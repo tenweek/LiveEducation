@@ -1,4 +1,5 @@
 <template>
+<div class="background">
     <div class="sign-in">
         <div>
             <h2>注册</h2>
@@ -35,7 +36,7 @@
 	        </div>
 	        
 		</div>
-	</div>
+	</div></div>
 </template>
 
 <script>
@@ -112,5 +113,9 @@
 }
 .form-panel{
 	margin: 10px 12%;
+}
+.background {
+	background-color: rgb(230,230,230);
+	margin: auto;
 }
 </style>
