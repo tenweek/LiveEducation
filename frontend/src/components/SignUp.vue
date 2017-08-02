@@ -42,27 +42,27 @@
 <script>
 export default {
     name: 'sign-up',
-    data() {
+    data () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('请输入密码'));
+                callback(new Error('请输入密码'))
             } else {
                 if (this.formCustom.passwdCheck !== '') {
                     // 对第二个密码框单独验证
-                    this.$refs.formCustom.validateField('passwdCheck');
+                    this.$refs.formCustom.validateField('passwdCheck')
                 }
-                callback();
+                callback()
             }
-        };
+        }
         const validatePassCheck = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('请再次输入密码'));
+                callback(new Error('请再次输入密码'))
             } else if (value !== this.formCustom.passwd) {
-                callback(new Error('两次输入密码不一致!'));
+                callback(new Error('两次输入密码不一致!'))
             } else {
-                callback();
+                callback()
             }
-        };
+        }
         return {
             formCustom: {
                 mail: '',
@@ -91,7 +91,7 @@ export default {
         signUp() {
             let code = document.getElementById('code').value
             if (code === this.verification) {
-                this.$Message.success('注册成功!');
+                this.$Message.success('注册成功!')
                 fetch('SignUp', {
                     method: 'post',
                     mode: 'cors',
@@ -106,7 +106,7 @@ export default {
                     })
                 }).then((response) => response.json()).then((obj) => { })
             } else {
-                this.$Message.error('验证码错误!');
+                this.$Message.error('验证码错误!')
             }
         },
         getVerification() {

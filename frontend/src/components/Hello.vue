@@ -10,9 +10,9 @@ import SignUp from './SignUp'
 export default {
     name: 'Hello',
     components: {
-        SignUp,
+        SignUp
     },
-    data() {
+    data () {
         return {}
     }
 }

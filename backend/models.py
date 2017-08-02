@@ -6,5 +6,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-	isTeacher = models.BooleanField(default=False)
+    isTeacher = models.BooleanField(default=False)
 # Create your models here.
