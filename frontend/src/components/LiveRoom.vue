@@ -1,7 +1,7 @@
 <template>
     <div class="layout">
         <div class="title">
-			mdzz
+			mdzz——直播间
         </div>
 
         <div class="layout-ceiling">
@@ -54,87 +54,20 @@
 </template>
 
 <script>
-import LivePicture from './LivePicture'
-
 export default {
-  name: 'hello',
-  components: {
-	  LivePicture,
-  },
-  data() {
-    return {
+    name: 'live-room',
+    components: {
+    },
+    data() {
+        return {
+        }
+    },
+    methods: {
+        
     }
-  },
-  methods: {
-
-  }
 }
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-	.picture{
-
-	}
-	.hint{
-		font-size: 15px;
-	}
-	.navigation-bar:hover{
-		color: gold;
-	}
-	.b{
-		font-size: 15px;
-		height: 20px;
-	}
-	.title{
-		height: 60px;
-		width: 100%;
-		font-size: 40px;
-	}
-    .layout{
-        border: 1px solid #d7dde4;
-        background: #f5f7f9;
-        position: relative;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .layout-logo{
-        width: 100px;
-        height: 30px;
-        background: #5b6270;
-        border-radius: 5px;
-        float: left;
-        position: relative;
-        top: 15px;
-        left: 20px;
-    }
-    .layout-header{
-      height: 268px;
-      background: #fff;
-      box-shadow: 0 1px 1px rgba(0,0,0,.1);
-      border: 1px solid #d7dde4;
-    }
-    .hint{
-      width: 100%;
-    }
-    .layout-copy{
-      background: #efefef;
-      text-align: center;
-      padding: 5px 0 5px;
-      color: #9ea7b4;
-    }
-    .layout-ceiling{
-        background: #464c5b;
-        padding: 8px 0;
-        overflow: hidden;
-    }
-    .layout-ceiling-main{
-        float: right;
-        margin-right: 15px;
-		font-size:15px;
-    }
-    .layout-ceiling-main a{
-        color: #9ba7b5;
-    }
+<style>
 </style>
