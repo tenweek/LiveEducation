@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import SignIn from './SignIn'
+import SignUp from './SignUp'
 
 export default {
     name: 'hello',
     components: {
-        SignIn,
+        SignUp,
     },
     data() {
         return {}
