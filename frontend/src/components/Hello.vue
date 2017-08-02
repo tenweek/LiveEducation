@@ -8,7 +8,7 @@
 import SignUp from './SignUp'
 
 export default {
-    name: 'hello',
+    name: 'Hello',
     components: {
         SignUp,
     },
