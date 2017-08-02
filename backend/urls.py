@@ -8,4 +8,6 @@ urlpatterns = [
     # url(r'^Hello', views.get_test),
     url(r'^Hello', views.post_test),
     url(r'^get-test', views.get_test),
+    url(r'^make-room', views.make_room),
+    url(r'^list-room', views.list_room),
 ]

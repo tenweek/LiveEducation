@@ -1,6 +1,7 @@
 <template>
   <div>
     <test-get></test-get>
+    <make-room></make-room>
     <form>
       账号:
       <input type="text" id="account" v-model="account" @blur="checkMail" /> 密码:
@@ -12,49 +13,51 @@
 
 <script>
 import TestGet from './test_get'
-//import PostGet from './test_post'
+import MakeRoom from './make_room'
+// import PostGet from './test_post'
 
 export default {
   name: 'hello',
   components: {
     TestGet,
+    MakeRoom
   },
-  data() {
+  data () {
     return {
       account: '',
-      password: '',
+      password: ''
     }
   },
   methods: {
-    checkMail() {
+    checkMail () {
       // 判断是不是邮箱
       if (this.account === '') { return }
-      let myreg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+      let myreg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
       if (!myreg.test(this.account)) {
         alert('邮箱错了啊摔！')
         return
       }
     },
 
-    checkStrength() {
+    checkStrength () {
       // 判断密码强度
       if (this.password === '') { return }
-      let aLvTxt = ['', '低', '中', '高'];
-      let lv = 0;
+      // let aLvTxt = ['', '低', '中', '高']
+      let lv = 0
       if (this.password.length < 6) {
         alert('密码起码要是6位以上啊摔！')
         return
       }
-      if (this.password.match(/[a-z]/g)) { lv++; }
-      if (this.password.match(/[0-9]/g)) { lv++; }
-      if (this.password.match(/(.[^a-z0-9])/g)) { lv++; }
+      if (this.password.match(/[a-z]/g)) { lv++ }
+      if (this.password.match(/[0-9]/g)) { lv++ }
+      if (this.password.match(/(.[^a-z0-9])/g)) { lv++ }
       if (lv < 2) {
         alert('密码太弱了啊摔！')
         return
       }
     },
 
-    showdata() {
+    showdata () {
       // 获取输入的账号密码
       fetch('Hello', {
         method: 'post',
