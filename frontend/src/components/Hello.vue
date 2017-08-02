@@ -1,24 +1,20 @@
 <template>
     <div>
-        <test-get></test-get>
-        <sign-up></sign-up>
+        <router-link to="/signin">注册</router-link>
     </div>
 </template>
 
 <script>
-import TestGet from './test_get'
-import SignUp from './signUp'
+import SignUp from './SignUp'
 
 export default {
-    name: 'hello',
+    name: 'Hello',
     components: {
-        TestGet,
         SignUp,
     },
     data() {
         return {}
-    },
-    methods: {}
+    }
 }
 
 </script>

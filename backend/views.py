@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -25,7 +25,7 @@ def getVerification(request):
         verification.append(random.choice(seed))
     salt = ''.join(verification)
     send_mail('Ur verification code!', salt,
-              'a1137901181@163.com', [req['account']], fail_silently=False)
+              'a1137901181@163.com', [req['mail']], fail_silently=False)
     response = JsonResponse({
         'verification': salt,
     })
@@ -36,8 +36,18 @@ def getVerification(request):
 def signUp(request):
     req = simplejson.load(request)
     user = User.objects.create_user(
-        username=req['account'], password=req['password'], email=req['account'])
+        username=req['username'], password=req['password'], email=req['mail'])
     user.save()
     response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def login(request):
+    response = JsonResponse({'result': True})
+    req = simplejson.load(request)
+    user = User.objects.filter(email=req['account'], password=req['password'])
+    if len(user) != 1:
+        response = JsonResponse({'result': False})
     return response
 # Create your views here.
