@@ -50,7 +50,7 @@ export default {
         }
     },
     methods: {
-        getResult() {
+        getResult () {
             // 获取输入的账号密码
             fetch('Login', {
                 method: 'post',
@@ -60,9 +60,18 @@ export default {
                     'Accept': 'application/json'
                 },
                 // 发送json消息需要执行一个序列化操作，发送一个字典类型
-                body: JSON.stringify({ 'account': this.account, 'password': this.password })
+                body: JSON.stringify({
+                    'account': this.formCustom.account,
+                    'password': this.formCustom.password
+                })
             }).then((response) => response.json()).then((obj) => {
-                console.log(obj.result)
+                if (obj.result) {
+                    this.$Message.success('登录成功！')
+                    document.cookie = obj.name + '=' + this.formCustom.account
+                    this.$router.push({path: '/'})
+                } else {
+                    this.$Message.error('账号或密码不正确！')
+                }
             })
         }
     }
