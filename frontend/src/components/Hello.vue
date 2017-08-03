@@ -2,6 +2,7 @@
     <div>
         <router-link to="/signup">注册</router-link>
         <router-link to="/login">登录</router-link>
+        <router-link to="/reset">找回密码</router-link>
     </div>
 </template>
 
