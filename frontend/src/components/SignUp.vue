@@ -133,7 +133,7 @@ export default {
 .sign-up {
     background-color: white;
     margin: 30px auto;
-    width: 39%;
+    width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
     box-sizing: border-box;
