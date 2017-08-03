@@ -30,7 +30,7 @@
                             </Row>
                         </Form-item>
                         <Form-item>
-                            <Button type="primary" @click="signUp">确认注册</Button>
+                            <Button type="primary" @click="signUp" id="midBtn">确认注册</Button>
                         </Form-item>
                     </Form>
                 </div>
@@ -66,6 +66,7 @@ export default {
         return {
             formCustom: {
                 mail: '',
+                mailChecked: '',
                 username: '',
                 passwd: '',
                 passwdCheck: '',
@@ -89,25 +90,41 @@ export default {
     },
     methods: {
         signUp() {
-            let code = document.getElementById('code').value
-            if (code === this.verification) {
-                this.$Message.success('注册成功!')
-                fetch('SignUp', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'mail': this.formCustom.mail,
-                        'password': this.formCustom.passwd,
-                        'username': this.formCustom.username
-                    })
-                }).then((response) => response.json()).then((obj) => { })
-            } else {
-                this.$Message.error('验证码错误!')
+            if (this.formCustom.mailChecked !== this.formCustom.mail) {
+                this.$Message.error('请不要修改注册邮箱！')
+                return
             }
+            if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
+                this.$Message.error('两次输入密码不一致！')
+                return
+            }
+            if (this.formCustom.username === '') {
+                this.$Message.error('用户名不能为空')
+                return
+            }
+            let code = document.getElementById('code').value
+            if (code === '') {
+                this.$Message.error('请输入验证码！')
+                return
+            }
+            if (this.formCustom.verification !== code) {
+                this.$Message.error('输入的验证码有误！')
+                return
+            }
+            this.$Message.success('注册成功!')
+            fetch('SignUp', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'mail': this.formCustom.mail,
+                    'password': this.formCustom.passwd,
+                    'username': this.formCustom.username
+                })
+            }).then((response) => response.json()).then((obj) => { })
         },
         getVerification() {
             fetch('Hello', {
@@ -122,6 +139,7 @@ export default {
             }).then((response) => response.json()).then((obj) => {
                 // 获取验证码
                 this.formCustom.verification = obj.verification
+                this.formCustom.mailChecked = this.formCustom.mail
                 console.log(this.formCustom.verification)
             })
         }
@@ -133,7 +151,7 @@ export default {
 .sign-up {
     background-color: white;
     margin: 30px auto;
-    width: 39%;
+    width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
     box-sizing: border-box;
@@ -148,5 +166,9 @@ export default {
 .background {
     background-color: rgb(230, 230, 230);
     margin: auto;
+}
+
+#midBtn {
+    margin-left: -66px;
 }
 </style>

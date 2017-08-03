@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link to="/signin">注册</router-link>
+        <router-link to="/signup">注册</router-link>
     </div>
 </template>
 
