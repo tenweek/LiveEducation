@@ -2,9 +2,9 @@
     <div class="picture">
         <a href="#" @click="live_room">
             <img src="../assets/papi.jpg" height="130">
-            <label>房间名:</label><br>
-            <label>主讲教师：</label><br>
-            <label>在线人数：</label>
+            <label>&nbsp;&nbsp;房间名:</label><br>
+            <label>&nbsp;&nbsp;主讲教师：</label><br>
+            <label class="person"><Icon type="person"></Icon>1234</label>
         </a>
     </div>
 </template>
@@ -36,9 +36,15 @@
         float: left;
         overflow: hidden;
         font-size: 14px;
-        text-align: center;
+    }
+    .person{
+        position: relative;
+        left: 130px;
     }
     .picture a{
         color: #464c5b;
+    }
+    .picture:hover{
+        color: #22313F;
     }
 </style>

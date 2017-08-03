@@ -2,61 +2,10 @@
     <div class="home-page">
         <div class="header">
             <home-page-header></home-page-header>
-		</div>
-        <div class="navigation">
-            <div class="navigation-center">
-                <a class="navigation-bar" href="#"><Icon type="home"></Icon> 首页</a> |               
-                <a class="navigation-bar" href="#"><Icon type="university"></Icon> 直播</a> |               
-                <a class="navigation-bar" href="#"><Icon type="videocamera"></Icon> 录播</a> |              
-                <a class="navigation-bar" href="#" @click="modal1 = true"><Icon type="ios-plus"></Icon> 创建房间</a>
-                <Modal
-                    v-model="modal1"
-                    title="创建房间"
-                    @on-ok="ok"
-                    @on-cancel="cancel">
-                    <label>房间名称：</label>
-                    <Input v-model="value1" size="large" placeholder="请输入房间名称"></Input><br><br>
-                    <p>上传课件</p>
-
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
-                        <div class="upload">    
-                            <Button type="ghost">                                
-                                点击选择文件&nbsp;&nbsp;<Icon type="folder"></Icon>
-                            </Button>
-                        </div>
-                        
-                    </Upload><br>
-
-                    <p>上传封面图</p>
-
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
-                        <div class="upload">    
-                            <Button type="ghost">                                
-                                点击选择图片&nbsp;&nbsp;<Icon type="image"></Icon>
-                            </Button>
-                        </div>
-                    </Upload>
-
-                </Modal>
-            </div>
-            <div class="navigation-right">
-              	<a class="navigation-bar" href="#">登录</a> |
-              	<a class="navigation-bar" href="#">注册</a> |
-              	<Dropdown>
-					<a class="navigation-bar" href="javascript:void(0)">
-					个人信息
-					<Icon type="arrow-down-b"></Icon>
-					</a>
-					<Dropdown-menu slot="list">
-					<Dropdown-item>修改昵称</Dropdown-item>
-					<Dropdown-item>修改密码</Dropdown-item>
-					</Dropdown-menu>
-				</Dropdown>
-            </div>
-        </div>    
+		</div>   
         <div class="list">
 			<div class="list-hint">
-				<Icon type="university" class="icon-middle"></Icon>
+				<div class="icon"><Icon type="university" class="icon-middle"></Icon></div>
                 &nbsp;
 				<label class="live-broadcast">正在直播</label>
                 <label class="information">当前直播房间：</label>
@@ -68,7 +17,7 @@
         </div>
         <div class="list">
 			<div class="list-hint">
-                <Icon type="videocamera" class="icon-middle"></Icon>
+                <div class="icon"><Icon type="videocamera" class="icon-middle"></Icon></div>
                 &nbsp;
             	<label class="live-broadcast">录播课堂</label>
                 <label class="information">共有录播视频：</label>
@@ -92,18 +41,9 @@ export default {
         HomePageHeader,
     },
     data() {
-        return {
-            modal1: false,
-            value1: ''
-        }
+        return {}
     },
     methods: {
-        ok () {
-             this.$Message.info('您已成功创建房间！');
-        },
-        cancel () {
-            this.$Message.info('点击了取消');
-        }
     }
 }
 </script>
@@ -144,31 +84,28 @@ export default {
         color: #9ba7b5;
     }
     .list{
-        height: 268px;
+        height: 295px;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.1);
-        border: 1px solid #d7dde4;
-        padding-left: 15px;
-        padding-top: 4px;
-        padding-right: 15px;
+        margin-left: 150px;
+        margin-right: 150px;
+        overflow: hidden;
+        background: white;
+        padding-top: 8px;
     }
 	.list-picture{
         background: red;
 	}
 	.list-hint{
-        height:30px;
-        line-height:30px;
+        height:40px;
+        line-height:40px;
         width: 100%;
         font-size: 20px;
         display: flex;
-        background: #efefef;
-        border-radius: 15px;
         padding-left: 8px;
         padding-right: 20px;
 	}
-    .icon-middle{
-        vertical-align: middle;
-    }
+
     .information{
         margin: 0 auto;
         font-size: 15px;
@@ -186,9 +123,8 @@ export default {
         position: relative;
         top: 15px;
         left: 20px;
-    }  
+    }
     .footer{
-        background: #efefef;
         text-align: center;
         padding: 5px 0 5px;
         color: #9ea7b4;
