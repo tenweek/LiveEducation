@@ -13,10 +13,24 @@ import LogIn from './Login'
 export default {
     name: 'Hello',
     components: {
-        SignUp
+        SignUp,
+        LogIn
     },
     data () {
         return {}
+    },
+    methods: {
+        signUp () {
+            this.$router.push({path: '/signup'})
+        },
+        login () {
+            let name = document.cookie.split(';')[0].split('=')[0]
+            if (name !== '') {
+                this.$Message.error('已经登录过了！')
+            } else {
+                this.$router.push({path: '/login'})
+            }
+        }
     }
 }
 

@@ -22,7 +22,7 @@
                         <Form-item label="验证码" prop="vertification">
                             <Row>
                                 <Col span="17">
-                                <Input id="code" placeholder="请输入验证码"></Input>
+                                <Input v-model="formCustom.verification" placeholder="请输入验证码"></Input>
                                 </Col>
                                 <Col span="7">
                                 <Button type="ghost" @click="getVerification">获取验证码</Button>
@@ -70,7 +70,8 @@ export default {
                 username: '',
                 passwd: '',
                 passwdCheck: '',
-                vertification: ''
+                vertification: '',
+                loadRand: ''
             },
             ruleCustom: {
                 mail: [
@@ -89,7 +90,7 @@ export default {
         }
     },
     methods: {
-        signUp() {
+        signUp () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
                 this.$Message.error('请不要修改注册邮箱！')
                 return
@@ -102,12 +103,11 @@ export default {
                 this.$Message.error('用户名不能为空')
                 return
             }
-            let code = document.getElementById('code').value
-            if (code === '') {
+            if (this.formCustom.verification === '') {
                 this.$Message.error('请输入验证码！')
                 return
             }
-            if (this.formCustom.verification !== code) {
+            if (this.formCustom.verification !== this.formCustom.loadRand) {
                 this.$Message.error('输入的验证码有误！')
                 return
             }
@@ -124,9 +124,11 @@ export default {
                     'password': this.formCustom.passwd,
                     'username': this.formCustom.username
                 })
-            }).then((response) => response.json()).then((obj) => { })
+            }).then((response) => response.json()).then((obj) => {
+                this.$router.push({path: '/'})
+            })
         },
-        getVerification() {
+        getVerification () {
             fetch('Hello', {
                 method: 'post',
                 mode: 'cors',
@@ -137,10 +139,13 @@ export default {
                 // 发送json消息需要执行一个序列化操作，发送一个字典类型
                 body: JSON.stringify({ 'mail': this.formCustom.mail })
             }).then((response) => response.json()).then((obj) => {
-                // 获取验证码
-                this.formCustom.verification = obj.verification
+                if (obj.verification === 'exist') {
+                    this.$Message.error('账号已存在')
+                    return
+                }
+                this.formCustom.loadRand = obj.verification
                 this.formCustom.mailChecked = this.formCustom.mail
-                console.log(this.formCustom.verification)
+                console.log(this.formCustom.loadRand)
             })
         }
     }
