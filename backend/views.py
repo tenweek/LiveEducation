@@ -27,9 +27,12 @@ def make_room(request):
 
 @csrf_exempt
 def list_room(request):
-    rooms=Room.objects.order_by('-createTime')
+    rooms = Room.objects.order_by('-createTime')
+    myroom = []
+    for room in rooms:
+        myroom.append({'roomname': room.roomName,'time': room.createTime})
     response = JsonResponse(
-        {'rooms': rooms})
+        {'rooms': myroom})
     return response
 
 @csrf_exempt

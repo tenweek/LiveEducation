@@ -8,7 +8,8 @@
         </form>
         <ul class="room" id="room">
           <li v-for="room in rooms">
-            <p readonly="true">{{room.Room}}</p>
+            <p readonly="true">{{room.roomname}}</p>
+            <p readonly="true">{{room.time}}</p>
           </li>
         </ul>
     </div>
