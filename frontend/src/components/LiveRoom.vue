@@ -1,73 +1,80 @@
 <template>
-    <div class="layout">
-        <div class="title">
-			mdzz——直播间
-        </div>
-
-        <div class="layout-ceiling">
-            <div class="layout-ceiling-main">
-              	<a class="navigation-bar" href="#">登录</a> |
-              	<a class="navigation-bar" href="#">注册</a> |
-
-              	<Dropdown>
-					<a href="javascript:void(0)">
-					个人信息
-					<Icon type="arrow-down-b"></Icon>
-					</a>
-					<Dropdown-menu slot="list">
-					<Dropdown-item>修改昵称</Dropdown-item>
-					</Dropdown-menu>
-				</Dropdown>
-
+    <div class="live-room">
+        <div class="header">
+            <home-page-header></home-page-header>
+		</div>
+        <div class="navigation">
+            <div class="welcome">
+                <Icon type="university"></Icon>
+                <label>欢迎进入直播间 !</label>
+            </div>
+            <div class="navigation-center">
+                <label class="information">房间ID：</label>
+                <label class="information">房间名：</label>
+                <label class="information">在线人数：</label>
+            </div>
+            <div class="navigation-right">
+                <Button type="primary" shape="circle" size="small">开始直播</Button>
             </div>
         </div>
-    
         <div class="layout-header">
-			<div class="hint">
-				<b><label class="cycle">· · · ·</label></b>
-				<label class="live-broadcast">正在直播</label>
-				<b><label class="cycle">· · · ·</label></b>
-				<br>
-			</div>
-
-			<div class="picture">
-				<live-picture></live-picture>
-			</div>
-	
-			<div class="b"><a href="#"><label>...查看更多>></label></a></div>
-
-        </div>
-
-        <div class="layout-header">
-			<div class="hint">
-				<b><label class="cycle">· · · ·</label></b>
-            	<label class="live-broadcast">录播列表</label>
-            	<b><label class="cycle">· · · ·</label></b>
-            	<br>
-			</div>
-        </div>
-        
-        <div class="layout-copy">
-            2017 &copy; 光宗耀组
         </div>
     </div>
 </template>
 
 <script>
+import LivePicture from './LivePicture'
+import HomePageHeader from './HomePageHeader'
+
 export default {
-    name: 'live-room',
+    name: 'hello',
     components: {
+        LivePicture,
+        HomePageHeader,
     },
     data() {
         return {
         }
     },
     methods: {
-        
+
     }
 }
-
 </script>
 
-<style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+    .live-room{
+        border: 1px solid #d7dde4;
+        background: #f5f7f9;
+        position: relative;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+	.header{
+		height: 60px;
+		width: 100%;
+		font-size: 40px;
+	}
+    .navigation{
+        background: #464c5b;
+        padding: 8px 10px;
+        overflow: hidden;
+        display: flex;
+        font-size: 15px;
+        color: #efefef;
+    }
+    .navigation-center{
+        margin: 0 auto;
+        font-size:15px;
+    }
+    .navigation-right{
+        float: right;
+        margin-right: 15px;
+		font-size:15px;
+    }
+    .information{
+        margin: 0 auto;
+    }
+
 </style>
