@@ -8,13 +8,42 @@
                 <a class="navigation-bar" href="#"><Icon type="home"></Icon> 首页</a> |               
                 <a class="navigation-bar" href="#"><Icon type="university"></Icon> 直播</a> |               
                 <a class="navigation-bar" href="#"><Icon type="videocamera"></Icon> 录播</a> |              
-                <a class="navigation-bar" href="#" @click="create_room"><Icon type="ios-plus"></Icon> 创建房间</a>
+                <a class="navigation-bar" href="#" @click="modal1 = true"><Icon type="ios-plus"></Icon> 创建房间</a>
+                <Modal
+                    v-model="modal1"
+                    title="创建房间"
+                    @on-ok="ok"
+                    @on-cancel="cancel">
+                    <label>房间名称：</label>
+                    <Input v-model="value1" size="large" placeholder="请输入房间名称"></Input><br><br>
+                    <p>上传课件</p>
+
+                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+                        <div class="upload">    
+                            <Button type="ghost">                                
+                                点击选择文件&nbsp;&nbsp;<Icon type="folder"></Icon>
+                            </Button>
+                        </div>
+                        
+                    </Upload><br>
+
+                    <p>上传封面图</p>
+
+                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+                        <div class="upload">    
+                            <Button type="ghost">                                
+                                点击选择图片&nbsp;&nbsp;<Icon type="image"></Icon>
+                            </Button>
+                        </div>
+                    </Upload>
+
+                </Modal>
             </div>
             <div class="navigation-right">
               	<a class="navigation-bar" href="#">登录</a> |
               	<a class="navigation-bar" href="#">注册</a> |
               	<Dropdown>
-					<a href="javascript:void(0)">
+					<a class="navigation-bar" href="javascript:void(0)">
 					个人信息
 					<Icon type="arrow-down-b"></Icon>
 					</a>
@@ -64,26 +93,16 @@ export default {
     },
     data() {
         return {
+            modal1: false,
+            value1: ''
         }
     },
     methods: {
-        create_room(){
-            this.$Modal.confirm({
-                    render: (h) => {
-                        return h('Input', {
-                            props: {
-                                value: this.value,
-                                autofocus: true,
-                                placeholder: 'Please enter the room name...'
-                            },
-                            on: {
-                                input: (val) => {
-                                    this.value = val;
-                                }
-                            }
-                        })
-                    }
-                })
+        ok () {
+             this.$Message.info('您已成功创建房间！');
+        },
+        cancel () {
+            this.$Message.info('点击了取消');
         }
     }
 }
