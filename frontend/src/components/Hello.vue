@@ -1,7 +1,8 @@
 <template>
     <div>
-        <button @click="signUp">注册</button>
-        <button @click="login">登录</button>
+        <router-link to="/signup">注册</router-link>
+        <router-link to="/login">登录</router-link>
+        <router-link to="/reset">找回密码</router-link>
     </div>
 </template>
 
