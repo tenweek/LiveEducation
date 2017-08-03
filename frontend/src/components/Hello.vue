@@ -8,7 +8,7 @@
                 <a class="navigation-bar" href="#"><Icon type="home"></Icon> 首页</a> |               
                 <a class="navigation-bar" href="#"><Icon type="university"></Icon> 直播</a> |               
                 <a class="navigation-bar" href="#"><Icon type="videocamera"></Icon> 录播</a> |              
-                <a class="navigation-bar" href="#"><Icon type="ios-plus"></Icon> 创建房间</a>
+                <a class="navigation-bar" href="#" @click="create_room"><Icon type="ios-plus"></Icon> 创建房间</a>
             </div>
             <div class="navigation-right">
               	<a class="navigation-bar" href="#">登录</a> |
@@ -20,6 +20,7 @@
 					</a>
 					<Dropdown-menu slot="list">
 					<Dropdown-item>修改昵称</Dropdown-item>
+					<Dropdown-item>修改密码</Dropdown-item>
 					</Dropdown-menu>
 				</Dropdown>
             </div>
@@ -66,7 +67,24 @@ export default {
         }
     },
     methods: {
-
+        create_room(){
+            this.$Modal.confirm({
+                    render: (h) => {
+                        return h('Input', {
+                            props: {
+                                value: this.value,
+                                autofocus: true,
+                                placeholder: 'Please enter the room name...'
+                            },
+                            on: {
+                                input: (val) => {
+                                    this.value = val;
+                                }
+                            }
+                        })
+                    }
+                })
+        }
     }
 }
 </script>
