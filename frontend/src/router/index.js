@@ -6,16 +6,16 @@ import LiveRoom from '@/components/LiveRoom'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-		{
-			path: '/',
-			name: 'Hello',
-			component: Hello
-		},
-		{
-			path: '/live_room',
-			name: 'live_room',
-			component: LiveRoom
-		}
-	]
+    routes: [
+        {
+            path: '/',
+            name: 'Hello',
+            component: Hello
+        },
+        {
+            path: '/live_room',
+            name: 'live_room',
+            component: LiveRoom
+        }
+    ]
 })

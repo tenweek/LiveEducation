@@ -2,7 +2,7 @@
     <div class="live-room">
         <div class="header">
             <home-page-header></home-page-header>
-		</div>
+        </div>
         <div class="navigation">
             <div class="welcome">
                 <Icon type="university"></Icon>
@@ -53,18 +53,17 @@ export default {
         border-radius: 5px;
         overflow: hidden;
     }
-	.header{
-		height: 60px;
-		width: 100%;
-		font-size: 40px;
-	}
+    .header{
+        height: 60px;
+        width: 100%;
+        font-size: 40px;
+    }
     .navigation{
-        background: #464c5b;
+        background: #efefef;
         padding: 8px 10px;
         overflow: hidden;
         display: flex;
         font-size: 15px;
-        color: #efefef;
     }
     .navigation-center{
         margin: 0 auto;
@@ -73,7 +72,7 @@ export default {
     .navigation-right{
         float: right;
         margin-right: 15px;
-		font-size:15px;
+        font-size:15px;
     }
     .information{
         margin: 0 auto;

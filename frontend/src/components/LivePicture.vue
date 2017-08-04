@@ -2,8 +2,8 @@
     <div class="picture">
         <a href="#" @click="live_room">
             <img src="../assets/papi.jpg" height="130">
-            <label>&nbsp;&nbsp;房间名:</label><br>
-            <label>&nbsp;&nbsp;主讲教师：</label><br>
+            <label>&nbsp;&nbsp;房间名</label><br>
+            <label>&nbsp;&nbsp;主讲教师</label><br>
             <label class="person"><Icon type="person"></Icon>1234</label>
         </a>
     </div>
@@ -18,8 +18,8 @@
             return {}
         },
         methods: {
-            live_room(){
-                window.open("http://localhost:8000/#/live_room/")
+            live_room() {
+                window.open('http://localhost:8000/#/live_room/')
             }
         }
     }

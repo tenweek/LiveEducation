@@ -4,12 +4,12 @@
             <a href="#">
             <img src="../assets/rabbit.png" height="60">
             <label id="mdzz">MDZZ</label>
-            </a>
+            </a>    
         </div>
         <div class="navigation-center">
             <a class="navigation-bar" href="#"><Icon type="home"></Icon> 首页</a> |               
             <a class="navigation-bar" href="#"><Icon type="university"></Icon> 直播</a> |               
-            <a class="navigation-bar" href="#"><Icon type="videocamera"></Icon> 录播</a>            
+            <a class="navigation-bar" href="#"><Icon type="videocamera"></Icon> 录播</a> |           
             <a class="navigation-bar" href="#" @click="modal1 = true"><Icon type="ios-plus"></Icon> 创建房间</a>
             <Modal
                 v-model="modal1"
@@ -61,7 +61,7 @@
     name: 'home-page-header',
     components: {
     },
-    data() {
+    data () {
         return {
             modal1: false,
             value1: ''
@@ -69,10 +69,10 @@
     },
     methods: {
         ok () {
-             this.$Message.info('您已成功创建房间！');
+             this.$Message.info('您已成功创建房间！')
         },
         cancel () {
-            this.$Message.info('点击了取消');
+            this.$Message.info('点击了取消')
         }
     }
 }
@@ -85,10 +85,11 @@
         width: 100%;
         padding-left: 30px;
         background: white;
-        display: flex;
         position: fixed;
         background: #22313F;
         overflow: hidden;
+        min-width: 1300px;
+        display: flex;
     }
     .logo{
         width: 180px;
@@ -101,7 +102,6 @@
         font-size: 35px;
     }
     .navigation-center{
-        
         font-size:20px;
         padding-top: 14px;
         color: #9ba7b5;
@@ -110,9 +110,10 @@
     .navigation-right{
         float: right;
         margin-right: 15px;
-		font-size:20px;
+        font-size:20px;
         padding-top: 14px;
-        margin-left:610px;     
+        position: relative;
+        margin-left: 40%;
     }
     .navigation-center a{
         color: #E4F1FE;
@@ -121,6 +122,6 @@
         color: #E4F1FE;
     }
     .navigation-bar:hover{
-		color: #FCE38A;
-	}
+        color: #FCE38A;
+    }
 </style>

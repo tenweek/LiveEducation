@@ -2,27 +2,25 @@
     <div class="home-page">
         <div class="header">
             <home-page-header></home-page-header>
-		</div>   
-        <div class="list">
-			<div class="list-hint">
-				<div class="icon"><Icon type="university" class="icon-middle"></Icon></div>
-                &nbsp;
-				<label class="live-broadcast">正在直播</label>
-                <label class="information">当前直播房间：</label>
-                <a href="#" class="more"><b><label>查看更多 <Icon type="chevron-right"></Icon></label><b></a>
-			</div>
-			<div class="list-picture">
-				<live-picture></live-picture>
-			</div>
         </div>
         <div class="list">
-			<div class="list-hint">
+            <div class="list-hint">
+                <div class="icon"><Icon type="university" class="icon-middle"></Icon></div>
+                &nbsp;
+                <label class="live-broadcast">正在直播</label>
+                <a href="#" class="more"><b><label>查看更多 <Icon type="chevron-right"></Icon></label><b></a>
+            </div>
+            <div class="list-picture">
+                <live-picture></live-picture>
+            </div>
+        </div>
+        <div class="list">
+            <div class="list-hint">
                 <div class="icon"><Icon type="videocamera" class="icon-middle"></Icon></div>
                 &nbsp;
-            	<label class="live-broadcast">录播课堂</label>
-                <label class="information">共有录播视频：</label>
+                <label class="live-broadcast">录播课堂</label>
                 <a href="#" class="more"><b><label>查看更多 <Icon type="chevron-right"></Icon></label><b></a>
-			</div>
+            </div>
         </div>        
         <div class="footer">
             2017 &copy; 光宗耀组
@@ -58,10 +56,10 @@ export default {
         overflow: hidden;
     }
     .header{
-		height: 60px;
-		width: 100%;
-		font-size: 40px;
-	}
+        height: 60px;
+        width: 100%;
+        font-size: 40px;
+    }
     .navigation{
         background: #464c5b;
         padding: 8px 0;
@@ -75,16 +73,17 @@ export default {
     .navigation-right{
         float: right;
         margin-right: 15px;
-		font-size:15px;
+        font-size:15px;
     }
     .navigation-bar:hover{
-		color: gold;
-	}
+        color: gold;
+    }
     .navigation a{
         color: #9ba7b5;
     }
     .list{
         height: 295px;
+        width: 1100px;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.1);
         margin-left: 150px;
@@ -93,27 +92,27 @@ export default {
         background: white;
         padding-top: 8px;
     }
-	.list-picture{
-        background: red;
-	}
-	.list-hint{
-        height:40px;
-        line-height:40px;
+    .list-picture{
+        height: 100%;
+        padding-top: 5px;
+    }
+    .list-hint{
+        height:45px;
+        line-height:45px;
         width: 100%;
-        font-size: 20px;
+        font-size: 25px;
         display: flex;
-        padding-left: 8px;
+        padding-left: 20px;
         padding-right: 20px;
-	}
-
-    .information{
-        margin: 0 auto;
-        font-size: 15px;
+        border-bottom: solid;
     }
     .more{
         float: right;
         font-size: 15px;
-    }	
+        color: #464c5b;
+        padding-top: 4px;
+        margin-left: 850px;
+    }
     .layout-logo{
         width: 100px;
         height: 30px;
@@ -128,9 +127,6 @@ export default {
         text-align: center;
         padding: 5px 0 5px;
         color: #9ea7b4;
-    }
-    .more{
-        color: #464c5b;
     }
 
 </style>
