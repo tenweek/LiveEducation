@@ -1,30 +1,32 @@
 <template>
-<div class="log-in">
-    <div>
-        <h2>登录</h2>
+    <div id="bg">
+        <div class="log-in">
+            <div>
+                <h2 id="title">登录</h2>
+            </div>
+            <div id="content">
+                <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
+                    <Form-item label="账号" prop="account">
+                        <Input placeholder="请输入注册邮箱" v-model="formCustom.account"></Input>
+                    </Form-item>
+                    <Form-item label="密码" prop="password">
+                        <Input type="password" v-model="formCustom.password" placeholder="请输入密码"></Input>
+                    </Form-item>
+                    <Form-item>
+                        <Button id="login-button" type="primary" @click="getResult">登录</Button>
+                    </Form-item>
+                </Form>
+    
+            </div>
+        </div>
     </div>
-    <div>
-         <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-            <Form-item label="账号" prop="account">
-                <Input placeholder="请输入注册邮箱" v-model="formCustom.account"></Input>
-            </Form-item>
-            <Form-item label="密码" prop="password">
-                <Input type="password" v-model="formCustom.password" placeholder="请输入密码"></Input>
-            </Form-item>
-            <Form-item>
-                <Button id="login-button" type="primary" @click="getResult">登录</Button>
-            </Form-item>
-        </Form>
-
-    </div>
-</div>
 </template>
 
 <script>
 export default {
     name: 'Login',
     components: {},
-    data () {
+    data() {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -50,7 +52,7 @@ export default {
         }
     },
     methods: {
-        getResult () {
+        getResult() {
             // 获取输入的账号密码
             fetch('Login', {
                 method: 'post',
@@ -68,7 +70,7 @@ export default {
                 if (obj.result) {
                     this.$Message.success('登录成功！')
                     document.cookie = obj.name + '=' + this.formCustom.account
-                    this.$router.push({path: '/'})
+                    this.$router.push({ path: '/' })
                 } else {
                     this.$Message.error('账号或密码不正确！')
                 }
@@ -82,12 +84,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #login-button {
-    margin-left: -66px;
+    margin-top: 30px;
+    margin-left: -40px;
+    margin-bottom: -30px;
 }
 
 .log-in {
     background-color: white;
-    margin: 30px auto;
+    margin: 180px auto;
     width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
@@ -98,5 +102,27 @@ export default {
 
 Form {
     margin: 10px 12px;
+}
+
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('./../assets/asteroids.jpg');
+    background-repeat: repeat;
+    z-index: -1;
+    margin: auto;
+}
+
+#title {
+    margin-bottom: 50px;
+    font-size: x-large;
+}
+
+#content {
+    margin-left: -15px;
+    margin-right: 15px;
 }
 </style>
