@@ -111,6 +111,9 @@ export default {
         dropdown: function (name) {
             alert(this.username)
         },
+        livePage: function () {
+            window.open('http://localhost:8000/#/live_page')
+        }
     }
 }
 </script>
