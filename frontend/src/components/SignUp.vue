@@ -138,7 +138,7 @@ export default {
                 this.$Message.error('请输入邮箱！')
                 return
             }
-            let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+            let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             if (!this.formCustom.mail.match(reg)) {
                 this.$Message.error('邮箱格式有问题！')
                 return

@@ -108,8 +108,7 @@ export default {
     width: 1100px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-    margin-left: 150px;
-    margin-right: 150px;
+    margin: auto;
     overflow: hidden;
     background: white;
     padding-top: 8px;

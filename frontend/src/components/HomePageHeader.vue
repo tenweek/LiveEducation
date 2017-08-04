@@ -41,18 +41,28 @@
             </Modal>
         </div>
         <div class="navigation-right">
-            <a class="navigation-bar" id="login" @click="login">登录</a> |
-            <a class="navigation-bar" @click="signUp">注册</a> |
-            <Dropdown>
-                <a class="navigation-bar" href="javascript:void(0)">
-                    个人信息
-                    <Icon type="arrow-down-b"></Icon>
-                </a>
-                <Dropdown-menu slot="list">
-                    <Dropdown-item>修改昵称</Dropdown-item>
-                    <Dropdown-item @click="resetPasswd">修改密码</Dropdown-item>
-                </Dropdown-menu>
-            </Dropdown>
+            <template v-if="this.name === ''">
+                <a class="navigation-bar" id="login" @click="login">登录</a> |
+                <a class="navigation-bar" @click="signUp">注册</a>
+            </template>
+    
+            <template v-else>
+                <Dropdown>
+                    <a class="navigation-bar" href=" ">
+                        {{ name }}
+                        <Icon type="arrow-down-b"></Icon>
+                    </a>
+                    <Dropdown-menu slot="list">
+                        <Dropdown-item>修改昵称</Dropdown-item>
+                        <Dropdown-item>
+                            <label @click="resetPasswd">修改密码</label>
+                        </Dropdown-item>
+                        <Dropdown-item>
+                            <label @click="signOut">注销账户</label>
+                        </Dropdown-item>
+                    </Dropdown-menu>
+                </Dropdown>
+            </template>
         </div>
     </div>
 </template>
@@ -93,6 +103,12 @@ export default {
         },
         signUp: function () {
             this.$router.push({ path: '/signup' })
+        },
+        signOut: function () {
+            var date = new Date()
+            date.setTime(date.getTime() - 10000)
+            document.cookie = this.name + '=a; expires=' + date.toGMTString()
+            window.location.reload()
         }
     }
 }
@@ -137,7 +153,7 @@ export default {
     font-size: 20px;
     padding-top: 14px;
     position: relative;
-    margin-left: 40%;
+    margin-left: 45%;
 }
 
 .navigation-center a {
@@ -149,6 +165,6 @@ export default {
 }
 
 .navigation-bar:hover {
-    color: #FCE38A;
+    color: gold;
 }
 </style>
