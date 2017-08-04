@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         live_room: function () {
-            window.open('http://localhost:8000/#/live_room/')
+            window.open('./#/live_room/')
         }
     }
 }

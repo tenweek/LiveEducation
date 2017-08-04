@@ -5,6 +5,7 @@ import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Reset from '@/components/Reset'
 import LiveRoom from '@/components/LiveRoom'
+import RecordRoom from '@/components/RecordRoom'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
             path: '/live_room',
             name: 'live_room',
             component: LiveRoom
+        },
+        {
+            path: '/record_room',
+            name: 'record_room',
+            component: RecordRoom
         }
     ]
 })
