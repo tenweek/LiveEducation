@@ -5,12 +5,12 @@
 </template>
 
 <script>
-    export default {
-        name: 'page-footer',
-        data() {
-            return {}
-        }
+export default {
+    name: 'page-footer',
+    data: function () {
+        return {}
     }
+}
 </script>
 
 <style scoped>

@@ -45,32 +45,35 @@
                 <a class="navigation-bar" id="login" @click="login">登录</a> |
                 <a class="navigation-bar" @click="signUp">注册</a>
             </template>
-
             <template v-else>
-                <Dropdown placement='right' @on-click='dropdown()'>
+                <Dropdown @on-click="dropdown">
                     <a class="navigation-bar" href="javascript:void(0)">
                         {{ username }}
                         <Icon type="arrow-down-b"></Icon>
                     </a>
                     <Dropdown-menu slot="list">
                         <Dropdown-item name='modifyName'>修改昵称</Dropdown-item>
-                            <Modal v-model="modifyName" title="修改昵称" @on-ok="okModifyName">
-                                <br><label id="new-username">请输入新的昵称：</label>
-                                <br><br><Input v-model="newName" size="large" placeholder="请输入新的昵称"></Input><br><br>
-                            </Modal>
+                        <Modal v-model="modifyName" title="修改昵称" @on-ok="okModifyName">
+                            <br>
+                            <label id="new-username">请输入新的昵称：</label>
+                            <br>
+                            <br>
+                            <Input v-model="newName" size="large" placeholder="请输入新的昵称"></Input>
+                            <br>
+                            <br>
+                        </Modal>
                         <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
                         <Dropdown-item name='logout'>注销账户</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </template>
-
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    username: 'home-page-header',
+    name: 'home-page-header',
     components: {
     },
     data: function () {
@@ -80,8 +83,7 @@ export default {
             modifyName: false,
             newName: '',
             username: '',
-            account: '',
-            name: '',
+            account: ''
         }
     },
     created: function () {
@@ -92,8 +94,30 @@ export default {
         ok: function () {
             this.$Message.info('您已成功创建房间！')
         },
-        okModifyName: function() {
+        okModifyName: function () {
             this.$Message.info('您已成功修改昵称！')
+            fetch('changeName', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                // 发送json消息需要执行一个序列化操作，发送一个字典类型
+                body: JSON.stringify({
+                    'account': this.account,
+                    'newname': this.newName
+                })
+            }).then((response) => response.json()).then((obj) => {
+                let date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                document.cookie = this.newName + '=' + this.account
+                window.location.reload()
+            })
+        },
+        livePage: function () {
+            window.open('./#/live_page')
         },
         login: function () {
             if (this.username) {
@@ -103,16 +127,29 @@ export default {
             }
         },
         resetPasswd: function () {
+            let date = new Date()
+            date.setTime(date.getTime() - 10000)
+            document.cookie = this.username + '=a; expires=' + date.toGMTString()
+            window.location.reload()
             this.$router.push({ path: '/reset' })
         },
         signUp: function () {
             this.$router.push({ path: '/signup' })
         },
         dropdown: function (name) {
-            alert(this.username)
-        },
-        livePage: function () {
-            window.open('http://localhost:8000/#/live_page')
+            if (name === 'modifyName') {
+                this.modifyName = true
+            } else if (name === 'modifyPassword') {
+                let date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                this.$router.push({ path: '/reset' })
+            } else {
+                let date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                window.location.reload()
+            }
         }
     }
 }
@@ -128,7 +165,6 @@ export default {
     position: fixed;
     background: #22313F;
     overflow: hidden;
-    
     display: flex;
 }
 
@@ -159,9 +195,11 @@ export default {
     position: relative;
     margin-left: 45%;
 }
+
 .username {
     color: #E4F1FE;
 }
+
 .navigation-center a {
     color: #E4F1FE;
 }
@@ -173,6 +211,7 @@ export default {
 .navigation-bar:hover {
     color: gold;
 }
+
 #new-username {
     font-size: 15px;
 }

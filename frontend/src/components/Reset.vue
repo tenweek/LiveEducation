@@ -44,7 +44,6 @@
                     <template v-else>
                         <p>修改密码成功！</p>
                         <Button type="primary" id="nextBtn" @click="next">登录</Button>
-    
                     </template>
                 </div>
             </div>

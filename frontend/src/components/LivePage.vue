@@ -1,136 +1,77 @@
 <template>
     <div class="head_bg">
-    <div class="content">
         <div class="header">
-            <!--logo位置-->
-            <img class="fl" src="../assets/app_logo.jpg" alt=""/>
-
-            <!--导航菜单-->
-            <ul class="head_nav fl">
-                <li><a href="#">首页</a></li>
-                <li class="active"><a href="#">直播</a></li>
-                <li><a href="#">录播</a></li>
-            </ul>
-            <!--其他功能-->
-
-            <div class="head-oth fr">
-                <div class="fl"><a href="#">登录</a></div>
-                <div class="fl"><a href="#">注册</a></div>
-                <div class="fl dropdown">
-                    <a>个人信息</a>
-                    <div class="icon"></div>
-                </div>
-                <div class="fl"><a href="#">创建</a></div>
-                <!--个人信息点击菜单内容-->
-                <div class="header_twoul">
-                    <ul>
-                        <li><a href="#">修改昵称</a></li>
-                        <li><a href="#">修改密码</a></li>
-                        <li><a href="#">注销</a></li>
-                    </ul>
-                </div>
+            <home-page-header></home-page-header>
+        </div>
+        <div class="navigation">
+            <div class="welcome">
+                <Icon type="university"></Icon>
+                <label>当前正在直播：</label>
             </div>
         </div>
-    </div>
 
 
 <!--页面头部end-->
 
 <!--直播房间star-->
 <div class="mt_20">
-
     <div class="content">
         <div class="house_both">
             <ul>
                 <!--直播房间枚举-->
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
-                <li>
-                    <live-picture1></live-picture1>
-                </li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
+                <li><live-picture></live-picture></li>
             </ul>
         </div>
     </div>
+</div>
+
+<div>
+    <page-footer></page-footer>
 </div>
 </div>
 </template>
 
 <script>
-import LivePicture1 from './LivePicture'
+import LivePicture from './LivePicture'
+import HomePageHeader from './HomePageHeader'
+import PageFooter from './PageFooter'
 
 export default {
-    name: 'LivePage',
+    name: 'live-page',
     components: {
-        LivePicture1
+        LivePicture,
+        HomePageHeader,
+        PageFooter,
     },
-    data() {
+    data: function () {
         return {
         }
     },
     methods: {
     }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.navigation {
+    background: #efefef;
+    padding: 8px 40px;
+    overflow: hidden;
+    display: flex;
+    font-size: 15px;
+}
 /*<!--直播房间star-->*/
 .house_both{
     width: 100%;
@@ -184,11 +125,14 @@ a{
     margin-top: 20px; 
     margin-bottom: 20px; 
     position:relative;
+    background: red;
+    height: auto;
+
 }
 
 .content{
     width: 1200px;
-    height: 50px;
+    height: auto;
     margin: 0 auto;
 }
 
@@ -207,10 +151,10 @@ a{
 }
 
 .header {
+    height: 60px;
     width: 100%;
-    height: 50px;
-    background: #404052;
-    box-sizing: border-box;
+    font-size: 40px;
+    z-index: 9999;
 }
 
 /*logo大小*/
@@ -237,9 +181,8 @@ a{
     text-align: center;
 }
 
-live-room {
+.live-room {
     width:100%;
-
 }
 
 /*一级导航添加active*/
