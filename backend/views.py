@@ -27,7 +27,7 @@ def make_room(request):
         return response
     else:
         response = JsonResponse(
-            {'msg': 'Sorry! You are not a teacher'})
+            {'msg': 'Sorry! You are not a teacher!!!'})
         return response
 
 @csrf_exempt
@@ -96,7 +96,6 @@ def getRand(request):
     response = JsonResponse({'verification': salt})
     return response
 
-
 @csrf_exempt
 def changePasswd(request):
     req = simplejson.load(request)
@@ -105,7 +104,6 @@ def changePasswd(request):
     user.save()
     response = JsonResponse({'result': True})
     return response
-
 
 @csrf_exempt
 def changeName(request):

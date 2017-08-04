@@ -11,7 +11,7 @@
                 <Icon type="home"></Icon> 首页</a> |
             <a class="navigation-bar" href="#">
                 <Icon type="university"></Icon> 直播</a> |
-            <a class="navigation-bar" href="#">
+            <a class="navigation-bar" href="#" @click="video_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
             <a class="navigation-bar" @click="modal = true">
                 <Icon type="ios-plus"></Icon> 创建房间</a>
@@ -158,6 +158,9 @@ export default {
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 window.location.reload()
             }
+        },
+        video_page: function () {
+            window.open('http://localhost:8000/#/video_page/')
         }
     }
 }
@@ -173,7 +176,7 @@ export default {
     position: fixed;
     background: #22313F;
     overflow: hidden;
-
+    z-index: 9999;
     display: flex;
 }
 

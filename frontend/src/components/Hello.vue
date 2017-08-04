@@ -37,6 +37,13 @@
                     </b>
                 </a>
             </div>
+            <div  class="list-picture">
+                <video-picture></video-picture>
+                <video-picture></video-picture>
+                <video-picture></video-picture>
+                <video-picture></video-picture>
+                <video-picture></video-picture>
+            </div>
         </div>
         <div class="footer">
             2017 &copy; 光宗耀组
@@ -47,6 +54,7 @@
 <script>
 import LivePicture from './LivePicture'
 import HomePageHeader from './HomePageHeader'
+import VideoPicture from './VideoPicture'
 
 export default {
     name: 'hello',
@@ -55,7 +63,8 @@ export default {
     },
     components: {
         LivePicture,
-        HomePageHeader
+        HomePageHeader,
+        VideoPicture
     },
     data () {
         return {
@@ -118,7 +127,7 @@ export default {
 }
 
 .list {
-    height: 295px;
+    height: auto;
     width: 1100px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
@@ -129,7 +138,7 @@ export default {
 }
 
 .list-picture {
-    height: 100%;
+    height: auto;
     padding-top: 5px;
 }
 
