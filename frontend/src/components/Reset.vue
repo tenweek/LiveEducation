@@ -1,56 +1,60 @@
 <template>
-    <div class="reset">
-        <div>
-            <h2>重置密码</h2>
-        </div>
-        <div class="step-bar">
-            <Steps :current="current">
-                <Step title="填写资料"></Step>
-                <Step title="验证身份"></Step>
-                <Step title="设置新密码"></Step>
-                <Step title="完成"></Step>
-            </Steps>
-        </div>
-        <div id="current-step">
-            <template v-if="this.current === 0">
-                <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-                    <Form-item label="账号" prop="mail">
-                        <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
-                    </Form-item>
-                </Form>
-                <Button type="primary" @click="getVerification">获取验证码</Button>
-            </template>
-            <template v-else-if="this.current === 1">
-                <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-                    <Form-item label="验证码" prop="vertification">
-                        <Input placeholder="请输入验证码" v-model="formCustom.verification"></Input>
-                    </Form-item>
-                </Form>
-                <Button type="primary" @click="checkKey">下一步</Button>
-            </template>
-            <template v-else-if="this.current === 2">
-                <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-                    <Form-item label="密码" prop="passwd">
-                        <Input type="password" v-model="formCustom.passwd" placeholder="请输入密码"></Input>
-                    </Form-item>
-                    <Form-item label="确认密码" prop="passwdCheck">
-                        <Input type="password" v-model="formCustom.passwdCheck" placeholder="请再次输入密码"></Input>
-                    </Form-item>
-                </Form>
-                <Button type="primary" @click="changePasswd">下一步</Button>
-            </template>
-            <template v-else>
-                <p>修改密码成功！</p>
-                <Button type="primary" @click="next">登录</Button>
+    <div id="bg">
+        <Card id="card" shadow>
+            <div class="reset">
+                <div>
+                    <h2>重置密码</h2>
+                </div>
+                <div class="step-bar">
+                    <Steps :current="current">
+                        <Step title="填写资料"></Step>
+                        <Step title="验证身份"></Step>
+                        <Step title="设置新密码"></Step>
+                        <Step title="完成"></Step>
+                    </Steps>
+                </div>
+                <div id="current-step">
+                    <template v-if="this.current === 0">
+                        <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
+                            <Form-item label="账号" prop="mail">
+                                <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
+                            </Form-item>
+                        </Form>
+                        <Button type="primary" id="nextBtn" @click="getVerification">获取验证码</Button>
+                    </template>
+                    <template v-else-if="this.current === 1">
+                        <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
+                            <Form-item label="验证码" prop="vertification">
+                                <Input placeholder="请输入验证码" v-model="formCustom.verification"></Input>
+                            </Form-item>
+                        </Form>
+                        <Button type="primary" id="nextBtn" @click="checkKey">下一步</Button>
+                    </template>
+                    <template v-else-if="this.current === 2">
+                        <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
+                            <Form-item label="密码" prop="passwd">
+                                <Input type="password" v-model="formCustom.passwd" placeholder="请输入密码"></Input>
+                            </Form-item>
+                            <Form-item label="确认密码" prop="passwdCheck">
+                                <Input type="password" v-model="formCustom.passwdCheck" placeholder="请再次输入密码"></Input>
+                            </Form-item>
+                        </Form>
+                        <Button type="primary" id="nextBtn" @click="changePasswd">下一步</Button>
+                    </template>
+                    <template v-else>
+                        <p>修改密码成功！</p>
+                        <Button type="primary" id="nextBtn" @click="next">登录</Button>
     
-            </template>
-        </div>
+                    </template>
+                </div>
+            </div>
+        </Card>
     </div>
 </template>
 
 <script>
 export default {
-    data () {
+    data() {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -97,11 +101,11 @@ export default {
         }
     },
     methods: {
-        next () {
+        next() {
             this.current = 0
             this.$router.push({ path: '/login' })
         },
-        getVerification () {
+        getVerification() {
             fetch('getRand', {
                 method: 'post',
                 mode: 'cors',
@@ -121,14 +125,14 @@ export default {
                 }
             })
         },
-        checkKey () {
+        checkKey() {
             if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error('验证码错误！')
             } else {
                 this.current += 1
             }
         },
-        changePasswd () {
+        changePasswd() {
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
                 this.$Message.error('两次输入的密码不一致！')
             } else {
@@ -154,7 +158,7 @@ export default {
 
 <style scoped>
 .reset {
-    margin-top: 100px;
+    margin-top: 80px;
     margin-left: auto;
     margin-right: auto;
     padding: auto;
@@ -162,15 +166,38 @@ export default {
 
 .step-bar {
     margin-top: 60px;
-    width: 900px;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
 #current-step {
     margin-top: 60px;
-    width: 505px;
+    width: 90%  ;
+    margin-left: 15px;
+    padding-bottom: 30px;
+}
+
+#card {
+    margin: 200px auto;
+    width: 550px;
     margin-left: auto;
     margin-right: auto;
+}
+
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('./../assets/asteroids.jpg');
+    background-repeat: repeat;
+    z-index: -1;
+    margin: auto;
+}
+
+#nextBtn {
+    margin-top: 20px;
 }
 </style>
