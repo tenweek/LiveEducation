@@ -109,7 +109,7 @@ export default {
                     'newname': this.newName
                 })
             }).then((response) => response.json()).then((obj) => {
-                var date = new Date()
+                let date = new Date()
                 date.setTime(date.getTime() - 10000)
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 document.cookie = this.newName + '=' + this.account
@@ -124,6 +124,7 @@ export default {
             }
         },
         resetPasswd: function () {
+            let date = new Date()
             date.setTime(date.getTime() - 10000)
             document.cookie = this.username + '=a; expires=' + date.toGMTString()
             window.location.reload()
@@ -136,12 +137,12 @@ export default {
             if (name === 'modifyName') {
                 this.modifyName = true
             } else if (name === 'modifyPassword') {
-                var date = new Date()
+                let date = new Date()
                 date.setTime(date.getTime() - 10000)
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 this.$router.push({ path: '/reset' })
             } else {
-                var date = new Date()
+                let date = new Date()
                 date.setTime(date.getTime() - 10000)
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 window.location.reload()
