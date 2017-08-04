@@ -8,6 +8,8 @@ import 'iview/dist/styles/iview.css'
 Vue.config.productionTip = false
 Vue.use(iView)
 
+Vue.use(iView)
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
