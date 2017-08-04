@@ -43,7 +43,7 @@
 <script>
 export default {
     name: 'sign-up',
-    data () {
+    data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -91,7 +91,7 @@ export default {
         }
     },
     methods: {
-        signUp () {
+        signUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
                 this.$Message.error('请不要修改注册邮箱！')
                 return
@@ -126,10 +126,10 @@ export default {
                     'username': this.formCustom.username
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.$router.push({path: '/'})
+                this.$router.push({ path: '/' })
             })
         },
-        getVerification () {
+        getVerification: function () {
             fetch('getVerification', {
                 method: 'post',
                 mode: 'cors',
@@ -155,7 +155,7 @@ export default {
 
 <style scoped>
 h2 {
-    font: 30px  "microsoft yahei";
+    font: 30px "microsoft yahei";
     color: #000000;
     height: 30px;
     position: absolute;

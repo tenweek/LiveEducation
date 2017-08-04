@@ -54,7 +54,7 @@
 
 <script>
 export default {
-    data() {
+    data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -73,7 +73,6 @@ export default {
                 callback(new Error('两次输入密码不一致!'))
             } else {
                 callback()
-
             }
         }
         return {
@@ -102,11 +101,11 @@ export default {
         }
     },
     methods: {
-        next() {
+        next: function () {
             this.current = 0
             this.$router.push({ path: '/login' })
         },
-        getVerification() {
+        getVerification: function () {
             fetch('getRand', {
                 method: 'post',
                 mode: 'cors',
@@ -126,14 +125,14 @@ export default {
                 }
             })
         },
-        checkKey() {
+        checkKey: function () {
             if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error('验证码错误！')
             } else {
                 this.current += 1
             }
         },
-        changePasswd() {
+        changePasswd: function () {
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
                 this.$Message.error('两次输入的密码不一致！')
             } else {
@@ -174,7 +173,7 @@ export default {
 
 #current-step {
     margin-top: 60px;
-    width: 90%  ;
+    width: 90%;
     margin-left: 15px;
     padding-bottom: 30px;
 }

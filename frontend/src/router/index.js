@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Reset from '@/components/Reset'
+import LiveRoom from '@/components/LiveRoom'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
             path: '/reset',
             name: 'Reset',
             component: Reset
+        },
+        {
+            path: '/live_room',
+            name: 'live_room',
+            component: LiveRoom
         }
     ]
 })
