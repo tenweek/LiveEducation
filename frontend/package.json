@@ -15,12 +15,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "vue": "^2.4.2",
-=======
     "iview": "^2.0.0",
     "vue": "^2.3.3",
->>>>>>> b11a7a4777db9e1358d1cdcab558f72bbaa96fde
     "vue-router": "^2.6.0"
   },
   "devDependencies": {

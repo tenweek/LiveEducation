@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-<template>
-    <div id="app">
-        <v-header></v-header>
-        <router-view></router-view>
-    </div>
-</template>
-
-<script>
-export default {
-    name: 'app'
-}
-</script>
-
-<style>
-#app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 0;
-}
-</style>
-=======
 <template>
     <div id="app">
         <v-header></v-header>
@@ -45,4 +21,3 @@ export default {
     margin-top: 0;
 }
 </style>
->>>>>>> b11a7a4777db9e1358d1cdcab558f72bbaa96fde
