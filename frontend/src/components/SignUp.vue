@@ -130,7 +130,7 @@ export default {
             })
         },
         getVerification () {
-            fetch('Hello', {
+            fetch('getVerification', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
