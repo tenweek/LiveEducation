@@ -73,6 +73,7 @@ def getRand(request):
     response = JsonResponse({'verification': salt})
     return response
 
+
 @csrf_exempt
 def changePasswd(request):
     req = simplejson.load(request)
@@ -80,5 +81,15 @@ def changePasswd(request):
     user.set_password(req['password'])
     user.save()
     response = JsonResponse({'result': True})
+    return response
+
+
+@csrf_exempt
+def changeName(request):
+    req = simplejson.load(request)
+    user = User.objects.get(username=req['account'])
+    user.name = req['newname']
+    user.save()
+    response = JsonResponse({})
     return response
 # Create your views here.

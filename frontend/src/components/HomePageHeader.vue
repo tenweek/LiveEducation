@@ -15,7 +15,7 @@
                 <Icon type="videocamera"></Icon> 录播</a> |
             <a class="navigation-bar" @click="modal = true">
                 <Icon type="ios-plus"></Icon> 创建房间</a>
-            <Modal v-model="modal" title="创建房间" @on-ok="ok" @on-cancel="cancel">
+            <Modal v-model="modal" title="创建房间" @on-ok="ok">
                 <label>房间名称：</label>
                 <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
                 <br>
@@ -41,25 +41,29 @@
             </Modal>
         </div>
         <div class="navigation-right">
-            <template v-if="this.name === ''">
+            <template v-if="this.username === ''">
                 <a class="navigation-bar" id="login" @click="login">登录</a> |
                 <a class="navigation-bar" @click="signUp">注册</a>
             </template>
-    
             <template v-else>
-                <Dropdown>
-                    <a class="navigation-bar" href=" ">
-                        {{ name }}
+                <Dropdown @on-click="dropdown">
+                    <a class="navigation-bar" href="javascript:void(0)">
+                        {{ username }}
                         <Icon type="arrow-down-b"></Icon>
                     </a>
                     <Dropdown-menu slot="list">
-                        <Dropdown-item>修改昵称</Dropdown-item>
-                        <Dropdown-item>
-                            <label @click="resetPasswd">修改密码</label>
-                        </Dropdown-item>
-                        <Dropdown-item>
-                            <label @click="signOut">注销账户</label>
-                        </Dropdown-item>
+                        <Dropdown-item name='modifyName'>修改昵称</Dropdown-item>
+                        <Modal v-model="modifyName" title="修改昵称" @on-ok="okModifyName">
+                            <br>
+                            <label id="new-username">请输入新的昵称：</label>
+                            <br>
+                            <br>
+                            <Input v-model="newName" size="large" placeholder="请输入新的昵称"></Input>
+                            <br>
+                            <br>
+                        </Modal>
+                        <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
+                        <Dropdown-item name='logout'>注销账户</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </template>
@@ -76,39 +80,72 @@ export default {
         return {
             modal: false,
             roomName: '',
-            name: '',
+            modifyName: false,
+            newName: '',
+            username: '',
             account: ''
         }
     },
     created: function () {
-        this.name = document.cookie.split(';')[0].split('=')[0]
+        this.username = document.cookie.split(';')[0].split('=')[0]
         this.account = document.cookie.split(';')[0].split('=')[1]
     },
     methods: {
         ok: function () {
             this.$Message.info('您已成功创建房间！')
         },
-        cancel: function () {
-            this.$Message.info('点击了取消')
+        okModifyName: function () {
+            this.$Message.info('您已成功修改昵称！')
+            fetch('changeName', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                // 发送json消息需要执行一个序列化操作，发送一个字典类型
+                body: JSON.stringify({
+                    'account': this.account,
+                    'newname': this.newName
+                })
+            }).then((response) => response.json()).then((obj) => {
+                var date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                document.cookie = this.newName + '=' + this.account
+                window.location.reload()
+            })
         },
         login: function () {
-            if (this.name) {
+            if (this.username) {
                 this.$Message.error('已经登录过了！')
             } else {
                 this.$router.push({ path: '/login' })
             }
         },
         resetPasswd: function () {
+            date.setTime(date.getTime() - 10000)
+            document.cookie = this.username + '=a; expires=' + date.toGMTString()
+            window.location.reload()
             this.$router.push({ path: '/reset' })
         },
         signUp: function () {
             this.$router.push({ path: '/signup' })
         },
-        signOut: function () {
-            var date = new Date()
-            date.setTime(date.getTime() - 10000)
-            document.cookie = this.name + '=a; expires=' + date.toGMTString()
-            window.location.reload()
+        dropdown: function (name) {
+            if (name === 'modifyName') {
+                this.modifyName = true
+            } else if (name === 'modifyPassword') {
+                var date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                this.$router.push({ path: '/reset' })
+            } else {
+                var date = new Date()
+                date.setTime(date.getTime() - 10000)
+                document.cookie = this.username + '=a; expires=' + date.toGMTString()
+                window.location.reload()
+            }
         }
     }
 }
@@ -124,7 +161,7 @@ export default {
     position: fixed;
     background: #22313F;
     overflow: hidden;
-    min-width: 1300px;
+
     display: flex;
 }
 
@@ -156,6 +193,10 @@ export default {
     margin-left: 45%;
 }
 
+.username {
+    color: #E4F1FE;
+}
+
 .navigation-center a {
     color: #E4F1FE;
 }
@@ -166,5 +207,9 @@ export default {
 
 .navigation-bar:hover {
     color: gold;
+}
+
+#new-username {
+    font-size: 15px;
 }
 </style>
