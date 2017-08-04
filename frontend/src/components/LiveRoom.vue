@@ -85,7 +85,7 @@ export default {
         }
     },
     methods: {
-        changeCurrent(name) {
+        changeCurrent: function (name) {
             this.selected = name
         }
     }

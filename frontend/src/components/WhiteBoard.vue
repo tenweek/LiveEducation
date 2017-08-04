@@ -5,10 +5,10 @@
 </template>
 
 <script>
-    export default {
-        name: 'white-board',
-        data() {
-            return {}
-        }
+export default {
+    name: 'white-board',
+    data: function () {
+        return {}
     }
+}
 </script>
