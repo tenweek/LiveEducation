@@ -43,7 +43,7 @@
 <script>
 export default {
     name: 'sign-up',
-    data () {
+    data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -91,9 +91,13 @@ export default {
         }
     },
     methods: {
-        signUp () {
+        signUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
                 this.$Message.error('请不要修改注册邮箱！')
+                return
+            }
+            if (this.formCustom.passwd === '') {
+                this.$Message.error('请输入密码！')
                 return
             }
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
@@ -126,10 +130,19 @@ export default {
                     'username': this.formCustom.username
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.$router.push({path: '/'})
+                this.$router.push({ path: '/login' })
             })
         },
-        getVerification () {
+        getVerification: function () {
+            if (this.formCustom.mail === '') {
+                this.$Message.error('请输入邮箱！')
+                return
+            }
+            let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            if (!this.formCustom.mail.match(reg)) {
+                this.$Message.error('邮箱格式有问题！')
+                return
+            }
             fetch('getVerification', {
                 method: 'post',
                 mode: 'cors',
@@ -155,7 +168,7 @@ export default {
 
 <style scoped>
 h2 {
-    font: 30px  "microsoft yahei";
+    font: 30px "microsoft yahei";
     color: #000000;
     height: 30px;
     position: absolute;

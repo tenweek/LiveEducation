@@ -26,7 +26,7 @@
 export default {
     name: 'Login',
     components: {},
-    data() {
+    data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
@@ -52,7 +52,7 @@ export default {
         }
     },
     methods: {
-        getResult() {
+        getResult: function () {
             // 获取输入的账号密码
             fetch('Login', {
                 method: 'post',
