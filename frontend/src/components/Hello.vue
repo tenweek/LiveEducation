@@ -19,7 +19,7 @@
                 <div class="icon"><Icon type="videocamera" class="icon-middle"></Icon></div>
                 &nbsp;
                 <label class="live-broadcast">录播课堂</label>
-                <a href="#" class="more"><b><label>查看更多 <Icon type="chevron-right"></Icon></label><b></a>
+                <a href="#" class="more"><b><label>查看更多 <Icon type="chevron-right"></Icon></label></b></a>
             </div>
         </div>        
         <div class="footer">

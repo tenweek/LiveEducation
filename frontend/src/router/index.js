@@ -1,13 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
-<<<<<<< HEAD
 import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Reset from '@/components/Reset'
-=======
 import LiveRoom from '@/components/LiveRoom'
->>>>>>> homepage
 
 Vue.use(Router)
 
@@ -32,7 +29,7 @@ export default new Router({
             path: '/reset',
             name: 'Reset',
             component: Reset
-        }，
+        },
         {
             path: '/live_room',
             name: 'live_room',

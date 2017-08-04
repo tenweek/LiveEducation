@@ -25,7 +25,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .picture{
         background: #efefef;
         width: 195px;

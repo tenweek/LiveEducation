@@ -16,7 +16,6 @@
                         <Button id="login-button" type="primary" @click="getResult">登录</Button>
                     </Form-item>
                 </Form>
-    
             </div>
         </div>
     </div>
