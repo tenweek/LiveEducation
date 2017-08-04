@@ -6,39 +6,36 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 from .models import User
 import simplejson
-<<<<<<< HEAD
-from .models import Post,Room,User
+from .models import Room,User
 
-
-=======
 import random
->>>>>>> b11a7a4777db9e1358d1cdcab558f72bbaa96fde
 # Create your views here.
 
 
 @csrf_exempt
-def get_test(request):
-    response = JsonResponse(
-        {'msg': 'GET Request!'})
-    return response
 
 @csrf_exempt
 def make_room(request):
     req = simplejson.load(request)
     roomname = req['roomname']
     authId=req['authId']
-    myuser=User.objects.get(id=1)
-    Room.objects.create(author=myuser,roomName= roomname)
-    response = JsonResponse(
-        {'msg': 'Making a room successfully!'})
-    return response
+    myuser=User.objects.get(name=authId)
+    if myuser.isTeacher:
+        Room.objects.create(author=myuser,roomName= roomname)
+        response = JsonResponse(
+            {'msg': 'Making a room successfully!'})
+        return response
+    else:
+        response = JsonResponse(
+            {'msg': 'Sorry! You are not a teacher'})
+        return response
 
 @csrf_exempt
 def list_room(request):
     rooms = Room.objects.order_by('-createTime')
     myroom = []
     for room in rooms:
-        myroom.append({'roomname': room.roomName,'time': room.createTime})
+        myroom.append({'roomname': room.roomName,'username': room.author.name})
     response = JsonResponse(
         {'rooms': myroom})
     return response

@@ -76,7 +76,18 @@ export default {
     },
     methods: {
         ok: function () {
-            this.$Message.info('您已成功创建房间！')
+            fetch('make-room', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({'roomname':this.roomName, 'authId': this.name})
+            }).then((response) =>
+            response.json()).then((obj) =>{
+                this.$Message.info(obj.msg)
+            })
         },
         cancel: function () {
             this.$Message.info('点击了取消')
