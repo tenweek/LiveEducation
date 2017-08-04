@@ -3,6 +3,7 @@
         <div class="log-in">
             <div>
                 <h2 id="title">登录</h2>
+                <router-link to="/reset" id="reset-link">忘记密码？</router-link>
             </div>
             <div id="content">
                 <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
@@ -116,12 +117,19 @@ Form {
 }
 
 #title {
-    margin-bottom: 50px;
     font-size: x-large;
+    position: absolute;
+    margin-left: 223px;
+    margin-top: -20px;
 }
 
 #content {
     margin-left: -15px;
     margin-right: 15px;
+    margin-top: 40px;
+}
+
+#reset-link {
+    margin-right: -300px;
 }
 </style>
