@@ -1,13 +1,14 @@
 <template>
-    <div class="background">
+    <div class="bg">
         <div class="sign-up">
             <div>
                 <h2>注册</h2>
+                <router-link to="/login" id="login-link">已有账号？</router-link>
             </div>
             <div class="form-panel">
                 <div>
                     <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-                        <Form-item label="账号" prop="mail">
+                        <Form-item label="邮箱" prop="mail">
                             <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
                         </Form-item>
                         <Form-item label="用户名" prop="username">
@@ -30,7 +31,7 @@
                             </Row>
                         </Form-item>
                         <Form-item>
-                            <Button type="primary" @click="signUp" id="midBtn">确认注册</Button>
+                            <Button type="primary" @click="signUp" id="signup-btn">确认注册</Button>
                         </Form-item>
                     </Form>
                 </div>
@@ -153,27 +154,50 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+    font: 30px  "microsoft yahei";
+    color: #000000;
+    height: 30px;
+    position: absolute;
+    margin-left: 223px;
+    margin-top: -20px;
+}
+
 .sign-up {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     margin: 30px auto;
     width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
     box-sizing: border-box;
-    padding-top: 60px;
+    padding-top: 80px;
     padding-bottom: 60px;
 }
 
 .form-panel {
-    margin: 10px 12%;
+    margin-left: 12%;
+    margin-right: 12%;
+    margin-top: 40px;
 }
 
-.background {
-    background-color: rgb(230, 230, 230);
+.bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('./../assets/asteroids.jpg');
+    background-repeat: repeat;
+    z-index: -1;
     margin: auto;
 }
 
-#midBtn {
+#signup-btn {
     margin-left: -66px;
+    margin-top: 30px;
+}
+
+#login-link {
+    margin-right: -300px;
 }
 </style>
