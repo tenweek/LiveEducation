@@ -69,7 +69,7 @@ export default {
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
                     this.$Message.success('登录成功！')
-                    document.cookie = obj.name + '=' + this.formCustom.account
+                    document.cookie = 'userAccount=' + this.formCustom.account
                     this.$router.push({ path: '/' })
                 } else {
                     this.$Message.error('账号或密码不正确！')

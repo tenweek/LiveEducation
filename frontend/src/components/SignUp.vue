@@ -72,7 +72,7 @@ export default {
                 passwd: '',
                 passwdCheck: '',
                 vertification: '',
-                loadRand: ''
+                loginKey: ''
             },
             ruleCustom: {
                 mail: [
@@ -112,7 +112,7 @@ export default {
                 this.$Message.error('请输入验证码！')
                 return
             }
-            if (this.formCustom.verification !== this.formCustom.loadRand) {
+            if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error('输入的验证码有误！')
                 return
             }
@@ -157,9 +157,9 @@ export default {
                     this.$Message.error('账号已存在')
                     return
                 }
-                this.formCustom.loadRand = obj.verification
+                this.formCustom.loginKey = obj.verification
                 this.formCustom.mailChecked = this.formCustom.mail
-                console.log(this.formCustom.loadRand)
+                console.log(this.formCustom.loginKey)
             })
         }
     }

@@ -6,7 +6,6 @@
             <br>
             <label>&nbsp;&nbsp;{{username}}</label>
             <br>
-
             <label class="person">
                 <Icon type="person"></Icon>1234</label>
         </a>
@@ -16,7 +15,7 @@
 <script>
 export default {
     name: 'live-picture',
-    props:['roomname','username','id'],
+    props: ['roomname', 'username', 'id'],
     components: {
     },
     data: function () {

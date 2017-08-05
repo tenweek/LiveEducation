@@ -1,27 +1,29 @@
 <template>
-<div class="mydiv">
-    <a href="#" @click="record_room">
-    <!--视频封面-->
-        <span class="imgbox">
-            <img src="../assets/001.jpg" alt=""/>
-        </span>
-        <div class="item_font">
-            <!--房间名称-->
-            <h3 class="ellipsis">花吃了那鱼尾</h3>
-            <!--id-->
-            <span class="ellipsis">10001房</span>
-            <!--昵称-->
-            <p><span class="zb_name ellipsis fl">FarmerIslander</span></p>
-        </div>
-    </a>
-</div>
+    <div class="mydiv">
+        <a href="#" @click="record_room">
+            <!--视频封面-->
+            <span class="imgbox">
+                <img src="../assets/001.jpg" alt="" />
+            </span>
+            <div class="item-font">
+                <!--房间名称-->
+                <h3 class="ellipsis">花吃了那鱼尾</h3>
+                <!--id-->
+                <span class="ellipsis">10001房</span>
+                <!--昵称-->
+                <p>
+                    <span class="zb-name ellipsis fl">FarmerIslander</span>
+                </p>
+            </div>
+        </a>
+    </div>
 </template>
 
 <script>
 export default {
     name: 'RecordPicture',
     components: {},
-    data() {
+    data: function () {
         return {
         }
     },
@@ -48,10 +50,10 @@ export default {
     display: block;
     background: #f5f5f5;
     margin-right: 10px;
-    -webkit-transition : all .3s linear;
+    -webkit-transition: all .3s linear;
     -moz-transition: all .3s linear;
     -o-transition: all .3s linear;
-    transition:all .3s linear;
+    transition: all .3s linear;
     box-sizing: border-box;
     border-bottom: 3px solid #f5f5f5;
 }
@@ -87,7 +89,7 @@ h3 {
     word-break: keep-all;
 }
 
-.item_font>span {
+.item-font>span {
     display: block;
     width: 60px;
     font-size: 12px;
@@ -104,7 +106,7 @@ p {
     overflow: hidden;
 }
 
-.zb_name {
+.zb-name {
     display: block;
     max-width: 180px;
     padding-left: 25px;
@@ -117,7 +119,7 @@ p {
     background-size: contain;
 }
 
-.item_font {
+.item-font {
     background: #f5f5f5;
     padding: 5px 5px 3px;
     line-height: 20px;
@@ -126,6 +128,7 @@ p {
     overflow: hidden;
     position: relative;
 }
+
 .fl {
     float: left
 }

@@ -38,7 +38,7 @@ export default new Router({
             component: LiveRoom
         },
         {
-            path: '/record_page',
+            path: '/recordPage',
             name: 'record_page',
             component: RecordPage
         },

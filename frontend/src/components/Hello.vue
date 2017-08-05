@@ -18,7 +18,7 @@
                     </b>
                 </a>
             </div>
-            <div  class="list-picture">
+            <div class="list-picture">
                 <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username v-bind:id=room.id></live-picture>
             </div>
         </div>
@@ -37,7 +37,7 @@
                     </b>
                 </a>
             </div>
-            <div  class="list-picture">
+            <div class="list-picture">
                 <live-picture></live-picture>
                 <live-picture></live-picture>
                 <live-picture></live-picture>
@@ -57,27 +57,27 @@ import RecordPicture from './RecordPicture'
 
 export default {
     name: 'hello',
-    created(){
-        this.showroom()
+    created: function () {
+        this.getRooms()
     },
     components: {
         LivePicture,
         HomePageHeader,
         RecordPicture
     },
-    data () {
+    data: function () {
         return {
             rooms: []
         }
     },
     methods: {
-        showroom () {
-            fetch('list-room', {
-            method: 'get',
-            mode: 'cors'
+        getRooms: function () {
+            fetch('getRooms', {
+                method: 'get',
+                mode: 'cors'
             }).then((response) => response.json()).then((obj) => {
-            this.rooms = obj.rooms
-      })
+                this.rooms = obj.rooms
+            })
         }
     }
 }

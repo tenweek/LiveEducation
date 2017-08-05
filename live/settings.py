@@ -80,11 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'live',
         'USER': 'root',
-<<<<<<< HEAD
         'PASSWORD': 'vagrant'
-=======
-        'PASSWORD': '',
->>>>>>> manageroom
     }
 }
 
@@ -152,4 +148,3 @@ EMAIL_HOST_USER = 'a1137901181@163.com'
 EMAIL_HOST_PASSWORD = '2025205224'
 
 AUTH_USER_MODEL = 'backend.User'
-

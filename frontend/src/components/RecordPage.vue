@@ -1,11 +1,11 @@
 <template>
-    <div class="head_bg">
+    <div class="head-bg">
         <div class="header">
             <home-page-header class='header'></home-page-header>
         </div>
-        <div class="mt_20">
+        <div class="mt-20">
             <div class="content">
-                <div class="house_both">
+                <div class="house-both">
                     <ul>
                         <!--直播房间枚举-->
                         <li>
@@ -26,7 +26,7 @@
                         <li>
                             <record-picture></record-picture>
                         </li>
-
+    
                         <li>
                             <record-picture></record-picture>
                         </li>
@@ -76,7 +76,7 @@ export default {
         HomePageHeader,
         PageFooter
     },
-    data() {
+    data: function () {
         return {
         }
     },
@@ -88,27 +88,32 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 /*<!--直播房间star-->*/
-.house_both{
+
+.house-both {
     width: 100%;
     overflow: hidden;
     position: relative;
 }
-.house_both ul li{
+
+.house-both ul li {
     width: 25%;
     float: left;
     display: inline-block;
     margin-bottom: 20px;
 }
 
+
+
 /*全局定义*/
+
 * {
     margin: 0;
     padding: 0;
 }
 
-body,html {
+body,
+html {
     font-family: 微软雅黑
 }
 
@@ -121,7 +126,7 @@ li {
     list-style: none
 }
 
-a{
+a {
     text-decoration: none
 }
 
@@ -138,15 +143,15 @@ a{
     border-bottom: 1px solid #f5f5f5
 }
 
-.mt_20 {
-    margin-top: 20px; 
-    margin-bottom: 20px; 
+.mt-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
     position: relative;
     top: -100px;
 }
 
-.content{
-    backgroun-color:red;
+.content {
+    backgroun-color: red;
     position: relative;
     top: 100px;
     width: 1200px;
@@ -154,7 +159,7 @@ a{
     margin: 0 auto;
 }
 
-.ellipsis{
+.ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -162,8 +167,11 @@ a{
     word-break: keep-all;
 }
 
+
+
 /*导航栏*/
-.head_bg {
+
+.head-bg {
     background-color: #404052;
     height: 50px;
 }
@@ -174,7 +182,10 @@ a{
     font-size: 40px;
 }
 
+
+
 /*logo大小*/
+
 .header img {
     display: block;
     width: 40px;
@@ -182,13 +193,16 @@ a{
     margin-top: 5px;
 }
 
+
+
 /*<!--导航菜单-->*/
-.header .head_nav {
+
+.header .head-nav {
     margin-left: 60px;
     height: 50px;
 }
 
-.header .head_nav li {
+.header .head-nav li {
     float: left;
     font-size: 18px;
     line-height: 50px;
@@ -198,27 +212,34 @@ a{
     text-align: center;
 }
 
+
+
 /*一级导航添加active*/
-.header .head_nav li:hover a {
+
+.header .head-nav li:hover a {
     background-color: white;
     color: #404052 !important;
 }
 
-.header .head_nav li.active {
+.header .head-nav li.active {
     background-color: white;
     color: #404052 !important;
 }
 
-.header .head_nav li.active a {
+.header .head-nav li.active a {
     background-color: white;
     color: #404052 !important;
 }
 
-.header .head_nav li a {
+.header .head-nav li a {
     display: block;
     color: white;
 }
+
+
+
 /*<!--其他功能-->*/
+
 .header .head-oth {
     height: 50px;
     position: relative;
@@ -238,12 +259,15 @@ a{
     color: white;
 }
 
+
+
 /*个人信息*/
+
 .header .head-oth .icon {
     position: absolute;
     top: 5px;
-    right:-37px;
-     width: 30px;
+    right: -37px;
+    width: 30px;
     height: 24px;
     line-height: 36px;
     text-align: center;
@@ -258,18 +282,21 @@ a{
     background-position: bottom left;
 }
 
-/*<!--个人信息点击菜单内容-->*/
- .header_twoul {
-     position: absolute !important;
-     width: 90px !important;
-     top: 49px;
-     left: 185px;
-     background-color: #404052;
-     display: none;
-     z-index: 9999;
- }
 
-.header_twoul ul li {
+
+/*<!--个人信息点击菜单内容-->*/
+
+.header-twoul {
+    position: absolute !important;
+    width: 90px !important;
+    top: 49px;
+    left: 185px;
+    background-color: #404052;
+    display: none;
+    z-index: 9999;
+}
+
+.header-twoul ul li {
     width: 90px;
     height: 30px;
     line-height: 30px;
@@ -277,12 +304,15 @@ a{
     text-align: center;
 }
 
-.header_twoul ul li a {
+.header-twoul ul li a {
     color: white;
 }
 
+
+
 /*鼠标移入效果*/
-.header_twoul ul li:hover {
+
+.header-twoul ul li:hover {
     background-color: #c2c2c2;
 }
 </style>
