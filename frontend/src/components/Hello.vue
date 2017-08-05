@@ -10,7 +10,7 @@
                 </div>
                 &nbsp;
                 <label class="live-broadcast">正在直播</label>
-                <a href="#" class="more">
+                <a href="#/live_page" class="more">
                     <b>
                         <label>查看更多
                             <Icon type="chevron-right"></Icon>
@@ -18,8 +18,14 @@
                     </b>
                 </a>
             </div>
-            <div  class="list-picture">
-                <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username v-bind:id=room.id></live-picture>
+            <div class="list-picture">
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
             </div>
         </div>
         <div class="list">
@@ -29,7 +35,7 @@
                 </div>
                 &nbsp;
                 <label class="live-broadcast">录播课堂</label>
-                <a href="#" class="more">
+                <a href="#/record-page" class="more">
                     <b>
                         <label>查看更多
                             <Icon type="chevron-right"></Icon>
@@ -37,23 +43,29 @@
                     </b>
                 </a>
             </div>
-            <div  class="list-picture">
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
+            <div class="list-picture">
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
+                <record-picture></record-picture>
             </div>
         </div>
-        <div class="footer">
-            2017 &copy; 光宗耀组
+        <div>
+            <page-footer></page-footer>
         </div>
     </div>
 </template>
 
 <script>
 import LivePicture from './LivePicture'
-import HomePageHeader from './HomePageHeader'
 import RecordPicture from './RecordPicture'
+import HomePageHeader from './HomePageHeader'
+import PageFooter from './PageFooter'
 
 export default {
     name: 'hello',
@@ -62,8 +74,9 @@ export default {
     },
     components: {
         LivePicture,
+        RecordPicture,
         HomePageHeader,
-        RecordPicture
+        PageFooter
     },
     data () {
         return {
@@ -127,6 +140,8 @@ export default {
 
 .list {
     height: auto;
+    height: auto;
+    min-height: 295px;
     width: 1100px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
@@ -137,8 +152,9 @@ export default {
 }
 
 .list-picture {
-    height: auto;
+    height: 100%;
     padding-top: 5px;
+    padding-left: 35px;
 }
 
 .list-hint {

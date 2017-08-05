@@ -96,6 +96,7 @@ def getRand(request):
     response = JsonResponse({'verification': salt})
     return response
 
+
 @csrf_exempt
 def changePasswd(request):
     req = simplejson.load(request)
@@ -104,6 +105,7 @@ def changePasswd(request):
     user.save()
     response = JsonResponse({'result': True})
     return response
+
 
 @csrf_exempt
 def changeName(request):

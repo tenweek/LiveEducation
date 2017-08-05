@@ -14,6 +14,5 @@ urlpatterns = [
     url(r'^Login', views.login),
     url(r'^getRand', views.getRand),
     url(r'^changePasswd', views.changePasswd),
-
     url(r'^changeName', views.changeName)
 ]

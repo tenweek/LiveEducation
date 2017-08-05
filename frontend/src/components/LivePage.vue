@@ -5,23 +5,20 @@
         </div>
         <div class="navigation">
             <div class="welcome">
-                <Icon type="videocamera"></Icon>
-                <label>录播课堂：</label>
+                <Icon type="university"></Icon>
+                <label>当前正在直播：</label>
             </div>
         </div>
 
         <div class="list">
             <div class="list-picture">
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
             </div>
         </div>
         <div>
@@ -31,14 +28,14 @@
 </template>
 
 <script>
-import RecordPicture from './LivePicture'
+import LivePicture from './LivePicture'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 
 export default {
-    name: 'record-page',
+    name: 'live-page',
     components: {
-        RecordPicture,
+        LivePicture,
         HomePageHeader,
         PageFooter,
     },
@@ -51,6 +48,8 @@ export default {
 }
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .list {
     height: auto;

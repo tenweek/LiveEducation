@@ -9,9 +9,9 @@
         <div class="navigation-center">
             <a class="navigation-bar" href="#">
                 <Icon type="home"></Icon> 首页</a> |
-            <a class="navigation-bar" href="#">
+            <a class="navigation-bar" href="#/live_page">
                 <Icon type="university"></Icon> 直播</a> |
-            <a class="navigation-bar" href="#" @click="video_page">
+            <a class="navigation-bar" href="#/record_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
             <a class="navigation-bar" @click="modal = true">
                 <Icon type="ios-plus"></Icon> 创建房间</a>
@@ -100,7 +100,7 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'roomname':this.roomName, 
+                    'roomname': this.roomName,
                     'account': this.account
                 })
             }).then((response) => response.json()).then((obj) => {
@@ -161,9 +161,6 @@ export default {
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 window.location.reload()
             }
-        },
-        video_page: function () {
-            window.open('http://localhost:8000/#/video_page/')
         }
     }
 }

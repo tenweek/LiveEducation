@@ -80,11 +80,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'live',
         'USER': 'root',
-<<<<<<< HEAD
-        'PASSWORD': 'vagrant'
-=======
-        'PASSWORD': '',
->>>>>>> manageroom
     }
 }
 
