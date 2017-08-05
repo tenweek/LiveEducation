@@ -43,8 +43,8 @@
                 </template>
             </div>
             <div class="composite-area">
-                <div class="vedio-area">
-                    <vedio-display></vedio-display>
+                <div class="video-area">
+                    <video-display></video-display>
                 </div>
                 <div class="chat-area">
                     <chat-board></chat-board>
@@ -58,25 +58,23 @@
 </template>
 
 <script>
-import LivePicture from './LivePicture'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import FileDisplay from './FileDisplay'
 import ChatBoard from './ChatBoard'
 import CodeEditor from './CodeEditor'
-import VedioDisplay from './VedioDisplay'
+import VideoDisplay from './VideoDisplay'
 import WhiteBoard from './WhiteBoard'
 
 export default {
     name: 'live-room',
     components: {
-        LivePicture,
         HomePageHeader,
         PageFooter,
         ChatBoard,
         FileDisplay,
         CodeEditor,
-        VedioDisplay,
+        VideoDisplay,
         WhiteBoard
     },
     data: function () {
@@ -150,7 +148,7 @@ export default {
     margin-left: 20px;
 }
 
-.vedio-area {
+.video-area {
     height: 190px;
     width: 400px;
     border: solid;

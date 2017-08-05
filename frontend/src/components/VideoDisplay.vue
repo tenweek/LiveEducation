@@ -1,12 +1,12 @@
 <template>
-    <div class="vedio-display">
-        vedio display
+    <div class="video-display">
+        video display
     </div>
 </template>
 
 <script>
     export default {
-        name: 'vedio-display',
+        name: 'video-display',
         data () {
             return {}
         }
