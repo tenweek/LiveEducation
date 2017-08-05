@@ -11,7 +11,7 @@
                 <Icon type="home"></Icon> 首页</a> |
             <a class="navigation-bar" href="#">
                 <Icon type="university"></Icon> 直播</a> |
-            <a class="navigation-bar" href="#">
+            <a class="navigation-bar" href="#" @click="video_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
             <a class="navigation-bar" @click="modal = true">
                 <Icon type="ios-plus"></Icon> 创建房间</a>
@@ -92,7 +92,21 @@ export default {
     },
     methods: {
         ok: function () {
-            this.$Message.info('您已成功创建房间！')
+            fetch('make-room', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomname':this.roomName, 
+                    'account': this.account
+                })
+            }).then((response) => response.json()).then((obj) => {
+                window.location.reload()
+                this.$Message.info(obj.msg)
+            })
         },
         okModifyName: function () {
             this.$Message.info('您已成功修改昵称！')
@@ -147,6 +161,9 @@ export default {
                 document.cookie = this.username + '=a; expires=' + date.toGMTString()
                 window.location.reload()
             }
+        },
+        video_page: function () {
+            window.open('http://localhost:8000/#/video_page/')
         }
     }
 }
@@ -162,8 +179,8 @@ export default {
     position: fixed;
     background: #22313F;
     overflow: hidden;
-
     display: flex;
+    z-index: 50;
 }
 
 .logo {

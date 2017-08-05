@@ -18,8 +18,8 @@
                     </b>
                 </a>
             </div>
-            <div class="list-picture">
-                <live-picture></live-picture>
+            <div  class="list-picture">
+                <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username v-bind:id=room.id></live-picture>
             </div>
         </div>
         <div class="list">
@@ -37,6 +37,12 @@
                     </b>
                 </a>
             </div>
+            <div  class="list-picture">
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+            </div>
         </div>
         <div class="footer">
             2017 &copy; 光宗耀组
@@ -47,17 +53,33 @@
 <script>
 import LivePicture from './LivePicture'
 import HomePageHeader from './HomePageHeader'
+import RecordPicture from './RecordPicture'
 
 export default {
     name: 'hello',
+    created(){
+        this.showroom()
+    },
     components: {
         LivePicture,
-        HomePageHeader
+        HomePageHeader,
+        RecordPicture
     },
-    data: function () {
-        return {}
+    data () {
+        return {
+            rooms: []
+        }
     },
-    methods: {}
+    methods: {
+        showroom () {
+            fetch('list-room', {
+            method: 'get',
+            mode: 'cors'
+            }).then((response) => response.json()).then((obj) => {
+            this.rooms = obj.rooms
+      })
+        }
+    }
 }
 </script>
 
@@ -104,7 +126,7 @@ export default {
 }
 
 .list {
-    height: 295px;
+    height: auto;
     width: 1100px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
@@ -115,7 +137,7 @@ export default {
 }
 
 .list-picture {
-    height: 100%;
+    height: auto;
     padding-top: 5px;
 }
 

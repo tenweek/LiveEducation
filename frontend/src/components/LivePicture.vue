@@ -2,10 +2,11 @@
     <div class="picture">
         <a href="#" @click="live_room">
             <img src="../assets/papi.jpg" height="130">
-            <label>&nbsp;&nbsp;房间名</label>
+            <label>&nbsp;&nbsp;{{roomname}}</label>
             <br>
-            <label>&nbsp;&nbsp;主讲教师</label>
+            <label>&nbsp;&nbsp;{{username}}</label>
             <br>
+
             <label class="person">
                 <Icon type="person"></Icon>1234</label>
         </a>
@@ -15,10 +16,13 @@
 <script>
 export default {
     name: 'live-picture',
+    props:['roomname','username','id'],
     components: {
     },
     data: function () {
-        return {}
+        return {
+            roomid: this.id
+        }
     },
     methods: {
         live_room: function () {

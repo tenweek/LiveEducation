@@ -6,16 +6,39 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 from .models import User
 import simplejson
+from .models import Room,User
+
 import random
 # Create your views here.
 
 
 @csrf_exempt
-def get_test(request):
-    response = JsonResponse(
-        {'msg': 'GET Request!'})
-    return response
 
+@csrf_exempt
+def make_room(request):
+    req = simplejson.load(request)
+    roomname = req['roomname']
+    authId=req['account']
+    myuser=User.objects.get(username=authId)
+    if myuser.isTeacher:
+        Room.objects.create(author=myuser,roomName= roomname)
+        response = JsonResponse(
+            {'msg': 'Making a room successfully!'})
+        return response
+    else:
+        response = JsonResponse(
+            {'msg': 'Sorry! You are not a teacher!!!'})
+        return response
+
+@csrf_exempt
+def list_room(request):
+    rooms = Room.objects.order_by('-createTime')
+    myroom = []
+    for room in rooms:
+        myroom.append({'roomname': room.roomName,'username': room.author.name,'id': room.id})
+    response = JsonResponse(
+        {'rooms': myroom})
+    return response
 
 @csrf_exempt
 def getVerification(request):
@@ -73,7 +96,6 @@ def getRand(request):
     response = JsonResponse({'verification': salt})
     return response
 
-
 @csrf_exempt
 def changePasswd(request):
     req = simplejson.load(request)
@@ -82,7 +104,6 @@ def changePasswd(request):
     user.save()
     response = JsonResponse({'result': True})
     return response
-
 
 @csrf_exempt
 def changeName(request):

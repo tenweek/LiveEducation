@@ -80,7 +80,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'live',
         'USER': 'root',
+<<<<<<< HEAD
         'PASSWORD': 'vagrant'
+=======
+        'PASSWORD': '',
+>>>>>>> manageroom
     }
 }
 
@@ -125,6 +129,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+AUTH_USER_MODEL = 'backend.User'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/static"),
 ]
@@ -135,6 +141,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGINATE_BY': 10
 }
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_USE_TLS = False
@@ -144,3 +152,4 @@ EMAIL_HOST_USER = 'a1137901181@163.com'
 EMAIL_HOST_PASSWORD = '2025205224'
 
 AUTH_USER_MODEL = 'backend.User'
+
