@@ -1,5 +1,5 @@
 <template>
-    <div class="head_bg">
+    <div class="head-bg">
         <div class="header">
             <home-page-header></home-page-header>
         </div>
@@ -9,7 +9,6 @@
                 <label>录播课堂：</label>
             </div>
         </div>
-
         <div class="list">
             <div class="list-picture">
                 <record-picture></record-picture>
@@ -74,7 +73,7 @@ export default {
 .navigation {
     background: #efefef;
     padding: 8px 40px;
-    overflow: hidden;
+
     display: flex;
     font-size: 15px;
 }

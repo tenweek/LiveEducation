@@ -26,19 +26,19 @@
                             <Icon type="arrow-right-b"></Icon>
                         </Button>
                         <Dropdown-menu slot="list">
-                            <Dropdown-item name="white-board-selected">白板</Dropdown-item>
-                            <Dropdown-item name="code-editor-selected">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="file-display-selected">课件展示</Dropdown-item>
+                            <Dropdown-item name="showWhiteBoard">白板</Dropdown-item>
+                            <Dropdown-item name="showCodeEditor">代码编辑器</Dropdown-item>
+                            <Dropdown-item name="showCourseware">课件展示</Dropdown-item>
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
-                <template v-if="this.selected === 'white-board-selected'">
+                <template v-if="this.selected === 'showWhiteBoard'">
                     <white-board></white-board>
                 </template>
-                <template v-else-if="this.selected === 'code-editor-selected'">
+                <template v-else-if="this.selected === 'showCodeEditor'">
                     <code-editor></code-editor>
                 </template>
-                <template v-else-if="this.selected === 'file-display-selected'">
+                <template v-else-if="this.selected === 'showCourseware'">
                     <file-display></file-display>
                 </template>
             </div>
@@ -79,7 +79,7 @@ export default {
     },
     data: function () {
         return {
-            selected: 'white-board-selected'
+            selected: 'showWhiteBoard'
         }
     },
     methods: {

@@ -14,10 +14,10 @@
             </div>
         </div>
         <div class="layout-header">
-        	<video-display></video-display>
+            <video-display></video-display>
         </div>
         <div>
-        	<page-footer></page-footer>
+            <page-footer></page-footer>
         </div>
     </div>
 </template>

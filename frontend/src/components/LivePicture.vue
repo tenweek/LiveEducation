@@ -13,7 +13,7 @@
 <script>
 export default {
     name: 'live-picture',
-    props:['roomname', 'username', 'id'],
+    props: ['roomname', 'username', 'id'],
     components: {
     },
     data: function () {

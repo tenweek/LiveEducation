@@ -11,11 +11,11 @@
 
 <script>
 export default {
-    name: 'record-picture',
-    components: {
-    },
+    name: 'RecordPicture',
+    components: {},
     data: function () {
-        return {}
+        return {
+        }
     },
     methods: {
         recordRoom: function () {
@@ -25,6 +25,7 @@ export default {
 }
 
 </script>
+
 
 <style>
 .picture {
@@ -38,13 +39,16 @@ export default {
     overflow: hidden;
     font-size: 14px;
 }
+
 .picture a {
     color: #464c5b;
 }
+
 .information {
     position: relative;
     right: 70px;
 }
+
 .picture:hover {
     color: #22313F;
 }
