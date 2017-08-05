@@ -40,6 +40,6 @@ export default new Router({
             path: '/live_page',
             name: 'live_page',
             component: LivePage
-        }
+        },
     ]
 })

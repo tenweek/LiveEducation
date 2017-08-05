@@ -9,9 +9,9 @@
         <div class="navigation-center">
             <a class="navigation-bar" href="#">
                 <Icon type="home"></Icon> 首页</a> |
-            <a class="navigation-bar" href="#" @click="livePage">
+            <a class="navigation-bar" href="#/live_page">
                 <Icon type="university"></Icon> 直播</a> |
-            <a class="navigation-bar" href="#">
+            <a class="navigation-bar" href="#/record_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
             <a class="navigation-bar" @click="modal = true">
                 <Icon type="ios-plus"></Icon> 创建房间</a>
@@ -116,9 +116,6 @@ export default {
                 window.location.reload()
             })
         },
-        livePage: function () {
-            window.open('./#/live_page')
-        },
         login: function () {
             if (this.username) {
                 this.$Message.error('已经登录过了！')
@@ -166,27 +163,24 @@ export default {
     background: #22313F;
     overflow: hidden;
     display: flex;
+    z-index: 50;
 }
-
 .logo {
     width: 180px;
     height: 100%;
 }
-
 #mdzz {
     color: #ECFFFB;
     vertical-align: top;
     font-family: "Comic Sans MS";
     font-size: 35px;
 }
-
 .navigation-center {
     font-size: 20px;
     padding-top: 14px;
     color: #9ba7b5;
     margin-left: 20px;
 }
-
 .navigation-right {
     float: right;
     margin-right: 15px;
@@ -195,23 +189,18 @@ export default {
     position: relative;
     margin-left: 45%;
 }
-
 .username {
     color: #E4F1FE;
 }
-
 .navigation-center a {
     color: #E4F1FE;
 }
-
 .navigation-right a {
     color: #E4F1FE;
 }
-
 .navigation-bar:hover {
     color: gold;
 }
-
 #new-username {
     font-size: 15px;
 }

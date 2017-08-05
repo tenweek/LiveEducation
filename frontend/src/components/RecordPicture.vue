@@ -2,9 +2,9 @@
     <div class="picture">
         <a href="#" @click="recordRoom">
             <img src="../assets/record.jpg" height="130">
-            <label>&nbsp;&nbsp;房间名</label>
+            <label class="information">房间名</label>
             <br>
-            <label>&nbsp;&nbsp;主讲教师</label>
+            <label class="information">&nbsp;&nbsp;主讲教师</label>
         </a>
     </div>
 </template>
@@ -29,7 +29,7 @@ export default {
 .picture {
     background: #efefef;
     width: 195px;
-    height: 205px;
+    height: 185px;
     margin-right: 30px;
     margin-left: 30px;
     margin-top: 15px;
@@ -40,7 +40,10 @@ export default {
 .picture a {
     color: #464c5b;
 }
-
+.information {
+    position: relative;
+    right: 70px;
+}
 .picture:hover {
     color: #22313F;
 }
