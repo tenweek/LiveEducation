@@ -19,7 +19,9 @@
                 </a>
             </div>
             <div class="list-picture">
-                <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username v-bind:id=room.id></live-picture>
+                <live-picture v-for="room in rooms"
+                    :roomname="room.roomname" :roomid="this.roomid" :username="room.username" :studentNum="room.studentNum">
+                </live-picture>
             </div>
         </div>
         <div class="list">

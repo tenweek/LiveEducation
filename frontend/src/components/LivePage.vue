@@ -9,7 +9,7 @@
                 <label>当前正在直播：</label>
             </div>
         </div>
-
+    
         <div class="list">
             <div class="list-picture">
                 <live-picture></live-picture>
@@ -37,7 +37,7 @@ export default {
     components: {
         LivePicture,
         HomePageHeader,
-        PageFooter,
+        PageFooter
     },
     data: function () {
         return {

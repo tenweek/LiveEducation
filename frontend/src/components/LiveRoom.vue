@@ -9,8 +9,8 @@
                 <label>欢迎进入直播间 !</label>
             </div>
             <div class="navigation-center">
-                <label class="information">房间ID：</label>
-                <label class="information">房间名：</label>
+                <label class="information">房间ID:{{this.id}}</label>
+                <label class="information">房间名：{{this.roomName}}</label>
                 <label class="information">在线人数：</label>
             </div>
             <div class="navigation-right">
@@ -79,8 +79,14 @@ export default {
     },
     data: function () {
         return {
-            selected: 'showWhiteBoard'
+            selected: 'showWhiteBoard',
+            id: '',
+            roomName: '',
+            teacherName: '',
+            studentNum: ''
         }
+    },
+    created: function () {
     },
     methods: {
         changeCurrent: function (name) {

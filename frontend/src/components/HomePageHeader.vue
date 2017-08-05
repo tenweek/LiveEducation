@@ -13,8 +13,10 @@
                 <Icon type="university"></Icon> 直播</a> |
             <a class="navigation-bar" href="#/record_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
-            <a class="navigation-bar" @click="showCreateRoom = true">
-                <Icon type="ios-plus"></Icon> 创建房间</a>
+            <template v-if="this.isTeacher === true">
+                <a class="navigation-bar" @click="showCreateRoom = true">
+                    <Icon type="ios-plus"></Icon> 创建房间</a>
+            </template>
             <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
                 <label>房间名称：</label>
                 <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
@@ -80,6 +82,7 @@ export default {
         return {
             showCreateRoom: false,
             showChangeName: false,
+            isTeacher: false,
             username: '',
             account: '',
             roomName: '',
@@ -105,6 +108,7 @@ export default {
                 body: JSON.stringify({ 'account': this.account })
             }).then((response) => response.json()).then((obj) => {
                 this.username = obj.name
+                this.isTeacher = obj.isTeacher
             })
         }
     },

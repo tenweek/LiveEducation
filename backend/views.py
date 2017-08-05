@@ -16,7 +16,10 @@ import random
 def getName(request):
     req = simplejson.load(request)
     user = User.objects.get(username=req['account'])
-    response = JsonResponse({'name': user.name})
+    response = JsonResponse({
+        'name': user.name,
+        'isTeacher': user.isTeacher
+    })
     return response
 
 
@@ -43,7 +46,9 @@ def getRooms(request):
     myroom = []
     for room in rooms:
         myroom.append({'roomname': room.roomName,
-                       'username': room.author.name, 'id': room.id})
+                       'username': room.author.name,
+                       'id': room.id,
+                       'studentNum': room.studentNum})
     response = JsonResponse(
         {'rooms': myroom})
     return response
