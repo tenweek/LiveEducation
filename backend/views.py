@@ -18,8 +18,8 @@ import random
 def make_room(request):
     req = simplejson.load(request)
     roomname = req['roomname']
-    authId=req['authId']
-    myuser=User.objects.get(name=authId)
+    authId=req['account']
+    myuser=User.objects.get(username=authId)
     if myuser.isTeacher:
         Room.objects.create(author=myuser,roomName= roomname)
         response = JsonResponse(
@@ -35,7 +35,7 @@ def list_room(request):
     rooms = Room.objects.order_by('-createTime')
     myroom = []
     for room in rooms:
-        myroom.append({'roomname': room.roomName,'username': room.author.name})
+        myroom.append({'roomname': room.roomName,'username': room.author.name,'id': room.id})
     response = JsonResponse(
         {'rooms': myroom})
     return response

@@ -1,7 +1,7 @@
 <template>
     <div class="head_bg">
         <div class="header">
-            <home-page-header></home-page-header>
+            <home-page-header class='header'></home-page-header>
         </div>
 
 

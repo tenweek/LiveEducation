@@ -19,7 +19,7 @@
                 </a>
             </div>
             <div  class="list-picture">
-                <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username></live-picture>
+                <live-picture v-for="room in rooms" v-bind:roomname=room.roomname v-bind:username=room.username v-bind:id=room.id></live-picture>
             </div>
         </div>
         <div class="list">
@@ -38,11 +38,10 @@
                 </a>
             </div>
             <div  class="list-picture">
-                <video-picture></video-picture>
-                <video-picture></video-picture>
-                <video-picture></video-picture>
-                <video-picture></video-picture>
-                <video-picture></video-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
+                <live-picture></live-picture>
             </div>
         </div>
         <div class="footer">

@@ -6,6 +6,7 @@
             <br>
             <label>&nbsp;&nbsp;{{username}}</label>
             <br>
+
             <label class="person">
                 <Icon type="person"></Icon>1234</label>
         </a>
@@ -15,15 +16,17 @@
 <script>
 export default {
     name: 'live-picture',
-    props:['roomname','username'],
+    props:['roomname','username','id'],
     components: {
     },
     data: function () {
-        return {}
+        return {
+            roomid: this.id
+        }
     },
     methods: {
         live_room: function () {
-            window.open('http://localhost:8000/#/live_room/')
+            window.open('./#/live_room/')
         }
     }
 }

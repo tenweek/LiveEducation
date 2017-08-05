@@ -39,6 +39,7 @@ export default {
 .mydiv {
     width: 290px;
     height: auto;
+    z-index: 0;
 }
 
 .mydiv a {

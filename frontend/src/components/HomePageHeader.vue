@@ -99,9 +99,12 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({'roomname':this.roomName, 'authId': this.name})
-            }).then((response) =>
-            response.json()).then((obj) =>{
+                body: JSON.stringify({
+                    'roomname':this.roomName, 
+                    'account': this.account
+                })
+            }).then((response) => response.json()).then((obj) => {
+                window.location.reload()
                 this.$Message.info(obj.msg)
             })
         },
@@ -176,8 +179,8 @@ export default {
     position: fixed;
     background: #22313F;
     overflow: hidden;
-    z-index: 9999;
     display: flex;
+    z-index: 50;
 }
 
 .logo {
@@ -227,4 +230,5 @@ export default {
 #new-username {
     font-size: 15px;
 }
+
 </style>
