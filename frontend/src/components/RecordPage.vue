@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import RecordPicture from './LivePicture'
+import RecordPicture from './RecordPicture'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 
