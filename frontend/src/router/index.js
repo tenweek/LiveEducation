@@ -7,6 +7,7 @@ import Reset from '@/components/Reset'
 import LiveRoom from '@/components/LiveRoom'
 import RecordPage from '@/components/RecordPage'
 import RecordRoom from '@/components/RecordRoom'
+import LivePage from '@/components/LivePage'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
             path: '/record_room',
             name: 'record_room',
             component: RecordRoom
+        },
+        {
+            path: '/live_page',
+            name: 'live_page',
+            component: LivePage
         }
     ]
 })

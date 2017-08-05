@@ -9,7 +9,7 @@
         <div class="navigation-center">
             <a class="navigation-bar" href="#">
                 <Icon type="home"></Icon> 首页</a> |
-            <a class="navigation-bar" href="#">
+            <a class="navigation-bar" href="#" @click="live_page">
                 <Icon type="university"></Icon> 直播</a> |
             <a class="navigation-bar" href="#" @click="video_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
@@ -164,6 +164,9 @@ export default {
         },
         video_page: function () {
             window.open('http://localhost:8000/#/video_page/')
+        }
+        live_page: function () {
+            window.open('http://localhost:8000/#/live_page/')
         }
     }
 }
