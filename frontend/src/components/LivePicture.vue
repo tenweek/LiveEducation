@@ -19,7 +19,8 @@ export default {
     },
     data: function () {
         return {
-            stuAccount: ''
+            stuAccount: '',
+            joinOrNor: false
         }
     },
     created: function () {
@@ -49,11 +50,13 @@ export default {
                         'stuAccount': this.stuAccount
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    // 创建房间后自动进入该房间 目前还没做
-                    console.log(obj.result)
+                    if (obj.result !== 'cannot') {
+                        this.joinOrNor = true
+                    }
                     location.reload()
                 })
-                // window.open('./#/live_room/')
+                // 这个地方还没有加判定，先假装没有这个问题
+                window.open('./#/live_room/' + this.id)
             } else {
                 this.$Message.error('请先登录！')
             }

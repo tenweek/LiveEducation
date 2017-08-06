@@ -15,5 +15,7 @@ urlpatterns = [
     url(r'^changePasswd', views.changePasswd),
     url(r'^changeName', views.changeName),
     url(r'^getName', views.getName),
-    url(r'^joinRoom', views.joinRoom)
+    url(r'^joinRoom', views.joinRoom),
+    url(r'^getRoomInfo', views.getRoomInfo),
+    url(r'^leaveRoom', views.leaveRoom)
 ]
