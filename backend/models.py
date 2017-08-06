@@ -14,13 +14,13 @@ class Room(models.Model):
 
 
 class roomStudent(models.Model):
-    roomId = models.ForeignKey('backend.Room')
-    studentId = models.ForeignKey('backend.User')
+    room = models.ForeignKey('backend.Room')
+    student = models.ForeignKey('backend.User')
 
 
 class stuBlackList(models.Model):
-    roomId = models.ForeignKey('backend.Room')
-    studentId = models.ForeignKey('backend.User')
+    room = models.ForeignKey('backend.Room')
+    student = models.ForeignKey('backend.User')
 
 
 class User(AbstractUser):

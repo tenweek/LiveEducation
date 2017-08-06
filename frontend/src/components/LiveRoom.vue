@@ -11,7 +11,7 @@
             <div class="navigation-center">
                 <label class="information">房间ID:{{this.id}}</label>
                 <label class="information">房间名：{{this.roomName}}</label>
-                <label class="information">在线人数：</label>
+                <label class="information">在线人数：{{this.studentNum}}</label>
             </div>
             <div class="navigation-right">
                 <Button type="primary" shape="circle" size="small">开始直播</Button>

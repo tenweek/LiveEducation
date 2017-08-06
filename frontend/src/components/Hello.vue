@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <div class="header">
-            <home-page-header></home-page-header>
+            <home-page-header v-bind:myOption=this.option></home-page-header>
         </div>
         <div class="list">
             <div class="list-hint">
@@ -19,8 +19,7 @@
                 </a>
             </div>
             <div class="list-picture">
-                <live-picture v-for="room in rooms"
-                    :roomname="room.roomname" :roomid="this.roomid" :username="room.username" :studentNum="room.studentNum">
+                <live-picture v-for="room in rooms" :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum">
                 </live-picture>
             </div>
         </div>
@@ -76,7 +75,8 @@ export default {
     },
     data: function () {
         return {
-            rooms: []
+            rooms: [],
+            option: 1
         }
     },
     methods: {

@@ -19,22 +19,41 @@ export default {
     },
     data: function () {
         return {
-            canWork: false
+            stuAccount: ''
         }
     },
     created: function () {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
             let arrStr = arrCookies[i].split('=')
-            if (arrStr[0] === 'userAccount') {
-                this.canWork = true
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                this.stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+                break
+            } else {
+                this.stuAccount = ''
             }
         }
     },
     methods: {
         liveRoom: function () {
-            if (this.canWork) {
-                window.open('./#/live_room/')
+            if (this.stuAccount) {
+                fetch('joinRoom', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'roomID': this.id,
+                        'stuAccount': this.stuAccount
+                    })
+                }).then((response) => response.json()).then((obj) => {
+                    // 创建房间后自动进入该房间 目前还没做
+                    console.log(obj.result)
+                    location.reload()
+                })
+                // window.open('./#/live_room/')
             } else {
                 this.$Message.error('请先登录！')
             }

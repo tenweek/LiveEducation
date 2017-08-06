@@ -22,7 +22,7 @@ export default {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
             let arrStr = arrCookies[i].split('=')
-            if (arrStr[0] === 'userAccount') {
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
                 this.canWork = true
             }
         }

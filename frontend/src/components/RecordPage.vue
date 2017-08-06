@@ -1,7 +1,7 @@
 <template>
     <div class="head-bg">
         <div class="header">
-            <home-page-header></home-page-header>
+            <home-page-header v-bind:myOption=this.option></home-page-header>
         </div>
         <div class="navigation">
             <div class="welcome">
@@ -43,6 +43,7 @@ export default {
     },
     data: function () {
         return {
+            option: 3
         }
     },
     methods: {

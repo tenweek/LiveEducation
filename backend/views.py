@@ -4,12 +4,31 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
-from .models import User
 import simplejson
-from .models import Room, User
+from .models import Room, User, roomStudent, stuBlackList
 
 import random
 # Create your views here.
+
+
+@csrf_exempt
+def joinRoom(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    student = User.objects.get(username=req['stuAccount'])
+    if len(roomStudent.objects.filter(room=room, student=student)) == 0:
+        if len(stuBlackList.objects.filter(room=room, student=student)) == 0:
+            roomStudent.objects.create(room=room, student=student)
+            room.studentNum += 1
+            room.save()
+            response = JsonResponse({'result': room.id})
+            return response
+        else:
+            response = JsonResponse({'result': 'cannot'})
+            return response
+    else:
+        response = JsonResponse({'result': room.id})
+        return response
 
 
 @csrf_exempt
@@ -26,18 +45,13 @@ def getName(request):
 @csrf_exempt
 def createRoom(request):
     req = simplejson.load(request)
-    roomname = req['roomname']
+    roomName = req['roomName']
     authId = req['account']
-    myuser = User.objects.get(username=authId)
-    if myuser.isTeacher:
-        Room.objects.create(author=myuser, roomName=roomname)
-        response = JsonResponse(
-            {'msg': 'Making a room successfully!'})
-        return response
-    else:
-        response = JsonResponse(
-            {'msg': 'Sorry! You are not a teacher!!!'})
-        return response
+    teacher = User.objects.get(username=authId)
+    Room.objects.create(author=teacher, roomName=roomName)
+    response = JsonResponse(
+        {'msg': 'Making a room successfully!'})
+    return response
 
 
 @csrf_exempt
@@ -45,8 +59,8 @@ def getRooms(request):
     rooms = Room.objects.order_by('-createTime')
     myroom = []
     for room in rooms:
-        myroom.append({'roomname': room.roomName,
-                       'username': room.author.name,
+        myroom.append({'roomName': room.roomName,
+                       'teacherName': room.author.name,
                        'id': room.id,
                        'studentNum': room.studentNum})
     response = JsonResponse(
