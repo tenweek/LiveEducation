@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
-    
+
     url(r'^createRoom', views.createRoom),
     url(r'^getRooms', views.getRooms),
     url(r'^getVerification', views.getVerification),
@@ -14,5 +14,8 @@ urlpatterns = [
     url(r'^getRand', views.getRand),
     url(r'^changePasswd', views.changePasswd),
     url(r'^changeName', views.changeName),
-    url(r'^getName', views.getName)
+    url(r'^getName', views.getName),
+    url(r'^joinRoom', views.joinRoom),
+    url(r'^getRoomInfo', views.getRoomInfo),
+    url(r'^leaveRoom', views.leaveRoom)
 ]

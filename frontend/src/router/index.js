@@ -34,7 +34,7 @@ export default new Router({
             component: Reset
         },
         {
-            path: '/live_room',
+            path: '/live_room/:id',
             name: 'live_room',
             component: LiveRoom
         },

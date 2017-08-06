@@ -9,9 +9,10 @@
                 <label>欢迎进入直播间 !</label>
             </div>
             <div class="navigation-center">
-                <label class="information">房间ID：</label>
-                <label class="information">房间名：</label>
-                <label class="information">在线人数：</label>
+                <label class="information">老师姓名：{{this.teacherName}}</label>
+                <label class="information">房间ID:{{this.id}}</label>
+                <label class="information">房间名：{{this.roomName}}</label>
+                <label class="information">在线人数：{{this.studentNum}}</label>
             </div>
             <div class="navigation-right">
                 <Button type="primary" shape="circle" size="small">开始直播</Button>
@@ -79,8 +80,52 @@ export default {
     },
     data: function () {
         return {
-            selected: 'showWhiteBoard'
+            selected: 'showWhiteBoard',
+            id: -1,
+            roomName: '',
+            teacherName: '',
+            studentNum: ''
         }
+    },
+    created: function () {
+        this.id = this.$route.params.id
+        fetch('getRoomInfo', {
+            method: 'post',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                'roomID': this.id
+            })
+        }).then((response) => response.json()).then((obj) => {
+            this.roomName = obj.roomName
+            this.studentNum = obj.stuNum
+            this.teacherName = obj.teacherName
+        })
+    },
+    beforeDestroy: function () {
+        let arrCookies = document.cookie.split(';')
+        let stuAccount = ''
+        for (let i = 0; i < arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split('=')
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+            }
+        }
+        fetch('leaveRoom', {
+            method: 'post',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                'roomID': this.id,
+                'stuAccount': stuAccount
+            })
+        }).then((response) => response.json()).then((obj) => { })
     },
     methods: {
         changeCurrent: function (name) {

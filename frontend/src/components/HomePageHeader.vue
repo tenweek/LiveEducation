@@ -7,14 +7,16 @@
             </a>
         </div>
         <div class="navigation-center">
-            <a class="navigation-bar" href="#">
+            <a :class="this.myOption === 1 ? 'selected' : 'navigation-bar'" href="#">
                 <Icon type="home"></Icon> 首页</a> |
-            <a class="navigation-bar" href="#/live_page">
+            <a :class="this.myOption === 2 ? 'selected' : 'navigation-bar'" href="#/live_page">
                 <Icon type="university"></Icon> 直播</a> |
-            <a class="navigation-bar" href="#/record_page">
+            <a :class="this.myOption === 3 ? 'selected' : 'navigation-bar'" href="#/record_page">
                 <Icon type="videocamera"></Icon> 录播</a> |
-            <a class="navigation-bar" @click="showCreateRoom = true">
-                <Icon type="ios-plus"></Icon> 创建房间</a>
+            <template v-if="this.isTeacher === true">
+                <a class="navigation-bar" @click="showCreateRoom = true">
+                    <Icon type="ios-plus"></Icon> 创建房间</a>
+            </template>
             <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
                 <label>房间名称：</label>
                 <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
@@ -74,12 +76,14 @@
 <script>
 export default {
     name: 'home-page-header',
+    props: ['myOption'],
     components: {
     },
     data: function () {
         return {
             showCreateRoom: false,
             showChangeName: false,
+            isTeacher: false,
             username: '',
             account: '',
             roomName: '',
@@ -90,8 +94,8 @@ export default {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
             let arrStr = arrCookies[i].split('=')
-            if (arrStr[0] === 'userAccount') {
-                this.account = arrStr[1]
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                this.account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
             }
         }
         if (this.account !== '') {
@@ -105,6 +109,7 @@ export default {
                 body: JSON.stringify({ 'account': this.account })
             }).then((response) => response.json()).then((obj) => {
                 this.username = obj.name
+                this.isTeacher = obj.isTeacher
             })
         }
     },
@@ -118,12 +123,12 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'roomname': this.roomName,
+                    'roomName': this.roomName,
                     'account': this.account
                 })
             }).then((response) => response.json()).then((obj) => {
+                // 创建房间后自动进入该房间 目前还没做
                 this.$Message.success(obj.msg)
-                window.location.reload()
             })
         },
         changeName: function () {
@@ -134,7 +139,6 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                // 发送json消息需要执行一个序列化操作，发送一个字典类型
                 body: JSON.stringify({
                     'account': this.account,
                     'newname': this.newUserName
@@ -217,6 +221,10 @@ export default {
 
 .navigation-center a {
     color: #E4F1FE;
+}
+
+.navigation-center .selected {
+    color: gold;
 }
 
 .navigation-right a {

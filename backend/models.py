@@ -7,20 +7,20 @@ from django.utils import timezone
 
 
 class Room(models.Model):
-    author = models.ForeignKey('backend.User')
+    teacher = models.ForeignKey('backend.User')
     roomName = models.CharField(max_length=100)
     studentNum = models.IntegerField(default=0)
     createTime = models.DateTimeField(default=timezone.now)
 
 
 class roomStudent(models.Model):
-    roomId = models.ForeignKey('backend.Room')
-    studentId = models.ForeignKey('backend.User')
+    room = models.ForeignKey('backend.Room')
+    student = models.ForeignKey('backend.User')
 
 
 class stuBlackList(models.Model):
-    roomId = models.ForeignKey('backend.Room')
-    studentId = models.ForeignKey('backend.User')
+    room = models.ForeignKey('backend.Room')
+    student = models.ForeignKey('backend.User')
 
 
 class User(AbstractUser):
