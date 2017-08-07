@@ -79,7 +79,7 @@ export default {
     font-size: 15px;
 }
 
-.head_bg {
+.head-bg {
     background-color: #efefef;
     height: 50px;
 }

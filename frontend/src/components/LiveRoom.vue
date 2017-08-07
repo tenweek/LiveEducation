@@ -97,7 +97,7 @@ export default {
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                'roomID': this.id,
+                'roomID': this.id
             })
         }).then((response) => response.json()).then((obj) => {
             this.roomName = obj.roomName
