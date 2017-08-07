@@ -1,3 +1,9 @@
+# File:npm-debug.log
+/npm-debug.log
+
+# All pyc files
+*.pyc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
