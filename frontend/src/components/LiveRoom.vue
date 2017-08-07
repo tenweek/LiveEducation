@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="layout-header">
-            <div class="teaching-area">
+            <div class="teaching-tools">
                 <div class="choose-current">
                     <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
                         <Button type="ghost">
@@ -43,11 +43,11 @@
                     <file-display></file-display>
                 </template>
             </div>
-            <div class="composite-area">
-                <div class="video-area">
+            <div class="composite-container">
+                <div class="video-live">
                     <video-display></video-display>
                 </div>
-                <div class="chat-area">
+                <div class="chatroom">
                     <chat-board></chat-board>
                 </div>
             </div>
@@ -180,26 +180,26 @@ export default {
     margin-right: auto;
 }
 
-.teaching-area {
+.teaching-tools {
     height: 490px;
     width: 680px;
     border: solid;
     text-align: left;
 }
 
-.composite-area {
+.composite-container {
     width: 400px;
     height: 490px;
     margin-left: 20px;
 }
 
-.video-area {
+.video-live {
     height: 190px;
     width: 400px;
     border: solid;
 }
 
-.chat-area {
+.chatroom {
     height: 300px;
     width: 400px;
     border: solid;
