@@ -82,8 +82,15 @@ export default {
     methods: {
         getRooms: function () {
             fetch('getRooms', {
-                method: 'get',
-                mode: 'cors'
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'type': 1
+                })
             }).then((response) => response.json()).then((obj) => {
                 this.rooms = obj.rooms
             })

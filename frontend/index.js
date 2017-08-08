@@ -1,39 +1,26 @@
 var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var nsp = io.of('/mynsp');
-var nsp1 = io.of('/mynsp1');
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname+'/index.html');
+//服务器在9000监听
+server.listen(9000,() => {
+	console.log('in 9000')
 });
 
-
-
-nsp.on('connection', function(socket){
-	console.log('user in nsp connected');
-	socket.on('chat message', function(msg){
-    nsp.emit('chat message',msg);
+//io监听连接事件
+io.on('connection', function (mysocket) {
+	console.log('connected')
+  //监听加入房间事件
+	mysocket.on('join',function(roomid){
+		mysocket.join(roomid)
+	})
+  //监听message事件
+  mysocket.on('message',function(msg,roomid){
+  	console.log('received')
+  	io.to(roomid).emit('message',msg)  //向roomid号房间发送消息
   });
-	socket.on('disconnect',function(){
-		console.log('user in nsp disconnected')
-	})
-})
-
-nsp1.on('connection', function(socket){
-	console.log('user in nsp1 connected');
-	socket.on('chat message', function(msg){
-    nsp1.to(1).emit('chat message',msg);
-  });
-	socket.on('join',function() {
-		socket.join(1);
-		console.log('in room 1 succefully')
-	})
-	socket.on('disconnect',function(){
-		console.log('user in nsp1 disconnected')
-	})
-})
-
-http.listen(8000, function(){
-  console.log('listening on *:8000');
+  //监听断开连接时件
+  mysocket.on('disconnect', function(){
+  	console.log('disconnect')
+  })
 });

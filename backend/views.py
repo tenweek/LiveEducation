@@ -80,7 +80,11 @@ def createRoom(request):
 
 @csrf_exempt
 def getRooms(request):
-    rooms = Room.objects.order_by('-createTime')
+    req = simplejson.load(request)
+    if req['type'] == 1:
+        rooms = Room.objects.order_by('-createTime')[:8]
+    else:
+        rooms = Room.objects.order_by('-createTime')
     myroom = []
     for room in rooms:
         myroom.append({'roomName': room.roomName,
