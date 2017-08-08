@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
+import HomePage from '@/components/HomePage'
 import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Reset from '@/components/Reset'
@@ -15,42 +15,35 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Hello',
-            component: Hello
+            component: HomePage
         },
         {
             path: '/signup',
-            name: 'SignUp',
             component: SignUp
         },
         {
             path: '/login',
-            name: 'Login',
             component: Login
         },
         {
             path: '/reset',
-            name: 'Reset',
             component: Reset
         },
         {
             path: '/live_room/:id',
-            name: 'live_room',
             component: LiveRoom
         },
         {
             path: '/record_page',
-            name: 'record_page',
             component: RecordPage
         },
         {
             path: '/record_room',
-            name: 'record_room',
             component: RecordRoom
         },
         {
             path: '/live_page',
-            name: 'live_page',
+            //name: 'LivePage',
             component: LivePage
         }
     ]
