@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 Vue.config.productionTip = false
 Vue.use(iView)
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({

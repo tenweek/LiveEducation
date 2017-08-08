@@ -43,7 +43,6 @@ export default new Router({
         },
         {
             path: '/live_page',
-            //name: 'LivePage',
             component: LivePage
         }
     ]

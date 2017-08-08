@@ -1,22 +1,23 @@
 <template>
     <div class="white-board">
         <div class="tools">
-<<<<<<< HEAD
-            <button :class="{ active: type === 'pen'}" @click="type = 'pen'"><Icon type="edit"></Icon></button>
-=======
-            <button :class="{ active: type === 'pen'}" @click="type = 'pen'">铅笔</button>
->>>>>>> 0f2de92282b520c30c1d929784c8d876d01ca2bf
-            <button :class="{ active: type === 'text'}" @click="type = 'text'">文字</button>
-            <button :class="{ active: type === 'eraser'}" @click="type = 'eraser'">橡皮擦</button>
-            <button :class="{ active: type === 'line'}" @click="type = 'line'">直线</button>
-            <button :class="{ active: type === 'rectangle'}" @click="type = 'rectangle'">矩形</button>
-            <button :class="{ active: type === 'circle'}" @click="type = 'circle'">圆形</button>
-            <button :class="{ active: type === 'ellipse'}" @click="type = 'ellipse'">椭圆</button>
-<<<<<<< HEAD
-            <el-color-picker v-model="color" show-alpha></el-color-picker>
-=======
->>>>>>> 0f2de92282b520c30c1d929784c8d876d01ca2bf
+            <Button type="text" @click="clear">清空</Button>
+            <Button type="text" :class="{ active: type === 'eraser'}" @click="type = 'eraser'">橡皮擦</Button>
+            <Button type="text" :class="{ active: type === 'pen'}" @click="type = 'pen'"><Icon type="edit"></Icon>&nbsp;&nbsp;铅笔</Button>
+            <Button type="text" :class="{ active: type === 'text'}" @click="type = 'text'">文字</Button>
+            <Button type="text" :class="{ active: type === 'line'}" @click="type = 'line'">直线</Button>
+            <Button type="text" :class="{ active: type === 'rectangle'}" @click="type = 'rectangle'">矩形</Button>
+            <Button type="text" :class="{ active: type === 'circle'}" @click="type = 'circle'">圆形</Button>
+            <Button type="text" :class="{ active: type === 'ellipse' }" @click="type = 'ellipse'">椭圆</Button>
+            <Button type="text" :class="{ active: border === true }" @click="border = !border">边框</Button>
+            <el-color-picker class="color-selected" v-model="color1" show-alpha>颜色1</el-color-picker>
+            <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
+            <el-color-picker class="color-selected" v-model="color2" show-alpha></el-color-picker>
+            <Button type="text" :class="{ active: size === 5 }" @click="size = 5 ">大</Button>
+            <Button type="text" :class="{ active: size === 3 }" @click="size = 3  ">中</Button>
+            <Button type="text" :class="{ active: size === 1 }" @click="size = 1 ">小</Button>
         </div>
+
         <div class="drawing-board">
             <canvas ref="board" class="canvas" :width="WIDTH" :height="HEIGHT"></canvas>
         </div>
@@ -43,10 +44,19 @@ export default {
             lastImageData: null,
             WIDTH: 601,
             HEIGHT: 486,
-            color: 'rgba(19, 206, 102, 0.8)'
+            color1: 'rgba(0, 0, 0, 1)',
+            color2: 'rgba(255, 255, 255, 1)',
+            fill: false,
+            border: true,
+            size: 1
         }
     },
     methods: {
+        clear() {
+            this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
+            return
+        },
+
         commandpen(action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
@@ -58,15 +68,15 @@ export default {
                 return
                 }
                 const context = this.context
-                //context.putImageData(this.lastImageData, 0, 0)
                 const [ ox, oy ] = this.penOriginPoint
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
                 context.lineTo(x, y)
                 context.stroke()
                 context.closePath()
                 this.penOriginPoint = [x, y]
-                //context.putImageData(this.lastImageData, 0, 0)
                 break
                 case 'mouseup':
                 this.penOriginPoint = null
@@ -86,9 +96,7 @@ export default {
             return
             }
             const context = this.context
-            //context.putImageData(this.lastImageData, 0, 0)
             const [ ox, oy ] = this.circleOriginPoint
-            //context.clearRect(ox, oy, 10, 10)
             context.fillText("Hello World", ox, oy)
             this.circleOriginPoint = [x, y]
             break
@@ -110,9 +118,8 @@ export default {
             return
             }
             const context = this.context
-            //context.putImageData(this.lastImageData, 0, 0)
             const [ ox, oy ] = this.circleOriginPoint
-            context.clearRect(ox, oy, 10, 10)
+            context.clearRect(ox, oy, this.size*10, this.size*10)
 
             this.circleOriginPoint = [x, y]
             break
@@ -136,6 +143,8 @@ export default {
                 const context = this.context
                 context.putImageData(this.lastImageData, 0, 0)
                 const [ ox, oy ] = this.lineOriginPoint
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
                 context.lineTo(x, y)
@@ -163,10 +172,17 @@ export default {
                 context.putImageData(this.lastImageData, 0, 0)
                 const [ ox, oy ] = this.circleOriginPoint
                 const [ dx, dy ] = [ x - ox, y - oy ]
+                context.lineWidth = this.size
                 context.beginPath()
                 context.rect(ox, oy, dx, dy)
-                context.stroke() // 通过线条来绘制图形轮廓
-                //context.fill() // 通过填充路径的内容区域生成实心的图形
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
+                    context.strokeStyle = this.color1
+                    context.stroke()
+                }
                 context.closePath()
                 break
                 case 'mouseup':
@@ -191,10 +207,17 @@ export default {
                 const [ ox, oy ] = this.circleOriginPoint
                 const [ dx, dy ] = [ x - ox, y - oy ]
                 const radius = Math.sqrt(dx * dx, dy * dy)
+                context.lineWidth = this.size
                 context.beginPath()
                 context.arc((ox + x)/2, (y + oy)/2, radius, 0, 2 * Math.PI)
-                context.stroke() // 通过线条来绘制图形轮廓
-                //context.fill() // 通过填充路径的内容区域生成实心的图形
+               if (this.fill === true) {
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
+                    context.strokeStyle = this.color1
+                    context.stroke()
+                }
                 context.closePath()
                 break
                 case 'mouseup':
@@ -217,11 +240,21 @@ export default {
                 context.putImageData(this.lastImageData, 0, 0)
                 const [ ox, oy ] = this.circleOriginPoint
                 const [ dx, dy ] = [ x - ox, y - oy ]
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                }
                 context.beginPath()
-                // ************************************************！！！括号、/ 空格问题
                 context.ellipse((x + ox)/2, (y + oy)/2, dx/2, dy/2, 0, 0, 2 * Math.PI)
-                context.stroke() // 通过线条来绘制图形轮廓
-                //context.fill() // 通过填充路径的内容区域生成实心的图形
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
+                    context.strokeStyle = this.color1
+                    context.stroke()
+                }
                 context.closePath()
                 break
                 case 'mouseup':
@@ -243,9 +276,7 @@ export default {
         }
         this.context = this.$refs.board.getContext('2d')
     }
-    this.context = this.$refs.board.getContext('2d')
   }
-}
 </script>
 
 <style scoped>
@@ -258,19 +289,23 @@ export default {
 .tools {
     height: auto;
     width: 85px;
-    background: #99ff99;
+    background: #efefef;
 }
 
 button {
-    background-color: #ccc;
-    height: 37px;
-    width: 37px;
+    background-color: #efefef;
+    height: 30px;
+    width: 74px;
     margin-left: 0;
     margin-right: 0;
 }
 
 button.active {
     background-color: #aaa;
+}
+
+.color-selected {
+    margin-left: 8px;
 }
 
 .drawing-board {
