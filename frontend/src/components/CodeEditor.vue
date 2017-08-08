@@ -5,10 +5,10 @@
 </template>
 
 <script>
-    export default {
-        name: 'code-editor',
-        data () {
-            return {}
-        }
+export default {
+    name: 'code-editor',
+    data: function () {
+        return {}
     }
+}
 </script>

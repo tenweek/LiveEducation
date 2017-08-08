@@ -5,10 +5,10 @@
 </template>
 
 <script>
-    export default {
-        name: 'chat-board',
-        data () {
-            return {}
-        }
+export default {
+    name: 'chat-board',
+    data: function () {
+        return {}
     }
+}
 </script>

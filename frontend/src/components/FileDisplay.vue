@@ -7,7 +7,7 @@
 <script>
 export default {
     name: 'file-display',
-    data () {
+    data: function () {
         return {}
     }
 }

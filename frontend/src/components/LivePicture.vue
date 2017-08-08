@@ -6,7 +6,8 @@
             <br>
             <label id="information-teacher-name">主讲教师:{{this.teacherName}}</label>
             <label class="person">
-                <Icon type="person"></Icon>{{this.studentNum}}</label>
+                <Icon type="person"></Icon>{{this.studentNum}}
+            </label>
         </a>
     </div>
 </template>

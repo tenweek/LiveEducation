@@ -5,10 +5,10 @@
 </template>
 
 <script>
-    export default {
-        name: 'video-display',
-        data () {
-            return {}
-        }
+export default {
+    name: 'video-display',
+    data: function () {
+        return {}
     }
+}
 </script>
