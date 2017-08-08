@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <div class="header">
-            <home-page-header v-bind:myOption=this.option></home-page-header>
+            <home-page-header :myOption="this.option"></home-page-header>
         </div>
         <div class="list">
             <div class="list-hint">
