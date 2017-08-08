@@ -9,7 +9,7 @@
 <script>
 export default {
     name: 'white-board',
-    data() {
+    data: function () {
         return {}
     }
 }
