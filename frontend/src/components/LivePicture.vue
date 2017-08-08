@@ -2,11 +2,11 @@
     <div class="picture">
         <a @click="liveRoom">
             <img src="../assets/papi.jpg" height="130">
-            <label id="information-room-name">房间名:{{this.roomName}}</label>
+            <label id="information-room-name">房间名:{{ this.roomName }}</label>
             <br>
-            <label id="information-teacher-name">主讲教师:{{this.teacherName}}</label>
+            <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
             <label class="person">
-                <Icon type="person"></Icon>{{this.studentNum}}
+                <Icon type="person"></Icon>{{ this.studentNum }}
             </label>
         </a>
     </div>
