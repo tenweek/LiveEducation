@@ -13,17 +13,17 @@ class Room(models.Model):
     createTime = models.DateTimeField(default=timezone.now)
 
 
-class roomStudent(models.Model):
+class RoomStudent(models.Model):
     room = models.ForeignKey('backend.Room')
     student = models.ForeignKey('backend.User')
 
 
-class stuBlackList(models.Model):
+class StuBlackList(models.Model):
     room = models.ForeignKey('backend.Room')
     student = models.ForeignKey('backend.User')
 
 
 class User(AbstractUser):
-    isTeacher = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
     name = models.CharField(default='', max_length=16)
 # Create your models here.

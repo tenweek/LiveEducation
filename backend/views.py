@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
-from .models import Room, User, roomStudent, stuBlackList
+from .models import Room, User, RoomStudent, StuBlackList
 
 import random
 # Create your views here.
@@ -16,7 +16,7 @@ def leaveRoom(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
     student = User.objects.get(username=req['stuAccount'])
-    roomStudent.objects.filter(room=room, student=student).delete()
+    RoomStudent.objects.filter(room=room, student=student).delete()
     room.studentNum -= 1
     room.save()
     response = JsonResponse({})
@@ -40,9 +40,9 @@ def joinRoom(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
     student = User.objects.get(username=req['stuAccount'])
-    if len(roomStudent.objects.filter(room=room, student=student)) == 0:
-        if len(stuBlackList.objects.filter(room=room, student=student)) == 0:
-            roomStudent.objects.create(room=room, student=student)
+    if len(RoomStudent.objects.filter(room=room, student=student)) == 0:
+        if len(StuBlackList.objects.filter(room=room, student=student)) == 0:
+            RoomStudent.objects.create(room=room, student=student)
             room.studentNum += 1
             room.save()
             response = JsonResponse({'result': room.id})
@@ -61,7 +61,7 @@ def getName(request):
     user = User.objects.get(username=req['account'])
     response = JsonResponse({
         'name': user.name,
-        'isTeacher': user.isTeacher
+        'isTeacher': user.is_teacher
     })
     return response
 
