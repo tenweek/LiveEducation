@@ -37,9 +37,7 @@ export default {
         }
     }
 }
-
 </script>
-
 
 <style scoped>
 .picture {
