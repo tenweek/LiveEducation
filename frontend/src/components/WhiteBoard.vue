@@ -1,7 +1,11 @@
 <template>
     <div class="white-board">
         <div class="tools">
-            <Button type="text" @click="clear">清空</Button>
+            <div class="undo-redo">
+                <Button type="text" class="button-undo-redo" @click="undo"><Icon type="reply"></Icon></Button>
+                <Button type="text" class="button-undo-redo" @click="redo"><Icon type="forward"></Icon></Button>
+            </div>
+            <Button type="text" class="clear" @click="clear">清空</Button>
             <Button type="text" :class="{ active: type === 'eraser' }" @click="type = 'eraser'">橡皮擦</Button>
             <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'"><Icon type="edit"></Icon>&nbsp;&nbsp;铅笔</Button>
             <Button type="text" :class="{ active: type === 'text' }" @click="type = 'text'">文字</Button>
@@ -13,13 +17,17 @@
             <el-color-picker class="color-selected" v-model="color1" show-alpha>颜色1</el-color-picker>
             <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
             <el-color-picker class="color-selected" v-model="color2" show-alpha></el-color-picker>
-            <Button type="text" :class="{ active: size === 5 }" @click="size = 5">大</Button>
-            <Button type="text" :class="{ active: size === 3 }" @click="size = 3">中</Button>
-            <Button type="text" :class="{ active: size === 1 }" @click="size = 1">小</Button>
+            <div class="size">
+                <Button type="text" :class="{ active: size === 5 }" id="button-size" @click="size = 5">大</Button>
+                <Button type="text" :class="{ active: size === 3 }" id="button-size" @click="size = 3">中</Button>
+            </div>
+            <Button type="text" :class="{ active: size === 1 }" id="button-size" @click="size = 1">小</Button>
         </div>
 
         <div class="drawing-board">
-            <canvas ref="board" class="canvas" :width="WIDTH" :height="HEIGHT"></canvas>
+            <canvas ref="board" class="canvas" :width="WIDTH" :height="HEIGHT">
+                <label v-show="textField === true">Hello</label>
+            </canvas>
         </div>
     </div>
 </template>
@@ -48,13 +56,29 @@ export default {
             color2: 'rgba(255, 255, 255, 1)',
             fill: false,
             border: true,
-            size: 1
+            size: 1,
+            textField: true,
+            allImageData: [],
+            pointer: 0
         }
     },
     methods: {
         clear() {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
+            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+            this.pointer += 1
+            if(this.allImageData != null) {
+                alert(this.allImageData)
+                alert(this.pointer)
+            }
             return
+        },
+
+        undo() {
+            if (this.pointer != 0) {
+                this.pointer -= 1
+            }
+            this.context.putImageData(this.allImageData[this.pointer-1], 0, 0)
         },
 
         commandpen(action, { x, y, buttons }) {
@@ -65,7 +89,7 @@ export default {
                     break
                 case 'mousemove':
                     if (this.penOriginPoint == null) {
-                    return
+                        return
                     }
                     const context = this.context
                     const [ ox, oy ] = this.penOriginPoint
@@ -81,6 +105,11 @@ export default {
                 case 'mouseup':
                     this.penOriginPoint = null
                     this.lastImageData = null
+                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                    this.pointer += 1
+                    if(this.allImageData != null) {
+                        alert(this.allImageData)
+                    }
                     break
             }
         },
@@ -88,12 +117,13 @@ export default {
         commandtext(action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
+                    this.textField = true
+                    this.circleOriginPoint = [x, y]
+                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                    break
             case 'mousemove':
                 if (this.circleOriginPoint === null) {
-                return
+                    return
                 }
                 const context = this.context
                 const [ ox, oy ] = this.circleOriginPoint
@@ -110,12 +140,12 @@ export default {
         commanderaser(action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
+                    this.circleOriginPoint = [x, y]
+                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                    break
             case 'mousemove':
                 if (this.circleOriginPoint === null) {
-                return
+                    return
                 }
                 const context = this.context
                 const [ ox, oy ] = this.circleOriginPoint
@@ -126,6 +156,12 @@ export default {
             case 'mouseup':
                 this.circleOriginPoint = null
                 this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                this.pointer += 1
+                if(this.allImageData != null) {
+                    alert(this.allImageData)
+                    alert(this.pointer)
+                }
                 break
             }
         },
@@ -138,7 +174,7 @@ export default {
                     break
                 case 'mousemove':
                     if (this.lineOriginPoint == null) {
-                    return
+                        return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
@@ -154,6 +190,12 @@ export default {
                 case 'mouseup':
                     this.lineOriginPoint = null
                     this.lastImageData = null
+                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                    this.pointer += 1
+                    if(this.allImageData != null) {
+                        alert(this.allImageData)
+                        alert(this.pointer)
+                    }
                     break
             }
         },
@@ -188,6 +230,12 @@ export default {
                 case 'mouseup':
                     this.circleOriginPoint = null
                     this.lastImageData = null
+                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                    this.pointer += 1
+                    if(this.allImageData != null) {
+                        alert(this.allImageData)
+                        alert(this.pointer)
+                    }
                     break
             }
         },
@@ -223,6 +271,12 @@ export default {
                 case 'mouseup':
                     this.circleOriginPoint = null
                     this.lastImageData = null
+                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                    this.pointer += 1
+                    if(this.allImageData != null) {
+                        alert(this.allImageData)
+                        alert(this.pointer)
+                    }
                     break
             }
         },
@@ -260,6 +314,12 @@ export default {
                 case 'mouseup':
                     this.circleOriginPoint = null
                     this.lastImageData = null
+                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                    this.pointer += 1
+                    if(this.allImageData != null) {
+                        alert(this.allImageData)
+                        alert(this.pointer)
+                    }
                     break
             }
         }
@@ -280,6 +340,22 @@ export default {
 </script>
 
 <style scoped>
+
+.undo-redo {
+    display: flex;
+}
+
+.button-undo-redo {
+    width: 37px;
+}
+
+.button-undo-redo:hover {
+    border: 1.5px solid yellow;
+}
+
+.clear:hover {
+    border: 1.5px solid yellow;
+}
 
 .white-board {
     height: 100%;
@@ -306,6 +382,14 @@ button.active {
 
 .color-selected {
     margin-left: 8px;
+}
+
+.size {
+    display: flex;
+}
+
+#button-size {
+    width: 37px;
 }
 
 .drawing-board {
