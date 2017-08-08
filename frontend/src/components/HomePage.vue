@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <div class="header">
-            <home-page-header v-bind:myOption=this.option></home-page-header>
+            <home-page-header v-bind:myOption="option"></home-page-header>
         </div>
         <div class="list">
             <div class="list-hint">
@@ -63,7 +63,7 @@ import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 
 export default {
-    name: 'hello',
+    name: 'home-page',
     created: function () {
         this.getRooms()
     },

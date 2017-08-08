@@ -185,6 +185,7 @@ export default {
     width: 680px;
     border: solid;
     text-align: left;
+    overflow: hidden;
 }
 
 .composite-container {

@@ -1,7 +1,7 @@
 <template>
-    <div class="head_bg">
+    <div class="live-page">
         <div class="header">
-            <home-page-header v-bind:myOption=this.option></home-page-header>
+            <home-page-header v-bind:myOption="option"></home-page-header>
         </div>
         <div class="navigation">
             <div class="welcome">
@@ -9,7 +9,7 @@
                 <label>当前正在直播：</label>
             </div>
         </div>
-    
+
         <div class="list">
             <div class="list-picture">
                 <live-picture></live-picture>
@@ -78,7 +78,7 @@ export default {
     font-size: 15px;
 }
 
-.head_bg {
+.live-page {
     background-color: #efefef;
     height: 50px;
 }
