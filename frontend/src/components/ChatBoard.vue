@@ -2,7 +2,8 @@
     <div class="chat-board">
         <ul id="messages"></ul>
         <form action="">
-            <input id="msgInput" autocomplete="off" />
+            <img src="../assets/chat_bottombar_icon_face.png">
+            <input id="msgInput" class="msgInput" autocomplete="off" />
             <button @click="sendMsg">Send</button>
         </form>
     </div>
@@ -50,7 +51,7 @@ export default {
                 return
             }
             document.getElementById('msgInput').value = ''
-            fetch('checkMute', {
+            fetch('checkGag', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -83,15 +84,26 @@ export default {
             let button = document.createElement('input')
             button.type = 'button'
             button.value = data['username'] + ' : ' + data['message']
-            button.style = 'background-color:Transparent;border-style:None;outline:none;'
+            let styleArr = ['background-color:Transparent;', 'border-style:None;', 'outline:none;',
+                'word-wrap: break-word !important;', 'word-break: break-all !important;',
+                'white-space: normal !important;', 'text-align:left;', 'padding-left:10px;',
+                'float:left;', 'padding-left:0px;', 'width:100%;']
+            let style = ''
+            for (let i = 0; i < styleArr.length; i++) {
+                style += styleArr[i]
+            }
+            // 如果判定是本人就给字体加粗
+            style += 'font-weight:bold;'
+            button.style = style
             button.onmousedown = function (oEvent) {
+                // 此处判定未生效
                 if (this.teacherName === this.username) {
                     if (!oEvent) {
                         oEvent = window.event
                     }
                     if (oEvent.button === 2) {
                         alert('您将禁言用户： ' + data['username'])
-                        fetch('mute', {
+                        fetch('gag', {
                             method: 'post',
                             mode: 'cors',
                             headers: {
@@ -150,6 +162,11 @@ form button {
     border: none;
 }
 
+form img {
+    margin-bottom: -10px;
+    height: 30px;
+}
+
 #messages {
     list-style-type: none;
     height: 264.5px;
@@ -161,20 +178,7 @@ form button {
     padding-top: 5px;
 }
 
-#messages {
-    width: 373px;
-}
-</style>
-
-<style>
-#messages li {
-    width: 373px;
-}
-
-#messages li {
-    word-break: break-all;
-    word-wrap: break-word;
-    text-align: left;
-    padding: 2px 0px;
+#msgInput {
+    width: 292px;
 }
 </style>

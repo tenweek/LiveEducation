@@ -17,6 +17,10 @@ urlpatterns = [
     url(r'^getName', views.getName),
     url(r'^joinRoom', views.joinRoom),
     url(r'^getRoomInfo', views.getRoomInfo),
-    url(r'^mute', views.mute),
-    url(r'^checkMute', views.checkMute)
+    url(r'^gag', views.gag),
+    url(r'^checkGag', views.checkGag),
+
+    url(r'^gagAll', views.gagAll),
+    url(r'^allowSpeak', views.allowSpeak),
+    url(r'^allowAllSpeak', views.allowAllSpeak)
 ]
