@@ -16,7 +16,31 @@ export default {
     props: ['id'],
     data: function () {
         return {
-            socket: ''
+            socket: '',
+            username: ''
+        }
+    },
+    created: function () {
+        let arrCookies = document.cookie.split(';')
+        let account = ''
+        for (let i = 0; i < arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split('=')
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+            }
+        }
+        if (account !== '') {
+            fetch('getName', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'account': account })
+            }).then((response) => response.json()).then((obj) => {
+                this.username = obj.name
+            })
         }
     },
     methods: {
@@ -26,16 +50,16 @@ export default {
                 return
             }
             document.getElementById('msgInput').value = ''
-            this.socket.emit('message', msg, this.id + '.1')
+            this.socket.emit('message', { message: msg, username: this.username }, this.id + '.1')
         }
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('join', this.id + '.1')
-        this.socket.on('message', function (msg) {
+        this.socket.on('message', function (data) {
             let ul = document.getElementById('messages')
             let li = document.createElement('li')
-            li.innerText = msg
+            li.innerText = data['username'] + ' : ' + data['message']
             ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
