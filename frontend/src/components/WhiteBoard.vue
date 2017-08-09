@@ -18,6 +18,7 @@
             <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
             <el-color-picker class="color-selected" v-model="color2" show-alpha></el-color-picker>
             <div class="size">
+                <button @click="sendmes">Send</button>
                 <Button type="text" :class="{ active: size === 5 }" id="button-size" @click="size = 5">大</Button>
                 <Button type="text" :class="{ active: size === 3 }" id="button-size" @click="size = 3">中</Button>
             </div>
@@ -29,10 +30,13 @@
                 <label v-show="textField === true">Hello</label>
             </canvas>
         </div>
+
     </div>
 </template>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
+import * as io from 'socket.io-client'
 export default {
     name: 'white-board',
     props: {
@@ -59,18 +63,19 @@ export default {
             size: 1,
             textField: true,
             allImageData: [],
-            pointer: 0
+            currentImageData: null,
+            pointer: 0,
+            socket: ''
         }
     },
     methods: {
+        sendmes () {
+            this.socket.emit('drawing','123456')
+        },
         clear () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
             this.pointer += 1
-            if (this.allImageData != null) {
-                alert(this.allImageData)
-                alert(this.pointer)
-            }
             return
         },
 
@@ -107,7 +112,17 @@ export default {
                 case 'mousedown':
                 this.penOriginPoint = [x, y]
                 this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                 break
+                
+                this.socket.emit('drawing', {
+                    //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                    type: 'pen',
+                    action: action,
+                    x: x,
+                    y: y,
+                    buttons: buttons
+                })
+
+                break
                 case 'mousemove':
                 if (this.penOriginPoint == null) {
                     return
@@ -122,6 +137,18 @@ export default {
                 context.stroke()
                 context.closePath()
                 this.penOriginPoint = [x, y]
+
+                this.socket.emit('drawing', {
+                    //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                    type: 'pen',
+                    action: action,
+                    x: x,
+                    y: y,
+                    buttons: buttons
+                })
+
+
+                
                 break
                 case 'mouseup':
                 this.penOriginPoint = null
@@ -129,6 +156,18 @@ export default {
                 this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
                 //this.pointer += 1
                 this.pointer = this.allImageData.length - 1
+
+
+                this.socket.emit('drawing', {
+                    //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                    type: 'pen',
+                    action: action,
+                    x: x,
+                    y: y,
+                    buttons: buttons
+                })
+
+
                 break
             }
         },
@@ -333,13 +372,22 @@ export default {
         if (this.operational) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                this.$emit('action', this.type, eventName, { x, y, buttons })
-                this[`command${this.type}`](eventName, { x, y, buttons })
+                    this.$emit('action', this.type, eventName, { x, y, buttons })
+                    this[`command${this.type}`](eventName, { x, y, buttons })
                 })
             })
         }
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+        // socket.io
+        this.socket = io.connect('http://localhost:9000')
+        this.socket.on('drawing', function(data) {
+            //这里我想调用command**函数来画图
+            //this[`command${data.type}`](data.action, { data.x, data.y, data.buttons })
+            //this.commandpen(data.action, { data.x, data.y, data.buttons })
+            console.log(data.x)
+            console.log('kkkk')
+        })
     }
 }
 </script>
@@ -365,6 +413,7 @@ export default {
 .white-board {
     height: 100%;
     display: flex;
+    cursor: hand;
 }
 
 .tools {

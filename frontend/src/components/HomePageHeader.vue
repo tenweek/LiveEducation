@@ -15,7 +15,7 @@
                 <Icon type="videocamera"></Icon> 录播</a>
             <template v-if="this.isTeacher === true">
                 <a class="navigation-bar" @click="showCreateRoom = true">
-                    <Icon type="ios-plus"></Icon>&nbsp;| 创建房间</a>
+                    |&nbsp;<Icon type="ios-plus"></Icon> 创建房间</a>
             </template>
             <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
                 <label>房间名称：</label>
