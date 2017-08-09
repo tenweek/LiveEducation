@@ -166,7 +166,8 @@ export default {
                 let date = new Date()
                 date.setTime(date.getTime() - 10000)
                 document.cookie = 'userAccount=a; expires=' + date.toGMTString()
-                this.$router.push({ path: '/#/' })
+                location.reload()
+                this.$router.push({ path: '/' })
             }
         }
     }

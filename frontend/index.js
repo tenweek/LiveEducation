@@ -13,7 +13,7 @@ io.on('connection', function (mysocket) {
 	})
 	mysocket.on('message', function (data, roomid) {
 		console.log('received')
-		io.to(roomid).emit('data', data)
+		io.to(roomid).emit('message', data)
 	});
 	mysocket.on('disconnect', function () {
 		console.log('disconnect')

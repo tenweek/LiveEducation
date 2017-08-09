@@ -21,7 +21,7 @@ export default {
     data: function () {
         return {
             stuAccount: '',
-            joinOrNor: false
+            joinOrNot: false
         }
     },
     created: function () {
@@ -52,7 +52,7 @@ export default {
                     })
                 }).then((response) => response.json()).then((obj) => {
                     if (obj.result !== 'cannot') {
-                        this.joinOrNor = true
+                        this.joinOrNot = true
                     }
                     location.reload()
                 })

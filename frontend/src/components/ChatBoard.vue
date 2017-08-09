@@ -13,7 +13,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
-    props: ['id'],
+    props: ['id', 'teacherName'],
     data: function () {
         return {
             socket: '',
@@ -50,10 +50,30 @@ export default {
                 return
             }
             document.getElementById('msgInput').value = ''
-            this.socket.emit('message', { message: msg, username: this.username }, this.id + '.1')
+            fetch('checkMute', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': this.username,
+                    'roomID': this.id
+                })
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.result) {
+                    this.socket.emit('message', { message: msg, username: this.username }, this.id + '.1')
+                } else {
+                    this.$Message.error('您已被禁言')
+                }
+            })
         }
     },
     mounted: function () {
+        // 先获取ID 这个函数在父组件与子组件之间传递数据之前被调用
+        let id = this.$route.params.id
+        // 监听
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('join', this.id + '.1')
         this.socket.on('message', function (data) {
@@ -65,24 +85,40 @@ export default {
             button.value = data['username'] + ' : ' + data['message']
             button.style = 'background-color:Transparent;border-style:None;outline:none;'
             button.onmousedown = function (oEvent) {
-                if (!oEvent) { oEvent = window.event }
-                if (oEvent.button === 2) {
-                    alert(data['username'])
+                if (this.teacherName === this.username) {
+                    if (!oEvent) {
+                        oEvent = window.event
+                    }
+                    if (oEvent.button === 2) {
+                        alert('您将禁言用户： ' + data['username'])
+                        fetch('mute', {
+                            method: 'post',
+                            mode: 'cors',
+                            headers: {
+                                'Content-Type': 'application/json, text/plain, */*',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                'name': data['username'],
+                                'roomID': id
+                            })
+                        }).then((response) => response.json()).then((obj) => { })
+                    }
                 }
             }
+            // 屏蔽右键菜单
             button.oncontextmenu = function () {
                 return false
             }
             li.appendChild(button)
             ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
-            let scroll = document.getElementById('messages')
-            scroll.scrollTop = scroll.scrollHeight
+            ul.scrollTop = ul.scrollHeight
         })
     }
 }
 </script>
 
-<style scope>
+<style scoped>
 * {
     overflow: hidden;
     margin: 0;
@@ -125,7 +161,12 @@ form button {
     padding-top: 5px;
 }
 
-#messages ul,
+#messages {
+    width: 373px;
+}
+</style>
+
+<style>
 #messages li {
     width: 373px;
 }
@@ -135,6 +176,5 @@ form button {
     word-wrap: break-word;
     text-align: left;
     padding: 2px 0px;
-    width: 373px;
 }
 </style>

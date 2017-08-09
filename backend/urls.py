@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^getName', views.getName),
     url(r'^joinRoom', views.joinRoom),
     url(r'^getRoomInfo', views.getRoomInfo),
-    url(r'^leaveRoom', views.leaveRoom)
+    url(r'^mute', views.mute),
+    url(r'^checkMute', views.checkMute)
 ]

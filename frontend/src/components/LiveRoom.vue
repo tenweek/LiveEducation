@@ -48,7 +48,7 @@
                     <video-display></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board :id="this.id"></chat-board>
+                    <chat-board :id="this.id" :teacherName="this.teacherName"></chat-board>
                 </div>
             </div>
         </div>

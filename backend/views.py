@@ -12,13 +12,23 @@ import random
 
 
 @csrf_exempt
-def leaveRoom(request):
+def checkMute(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=req['stuAccount'])
-    RoomStudent.objects.filter(room=room, student=student).delete()
-    room.studentNum -= 1
-    room.save()
+    student = User.objects.get(name='qq')
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    response = JsonResponse({'result': roomStudent.can_speak})
+    return response
+
+
+@csrf_exempt
+def mute(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    student = User.objects.get(name=req['name'])
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    roomStudent.can_speak = False
+    roomStudent.save()
     response = JsonResponse({})
     return response
 
@@ -29,8 +39,8 @@ def getRoomInfo(request):
     room = Room.objects.get(id=req['roomID'])
     response = JsonResponse({
         'teacherName': room.teacher.name,
-        'stuNum': room.studentNum,
-        'roomName': room.roomName
+        'stuNum': room.student_num,
+        'roomName': room.room_name
     })
     return response
 
@@ -43,7 +53,7 @@ def joinRoom(request):
     if len(RoomStudent.objects.filter(room=room, student=student)) == 0:
         if len(StuBlackList.objects.filter(room=room, student=student)) == 0:
             RoomStudent.objects.create(room=room, student=student)
-            room.studentNum += 1
+            room.student_num += 1
             room.save()
             response = JsonResponse({'result': room.id})
             return response
@@ -72,7 +82,7 @@ def createRoom(request):
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
-    Room.objects.create(teacher=teacher, roomName=roomName)
+    Room.objects.create(teacher=teacher, room_name=roomName)
     response = JsonResponse(
         {'msg': 'Making a room successfully!'})
     return response
@@ -80,13 +90,13 @@ def createRoom(request):
 
 @csrf_exempt
 def getRooms(request):
-    rooms = Room.objects.order_by('-createTime')
+    rooms = Room.objects.order_by('-create_time')
     myroom = []
     for room in rooms:
-        myroom.append({'roomName': room.roomName,
+        myroom.append({'roomName': room.room_name,
                        'teacherName': room.teacher.name,
                        'id': room.id,
-                       'studentNum': room.studentNum})
+                       'studentNum': room.student_num})
     response = JsonResponse(
         {'rooms': myroom})
     return response
@@ -114,7 +124,7 @@ def getVerification(request):
 def signUp(request):
     req = simplejson.load(request)
     userFilterWithName = User.objects.filter(name=req['username'])
-    if len(userFilterWithName)!=0:
+    if len(userFilterWithName) != 0:
         response = JsonResponse({'result': False})
         return response
     user = User.objects.create_user(
