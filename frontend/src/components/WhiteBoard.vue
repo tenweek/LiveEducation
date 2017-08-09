@@ -2,10 +2,10 @@
     <div class="white-board">
         <div class="tools">
             <div class="undo-redo">
-                <Button type="text" class="button-undo-redo" @click="undo"><Icon type="reply"></Icon></Button>
-                <Button type="text" class="button-undo-redo" @click="redo"><Icon type="forward"></Icon></Button>
+                <Button class="button-undo-redo" @click="undo"><Icon type="reply"></Icon></Button>
+                <Button class="button-undo-redo" @click="redo"><Icon type="forward"></Icon></Button>
             </div>
-            <Button type="text" class="clear" @click="clear">清空</Button>
+            <Button class="clear" @click="clear">清空</Button>
             <Button type="text" :class="{ active: type === 'eraser' }" @click="type = 'eraser'">橡皮擦</Button>
             <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'"><Icon type="edit"></Icon>&nbsp;&nbsp;铅笔</Button>
             <Button type="text" :class="{ active: type === 'text' }" @click="type = 'text'">文字</Button>
@@ -14,15 +14,18 @@
             <Button type="text" :class="{ active: type === 'circle' }" @click="type = 'circle'">圆形</Button>
             <Button type="text" :class="{ active: type === 'ellipse' }" @click="type = 'ellipse'">椭圆</Button>
             <Button type="text" :class="{ active: border === true }" @click="border = !border">边框</Button>
-            <el-color-picker class="color-selected" v-model="color1" show-alpha>颜色1</el-color-picker>
             <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
+            <el-color-picker class="color-selected" v-model="color1" show-alpha></el-color-picker>
             <el-color-picker class="color-selected" v-model="color2" show-alpha></el-color-picker>
             <div class="size">
-                <button @click="sendmes">Send</button>
-                <Button type="text" :class="{ active: size === 5 }" id="button-size" @click="size = 5">大</Button>
-                <Button type="text" :class="{ active: size === 3 }" id="button-size" @click="size = 3">中</Button>
+                <label class="size-label">粗细</label>
+                <div class="size-buttons">
+                    <Button type="text" :class="{ active: size === 5 }" id="size-button" @click="size = 5">大</Button>
+                    <Button type="text" :class="{ active: size === 3 }" id="size-button" @click="size = 3">中</Button>
+                    <Button type="text" :class="{ active: size === 1 }" id="size-button" @click="size = 1">小</Button>
+                </div>
             </div>
-            <Button type="text" :class="{ active: size === 1 }" id="button-size" @click="size = 1">小</Button>
+            
         </div>
 
         <div class="drawing-board">
@@ -107,19 +110,53 @@ export default {
             //this.pointer = this.allImageData.length - 1
         },
 
-        commandpen (action, { x, y, buttons }) {
+        commandpenNotEmit (action, { x, y, buttons }) {
+            switch (action) {
+                case 'mousedown':
+                this.penOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
+                case 'mousemove':
+                if (this.penOriginPoint == null) {
+                    return
+                }
+                const context = this.context
+                const [ ox, oy ] = this.penOriginPoint
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
+                context.beginPath()
+                context.moveTo(ox, oy)
+                context.lineTo(x, y)
+                context.stroke()
+                context.closePath()
+                this.penOriginPoint = [x, y]
+                break
+                case 'mouseup':
+                this.penOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
+            }
+        },
+
+        commandpen (action, { x, y, buttons, emit }) {
             switch (action) {
                 case 'mousedown':
                 this.penOriginPoint = [x, y]
                 this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 
+                if (emit === false) {
+                    return
+                }
                 this.socket.emit('drawing', {
                     //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    type: 'pen',
-                    action: action,
-                    x: x,
-                    y: y,
-                    buttons: buttons
+                    type0: 'pen',
+                    action0: action,
+                    x0: x,
+                    y0: y,
+                    buttons0: buttons
                 })
 
                 break
@@ -138,13 +175,16 @@ export default {
                 context.closePath()
                 this.penOriginPoint = [x, y]
 
+                if (emit === false) {
+                    return
+                }
                 this.socket.emit('drawing', {
                     //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    type: 'pen',
-                    action: action,
-                    x: x,
-                    y: y,
-                    buttons: buttons
+                    type0: 'pen',
+                    action0: action,
+                    x0: x,
+                    y0: y,
+                    buttons0: buttons
                 })
 
 
@@ -158,13 +198,16 @@ export default {
                 this.pointer = this.allImageData.length - 1
 
 
+                if (emit === false) {
+                    return
+                }
                 this.socket.emit('drawing', {
                     //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    type: 'pen',
-                    action: action,
-                    x: x,
-                    y: y,
-                    buttons: buttons
+                    type0: 'pen',
+                    action0: action,
+                    x0: x,
+                    y0: y,
+                    buttons0: buttons
                 })
 
 
@@ -369,24 +412,37 @@ export default {
     },
 
     mounted () {
+        let emit = true
         if (this.operational) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
-                this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                    this.$emit('action', this.type, eventName, { x, y, buttons })
-                    this[`command${this.type}`](eventName, { x, y, buttons })
+                this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons, emit }) => {
+                    this.$emit('action', this.type, eventName, { x, y, buttons, emit })
+                    this[`command${this.type}`](eventName, { x, y, buttons, emit })
                 })
             })
         }
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
         // socket.io
+        let kkk = this
         this.socket = io.connect('http://localhost:9000')
         this.socket.on('drawing', function(data) {
-            //这里我想调用command**函数来画图
-            //this[`command${data.type}`](data.action, { data.x, data.y, data.buttons })
-            //this.commandpen(data.action, { data.x, data.y, data.buttons })
-            console.log(data.x)
-            console.log('kkkk')
+            let x1 = data.x0
+            let y1 = data.y0
+            let buttons1 = data.buttons0
+            // let emit1 = false
+            // kkk.commandpen(data.action0, { x1, y1, buttons1, emit1 })
+            // kkk.commandpenNotEmit(data.action0, { x1, y1, buttons1 })
+            if (data.action0 === 'mousedown') {
+                // let t = kkk.type
+                console.log(data.x0)
+                kkk.penOriginPoint = [data.x0, y1]
+                console.log(kkk.penOriginPoint)
+                kkk.lastImageData = kkk.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+            } else if (data.action0 === 'mousemove') {
+
+            }
+            console.log(data.action0)
         })
     }
 }
@@ -400,14 +456,6 @@ export default {
 
 .button-undo-redo {
     width: 37px;
-}
-
-.button-undo-redo:hover {
-    border: 1.5px solid yellow;
-}
-
-.clear:hover {
-    border: 1.5px solid yellow;
 }
 
 .white-board {
@@ -442,8 +490,25 @@ button.active {
     display: flex;
 }
 
-#button-size {
-    width: 37px;
+.size-label {
+    width: 25px;
+    height: 54px;
+    font-size: 13px;
+    padding-left: 5px;
+    padding-top: 10px;
+    border: 1px solid #aaa;
+    margin-top: 1px;
+}
+
+.size-buttons {
+    width: 49px;
+}
+
+#size-button {
+    width: 49px;
+    height: 17px;
+    font-size: 8px;
+    padding-top: 1px;
 }
 
 .drawing-board {
