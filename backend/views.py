@@ -106,17 +106,21 @@ def getVerification(request):
     salt = ''.join(verification)
     send_mail('Ur verification code!', salt,
               'a1137901181@163.com', [req['mail']], fail_silently=False)
-    response = JsonResponse({'verification': salt, })
+    response = JsonResponse({'verification': salt})
     return response
 
 
 @csrf_exempt
 def signUp(request):
     req = simplejson.load(request)
+    userFilterWithName = User.objects.filter(name=req['username'])
+    if len(userFilterWithName)!=0:
+        response = JsonResponse({'result': False})
+        return response
     user = User.objects.create_user(
         username=req['mail'], password=req['password'], name=req['username'])
     user.save()
-    response = JsonResponse({})
+    response = JsonResponse({'result': True})
     return response
 
 

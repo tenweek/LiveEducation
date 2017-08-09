@@ -130,7 +130,11 @@ export default {
                     'username': this.formCustom.username
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.$router.push({ path: '/login' })
+                if (obj.result) {
+                    this.$router.push({ path: '/login' })
+                } else {
+                    this.$Message.error('该用户已被注册过')
+                }
             })
         },
         getVerification: function () {

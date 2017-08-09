@@ -25,5 +25,5 @@ class StuBlackList(models.Model):
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
-    name = models.CharField(default='', max_length=16)
+    name = models.CharField(default='', max_length=16, unique=True)
 # Create your models here.
