@@ -59,7 +59,21 @@ export default {
         this.socket.on('message', function (data) {
             let ul = document.getElementById('messages')
             let li = document.createElement('li')
-            li.innerText = data['username'] + ' : ' + data['message']
+            // 创建button
+            let button = document.createElement('input')
+            button.type = 'button'
+            button.value = data['username'] + ' : ' + data['message']
+            button.style = 'background-color:Transparent;border-style:None;outline:none;'
+            button.onmousedown = function (oEvent) {
+                if (!oEvent) { oEvent = window.event }
+                if (oEvent.button === 2) {
+                    alert(data['username'])
+                }
+            }
+            button.oncontextmenu = function () {
+                return false
+            }
+            li.appendChild(button)
             ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
