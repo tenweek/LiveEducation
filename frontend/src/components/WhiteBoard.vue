@@ -88,7 +88,6 @@ export default {
             this.pointer = this.allImageData.length - 1
         },
 
-
         clear () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
@@ -200,9 +199,6 @@ export default {
                     y0: y,
                     buttons0: buttons
                 })
-
-
-                
                 break
                 case 'mouseup':
                 this.penOriginPoint = null
@@ -210,7 +206,6 @@ export default {
                 this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
                 //this.pointer += 1
                 this.pointer = this.allImageData.length - 1
-
 
                 if (emit === false) {
                     return
@@ -223,8 +218,6 @@ export default {
                     y0: y,
                     buttons0: buttons
                 })
-
-
                 break
             }
         },
