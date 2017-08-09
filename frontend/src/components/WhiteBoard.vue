@@ -41,7 +41,7 @@ export default {
             default: true
         }
     },
-    data() {
+    data () {
         return {
             types: ['pen', 'line', 'circle', 'rectangle', 'eraser', 'ellipse', 'eraser', 'text'],
             type: 'pen',
@@ -63,269 +63,273 @@ export default {
         }
     },
     methods: {
-        clear() {
+        clear () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
             this.pointer += 1
-            if(this.allImageData != null) {
+            if (this.allImageData != null) {
                 alert(this.allImageData)
                 alert(this.pointer)
             }
             return
         },
 
-        undo() {
-            if (this.pointer != 0) {
+        undo () {
+            if (this.pointer === 0) {
+                alert('没有可撤销的操作')
+                return
+            }
+            if (this.pointer > 0) {
                 this.pointer -= 1
             }
-            this.context.putImageData(this.allImageData[this.pointer-1], 0, 0)
+            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+            //this.pointer += 1
+            //this.pointer = this.allImageData.length - 1
         },
 
-        commandpen(action, { x, y, buttons }) {
+        redo () {
+            if (this.pointer === this.allImageData.length - 1) {
+                alert('已没有可重做的操作')
+                return
+            }
+            if (this.pointer < this.allImageData.length) {
+                this.pointer += 1
+            }
+            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+            //this.pointer += 1
+            //this.pointer = this.allImageData.length - 1
+        },
+
+        commandpen (action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                    this.penOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
+                this.penOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                 break
                 case 'mousemove':
-                    if (this.penOriginPoint == null) {
-                        return
-                    }
-                    const context = this.context
-                    const [ ox, oy ] = this.penOriginPoint
-                    context.strokeStyle = this.color1
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.moveTo(ox, oy)
-                    context.lineTo(x, y)
-                    context.stroke()
-                    context.closePath()
-                    this.penOriginPoint = [x, y]
-                    break
+                if (this.penOriginPoint == null) {
+                    return
+                }
+                const context = this.context
+                const [ ox, oy ] = this.penOriginPoint
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
+                context.beginPath()
+                context.moveTo(ox, oy)
+                context.lineTo(x, y)
+                context.stroke()
+                context.closePath()
+                this.penOriginPoint = [x, y]
+                break
                 case 'mouseup':
-                    this.penOriginPoint = null
-                    this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                    this.pointer += 1
-                    if(this.allImageData != null) {
-                        alert(this.allImageData)
-                    }
-                    break
+                this.penOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
             }
         },
 
-        commandtext(action, { x, y, buttons }) {
+        commandtext (action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                    this.textField = true
-                    this.circleOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
-            case 'mousemove':
+                this.textField = true
+                this.circleOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
+                case 'mousemove':
                 if (this.circleOriginPoint === null) {
                     return
                 }
                 const context = this.context
                 const [ ox, oy ] = this.circleOriginPoint
-                context.fillText("Hello World", ox, oy)
+                context.fillText('Hello World', ox, oy)
                 this.circleOriginPoint = [x, y]
                 break
-            case 'mouseup':
+                case 'mouseup':
                 this.circleOriginPoint = null
                 this.lastImageData = null
                 break
             }
         },
 
-        commanderaser(action, { x, y, buttons }) {
+        commanderaser (action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                    this.circleOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
-            case 'mousemove':
+                this.circleOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
+                case 'mousemove':
                 if (this.circleOriginPoint === null) {
                     return
                 }
                 const context = this.context
                 const [ ox, oy ] = this.circleOriginPoint
-                context.clearRect(ox, oy, this.size*10, this.size*10)
+                context.clearRect(ox, oy, this.size * 10, this.size * 10)
 
                 this.circleOriginPoint = [x, y]
                 break
-            case 'mouseup':
+                case 'mouseup':
                 this.circleOriginPoint = null
                 this.lastImageData = null
                 this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                this.pointer += 1
-                if(this.allImageData != null) {
-                    alert(this.allImageData)
-                    alert(this.pointer)
-                }
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
                 break
             }
         },
 
-        commandline(action, { x, y, buttons }) {
+        commandline (action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                    this.lineOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
+                this.lineOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
                 case 'mousemove':
-                    if (this.lineOriginPoint == null) {
-                        return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ ox, oy ] = this.lineOriginPoint
-                    context.strokeStyle = this.color1
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.moveTo(ox, oy)
-                    context.lineTo(x, y)
-                    context.stroke()
-                    context.closePath()
-                    break
+                if (this.lineOriginPoint == null) {
+                    return
+                }
+                const context = this.context
+                context.putImageData(this.lastImageData, 0, 0)
+                const [ ox, oy ] = this.lineOriginPoint
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
+                context.beginPath()
+                context.moveTo(ox, oy)
+                context.lineTo(x, y)
+                context.stroke()
+                context.closePath()
+                break
                 case 'mouseup':
-                    this.lineOriginPoint = null
-                    this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                    this.pointer += 1
-                    if(this.allImageData != null) {
-                        alert(this.allImageData)
-                        alert(this.pointer)
-                    }
-                    break
+                this.lineOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
             }
         },
 
-        commandrectangle(action, {x, y, buttons }) {
+        commandrectangle (action, { x, y, buttons }) {
             switch (action) {
                 case 'mousedown':
-                    this.circleOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
+                this.circleOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
                 case 'mousemove':
-                    if (this.circleOriginPoint === null) {
-                    return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ ox, oy ] = this.circleOriginPoint
-                    const [ dx, dy ] = [ x - ox, y - oy ]
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.rect(ox, oy, dx, dy)
-                    if (this.fill === true) {
-                        context.fillStyle = this.color2
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.color1
-                        context.stroke()
-                    }
-                    context.closePath()
-                    break
-                case 'mouseup':
-                    this.circleOriginPoint = null
-                    this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                    this.pointer += 1
-                    if(this.allImageData != null) {
-                        alert(this.allImageData)
-                        alert(this.pointer)
-                    }
-                    break
-            }
-        },
-
-        commandcircle(action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                    this.circleOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
-                case 'mousemove':
-                    if (this.circleOriginPoint === null) {
-                    return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ ox, oy ] = this.circleOriginPoint
-                    const [ dx, dy ] = [ x - ox, y - oy ]
-                    const radius = Math.sqrt(dx * dx, dy * dy)
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.arc((ox + x)/2, (y + oy)/2, radius, 0, 2 * Math.PI)
+                if (this.circleOriginPoint === null) {
+                return
+                }
+                const context = this.context
+                context.putImageData(this.lastImageData, 0, 0)
+                const [ ox, oy ] = this.circleOriginPoint
+                const [ dx, dy ] = [ x - ox, y - oy ]
+                context.lineWidth = this.size
+                context.beginPath()
+                context.rect(ox, oy, dx, dy)
                 if (this.fill === true) {
-                        context.fillStyle = this.color2
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.color1
-                        context.stroke()
-                    }
-                    context.closePath()
-                    break
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
+                    context.strokeStyle = this.color1
+                    context.stroke()
+                }
+                context.closePath()
+                break
                 case 'mouseup':
-                    this.circleOriginPoint = null
-                    this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                    this.pointer += 1
-                    if(this.allImageData != null) {
-                        alert(this.allImageData)
-                        alert(this.pointer)
-                    }
-                    break
+                this.circleOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
             }
         },
-        commandellipse(action, { x, y, buttons }) {
+
+        commandcircle (action, { x, y, buttons }) {
             switch (action) {
-                    case 'mousedown':
-                    this.circleOriginPoint = [x, y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                    break
+                case 'mousedown':
+                this.circleOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
                 case 'mousemove':
-                    if (this.circleOriginPoint === null) {
+                if (this.circleOriginPoint === null) {
                     return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ ox, oy ] = this.circleOriginPoint
-                    const [ dx, dy ] = [ x - ox, y - oy ]
+                }
+                const context = this.context
+                context.putImageData(this.lastImageData, 0, 0)
+                const [ ox, oy ] = this.circleOriginPoint
+                const [ dx, dy ] = [ x - ox, y - oy ]
+                const radius = Math.sqrt(dx * dx, dy * dy)
+                context.lineWidth = this.size
+                context.beginPath()
+                context.arc((ox + x) / 2, (y + oy) / 2, radius, 0, 2 * Math.PI)
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
                     context.strokeStyle = this.color1
-                    context.lineWidth = this.size
-                    if (this.fill === true) {
-                        context.fillStyle = this.color2
-                    }
-                    context.beginPath()
-                    context.ellipse((x + ox)/2, (y + oy)/2, dx/2, dy/2, 0, 0, 2 * Math.PI)
-                    if (this.fill === true) {
-                        context.fillStyle = this.color2
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.color1
-                        context.stroke()
-                    }
-                    context.closePath()
-                    break
+                    context.stroke()
+                }
+                context.closePath()
+                break
                 case 'mouseup':
-                    this.circleOriginPoint = null
-                    this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                    this.pointer += 1
-                    if(this.allImageData != null) {
-                        alert(this.allImageData)
-                        alert(this.pointer)
-                    }
-                    break
+                this.circleOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
+            }
+        },
+        commandellipse (action, { x, y, buttons }) {
+            switch (action) {
+                case 'mousedown':
+                this.circleOriginPoint = [x, y]
+                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                break
+                case 'mousemove':
+                if (this.circleOriginPoint === null) {
+                return
+                }
+                const context = this.context
+                context.putImageData(this.lastImageData, 0, 0)
+                const [ ox, oy ] = this.circleOriginPoint
+                const [ dx, dy ] = [ x - ox, y - oy ]
+                context.strokeStyle = this.color1
+                context.lineWidth = this.size
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                }
+                context.beginPath()
+                context.ellipse((x + ox) / 2, (y + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                if (this.fill === true) {
+                    context.fillStyle = this.color2
+                    context.fill()
+                }
+                if (this.border === true) {
+                    context.strokeStyle = this.color1
+                    context.stroke()
+                }
+                context.closePath()
+                break
+                case 'mouseup':
+                this.circleOriginPoint = null
+                this.lastImageData = null
+                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+                //this.pointer += 1
+                this.pointer = this.allImageData.length - 1
+                break
             }
         }
     },
 
-    mounted() {
+    mounted () {
         if (this.operational) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
@@ -335,8 +339,9 @@ export default {
             })
         }
         this.context = this.$refs.board.getContext('2d')
+        this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
     }
-  }
+}
 </script>
 
 <style scoped>
