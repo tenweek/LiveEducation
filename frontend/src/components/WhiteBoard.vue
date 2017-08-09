@@ -29,9 +29,8 @@
         </div>
 
         <div class="drawing-board">
-            <canvas ref="board" class="canvas" :width="WIDTH" :height="HEIGHT">
-                <label v-show="textField === true">Hello</label>
-            </canvas>
+            <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true" style="width: 300px"></input>
+            <canvas ref="board" class="canvas" :width="WIDTH" :height="HEIGHT"></canvas>
         </div>
 
     </div>
@@ -64,7 +63,10 @@ export default {
             fill: false,
             border: true,
             size: 1,
-            textField: true,
+            textField: false,
+            textInput: '',
+            textLeft: 10,
+            textTop: 50,
             allImageData: [],
             currentImageData: null,
             pointer: 0,
@@ -75,6 +77,18 @@ export default {
         sendmes () {
             this.socket.emit('drawing','123456')
         },
+
+        drawText () {
+            console.log(window.innerHeight)
+            this.textField = false
+            this.context.fillText(this.textInput, this.textLeft, this.textTop)
+            this.textInput = ''
+            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+            //this.pointer += 1
+            this.pointer = this.allImageData.length - 1
+        },
+
+
         clear () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
@@ -216,25 +230,11 @@ export default {
         },
 
         commandtext (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
+            if (action === 'mouseup') {
+
                 this.textField = true
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.circleOriginPoint === null) {
-                    return
-                }
-                const context = this.context
-                const [ ox, oy ] = this.circleOriginPoint
-                context.fillText('Hello World', ox, oy)
-                this.circleOriginPoint = [x, y]
-                break
-                case 'mouseup':
-                this.circleOriginPoint = null
-                this.lastImageData = null
-                break
+                this.textLeft = x
+                this.textTop =  y
             }
         },
 
@@ -449,6 +449,11 @@ export default {
 </script>
 
 <style scoped>
+
+#text-field {
+    position: relative;
+    
+}
 
 .undo-redo {
     display: flex;
