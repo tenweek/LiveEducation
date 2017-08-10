@@ -27,13 +27,14 @@
                             <Icon type="arrow-right-b"></Icon>
                         </Button>
                         <Dropdown-menu slot="list">
-                            <Dropdown-item name="showWhiteBoard">白板</Dropdown-item>
-                            <Dropdown-item name="showCodeEditor">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="showCourseware">课件展示</Dropdown-item>
+                            <Dropdown-item name="WhiteBoard">白板</Dropdown-item>
+                            <Dropdown-item name="CodeEditor">代码编辑器</Dropdown-item>
+                            <Dropdown-item name="FileDisplay">课件展示</Dropdown-item>
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
-                <template v-if="this.selected === 'showWhiteBoard'">
+                <component :is="currentTools" keep-alive></component>
+                <!--template v-if="this.selected === 'showWhiteBoard'">
                     <white-board></white-board>
                 </template>
                 <template v-else-if="this.selected === 'showCodeEditor'">
@@ -41,7 +42,7 @@
                 </template>
                 <template v-else-if="this.selected === 'showCourseware'">
                     <file-display></file-display>
-                </template>
+                </template-->
             </div>
             <div class="composite-container">
                 <div class="video-live">
@@ -80,6 +81,7 @@ export default {
     },
     data: function () {
         return {
+            currentTools: 'WhiteBoard',
             selected: 'showWhiteBoard',
             id: -1,
             roomName: '',
@@ -129,7 +131,7 @@ export default {
     },
     methods: {
         changeCurrent: function (name) {
-            this.selected = name
+            this.currentTools = name
         }
     }
 }
