@@ -89,7 +89,7 @@ export default {
     },
     created: function () {
         this.id = this.$route.params.id
-        fetch('getRoomInfo', {
+        fetch('/getRoomInfo/', {
             method: 'post',
             mode: 'cors',
             headers: {
@@ -114,7 +114,7 @@ export default {
                 stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
             }
         }
-        fetch('leaveRoom', {
+        fetch('/leaveRoom/', {
             method: 'post',
             mode: 'cors',
             headers: {

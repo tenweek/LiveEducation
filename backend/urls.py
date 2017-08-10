@@ -6,21 +6,20 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
 
-    url(r'^createRoom', views.createRoom),
-    url(r'^getRooms', views.getRooms),
-    url(r'^getVerification', views.getVerification),
-    url(r'^SignUp', views.signUp),
-    url(r'^Login', views.login),
-    url(r'^getRand', views.getRand),
-    url(r'^changePasswd', views.changePasswd),
-    url(r'^changeName', views.changeName),
-    url(r'^getName', views.getName),
-    url(r'^joinRoom', views.joinRoom),
-    url(r'^getRoomInfo', views.getRoomInfo),
-    url(r'^gag', views.gag),
-    url(r'^checkGag', views.checkGag),
-
-    url(r'^gagAll', views.gagAll),
-    url(r'^allowSpeak', views.allowSpeak),
-    url(r'^allowAllSpeak', views.allowAllSpeak)
+    url(r'^createRoom/$', views.createRoom),
+    url(r'^getRooms/$', views.getRooms),
+    url(r'^getVerification/$', views.getVerification),
+    url(r'^signUp/$', views.signUp),
+    url(r'^login/$', views.login),
+    url(r'^getRand/$', views.getRand),
+    url(r'^changePasswd/$', views.changePasswd),
+    url(r'^changeName/$', views.changeName),
+    url(r'^getName/$', views.getName),
+    url(r'^joinRoom/$', views.joinRoom),
+    url(r'^getRoomInfo/$', views.getRoomInfo),
+    url(r'^gag/$', views.gag),
+    url(r'^checkGag/$', views.checkGag),
+    url(r'^gagAll/$', views.gagAll),
+    url(r'^allowSpeak/$', views.allowSpeak),
+    url(r'^allowAllSpeak/$', views.allowAllSpeak)
 ]

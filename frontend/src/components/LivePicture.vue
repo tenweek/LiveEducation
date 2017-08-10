@@ -39,7 +39,7 @@ export default {
     methods: {
         liveRoom: function () {
             if (this.stuAccount) {
-                fetch('joinRoom', {
+                fetch('/joinRoom/', {
                     method: 'post',
                     mode: 'cors',
                     headers: {

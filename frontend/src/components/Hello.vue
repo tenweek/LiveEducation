@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         getRooms: function () {
-            fetch('getRooms', {
+            fetch('/getRooms/', {
                 method: 'get',
                 mode: 'cors'
             }).then((response) => response.json()).then((obj) => {

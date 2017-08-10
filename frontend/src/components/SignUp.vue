@@ -117,7 +117,7 @@ export default {
                 return
             }
             this.$Message.success('注册成功!')
-            fetch('SignUp', {
+            fetch('/signUp/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -147,7 +147,7 @@ export default {
                 this.$Message.error('邮箱格式有问题！')
                 return
             }
-            fetch('getVerification', {
+            fetch('/getVerification/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {

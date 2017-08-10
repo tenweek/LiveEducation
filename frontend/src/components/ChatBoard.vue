@@ -6,23 +6,16 @@
             <input id="msgInput" class="msgInput" autocomplete="off" />
             <button @click="sendMsg">Send</button>
         </form>
-        <Menu id="menu" mode="horizontal" :theme="theme1" active-name="1" style='display:none'>
-            <Submenu name="3">
-                <template slot="title">
-                    <Icon type="stats-bars"></Icon>
-                    统计分析
-                </template>
-                <Menu-group title="使用">
-                    <Menu-item name="3-1">新增和启动</Menu-item>
-                    <Menu-item name="3-2">活跃分析</Menu-item>
-                    <Menu-item name="3-3">时段分析</Menu-item>
-                </Menu-group>
-                <Menu-group title="留存">
-                    <Menu-item name="3-4">用户留存</Menu-item>
-                    <Menu-item name="3-5">流失用户</Menu-item>
-                </Menu-group>
-            </Submenu>
-        </Menu>
+        <Dropdown trigger="click" @on-click="teacherDoing">
+            <label id="menu"></label>
+            <Dropdown-menu id="show" slot="list">
+                <Dropdown-item name="gag">禁言</Dropdown-item>
+                <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
+                <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
+                <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
+                <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
+            </Dropdown-menu>
+        </Dropdown>
     </div>
 </template>
 
@@ -35,7 +28,8 @@ export default {
     data: function () {
         return {
             socket: '',
-            username: ''
+            username: '',
+            choosenUser: ''
         }
     },
     created: function () {
@@ -48,7 +42,7 @@ export default {
             }
         }
         if (account !== '') {
-            fetch('getName', {
+            fetch('/getName/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -60,10 +54,13 @@ export default {
                 this.username = obj.name
             })
         }
+    },
+    mounted: function () {
         // 监听
-        this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('join', this.id + '.1')
-        this.socket.on('message', function (data) {
+        let self = this
+        self.socket = io.connect('http://localhost:9000')
+        self.socket.emit('join', self.id + '.1')
+        self.socket.on('message', function (data) {
             let ul = document.getElementById('messages')
             let li = document.createElement('li')
             // 创建button
@@ -78,40 +75,28 @@ export default {
             for (let i = 0; i < styleArr.length; i++) {
                 style += styleArr[i]
             }
-            // 如果判定是本人就给字体加粗 判断未生效
-            if (data.username === this.username) {
+            // 如果判定是本人就给字体加粗
+            if (data['username'] === self.username) {
                 style += 'font-weight:bold;'
             }
             button.style = style
             button.onmousedown = function (oEvent) {
-                let memu = document.getElementById('menu')
-                alert('ss')
-                // memu.style.display = 'block'
-                // memu.style.position = 'absolute'
-                // memu.style.left = oEvent.pageY
-                // memu.style.top = oEvent.pageX
-                memu.style = ('display:block;position:absolute;left:' + oEvent.pageX + ';top:' + oEvent.pageY + ';')
-                // // 如果是老师就有操作权限 判断未生效
-                // if (this.teacherName === this.username) {
-                //     if (!oEvent) {
-                //         oEvent = window.event
-                //     }
-                //     if (oEvent.button === 2) {
-                //         alert('您将禁言用户： ' + data['username'])
-                //         fetch('gag', {
-                //             method: 'post',
-                //             mode: 'cors',
-                //             headers: {
-                //                 'Content-Type': 'application/json, text/plain, */*',
-                //                 'Accept': 'application/json'
-                //             },
-                //             body: JSON.stringify({
-                //                 'name': data['username'],
-                //                 'roomID': this.id
-                //             })
-                //         }).then((response) => response.json()).then((obj) => { })
-                //     }
-                // }
+                // 如果是老师就有操作权限
+                if (self.teacherName === self.username) {
+                    if (!oEvent) {
+                        oEvent = window.event
+                    }
+                    // 如果是右键则出现
+                    if (oEvent.button === 2) {
+                        let menu = document.getElementById('menu')
+                        menu.click()
+                        let show = document.getElementById('show')
+                        let left = oEvent.pageX - 500
+                        let top = oEvent.pageY - 588
+                        show.style = ('position:absolute;left:' + left + 'px;top:' + top + 'px;')
+                        self.choosenUser = data['username']
+                    }
+                }
             }
             // 屏蔽右键菜单
             button.oncontextmenu = function () {
@@ -129,7 +114,7 @@ export default {
                 return
             }
             document.getElementById('msgInput').value = ''
-            fetch('checkGag', {
+            fetch('/checkGag/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -147,6 +132,46 @@ export default {
                     this.$Message.error('您已被禁言')
                 }
             })
+        },
+        teacherDoing: function (name) {
+            if (name === 'gag') {
+                this.$Message.warning('您将禁言用户： ' + this.choosenUser)
+                fetch('/gag/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'name': this.choosenUser,
+                        'roomID': this.id
+                    })
+                }).then((response) => response.json()).then((obj) => { })
+            }
+            if (name === 'gagAll') {
+                this.$Message.warning('您将禁言该房间内的所有用户')
+                fetch('/gagAll/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 'roomID': this.id })
+                }).then((response) => response.json()).then((obj) => {
+                    console.log('ss')
+                })
+            }
+            if (name === 'allowSpeak') {
+                alert('恢复禁言')
+            }
+            if (name === 'allowAllSpeak') {
+                alert('全局解禁')
+            }
+            if (name === 'kickOut') {
+                alert('滚蛋')
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ import random
 def allowAllSpeak(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    roomStudents = RoomStudent.objects.get(room=room)
+    roomStudents = RoomStudent.objects.filter(room=room)
     for roomStudent in roomStudents:
         roomStudent.can_speak = True
         roomStudent.save()
@@ -39,7 +39,7 @@ def allowSpeak(request):
 def gagAll(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    roomStudents = RoomStudent.objects.get(room=room)
+    roomStudents = RoomStudent.objects.filter(room=room)
     for roomStudent in roomStudents:
         roomStudent.can_speak = False
         roomStudent.save()
@@ -51,7 +51,7 @@ def gagAll(request):
 def checkGag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name='qq')
+    student = User.objects.get(name=req['name'])
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     response = JsonResponse({'result': roomStudent.can_speak})
     return response
