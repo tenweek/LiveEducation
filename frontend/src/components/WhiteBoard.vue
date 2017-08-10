@@ -15,8 +15,8 @@
             <Button type="text" :class="{ active: type === 'ellipse' }" @click="type = 'ellipse'">椭圆</Button>
             <Button type="text" :class="{ active: border === true }" @click="border = !border">边框</Button>
             <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
-            <el-color-picker class="color-selected" v-model="color1" show-alpha></el-color-picker>
-            <el-color-picker class="color-selected" v-model="color2" show-alpha></el-color-picker>
+            <el-color-picker class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
+            <el-color-picker class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
             <div class="size">
                 <label class="size-label">粗细</label>
                 <div class="size-buttons">
@@ -53,9 +53,8 @@ export default {
         this.roomId = this.$route.params.id
     },
 
-    data () {
+    data: function () {
         return {
-            types: ['pen', 'line', 'circle', 'rectangle', 'eraser', 'ellipse', 'eraser', 'text'],
             type: 'pen',
             context: null,
             penOriginPoint: null,
@@ -64,8 +63,8 @@ export default {
             lastImageData: null,
             WIDTH: 601,
             HEIGHT: 486,
-            color1: 'rgba(0, 0, 0, 1)',
-            color2: 'rgba(255, 255, 255, 1)',
+            colorBorder: 'rgba(0, 0, 0, 1)',
+            colorFill: 'rgba(255, 255, 255, 1)',
             fill: false,
             border: true,
             size: 1,
@@ -80,6 +79,7 @@ export default {
             roomId: ''
         }
     },
+
     methods: {
         drawText: function () {
             let input = this.textInput
@@ -109,8 +109,8 @@ export default {
             }, this.roomId + '.0')
         },
 
-        commandpen: function (action, { x, y, buttons}) {
-            let color = this.color1
+        penCommand: function (action, { x, y, buttons}) {
+            let color = this.colorBorder
             let size = this.size
             this.socket.emit('drawing', {
                 type: 'pen',
@@ -123,10 +123,8 @@ export default {
             }, this.roomId + '.0')
         },
 
-        commandtext: function (action, { x, y, buttons }) {
+        textCommand: function (action, { x, y, buttons }) {
             if (action === 'mouseup') {
-                console.log(x)
-                console.log(y)
                 this.textField = true
                 this.socket.emit('drawing', {
                     type: 'textField',
@@ -136,11 +134,10 @@ export default {
                     buttons: buttons
                 }, this.roomId + '.0')
             }
-            console.log('149')
             return
         },
 
-        commanderaser: function (action, { x, y, buttons }) {
+        eraserCommand: function (action, { x, y, buttons }) {
             let size = this.size
             this.socket.emit('drawing', {
                 type: 'eraser',
@@ -152,8 +149,8 @@ export default {
             }, this.roomId + '.0')
         },
 
-        commandline: function (action, { x, y, buttons }) {
-            let color = this.color1
+        lineCommand: function (action, { x, y, buttons }) {
+            let color = this.colorBorder
             let size = this.size
             this.socket.emit('drawing', {
                 type: 'line',
@@ -166,9 +163,9 @@ export default {
             }, this.roomId + '.0')
         },
 
-        commandrectangle: function (action, { x, y, buttons }) {
-            let color1 = this.color1
-            let color2 = this.color2
+        rectangleCommand: function (action, { x, y, buttons }) {
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
             this.socket.emit('drawing', {
@@ -177,16 +174,16 @@ export default {
                 x: x,
                 y: y,
                 buttons: buttons,
-                color1: color1,
-                color2: color2,
+                colorBorder: colorBorder,
+                colorFill: colorFill,
                 fill: fill,
                 size: size,
             }, this.roomId + '.0')
         },
 
-        commandcircle: function (action, { x, y, buttons }) {
-            let color1 = this.color1
-            let color2 = this.color2
+        circleCommand: function (action, { x, y, buttons }) {
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
             this.socket.emit('drawing', {
@@ -195,27 +192,26 @@ export default {
                 x: x,
                 y: y,
                 buttons: buttons,
-                color1: color1,
-                color2: color2,
+                colorBorder: colorBorder,
+                colorFill: colorFill,
                 fill: fill,
                 size: size,
             }, this.roomId + '.0')
         },
 
-        commandellipse: function (action, { x, y, buttons }) {
-            let color1 = this.color1
-            let color2 = this.color2
+        ellipseCommand: function (action, { x, y, buttons }) {
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'ellipse',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                color1: color1,
-                color2: color2,
+                colorBorder: colorBorder,
+                colorFill: colorFill,
                 fill: fill,
                 size: size,
             }, this.roomId + '.0')
@@ -226,25 +222,23 @@ export default {
         if (this.operational) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                    // this.$emit('action', this.type, eventName, { x, y, buttons, emit })
-                    this[`command${this.type}`](eventName, { x, y, buttons } )
+                    this[`${this.type}Command`](eventName, { x, y, buttons } )
                 })
             })
         }
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-        // socket.io
         let vueThis = this
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('join', this.roomId + '.0')
         this.socket.on('drawing', function(data) {
-            let x1 = data.x
-            let y1 = data.y
-            let buttons1 = data.buttons
+            let xData = data.x
+            let yData = data.y
+            let buttonsData = data.buttons
             switch (data.type) {
                 case 'pen':
                 vueThis.size = data.size
-                vueThis.color1 = data.color
+                vueThis.colorBorder = data.color
                 if (data.action === 'mousedown') {
                     vueThis.penOriginPoint = [data.x, data.y]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
@@ -254,14 +248,14 @@ export default {
                     }
                     const context = vueThis.context
                     const [ ox, oy ] = vueThis.penOriginPoint
-                    context.strokeStyle = vueThis.color1
+                    context.strokeStyle = vueThis.colorBorder
                     context.lineWidth = vueThis.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(x1, y1)
+                    context.lineTo(xData, yData)
                     context.stroke()
                     context.closePath()
-                    vueThis.penOriginPoint = [x1, y1]
+                    vueThis.penOriginPoint = [xData, yData]
                 } else if (data.action === 'mouseup') {
                     vueThis.penOriginPoint = null
                     vueThis.lastImageData = null
@@ -274,7 +268,7 @@ export default {
                 vueThis.size = data.size
                 switch (data.action) {
                     case 'mousedown':
-                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.circleOriginPoint = [xData, yData]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
@@ -284,7 +278,7 @@ export default {
                     const context = vueThis.context
                     const [ ox, oy ] = vueThis.circleOriginPoint
                     context.clearRect(ox, oy, vueThis.size * 10, vueThis.size * 10)
-                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.circleOriginPoint = [xData, yData]
                     break
                     case 'mouseup':
                     vueThis.circleOriginPoint = null
@@ -296,11 +290,11 @@ export default {
                 }
                 break
                 case 'line':
-                vueThis.color1 = data.color
+                vueThis.colorBorder = data.color
                 vueThis.size = data.size
                 switch (data.action) {
                     case 'mousedown':
-                    vueThis.lineOriginPoint = [x1, y1]
+                    vueThis.lineOriginPoint = [xData, yData]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
@@ -310,11 +304,11 @@ export default {
                     const context = vueThis.context
                     context.putImageData(vueThis.lastImageData, 0, 0)
                     const [ ox, oy ] = vueThis.lineOriginPoint
-                    context.strokeStyle = vueThis.color1
+                    context.strokeStyle = vueThis.colorBorder
                     context.lineWidth = vueThis.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(x1, y1)
+                    context.lineTo(xData, yData)
                     context.stroke()
                     context.closePath()
                     break
@@ -328,13 +322,13 @@ export default {
                 }
                 break
                 case 'rectangle':
-                vueThis.color1 = data.color1
-                vueThis.color2 = data.color2
+                vueThis.colorBorder = data.colorBorder
+                vueThis.colorFill = data.colorFill
                 vueThis.fill = data.fill
                 vueThis.size = data.size
                 switch (data.action) {
                     case 'mousedown':
-                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.circleOriginPoint = [xData, yData]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
@@ -344,16 +338,16 @@ export default {
                     const context = vueThis.context
                     context.putImageData(vueThis.lastImageData, 0, 0)
                     const [ ox, oy ] = vueThis.circleOriginPoint
-                    const [ dx, dy ] = [ x1 - ox, y1 - oy ]
+                    const [ dx, dy ] = [ xData - ox, yData - oy ]
                     context.lineWidth = vueThis.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
                     if (vueThis.fill === true) {
-                        context.fillStyle = vueThis.color2
+                        context.fillStyle = vueThis.colorFill
                         context.fill()
                     }
                     if (vueThis.border === true) {
-                        context.strokeStyle = vueThis.color1
+                        context.strokeStyle = vueThis.colorBorder
                         context.stroke()
                     }
                     context.closePath()
@@ -368,13 +362,13 @@ export default {
                 }
                 break
                 case 'circle':
-                vueThis.color1 = data.color1
-                vueThis.color2 = data.color2
+                vueThis.colorBorder = data.colorBorder
+                vueThis.colorFill = data.colorFill
                 vueThis.fill = data.fill
                 vueThis.size = data.size
                 switch (data.action) {
                     case 'mousedown':
-                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.circleOriginPoint = [xData, yData]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
@@ -384,17 +378,17 @@ export default {
                     const context = vueThis.context
                     context.putImageData(vueThis.lastImageData, 0, 0)
                     const [ ox, oy ] = vueThis.circleOriginPoint
-                    const [ dx, dy ] = [ x1 - ox, y1 - oy ]
+                    const [ dx, dy ] = [ xData - ox, yData - oy ]
                     const radius = Math.sqrt(dx * dx, dy * dy)
                     context.lineWidth = vueThis.size
                     context.beginPath()
-                    context.arc((ox + x1) / 2, (y1 + oy) / 2, radius, 0, 2 * Math.PI)
+                    context.arc((ox + xData) / 2, (yData + oy) / 2, radius, 0, 2 * Math.PI)
                     if (vueThis.fill === true) {
-                        context.fillStyle = vueThis.color2
+                        context.fillStyle = vueThis.colorFill
                         context.fill()
                     }
                     if (vueThis.border === true) {
-                        context.strokeStyle = vueThis.color1
+                        context.strokeStyle = vueThis.colorBorder
                         context.stroke()
                     }
                     context.closePath()
@@ -409,13 +403,13 @@ export default {
                 }
                 break
                 case 'ellipse':
-                vueThis.color1 = data.color1
-                vueThis.color2 = data.color2
+                vueThis.colorBorder = data.colorBorder
+                vueThis.colorFill = data.colorFill
                 vueThis.fill = data.fill
                 vueThis.size = data.size
                 switch (data.action) {
                     case 'mousedown':
-                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.circleOriginPoint = [xData, yData]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
@@ -425,20 +419,20 @@ export default {
                     const context = vueThis.context
                     context.putImageData(vueThis.lastImageData, 0, 0)
                     const [ ox, oy ] = vueThis.circleOriginPoint
-                    const [ dx, dy ] = [ x1 - ox, y1 - oy ]
-                    context.strokeStyle = vueThis.color1
+                    const [ dx, dy ] = [ xData - ox, yData - oy ]
+                    context.strokeStyle = vueThis.colorBorder
                     context.lineWidth = vueThis.size
                     if (vueThis.fill === true) {
-                        context.fillStyle = vueThis.color2
+                        context.fillStyle = vueThis.colorFill
                     }
                     context.beginPath()
-                    context.ellipse((x1 + ox) / 2, (y1 + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                    context.ellipse((xData + ox) / 2, (yData + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
                     if (vueThis.fill === true) {
-                        context.fillStyle = vueThis.color2
+                        context.fillStyle = vueThis.colorFill
                         context.fill()
                     }
                     if (vueThis.border === true) {
-                        context.strokeStyle = vueThis.color1
+                        context.strokeStyle = vueThis.colorBorder
                         context.stroke()
                     }
                     context.closePath()
@@ -459,8 +453,8 @@ export default {
                 break
                 case 'textField':
                 if (data.action === 'mouseup') {
-                    vueThis.textLeft = x1
-                    vueThis.textTop =  y1
+                    vueThis.textLeft = xData
+                    vueThis.textTop =  yData
                 }
                 break
                 case 'drawText':

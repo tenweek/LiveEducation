@@ -1,7 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var port = process.env.PORT || 9000
+var port = 9000
 
 io.on('connection', function(socket){
     socket.on('join', function (roomId) {
