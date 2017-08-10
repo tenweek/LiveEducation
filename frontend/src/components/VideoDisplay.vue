@@ -12,15 +12,20 @@
         </div>
         <div id="div_join" class="panel panel-default">
             <div class="panel-body">
-                Host: <input id="video" type="checkbox" checked></input>
+                <button id="is-teacher" @click="teacher">not teacher</button>
                 <button id="join" class="btn btn-primary" @click="join">Join</button>
                 <button id="leave" class="btn btn-primary" @click="leave">Leave</button>
-                <button id="publish" class="btn btn-primary" @click="publish">Publish</button>
-                <button id="unpublish" class="btn btn-primary" @click="unpublish">Unpublish</button>
+                <!--button id="publish" class="btn btn-primary" @click="publish">Publish</button>
+                <button id="unpublish" class="btn btn-primary" @click="unpublish">Unpublish</button-->
             </div>
         </div>
         <div id="video" style="margin:0 auto;">
-            <div id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
+            <template v-if="this.isTeacher === true">
+                <div id="agora_local" style="width:210px;height:147px;display:inline-block;"></div>
+            </template>
+            <template v-else-if="this.isTeacher === false">
+                <div id="agora_remote" style="width:210px;height:147px;display:inline-block;"></div>
+            </template>
         </div>
     </div>
 </template>
@@ -37,7 +42,8 @@ export default {
             videoSelect: '',
             key: '9b343e8aaaa144928e093b29513634e9',
             channel: '1000',
-            camera: ''
+            camera: '',
+            isTeacher: true
         }
     },
     mounted: function () {
@@ -45,9 +51,12 @@ export default {
         this.videoSelect = document.querySelector('select#videoSource')
     },
     methods: {
+        teacher: function () {
+            this.isTeacher = false
+            document.getElementById('is-teacher').disabled = true
+        },
         join: function () {
             document.getElementById('join').disabled = true
-            document.getElementById('video').disabled = true
 
             console.log('Init AgoraRTC client with vendor key: ' + this.key)
             this.client = AgoraRTC.createClient({mode: 'interop'})
@@ -56,11 +65,11 @@ export default {
                 this.client.join(null, this.channel, null, (uid) => {
                     console.log('User ' + uid + ' join channel successfully')
 
-                    if (document.getElementById('video').checked) {
+                    if (this.isTeacher === true) {
                         this.camera = videoSource.value
                         this.microphone = audioSource.value
-                        this.localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: this.camera, microphoneId: this.microphone, video: document.getElementById('video').checked, screen: false})
-                        if (document.getElementById('video').checked) {
+                        this.localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: this.camera, microphoneId: this.microphone, video: this.isTeacher, screen: false})
+                        if (this.isTeacher === true) {
                             this.localStream.setVideoProfile('720p_3')
                         }
                         this.localStream.init(() => {
@@ -103,24 +112,13 @@ export default {
             this.client.on('stream-subscribed', function (evt) {
                 var stream = evt.stream
                 console.log('Subscribe remote stream successfully: ' + stream.getId())
-                if ($('div#video #agora_remote' + stream.getId()).length === 0) {
-                    $('div#video').append('<div id="agora_remote' + stream.getId() + '" style="width:810px;height:607px;display:inline-block;"></div>')
-                }
-                stream.play('agora_remote' + stream.getId())
+                stream.play('agora_remote')
             })
             this.client.on('stream-removed', function (evt) {
                 var stream = evt.stream
                 stream.stop()
                 $('#agora_remote' + stream.getId()).remove()
                 console.log('Remote stream is removed ' + stream.getId())
-            })
-            this.client.on('peer-leave', function (evt) {
-                var stream = evt.stream
-                if (stream) {
-                    stream.stop()
-                    $('#agora_remote' + stream.getId()).remove()
-                    console.log(evt.uid + ' leaved from this channel')
-                }
             })
         },
         leave: function () {
@@ -129,20 +127,6 @@ export default {
                 console.log('Leavel channel successfully')
             }, function (err) {
                 console.log('Leave channel failed')
-            })
-        },
-        publish: function () {
-            document.getElementById('publish').disabled = true
-            document.getElementById('unpublish').disabled = false
-            this.client.publish(this.localStream, function (err) {
-                console.log('Publish local stream error: ' + err)
-            })
-        },
-        unpublish: function () {
-            document.getElementById('publish').disabled = false
-            document.getElementById('unpublish').disabled = true
-            this.client.unpublish(this.localStream, function (err) {
-                console.log('Unpublish local stream failed' + err)
             })
         },
         getDevices: function () {
