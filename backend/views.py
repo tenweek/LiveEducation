@@ -27,10 +27,11 @@ def allowAllSpeak(request):
 def allowSpeak(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name=req['name'])
-    roomStudent = RoomStudent.objects.get(room=room, student=student)
-    roomStudent.can_speak = True
-    roomStudent.save()
+    for name in req['student']:
+        student = User.objects.get(name=name)
+        roomStudent = RoomStudent.objects.get(room=room, student=student)
+        roomStudent.can_speak = True
+        roomStudent.save()
     response = JsonResponse({})
     return response
 
@@ -40,10 +41,12 @@ def gagAll(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
     roomStudents = RoomStudent.objects.filter(room=room)
+    stu = []
     for roomStudent in roomStudents:
         roomStudent.can_speak = False
+        stu.append(roomStudent.student.name)
         roomStudent.save()
-    response = JsonResponse({})
+    response = JsonResponse({'gagList': stu})
     return response
 
 

@@ -16,6 +16,12 @@
                 <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
             </Dropdown-menu>
         </Dropdown>
+        <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
+            <label id="new-username">请选择您要接触禁言的对象</label><br><br>
+            <Checkbox-group v-model="speakList">
+                <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
+            </Checkbox-group>
+        </Modal>
     </div>
 </template>
 
@@ -27,9 +33,12 @@ export default {
     props: ['id', 'teacherName'],
     data: function () {
         return {
+            showGagList: false,
             socket: '',
             username: '',
-            choosenUser: ''
+            choosenUser: '',
+            gagList: [],
+            speakList: []
         }
     },
     created: function () {
@@ -147,7 +156,9 @@ export default {
                         'name': this.choosenUser,
                         'roomID': this.id
                     })
-                }).then((response) => response.json()).then((obj) => { })
+                }).then((response) => response.json()).then((obj) => {
+                    this.gagList.push(this.choosenUser)
+                })
             }
             if (name === 'gagAll') {
                 this.$Message.warning('您将禁言该房间内的所有用户')
@@ -160,18 +171,62 @@ export default {
                     },
                     body: JSON.stringify({ 'roomID': this.id })
                 }).then((response) => response.json()).then((obj) => {
-                    console.log('ss')
+                    this.gagList = []
+                    this.gagList = obj.gagList
                 })
             }
             if (name === 'allowSpeak') {
-                alert('恢复禁言')
+                this.showGagList = true
             }
             if (name === 'allowAllSpeak') {
-                alert('全局解禁')
+                this.$Message.success('您将为该房间内的所有用户解禁')
+                fetch('/allowAllSpeak/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 'roomID': this.id })
+                }).then((response) => response.json()).then((obj) => {
+                    this.gagList = []
+                })
             }
             if (name === 'kickOut') {
                 alert('滚蛋')
             }
+        },
+        allowSpeak: function () {
+            let s = '您将为该房间内的以下用户解禁：\n'
+            for (let i = 0; i < this.speakList.length; i++) {
+                s += (this.speakList[i] + '  ')
+            }
+            this.$Message.success(s)
+            fetch('/allowSpeak/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomID': this.id,
+                    'student': this.speakList
+                })
+            }).then((response) => response.json()).then((obj) => {
+                // this.gagList = []
+                for (let i = this.gagList.length - 1; i >= 0; i--) {
+                    let a = this.gagList[i]
+                    for (let j = this.speakList.length - 1; j >= 0; j--) {
+                        let b = this.speakList[j]
+                        if (a === b) {
+                            this.gagList.splice(i, 1)
+                            this.speakList.splice(j, 1)
+                            break
+                        }
+                    }
+                }
+            })
         }
     }
 }
