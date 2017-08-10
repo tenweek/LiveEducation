@@ -5,10 +5,22 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
-from .models import Room, User, RoomStudent, StuBlackList
+from .models import Room, User, RoomStudent
 
 import random
 # Create your views here.
+
+
+@csrf_exempt
+def kickOut(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    student = User.objects.get(name=req['name'])
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    roomStudent.can_watch = False
+    roomStudent.save()
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt
@@ -89,16 +101,14 @@ def joinRoom(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
     student = User.objects.get(username=req['stuAccount'])
-    if len(RoomStudent.objects.filter(room=room, student=student)) == 0:
-        if len(StuBlackList.objects.filter(room=room, student=student)) == 0:
-            RoomStudent.objects.create(room=room, student=student)
-            room.student_num += 1
-            room.save()
-            response = JsonResponse({'result': room.id})
-            return response
-        else:
-            response = JsonResponse({'result': 'cannot'})
-            return response
+    roomStudent = RoomStudent.objects.filter(room=room, student=student)
+    if len(roomStudent) == 0:
+        RoomStudent.objects.create(room=room, student=student)
+        response = JsonResponse({'result': room.id})
+        return response
+    elif roomStudent[0].can_watch == False:
+        response = JsonResponse({'result': 'cannot'})
+        return response
     else:
         response = JsonResponse({'result': room.id})
         return response

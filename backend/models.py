@@ -17,12 +17,7 @@ class RoomStudent(models.Model):
     room = models.ForeignKey('backend.Room')
     student = models.ForeignKey('backend.User')
     can_speak = models.BooleanField(default=True)
-
-
-class StuBlackList(models.Model):
-    room = models.ForeignKey('backend.Room')
-    student = models.ForeignKey('backend.User')
-
+    can_watch = models.BooleanField(default=True)
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
