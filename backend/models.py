@@ -8,22 +8,18 @@ from django.utils import timezone
 
 class Room(models.Model):
     teacher = models.ForeignKey('backend.User')
-    roomName = models.CharField(max_length=100)
-    studentNum = models.IntegerField(default=0)
-    createTime = models.DateTimeField(default=timezone.now)
+    room_name = models.CharField(max_length=100)
+    student_num = models.IntegerField(default=0)
+    create_time = models.DateTimeField(default=timezone.now)
 
 
 class RoomStudent(models.Model):
     room = models.ForeignKey('backend.Room')
     student = models.ForeignKey('backend.User')
-
-
-class StuBlackList(models.Model):
-    room = models.ForeignKey('backend.Room')
-    student = models.ForeignKey('backend.User')
-
+    can_speak = models.BooleanField(default=True)
+    can_watch = models.BooleanField(default=True)
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
-    name = models.CharField(default='', max_length=16)
+    name = models.CharField(default='', max_length=16, unique=True)
 # Create your models here.

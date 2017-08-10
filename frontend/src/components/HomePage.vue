@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <div class="header">
-            <home-page-header v-bind:myOption="option"></home-page-header>
+            <home-page-header :myOption="this.option"></home-page-header>
         </div>
         <div class="list">
             <div class="list-hint">
@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         getRooms: function () {
-            fetch('getRooms', {
+            fetch('/getRooms/', {
                 method: 'get',
                 mode: 'cors'
             }).then((response) => response.json()).then((obj) => {

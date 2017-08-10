@@ -1,39 +1,37 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var nsp = io.of('/mynsp');
-var nsp1 = io.of('/mynsp1');
+let app = require('express')()
+let server = require('http').Server(app)
+let io = require('socket.io')(server)
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname+'/index.html');
-});
-
-
-
-nsp.on('connection', function(socket){
-	console.log('user in nsp connected');
-	socket.on('chat message', function(msg){
-    nsp.emit('chat message',msg);
-  });
-	socket.on('disconnect',function(){
-		console.log('user in nsp disconnected')
-	})
+app.get('/', function (req, res) {
+    res.send('<h1>Hello Wellcome</h1>')
 })
 
-nsp1.on('connection', function(socket){
-	console.log('user in nsp1 connected');
-	socket.on('chat message', function(msg){
-    nsp1.to(1).emit('chat message',msg);
-  });
-	socket.on('join',function() {
-		socket.join(1);
-		console.log('in room 1 succefully')
-	})
-	socket.on('disconnect',function(){
-		console.log('user in nsp1 disconnected')
-	})
+server.listen(9000, () => {
+    console.log('in 9000')
 })
 
-http.listen(8000, function(){
-  console.log('listening on *:8000');
+let onlineCount = 0
+
+io.on('connection', function (socket) {
+    let id = 0
+    socket.on('join', function (roomid) {
+        id = roomid
+        console.log('connected')
+        onlineCount++
+        socket.join(roomid)
+        io.to(roomid).emit('login', onlineCount)
+    })
+    socket.on('message', function (data, roomid) {
+        console.log('received')
+        io.to(roomid).emit('message', data)
+    })
+    socket.on('kickOut', function (userid, roomid) {
+        console.log('ss')
+        io.to(roomid).emit('kickOut', userid)
+    })
+    socket.on('disconnect', function () {
+        console.log('disconnect')
+        onlineCount--
+        io.to(id).emit('logout', onlineCount)
+    })
 });

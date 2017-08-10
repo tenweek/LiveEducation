@@ -40,7 +40,7 @@
                     <video-display></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board></chat-board>
+                    <chat-board :id="this.id" :teacherName="this.teacherName"></chat-board>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@ export default {
     },
     created: function () {
         this.id = this.$route.params.id
-        fetch('getRoomInfo', {
+        fetch('/getRoomInfo/', {
             method: 'post',
             mode: 'cors',
             headers: {
@@ -96,28 +96,6 @@ export default {
             this.studentNum = obj.stuNum
             this.teacherName = obj.teacherName
         })
-    },
-    beforeDestroy: function () {
-        let arrCookies = document.cookie.split(';')
-        let stuAccount = ''
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-            }
-        }
-        fetch('leaveRoom', {
-            method: 'post',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json, text/plain, */*',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                'roomID': this.id,
-                'stuAccount': stuAccount
-            })
-        }).then((response) => response.json()).then((obj) => { })
     },
     methods: {
         changeCurrent: function (name) {

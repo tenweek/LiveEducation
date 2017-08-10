@@ -5,20 +5,81 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
-from .models import Room, User, RoomStudent, StuBlackList
+from .models import Room, User, RoomStudent
 
 import random
 # Create your views here.
 
 
 @csrf_exempt
-def leaveRoom(request):
+def kickOut(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=req['stuAccount'])
-    RoomStudent.objects.filter(room=room, student=student).delete()
-    room.studentNum -= 1
-    room.save()
+    student = User.objects.get(name=req['name'])
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    roomStudent.can_watch = False
+    roomStudent.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def allowAllSpeak(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    roomStudents = RoomStudent.objects.filter(room=room)
+    for roomStudent in roomStudents:
+        roomStudent.can_speak = True
+        roomStudent.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def allowSpeak(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    for name in req['student']:
+        student = User.objects.get(name=name)
+        roomStudent = RoomStudent.objects.get(room=room, student=student)
+        roomStudent.can_speak = True
+        roomStudent.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def gagAll(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    roomStudents = RoomStudent.objects.filter(room=room)
+    stu = []
+    for roomStudent in roomStudents:
+        roomStudent.can_speak = False
+        stu.append(roomStudent.student.name)
+        roomStudent.save()
+    response = JsonResponse({'gagList': stu})
+    return response
+
+
+@csrf_exempt
+def checkGag(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    student = User.objects.get(name=req['name'])
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    response = JsonResponse({'result': roomStudent.can_speak})
+    return response
+
+
+@csrf_exempt
+def gag(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomID'])
+    student = User.objects.get(name=req['name'])
+    roomStudent = RoomStudent.objects.get(room=room, student=student)
+    roomStudent.can_speak = False
+    roomStudent.save()
     response = JsonResponse({})
     return response
 
@@ -29,8 +90,8 @@ def getRoomInfo(request):
     room = Room.objects.get(id=req['roomID'])
     response = JsonResponse({
         'teacherName': room.teacher.name,
-        'stuNum': room.studentNum,
-        'roomName': room.roomName
+        'stuNum': room.student_num,
+        'roomName': room.room_name
     })
     return response
 
@@ -40,16 +101,14 @@ def joinRoom(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
     student = User.objects.get(username=req['stuAccount'])
-    if len(RoomStudent.objects.filter(room=room, student=student)) == 0:
-        if len(StuBlackList.objects.filter(room=room, student=student)) == 0:
-            RoomStudent.objects.create(room=room, student=student)
-            room.studentNum += 1
-            room.save()
-            response = JsonResponse({'result': room.id})
-            return response
-        else:
-            response = JsonResponse({'result': 'cannot'})
-            return response
+    roomStudent = RoomStudent.objects.filter(room=room, student=student)
+    if len(roomStudent) == 0:
+        RoomStudent.objects.create(room=room, student=student)
+        response = JsonResponse({'result': room.id})
+        return response
+    elif roomStudent[0].can_watch == False:
+        response = JsonResponse({'result': 'cannot'})
+        return response
     else:
         response = JsonResponse({'result': room.id})
         return response
@@ -72,7 +131,7 @@ def createRoom(request):
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
-    Room.objects.create(teacher=teacher, roomName=roomName)
+    Room.objects.create(teacher=teacher, room_name=roomName)
     response = JsonResponse(
         {'msg': 'Making a room successfully!'})
     return response
@@ -80,13 +139,13 @@ def createRoom(request):
 
 @csrf_exempt
 def getRooms(request):
-    rooms = Room.objects.order_by('-createTime')
+    rooms = Room.objects.order_by('-create_time')
     myroom = []
     for room in rooms:
-        myroom.append({'roomName': room.roomName,
+        myroom.append({'roomName': room.room_name,
                        'teacherName': room.teacher.name,
                        'id': room.id,
-                       'studentNum': room.studentNum})
+                       'studentNum': room.student_num})
     response = JsonResponse(
         {'rooms': myroom})
     return response
@@ -106,17 +165,21 @@ def getVerification(request):
     salt = ''.join(verification)
     send_mail('Ur verification code!', salt,
               'a1137901181@163.com', [req['mail']], fail_silently=False)
-    response = JsonResponse({'verification': salt, })
+    response = JsonResponse({'verification': salt})
     return response
 
 
 @csrf_exempt
 def signUp(request):
     req = simplejson.load(request)
+    userFilterWithName = User.objects.filter(name=req['username'])
+    if len(userFilterWithName) != 0:
+        response = JsonResponse({'result': False})
+        return response
     user = User.objects.create_user(
         username=req['mail'], password=req['password'], name=req['username'])
     user.save()
-    response = JsonResponse({})
+    response = JsonResponse({'result': True})
     return response
 
 

@@ -105,7 +105,7 @@ export default {
             this.$router.push({ path: '/login' })
         },
         getVerification: function () {
-            fetch('getRand', {
+            fetch('/getRand/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -135,7 +135,7 @@ export default {
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
                 this.$Message.error('两次输入的密码不一致！')
             } else {
-                fetch('changePasswd', {
+                fetch('/changePasswd/', {
                     method: 'post',
                     mode: 'cors',
                     headers: {
