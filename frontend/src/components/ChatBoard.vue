@@ -1,9 +1,9 @@
 <template>
     <div class="chat-board">
         <ul id="messages"></ul>
-        <form action="">
+        <form>
             <img src="../assets/chat_bottombar_icon_face.png">
-            <input id="msgInput" class="msgInput" autocomplete="off" />
+            <input id="msgInput" class="msg-input" autocomplete="off" />
             <button @click="sendMsg">Send</button>
         </form>
         <Dropdown trigger="click" @on-click="teacherDoing">
@@ -312,7 +312,7 @@ form img {
     padding-top: 5px;
 }
 
-#msgInput {
+#msg-input {
     width: 292px;
 }
 </style>
