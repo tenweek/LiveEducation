@@ -7,7 +7,7 @@
             </div>
             <Button class="clear" @click="clear">清空</Button>
             <Button type="text" :class="{ active: type === 'eraser' }" @click="type = 'eraser'">橡皮擦</Button>
-            <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'"><Icon type="edit"></Icon>&nbsp;&nbsp;铅笔</Button>
+            <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'">画笔</Button>
             <Button type="text" :class="{ active: type === 'text' }" @click="type = 'text'">文字</Button>
             <Button type="text" :class="{ active: type === 'line' }" @click="type = 'line'">直线</Button>
             <Button type="text" :class="{ active: type === 'rectangle' }" @click="type = 'rectangle'">矩形</Button>
@@ -47,6 +47,11 @@ export default {
             default: true
         }
     },
+
+    created () {
+        this.roomId = this.$route.params.id
+    },
+
     data () {
         return {
             types: ['pen', 'line', 'circle', 'rectangle', 'eraser', 'ellipse', 'eraser', 'text'],
@@ -70,324 +75,175 @@ export default {
             allImageData: [],
             currentImageData: null,
             pointer: 0,
-            socket: ''
+            socket: '',
+            roomId: ''
         }
     },
     methods: {
-        sendmes () {
-            this.socket.emit('drawing','123456')
-        },
-
-        drawText () {
-            console.log(window.innerHeight)
+        drawText: function () {
             this.textField = false
             this.context.fillText(this.textInput, this.textLeft, this.textTop)
+            let input = this.textInput
             this.textInput = ''
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
             //this.pointer += 1
             this.pointer = this.allImageData.length - 1
+            this.socket.emit('drawing', {
+                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                type: 'drawText',
+                input: input
+            }, this.roomId + '.0')
+            return
         },
 
-        clear () {
+        clear: function () {
             this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
             this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
             this.pointer += 1
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'clear',
-            })
+                type: 'clear',
+            }, this.roomId + '.0')
             return
         },
 
-        undo () {
-            if (this.pointer === 0) {
-                alert('没有可撤销的操作')
-                return
-            }
-            if (this.pointer > 0) {
-                this.pointer -= 1
-            }
-            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
+        undo: function () {
             //this.pointer += 1
             //this.pointer = this.allImageData.length - 1
-        },
-
-        redo () {
-            if (this.pointer === this.allImageData.length - 1) {
-                alert('已没有可重做的操作')
-                return
-            }
-            if (this.pointer < this.allImageData.length) {
-                this.pointer += 1
-            }
-            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-            //this.pointer += 1
-            //this.pointer = this.allImageData.length - 1
-        },
-
-        commandpen (action, { x, y, buttons}) {
-            switch (action) {
-                case 'mousedown':
-                this.penOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.penOriginPoint == null) {
-                    return
-                }
-                const context = this.context
-                const [ ox, oy ] = this.penOriginPoint
-                context.strokeStyle = this.color1
-                context.lineWidth = this.size
-                context.beginPath()
-                context.moveTo(ox, oy)
-                context.lineTo(x, y)
-                context.stroke()
-                context.closePath()
-                this.penOriginPoint = [x, y]
-                break
-                case 'mouseup':
-                this.penOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'pen',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'undo',
+            }, this.roomId + '.0')
         },
 
-        commandtext (action, { x, y, buttons }) {
+        redo: function () {
+            //this.pointer += 1
+            //this.pointer = this.allImageData.length - 1
+            this.socket.emit('drawing', {
+                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                type: 'redo',
+            }, this.roomId + '.0')
+        },
+
+        commandpen: function (action, { x, y, buttons}) {
+            let color = this.color1
+            let size = this.size
+            this.socket.emit('drawing', {
+                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                type: 'pen',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                color: color,
+                size: size,
+            }, this.roomId + '.0')
+        },
+
+        commandtext: function (action, { x, y, buttons }) {
             if (action === 'mouseup') {
                 this.textField = true
                 this.textLeft = x
                 this.textTop =  y
             }
+            this.socket.emit('drawing', {
+                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
+                type: 'textField',
+                x: x,
+                y: y,
+                action: action,
+                buttons: buttons
+            }, this.roomId + '.0')
+            return
         },
 
-        commanderaser (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.circleOriginPoint === null) {
-                    return
-                }
-                const context = this.context
-                const [ ox, oy ] = this.circleOriginPoint
-                context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                this.circleOriginPoint = [x, y]
-                break
-                case 'mouseup':
-                this.circleOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
+        commanderaser: function (action, { x, y, buttons }) {
+            let size = this.size
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'eraser',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'eraser',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                size: size
+            }, this.roomId + '.0')
         },
 
-        commandline (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                this.lineOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.lineOriginPoint == null) {
-                    return
-                }
-                const context = this.context
-                context.putImageData(this.lastImageData, 0, 0)
-                const [ ox, oy ] = this.lineOriginPoint
-                context.strokeStyle = this.color1
-                context.lineWidth = this.size
-                context.beginPath()
-                context.moveTo(ox, oy)
-                context.lineTo(x, y)
-                context.stroke()
-                context.closePath()
-                break
-                case 'mouseup':
-                this.lineOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
+        commandline: function (action, { x, y, buttons }) {
+            let color = this.color1
+            let size = this.size
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'line',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'line',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                color: color,
+                size: size,
+            }, this.roomId + '.0')
         },
 
-        commandrectangle (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.circleOriginPoint === null) {
-                return
-                }
-                const context = this.context
-                context.putImageData(this.lastImageData, 0, 0)
-                const [ ox, oy ] = this.circleOriginPoint
-                const [ dx, dy ] = [ x - ox, y - oy ]
-                context.lineWidth = this.size
-                context.beginPath()
-                context.rect(ox, oy, dx, dy)
-                if (this.fill === true) {
-                    context.fillStyle = this.color2
-                    context.fill()
-                }
-                if (this.border === true) {
-                    context.strokeStyle = this.color1
-                    context.stroke()
-                }
-                context.closePath()
-                break
-                case 'mouseup':
-                this.circleOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
+        commandrectangle: function (action, { x, y, buttons }) {
+            let color1 = this.color1
+            let color2 = this.color2
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'rectangle',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'rectangle',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                color1: color1,
+                color2: color2,
+                fill: fill,
+                size: size,
+            }, this.roomId + '.0')
         },
 
-        commandcircle (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.circleOriginPoint === null) {
-                    return
-                }
-                const context = this.context
-                context.putImageData(this.lastImageData, 0, 0)
-                const [ ox, oy ] = this.circleOriginPoint
-                const [ dx, dy ] = [ x - ox, y - oy ]
-                const radius = Math.sqrt(dx * dx, dy * dy)
-                context.lineWidth = this.size
-                context.beginPath()
-                context.arc((ox + x) / 2, (y + oy) / 2, radius, 0, 2 * Math.PI)
-                if (this.fill === true) {
-                    context.fillStyle = this.color2
-                    context.fill()
-                }
-                if (this.border === true) {
-                    context.strokeStyle = this.color1
-                    context.stroke()
-                }
-                context.closePath()
-                break
-                case 'mouseup':
-                this.circleOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
+        commandcircle: function (action, { x, y, buttons }) {
+            let color1 = this.color1
+            let color2 = this.color2
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'circle',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'circle',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                color1: color1,
+                color2: color2,
+                fill: fill,
+                size: size,
+            }, this.roomId + '.0')
         },
-        commandellipse (action, { x, y, buttons }) {
-            switch (action) {
-                case 'mousedown':
-                this.circleOriginPoint = [x, y]
-                this.lastImageData = this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                break
-                case 'mousemove':
-                if (this.circleOriginPoint === null) {
-                return
-                }
-                const context = this.context
-                context.putImageData(this.lastImageData, 0, 0)
-                const [ ox, oy ] = this.circleOriginPoint
-                const [ dx, dy ] = [ x - ox, y - oy ]
-                context.strokeStyle = this.color1
-                context.lineWidth = this.size
-                if (this.fill === true) {
-                    context.fillStyle = this.color2
-                }
-                context.beginPath()
-                context.ellipse((x + ox) / 2, (y + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
-                if (this.fill === true) {
-                    context.fillStyle = this.color2
-                    context.fill()
-                }
-                if (this.border === true) {
-                    context.strokeStyle = this.color1
-                    context.stroke()
-                }
-                context.closePath()
-                break
-                case 'mouseup':
-                this.circleOriginPoint = null
-                this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-                //this.pointer += 1
-                this.pointer = this.allImageData.length - 1
-                break
-            }
+
+        commandellipse: function (action, { x, y, buttons }) {
+            let color1 = this.color1
+            let color2 = this.color2
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type0: 'ellipse',
-                action0: action,
-                x0: x,
-                y0: y,
-                buttons0: buttons
-            })
+                type: 'ellipse',
+                action: action,
+                x: x,
+                y: y,
+                buttons: buttons,
+                color1: color1,
+                color2: color2,
+                fill: fill,
+                size: size,
+            }, this.roomId + '.0')
         }
     },
 
     mounted () {
-        let emit = true
         if (this.operational) {
             ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
                 this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
@@ -400,83 +256,85 @@ export default {
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
         // socket.io
-        let kkk = this
+        let vueThis = this
         this.socket = io.connect('http://localhost:9000')
+        this.socket.emit('join', this.roomId + '.0')
         this.socket.on('drawing', function(data) {
-            let x1 = data.x0
-            let y1 = data.y0
-            let buttons1 = data.buttons0
+            let x1 = data.x
+            let y1 = data.y
+            let buttons1 = data.buttons
             // let emit1 = false
-            // kkk.commandpenNotEmit(data.action0, { x1, y1, buttons1 })
-            switch (data.type0) {
+            // vueThis.commandpenNotEmit(data.action0, { x1, y1, buttons1 })
+            switch (data.type) {
                 case 'pen':
-                if (data.action0 === 'mousedown') {
-                    console.log(data.x0)
-                    kkk.penOriginPoint = [data.x0, y1]
-                    console.log(kkk.penOriginPoint)
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
-                } else if (data.action0 === 'mousemove') {
-                // console.log('mmm')
-                    if (this.penOriginPoint === null) {
-                        console.log('this.penOriginPoint === null')
+                vueThis.size = data.size
+                vueThis.color1 = data.color
+                if (data.action === 'mousedown') {
+                    vueThis.penOriginPoint = [data.x, data.y]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
+                } else if (data.action === 'mousemove') {
+                    if (vueThis.penOriginPoint === null) {
                         return
                     }
-                    const context = kkk.context
-                    const [ ox, oy ] = kkk.penOriginPoint
-                    context.strokeStyle = kkk.color1
-                    context.lineWidth = kkk.size
+                    const context = vueThis.context
+                    const [ ox, oy ] = vueThis.penOriginPoint
+                    context.strokeStyle = vueThis.color1
+                    context.lineWidth = vueThis.size
                     context.beginPath()
                     context.moveTo(ox, oy)
                     context.lineTo(x1, y1)
                     context.stroke()
                     context.closePath()
-                    kkk.penOriginPoint = [x1, y1]
-                } else if (data.action0 === 'mouseup') {
-                    kkk.penOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.penOriginPoint = [x1, y1]
+                } else if (data.action === 'mouseup') {
+                    vueThis.penOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                    vueThis.pointer = vueThis.allImageData.length - 1
                 }
                 break
                 case 'eraser':
-                switch (data.action0) {
+                vueThis.size = data.size
+                switch (data.action) {
                     case 'mousedown':
-                    kkk.circleOriginPoint = [x1, y1]
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
+                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
-                    if (kkk.circleOriginPoint === null) {
+                    if (vueThis.circleOriginPoint === null) {
                         return
                     }
-                    const context = kkk.context
-                    const [ ox, oy ] = kkk.circleOriginPoint
-                    context.clearRect(ox, oy, kkk.size * 10, kkk.size * 10)
-                    kkk.circleOriginPoint = [x1, y1]
+                    const context = vueThis.context
+                    const [ ox, oy ] = vueThis.circleOriginPoint
+                    context.clearRect(ox, oy, vueThis.size * 10, vueThis.size * 10)
+                    vueThis.circleOriginPoint = [x1, y1]
                     break
                     case 'mouseup':
-                    kkk.circleOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
+                    vueThis.circleOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     //this.pointer += 1
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
                 break
                 case 'line':
-                switch (data.action0) {
+                vueThis.color1 = data.color
+                vueThis.size = data.size
+                switch (data.action) {
                     case 'mousedown':
-                    kkk.lineOriginPoint = [x1, y1]
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
+                    vueThis.lineOriginPoint = [x1, y1]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
-                    if (kkk.lineOriginPoint == null) {
+                    if (vueThis.lineOriginPoint == null) {
                         return
                     }
-                    const context = kkk.context
-                    context.putImageData(kkk.lastImageData, 0, 0)
-                    const [ ox, oy ] = kkk.lineOriginPoint
-                    context.strokeStyle = kkk.color1
-                    context.lineWidth = kkk.size
+                    const context = vueThis.context
+                    context.putImageData(vueThis.lastImageData, 0, 0)
+                    const [ ox, oy ] = vueThis.lineOriginPoint
+                    context.strokeStyle = vueThis.color1
+                    context.lineWidth = vueThis.size
                     context.beginPath()
                     context.moveTo(ox, oy)
                     context.lineTo(x1, y1)
@@ -484,135 +342,180 @@ export default {
                     context.closePath()
                     break
                     case 'mouseup':
-                    kkk.lineOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
+                    vueThis.lineOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     //this.pointer += 1
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
                 break
                 case 'rectangle':
-                switch (data.action0) {
+                vueThis.color1 = data.color1
+                vueThis.color2 = data.color2
+                vueThis.fill = data.fill
+                vueThis.size = data.size
+                switch (data.action) {
                     case 'mousedown':
-                    kkk.circleOriginPoint = [x1, y1]
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
+                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
-                    if (kkk.circleOriginPoint === null) {
+                    if (vueThis.circleOriginPoint === null) {
                     return
                     }
-                    const context = kkk.context
-                    context.putImageData(kkk.lastImageData, 0, 0)
-                    const [ ox, oy ] = kkk.circleOriginPoint
+                    const context = vueThis.context
+                    context.putImageData(vueThis.lastImageData, 0, 0)
+                    const [ ox, oy ] = vueThis.circleOriginPoint
                     const [ dx, dy ] = [ x1 - ox, y1 - oy ]
-                    context.lineWidth = kkk.size
+                    context.lineWidth = vueThis.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
-                    if (kkk.fill === true) {
-                        context.fillStyle = kkk.color2
+                    if (vueThis.fill === true) {
+                        context.fillStyle = vueThis.color2
                         context.fill()
                     }
-                    if (kkk.border === true) {
-                        context.strokeStyle = kkk.color1
+                    if (vueThis.border === true) {
+                        context.strokeStyle = vueThis.color1
                         context.stroke()
                     }
                     context.closePath()
                     break
                     case 'mouseup':
-                    kkk.circleOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
+                    vueThis.circleOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     //this.pointer += 1
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
                 break
                 case 'circle':
+                vueThis.color1 = data.color1
+                vueThis.color2 = data.color2
+                vueThis.fill = data.fill
+                vueThis.size = data.size
                 switch (data.action0) {
                     case 'mousedown':
-                    kkk.circleOriginPoint = [x1, y1]
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
+                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
-                    if (kkk.circleOriginPoint === null) {
+                    if (vueThis.circleOriginPoint === null) {
                         return
                     }
-                    const context = kkk.context
-                    context.putImageData(kkk.lastImageData, 0, 0)
-                    const [ ox, oy ] = kkk.circleOriginPoint
+                    const context = vueThis.context
+                    context.putImageData(vueThis.lastImageData, 0, 0)
+                    const [ ox, oy ] = vueThis.circleOriginPoint
                     const [ dx, dy ] = [ x1 - ox, y1 - oy ]
                     const radius = Math.sqrt(dx * dx, dy * dy)
-                    context.lineWidth = kkk.size
+                    context.lineWidth = vueThis.size
                     context.beginPath()
                     context.arc((ox + x1) / 2, (y1 + oy) / 2, radius, 0, 2 * Math.PI)
-                    if (kkk.fill === true) {
-                        context.fillStyle = kkk.color2
+                    if (vueThis.fill === true) {
+                        context.fillStyle = vueThis.color2
                         context.fill()
                     }
-                    if (kkk.border === true) {
-                        context.strokeStyle = kkk.color1
+                    if (vueThis.border === true) {
+                        context.strokeStyle = vueThis.color1
                         context.stroke()
                     }
                     context.closePath()
                     break
                     case 'mouseup':
-                    kkk.circleOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
+                    vueThis.circleOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     //this.pointer += 1
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
                 break
                 case 'ellipse':
+                vueThis.color1 = data.color1
+                vueThis.color2 = data.color2
+                vueThis.fill = data.fill
+                vueThis.size = data.size
                 switch (data.action0) {
                     case 'mousedown':
-                    kkk.circleOriginPoint = [x1, y1]
-                    kkk.lastImageData = kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT)
+                    vueThis.circleOriginPoint = [x1, y1]
+                    vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
                     break
                     case 'mousemove':
-                    if (kkk.circleOriginPoint === null) {
+                    if (vueThis.circleOriginPoint === null) {
                     return
                     }
-                    const context = kkk.context
-                    context.putImageData(kkk.lastImageData, 0, 0)
-                    const [ ox, oy ] = kkk.circleOriginPoint
+                    const context = vueThis.context
+                    context.putImageData(vueThis.lastImageData, 0, 0)
+                    const [ ox, oy ] = vueThis.circleOriginPoint
                     const [ dx, dy ] = [ x1 - ox, y1 - oy ]
-                    context.strokeStyle = kkk.color1
-                    context.lineWidth = kkk.size
-                    if (kkk.fill === true) {
-                        context.fillStyle = kkk.color2
+                    context.strokeStyle = vueThis.color1
+                    context.lineWidth = vueThis.size
+                    if (vueThis.fill === true) {
+                        context.fillStyle = vueThis.color2
                     }
                     context.beginPath()
                     context.ellipse((x1 + ox) / 2, (y1 + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
-                    if (kkk.fill === true) {
-                        context.fillStyle = kkk.color2
+                    if (vueThis.fill === true) {
+                        context.fillStyle = vueThis.color2
                         context.fill()
                     }
-                    if (kkk.border === true) {
-                        context.strokeStyle = kkk.color1
+                    if (vueThis.border === true) {
+                        context.strokeStyle = vueThis.color1
                         context.stroke()
                     }
                     context.closePath()
                     break
                     case 'mouseup':
-                    kkk.circleOriginPoint = null
-                    kkk.lastImageData = null
-                    kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
+                    vueThis.circleOriginPoint = null
+                    vueThis.lastImageData = null
+                    vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     //this.pointer += 1
-                    kkk.pointer = kkk.allImageData.length - 1
+                    vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
                 break
                 case 'clear':
-                kkk.context.clearRect(0, 0, kkk.WIDTH, kkk.HEIGHT)
-                kkk.allImageData.push(kkk.context.getImageData(0, 0, kkk.WIDTH, kkk.HEIGHT))
-                kkk.pointer += 1
+                vueThis.context.clearRect(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
+                vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                vueThis.pointer += 1
                 break
-
-            }
-            console.log(data.action0)
+                case 'textField':
+                if (data.action0 === 'mouseup') {
+                    // this.textField = true
+                    vueThis.textLeft = x1
+                    vueThis.textTop =  y1
+                }
+                break
+                case 'drawText':
+                vueThis.context.fillText(data.input, vueThis.textLeft, vueThis.textTop)
+                vueThis.textInput = ''
+                vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                //this.pointer += 1
+                vueThis.pointer = vueThis.allImageData.length - 1
+                break
+                case 'undo':
+                if (vueThis.pointer === 0) {
+                    alert('没有可撤销的操作')
+                    return
+                }
+                if (vueThis.pointer > 0) {
+                    vueThis.pointer -= 1
+                }
+                vueThis.context.putImageData(vueThis.allImageData[vueThis.pointer], 0, 0)
+                vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                return
+                case 'redo':
+                if (vueThis.pointer === vueThis.allImageData.length - 1) {
+                    alert('已没有可重做的操作')
+                    return
+                }
+                if (vueThis.pointer < vueThis.allImageData.length) {
+                    vueThis.pointer += 1
+                }
+                vueThis.context.putImageData(vueThis.allImageData[vueThis.pointer], 0, 0)
+                //vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                }
         })
     }
 }
