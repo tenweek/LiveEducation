@@ -34,15 +34,6 @@
                     </Dropdown>
                 </div>
                 <component :is="currentTools" keep-alive></component>
-                <!--template v-if="this.selected === 'showWhiteBoard'">
-                    <white-board></white-board>
-                </template>
-                <template v-else-if="this.selected === 'showCodeEditor'">
-                    <code-editor></code-editor>
-                </template>
-                <template v-else-if="this.selected === 'showCourseware'">
-                    <file-display></file-display>
-                </template-->
             </div>
             <div class="composite-container">
                 <div class="video-live">
@@ -82,7 +73,6 @@ export default {
     data: function () {
         return {
             currentTools: 'WhiteBoard',
-            selected: 'showWhiteBoard',
             id: -1,
             roomName: '',
             teacherName: '',
