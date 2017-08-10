@@ -17,6 +17,7 @@ io.on('connection', function (mysocket) {
   //监听message事件
   mysocket.on('message',function(msg,roomid){
   	console.log('received')
+    console.log(roomid)
   	io.to(roomid).emit('message',msg)  //向roomid号房间发送消息
   });
   //监听断开连接时件
