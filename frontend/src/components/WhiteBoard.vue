@@ -37,6 +37,7 @@
 </template>
 
 <script src="/socket.io/socket.io.js"></script>
+
 <script>
 import * as io from 'socket.io-client'
 export default {
@@ -81,15 +82,8 @@ export default {
     },
     methods: {
         drawText: function () {
-            this.textField = false
-            this.context.fillText(this.textInput, this.textLeft, this.textTop)
             let input = this.textInput
-            this.textInput = ''
-            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-            //this.pointer += 1
-            this.pointer = this.allImageData.length - 1
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'drawText',
                 input: input
             }, this.roomId + '.0')
@@ -97,30 +91,20 @@ export default {
         },
 
         clear: function () {
-            this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT)
-            this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
-            this.pointer += 1
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'clear',
             }, this.roomId + '.0')
             return
         },
 
         undo: function () {
-            //this.pointer += 1
-            //this.pointer = this.allImageData.length - 1
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'undo',
             }, this.roomId + '.0')
         },
 
         redo: function () {
-            //this.pointer += 1
-            //this.pointer = this.allImageData.length - 1
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'redo',
             }, this.roomId + '.0')
         },
@@ -129,7 +113,6 @@ export default {
             let color = this.color1
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'pen',
                 action: action,
                 x: x,
@@ -142,25 +125,24 @@ export default {
 
         commandtext: function (action, { x, y, buttons }) {
             if (action === 'mouseup') {
+                console.log(x)
+                console.log(y)
                 this.textField = true
-                this.textLeft = x
-                this.textTop =  y
+                this.socket.emit('drawing', {
+                    type: 'textField',
+                    x: x,
+                    y: y,
+                    action: action,
+                    buttons: buttons
+                }, this.roomId + '.0')
             }
-            this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
-                type: 'textField',
-                x: x,
-                y: y,
-                action: action,
-                buttons: buttons
-            }, this.roomId + '.0')
+            console.log('149')
             return
         },
 
         commanderaser: function (action, { x, y, buttons }) {
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'eraser',
                 action: action,
                 x: x,
@@ -174,7 +156,6 @@ export default {
             let color = this.color1
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'line',
                 action: action,
                 x: x,
@@ -191,7 +172,6 @@ export default {
             let fill = this.fill
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'rectangle',
                 action: action,
                 x: x,
@@ -210,7 +190,6 @@ export default {
             let fill = this.fill
             let size = this.size
             this.socket.emit('drawing', {
-                //imageData: this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT)
                 type: 'circle',
                 action: action,
                 x: x,
@@ -252,7 +231,6 @@ export default {
                 })
             })
         }
-        // this.$refs.board.addEventListener('mousedown', ({}))
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.WIDTH, this.HEIGHT))
         // socket.io
@@ -263,8 +241,6 @@ export default {
             let x1 = data.x
             let y1 = data.y
             let buttons1 = data.buttons
-            // let emit1 = false
-            // vueThis.commandpenNotEmit(data.action0, { x1, y1, buttons1 })
             switch (data.type) {
                 case 'pen':
                 vueThis.size = data.size
@@ -289,6 +265,7 @@ export default {
                 } else if (data.action === 'mouseup') {
                     vueThis.penOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                     vueThis.pointer = vueThis.allImageData.length - 1
                 }
@@ -312,8 +289,8 @@ export default {
                     case 'mouseup':
                     vueThis.circleOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                    //this.pointer += 1
                     vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
@@ -344,8 +321,8 @@ export default {
                     case 'mouseup':
                     vueThis.lineOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                    //this.pointer += 1
                     vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
@@ -384,8 +361,8 @@ export default {
                     case 'mouseup':
                     vueThis.circleOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                    //this.pointer += 1
                     vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
@@ -395,7 +372,7 @@ export default {
                 vueThis.color2 = data.color2
                 vueThis.fill = data.fill
                 vueThis.size = data.size
-                switch (data.action0) {
+                switch (data.action) {
                     case 'mousedown':
                     vueThis.circleOriginPoint = [x1, y1]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
@@ -425,8 +402,8 @@ export default {
                     case 'mouseup':
                     vueThis.circleOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                    //this.pointer += 1
                     vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
@@ -436,7 +413,7 @@ export default {
                 vueThis.color2 = data.color2
                 vueThis.fill = data.fill
                 vueThis.size = data.size
-                switch (data.action0) {
+                switch (data.action) {
                     case 'mousedown':
                     vueThis.circleOriginPoint = [x1, y1]
                     vueThis.lastImageData = vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT)
@@ -469,8 +446,8 @@ export default {
                     case 'mouseup':
                     vueThis.circleOriginPoint = null
                     vueThis.lastImageData = null
+                    vueThis.allImageData.length = vueThis.pointer + 1
                     vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                    //this.pointer += 1
                     vueThis.pointer = vueThis.allImageData.length - 1
                     break
                 }
@@ -481,17 +458,16 @@ export default {
                 vueThis.pointer += 1
                 break
                 case 'textField':
-                if (data.action0 === 'mouseup') {
-                    // this.textField = true
+                if (data.action === 'mouseup') {
                     vueThis.textLeft = x1
                     vueThis.textTop =  y1
                 }
                 break
                 case 'drawText':
+                vueThis.textField = false
                 vueThis.context.fillText(data.input, vueThis.textLeft, vueThis.textTop)
                 vueThis.textInput = ''
                 vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
-                //this.pointer += 1
                 vueThis.pointer = vueThis.allImageData.length - 1
                 break
                 case 'undo':
@@ -514,7 +490,7 @@ export default {
                     vueThis.pointer += 1
                 }
                 vueThis.context.putImageData(vueThis.allImageData[vueThis.pointer], 0, 0)
-                //vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
+                vueThis.allImageData.push(vueThis.context.getImageData(0, 0, vueThis.WIDTH, vueThis.HEIGHT))
                 }
         })
     }
