@@ -17,7 +17,7 @@
             </Dropdown-menu>
         </Dropdown>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
-            <label id="new-username">请选择您要接触禁言的对象</label><br><br>
+            <label id="new-username">请选择您要解除禁言的对象</label><br><br>
             <Checkbox-group v-model="speakList">
                 <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
             </Checkbox-group>
@@ -69,6 +69,12 @@ export default {
         let self = this
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.id + '.1')
+        self.socket.on('kickOut', function (userid) {
+            console.log('sss')
+            if (self.username === userid) {
+                self.closeWindow()
+            }
+        })
         if (self.teacherName === self.username) {
             self.socket.on('login', function (count) {
                 console.log(count)
@@ -125,6 +131,10 @@ export default {
         })
     },
     methods: {
+        closeWindow: function () {
+            this.$Message.warning('您将在 ' + 3 + ' 秒后退出直播间')
+            setTimeout(window.close, 3000)
+        },
         sendMsg: function () {
             let msg = document.getElementById('msgInput').value
             if (msg === '') {
@@ -214,7 +224,7 @@ export default {
                         'roomID': this.id
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    console.log('踢出' + this.choosenUser)
+                    this.socket.emit('kickOut', this.choosenUser, this.id + '.1')
                 })
             }
         },

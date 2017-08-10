@@ -24,7 +24,11 @@ io.on('connection', function (socket) {
     socket.on('message', function (data, roomid) {
         console.log('received')
         io.to(roomid).emit('message', data)
-    });
+    })
+    socket.on('kickOut', function (userid, roomid) {
+        console.log('ss')
+        io.to(roomid).emit('kickOut', userid)
+    })
     socket.on('disconnect', function () {
         console.log('disconnect')
         onlineCount--
