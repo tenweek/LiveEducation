@@ -69,6 +69,14 @@ export default {
         let self = this
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.id + '.1')
+        if (self.teacherName === self.username) {
+            self.socket.on('login', function (count) {
+                console.log(count)
+            })
+            self.socket.on('logout', function (count) {
+                console.log(count)
+            })
+        }
         self.socket.on('message', function (data) {
             let ul = document.getElementById('messages')
             let li = document.createElement('li')
@@ -193,7 +201,21 @@ export default {
                 })
             }
             if (name === 'kickOut') {
-                alert('滚蛋')
+                this.$Message.warning('您将踢出用户： ' + this.choosenUser)
+                fetch('/kickOut/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'name': this.choosenUser,
+                        'roomID': this.id
+                    })
+                }).then((response) => response.json()).then((obj) => {
+                    console.log('踢出' + this.choosenUser)
+                })
             }
         },
         allowSpeak: function () {
