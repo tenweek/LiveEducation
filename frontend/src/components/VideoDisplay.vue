@@ -1,6 +1,6 @@
 <template>
     <div class="video-display">
-        <div id="div_device" class="panel panel-default" style="display:none">
+        <div id="div-device" class="panel panel-default">
             <div class="select">
                 <label for="audioSource">Audio source: </label>
                 <select id="audioSource"></select>
@@ -10,21 +10,19 @@
                 <select id="videoSource"></select>
             </div>
         </div>
-        <div id="div_join" class="panel panel-default">
+        <div id="div-join" class="panel panel-default">
             <div class="panel-body">
                 <button id="is-teacher" @click="teacher">not teacher</button>
                 <button id="join" class="btn btn-primary" @click="join">Join</button>
                 <button id="leave" class="btn btn-primary" @click="leave">Leave</button>
-                <!--button id="publish" class="btn btn-primary" @click="publish">Publish</button>
-                <button id="unpublish" class="btn btn-primary" @click="unpublish">Unpublish</button-->
             </div>
         </div>
-        <div id="video" style="margin:0 auto;">
+        <div id="video">
             <template v-if="this.isTeacher === true">
-                <div id="agora_local" style="width:210px;height:147px;display:inline-block;"></div>
+                <div id="agora-local" class="agora-video"></div>
             </template>
             <template v-else-if="this.isTeacher === false">
-                <div id="agora_remote" style="width:210px;height:147px;display:inline-block;"></div>
+                <div id="agora-remote" class="agora-video"></div>
             </template>
         </div>
     </div>
@@ -74,7 +72,7 @@ export default {
                         }
                         this.localStream.init(() => {
                             console.log('getUserMedia successfully')
-                            this.localStream.play('agora_local')
+                            this.localStream.play('agora-local')
                             this.client.publish(this.localStream, function (err) {
                                 console.log('Publish local stream error: ' + err)
                             })
@@ -112,12 +110,12 @@ export default {
             this.client.on('stream-subscribed', function (evt) {
                 var stream = evt.stream
                 console.log('Subscribe remote stream successfully: ' + stream.getId())
-                stream.play('agora_remote')
+                stream.play('agora-remote')
             })
             this.client.on('stream-removed', function (evt) {
                 var stream = evt.stream
                 stream.stop()
-                $('#agora_remote' + stream.getId()).remove()
+                $('#agora-remote' + stream.getId()).remove()
                 console.log('Remote stream is removed ' + stream.getId())
             })
         },
@@ -150,3 +148,19 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.agora-video {
+	width: 340px;
+	height: 160px;
+	display: inline-block;
+}
+
+#div-device {
+	display: none;
+}
+
+#video {
+	margin: 0px auto;
+}
+</style>
