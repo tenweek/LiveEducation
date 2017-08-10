@@ -492,7 +492,6 @@ export default {
 </script>
 
 <style scoped>
-
 #text-field {
     position: relative;
     
@@ -567,5 +566,4 @@ button.active {
 .canvas {
     background: white;
 }
-
 </style>
