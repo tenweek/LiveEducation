@@ -4,9 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview'
+import VueCodeMirror from 'vue-codemirror'
+import 'codemirror/keymap/sublime'
 import 'iview/dist/styles/iview.css'
 Vue.config.productionTip = false
 Vue.use(iView)
+Vue.use(VueCodeMirror)
 
 /* eslint-disable no-new */
 new Vue({
