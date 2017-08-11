@@ -84,46 +84,52 @@ export default {
     },
     created: function () {
         this.id = this.$route.params.id
-        fetch('/getRoomInfo/', {
-            method: 'post',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json, text/plain, */*',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                'roomID': this.id
-            })
-        }).then((response) => response.json()).then((obj) => {
-            this.roomName = obj.roomName
-            this.studentNum = obj.stuNum
-            this.teacherName = obj.teacherName
-        })
-        let arrCookies = document.cookie.split(';')
-        let account = ''
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-            }
-        }
-        if (account !== '') {
-            fetch('/getName/', {
+        this.getRoomInfo()
+        this.getUsername()
+    },
+    methods: {
+        changeCurrent: function (name) {
+            this.currentTools = name
+        },
+        getRoomInfo: function () {
+            fetch('/getRoomInfo/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ 'account': account })
+                body: JSON.stringify({
+                    'roomID': this.id
+                })
             }).then((response) => response.json()).then((obj) => {
-                this.username = obj.name
+                this.roomName = obj.roomName
+                this.studentNum = obj.stuNum
+                this.teacherName = obj.teacherName
             })
-        }
-    },
-    methods: {
-        changeCurrent: function (name) {
-            this.currentTools = name
+        },
+        getUsername: function () {
+            let arrCookies = document.cookie.split(';')
+            let account = ''
+            for (let i = 0; i < arrCookies.length; i++) {
+                let arrStr = arrCookies[i].split('=')
+                if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                    account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+                }
+            }
+            if (account !== '') {
+                fetch('/getName/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 'account': account })
+                }).then((response) => response.json()).then((obj) => {
+                    this.username = obj.name
+                })
+            }
         }
     }
 }
