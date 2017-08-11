@@ -44,7 +44,7 @@ export default {
         }
     },
     created: function () {
-        this.isTeacher = this.username === this.teacherName ? true : false
+        this.isTeacher = this.username === this.teacherName
     },
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')

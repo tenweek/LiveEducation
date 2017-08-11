@@ -16,10 +16,14 @@ io.on('connection', function (socket) {
     let id = 0
     socket.on('join', function (roomid) {
         id = roomid
-        console.log('connected')
+        console.log('chatroom connected')
         onlineCount++
         socket.join(roomid)
         io.to(roomid).emit('login', onlineCount)
+    })
+    socket.on('joinForWhiteBoard', function (roomId) {
+        console.log('whiteboard connected')
+        socket.join(roomId)
     })
     socket.on('message', function (data, roomid) {
         console.log('received')
@@ -29,6 +33,9 @@ io.on('connection', function (socket) {
         console.log('kick ' + userid + ' out')
         io.to(roomid).emit('kickOut', userid)
     })
+    socket.on('drawing', function (data, roomId) {
+        io.to(roomId).emit('drawing', data)
+    });
     socket.on('disconnect', function () {
         console.log('disconnect')
         onlineCount--
