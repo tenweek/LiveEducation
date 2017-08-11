@@ -10,15 +10,8 @@
             </div>
         </div>
         <div class="list">
-            <div class="list-picture">
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-                <live-picture></live-picture>
-            </div>
+            <live-picture v-for="room in rooms" :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum">
+            </live-picture>
         </div>
         <div>
             <page-footer></page-footer>
@@ -33,6 +26,9 @@ import PageFooter from './PageFooter'
 
 export default {
     name: 'live-page',
+    created: function () {
+        this.getRooms()
+    },
     components: {
         LivePicture,
         HomePageHeader,
@@ -40,10 +36,19 @@ export default {
     },
     data: function () {
         return {
-            option: 2
+            option: 2,
+            rooms: []
         }
     },
     methods: {
+        getRooms: function () {
+            fetch('/getRooms/', {
+                method: 'get',
+                mode: 'cors'
+            }).then((response) => response.json()).then((obj) => {
+                this.rooms = obj.rooms
+            })
+        }
     }
 }
 </script>

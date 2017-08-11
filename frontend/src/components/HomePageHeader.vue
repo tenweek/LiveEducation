@@ -15,7 +15,9 @@
                 <Icon type="videocamera"></Icon> 录播</a>
             <template v-if="this.isTeacher === true">
                 <a class="navigation-bar" @click="showCreateRoom = true">
-                    |&nbsp;<Icon type="ios-plus"></Icon> 创建房间</a>
+                    |&nbsp;
+                    <Icon type="ios-plus"></Icon> 创建房间
+                </a>
             </template>
             <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
                 <label>房间名称：</label>
@@ -154,18 +156,19 @@ export default {
         signUp: function () {
             this.$router.push({ path: '/signup' })
         },
+        clearCookie: function () {
+            let date = new Date()
+            date.setTime(date.getTime() - 10000)
+            document.cookie = 'userAccount=a; expires=' + date.toGMTString()
+        },
         dropDownClick: function (name) {
             if (name === 'changeName') {
                 this.showChangeName = true
             } else if (name === 'modifyPassword') {
-                let date = new Date()
-                date.setTime(date.getTime() - 10000)
-                document.cookie = 'userAccount=a; expires=' + date.toGMTString()
+                this.clearCookie()
                 this.$router.push({ path: '/reset' })
             } else {
-                let date = new Date()
-                date.setTime(date.getTime() - 10000)
-                document.cookie = 'userAccount=a; expires=' + date.toGMTString()
+                this.clearCookie()
                 location.reload()
                 this.$router.push({ path: '/' })
             }
