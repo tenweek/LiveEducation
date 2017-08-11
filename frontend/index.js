@@ -25,6 +25,10 @@ io.on('connection', function (socket) {
         console.log('whiteboard connected')
         socket.join(roomId)
     })
+    socket.on('joinForCodeEditor', function (roomId) {
+        console.log('codeeditor connected')
+        socket.join(roomId)
+    })
     socket.on('message', function (data, roomid) {
         console.log('received')
         io.to(roomid).emit('message', data)
