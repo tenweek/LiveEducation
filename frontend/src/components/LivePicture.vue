@@ -21,7 +21,7 @@ export default {
     data: function () {
         return {
             stuAccount: '',
-            joinOrNor: false
+            joinOrNot: false
         }
     },
     created: function () {
@@ -38,8 +38,9 @@ export default {
     },
     methods: {
         liveRoom: function () {
+            // 如果用户已经登录
             if (this.stuAccount) {
-                fetch('joinRoom', {
+                fetch('/joinRoom/', {
                     method: 'post',
                     mode: 'cors',
                     headers: {
@@ -51,13 +52,12 @@ export default {
                         'stuAccount': this.stuAccount
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    if (obj.result !== 'cannot') {
-                        this.joinOrNor = true
+                    if (obj.result === 'cannot') {
+                        this.$Message.error('非常抱歉，您不可再加入该房间！')
+                    } else {
+                        window.open('./#/live_room/' + this.id)
                     }
-                    location.reload()
                 })
-                // 这个地方还没有加判定，先假装没有这个问题
-                window.open('./#/live_room/' + this.id)
             } else {
                 this.$Message.error('请先登录！')
             }

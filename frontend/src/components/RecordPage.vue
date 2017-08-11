@@ -1,7 +1,7 @@
 <template>
     <div class="head-bg">
         <div class="header">
-            <home-page-header v-bind:myOption="option"></home-page-header>
+            <home-page-header :myOption="this.option"></home-page-header>
         </div>
         <div class="navigation">
             <div class="welcome">

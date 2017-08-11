@@ -27,28 +27,22 @@
                             <Icon type="arrow-right-b"></Icon>
                         </Button>
                         <Dropdown-menu slot="list">
-                            <Dropdown-item name="showWhiteBoard">白板</Dropdown-item>
-                            <Dropdown-item name="showCodeEditor">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="showCourseware">课件展示</Dropdown-item>
+                            <Dropdown-item name="WhiteBoard">白板</Dropdown-item>
+                            <Dropdown-item name="CodeEditor">代码编辑器</Dropdown-item>
+                            <Dropdown-item name="FileDisplay">课件展示</Dropdown-item>
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
-                <template v-if="this.selected === 'showWhiteBoard'">
-                    <white-board></white-board>
-                </template>
-                <template v-else-if="this.selected === 'showCodeEditor'">
-                    <code-editor></code-editor>
-                </template>
-                <template v-else-if="this.selected === 'showCourseware'">
-                    <file-display></file-display>
-                </template>
+                <keep-alive>
+                    <component :is="currentTools"></component>
+                </keep-alive>
             </div>
             <div class="composite-container">
                 <div class="video-live">
-                    <video-display></video-display>
+                    <video-display :id="this.id" :teacherName="this.teacherName" :username="this.username"></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board></chat-board>
+                    <chat-board :id="this.id" :teacherName="this.teacherName" :username="this.username"></chat-board>
                 </div>
             </div>
         </div>
@@ -80,16 +74,17 @@ export default {
     },
     data: function () {
         return {
-            selected: 'showWhiteBoard',
+            currentTools: 'WhiteBoard',
             id: -1,
             roomName: '',
             teacherName: '',
-            studentNum: ''
+            studentNum: '',
+            username: ''
         }
     },
     created: function () {
         this.id = this.$route.params.id
-        fetch('getRoomInfo', {
+        fetch('/getRoomInfo/', {
             method: 'post',
             mode: 'cors',
             headers: {
@@ -104,32 +99,31 @@ export default {
             this.studentNum = obj.stuNum
             this.teacherName = obj.teacherName
         })
-    },
-    beforeDestroy: function () {
         let arrCookies = document.cookie.split(';')
-        let stuAccount = ''
+        let account = ''
         for (let i = 0; i < arrCookies.length; i++) {
             let arrStr = arrCookies[i].split('=')
             if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+                account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
             }
         }
-        fetch('leaveRoom', {
-            method: 'post',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json, text/plain, */*',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                'roomID': this.id,
-                'stuAccount': stuAccount
+        if (account !== '') {
+            fetch('/getName/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'account': account })
+            }).then((response) => response.json()).then((obj) => {
+                this.username = obj.name
             })
-        }).then((response) => response.json()).then((obj) => { })
+        }
     },
     methods: {
         changeCurrent: function (name) {
-            this.selected = name
+            this.currentTools = name
         }
     }
 }

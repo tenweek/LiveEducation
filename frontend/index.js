@@ -1,15 +1,48 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = 9000
+let app = require('express')()
+let server = require('http').Server(app)
+let io = require('socket.io')(server)
 
-io.on('connection', function(socket){
-    socket.on('join', function (roomId) {
+app.get('/', function (req, res) {
+    res.send('<h1>Hello Wellcome</h1>')
+})
+
+server.listen(9000, () => {
+    console.log('in 9000')
+})
+
+let onlineCount = 0
+
+io.on('connection', function (socket) {
+    let id = 0
+    socket.on('join', function (roomid) {
+        id = roomid
+        console.log('chatroom connected')
+        onlineCount++
+        socket.join(roomid)
+        io.to(roomid).emit('login', onlineCount)
+    })
+    socket.on('joinForWhiteBoard', function (roomId) {
+        console.log('whiteboard connected')
         socket.join(roomId)
     })
-    socket.on('drawing', function(data, roomId){
+    socket.on('joinForCodeEditor', function (roomId) {
+        console.log('codeeditor connected')
+        socket.join(roomId)
+    })
+    socket.on('message', function (data, roomid) {
+        console.log('received')
+        io.to(roomid).emit('message', data)
+    })
+    socket.on('kickOut', function (userid, roomid) {
+        console.log('kick ' + userid + ' out')
+        io.to(roomid).emit('kickOut', userid)
+    })
+    socket.on('drawing', function (data, roomId) {
         io.to(roomId).emit('drawing', data)
     });
+    socket.on('disconnect', function () {
+        console.log('disconnect')
+        onlineCount--
+        io.to(id).emit('logout', onlineCount)
+    })
 });
-
-http.listen(port, () => console.log('listening on port ' + port));

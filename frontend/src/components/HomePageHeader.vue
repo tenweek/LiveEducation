@@ -99,7 +99,7 @@ export default {
             }
         }
         if (this.account !== '') {
-            fetch('getName', {
+            fetch('/getName/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -115,7 +115,7 @@ export default {
     },
     methods: {
         createRoom: function () {
-            fetch('createRoom', {
+            fetch('/createRoom/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -132,7 +132,7 @@ export default {
             })
         },
         changeName: function () {
-            fetch('changeName', {
+            fetch('/changeName/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {
@@ -166,7 +166,8 @@ export default {
                 let date = new Date()
                 date.setTime(date.getTime() - 10000)
                 document.cookie = 'userAccount=a; expires=' + date.toGMTString()
-                window.location.reload()
+                location.reload()
+                this.$router.push({ path: '/' })
             }
         }
     }

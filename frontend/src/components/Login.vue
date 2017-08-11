@@ -54,7 +54,7 @@ export default {
     methods: {
         getResult: function () {
             // 获取输入的账号密码
-            fetch('Login', {
+            fetch('/login/', {
                 method: 'post',
                 mode: 'cors',
                 headers: {

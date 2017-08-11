@@ -4,12 +4,15 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview'
+import VueCodeMirror from 'vue-codemirror'
+import 'codemirror/keymap/sublime'
 import 'iview/dist/styles/iview.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(ElementUI)
+Vue.use(VueCodeMirror)
 
 /* eslint-disable no-new */
 new Vue({
