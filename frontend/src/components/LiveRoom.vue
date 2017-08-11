@@ -37,10 +37,10 @@
             </div>
             <div class="composite-container">
                 <div class="video-live">
-                    <video-display></video-display>
+                    <video-display :id="this.id" :teacherName="this.teacherName" :username="this.username"></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board :id="this.id" :teacherName="this.teacherName"></chat-board>
+                    <chat-board :id="this.id" :teacherName="this.teacherName" :username="this.username"></chat-board>
                 </div>
             </div>
         </div>
@@ -76,7 +76,8 @@ export default {
             id: -1,
             roomName: '',
             teacherName: '',
-            studentNum: ''
+            studentNum: '',
+            username: ''
         }
     },
     created: function () {
@@ -96,6 +97,27 @@ export default {
             this.studentNum = obj.stuNum
             this.teacherName = obj.teacherName
         })
+        let arrCookies = document.cookie.split(';')
+        let account = ''
+        for (let i = 0; i < arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split('=')
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
+            }
+        }
+        if (account !== '') {
+            fetch('/getName/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'account': account })
+            }).then((response) => response.json()).then((obj) => {
+                this.username = obj.name
+            })
+        }
     },
     methods: {
         changeCurrent: function (name) {
