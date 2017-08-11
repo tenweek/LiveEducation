@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
         io.to(roomid).emit('message', data)
     })
     socket.on('kickOut', function (userid, roomid) {
-        console.log('ss')
+        console.log('kick ' + userid + ' out')
         io.to(roomid).emit('kickOut', userid)
     })
     socket.on('disconnect', function () {

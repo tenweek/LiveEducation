@@ -19,6 +19,7 @@ class RoomStudent(models.Model):
     can_speak = models.BooleanField(default=True)
     can_watch = models.BooleanField(default=True)
 
+
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     name = models.CharField(default='', max_length=16, unique=True)

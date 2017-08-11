@@ -17,7 +17,7 @@
             </Dropdown-menu>
         </Dropdown>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
-            <label id="new-username">请选择您要解除禁言的对象</label><br><br>
+            <label>请选择您要解除禁言的对象</label><br><br>
             <Checkbox-group v-model="speakList">
                 <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
             </Checkbox-group>
@@ -30,38 +30,14 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
-    props: ['id', 'teacherName'],
+    props: ['id', 'teacherName', 'username'],
     data: function () {
         return {
             showGagList: false,
             socket: '',
-            username: '',
             choosenUser: '',
             gagList: [],
             speakList: []
-        }
-    },
-    created: function () {
-        let arrCookies = document.cookie.split(';')
-        let account = ''
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-            }
-        }
-        if (account !== '') {
-            fetch('/getName/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ 'account': account })
-            }).then((response) => response.json()).then((obj) => {
-                this.username = obj.name
-            })
         }
     },
     mounted: function () {
