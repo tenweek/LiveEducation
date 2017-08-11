@@ -14,7 +14,7 @@ export default {
         return {
             roomId: '',
             socket: '',
-            baseRoute: '/static/img/',
+            baseRoute: '/static/',
             recRoute: '',
             route: '',
             maxNum: '',
