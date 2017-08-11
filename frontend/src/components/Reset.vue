@@ -59,7 +59,6 @@ export default {
                 callback(new Error('请输入密码'))
             } else {
                 if (this.formCustom.passwdCheck !== '') {
-                    // 对第二个密码框单独验证
                     this.$refs.formCustom.validateField('passwdCheck')
                 }
                 callback()
@@ -112,13 +111,12 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                // 发送json消息需要执行一个序列化操作，发送一个字典类型
                 body: JSON.stringify({ 'mail': this.formCustom.mail })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.verification === 'none') {
                     this.$Message.error('用户不存在！')
                 } else {
-                    this.current += 1
+                    this.current = 1
                     this.formCustom.loginKey = obj.verification
                     console.log(this.formCustom.loginKey)
                 }
@@ -128,7 +126,7 @@ export default {
             if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error('验证码错误！')
             } else {
-                this.current += 1
+                this.current = 2
             }
         },
         changePasswd: function () {
@@ -147,7 +145,7 @@ export default {
                         'password': this.formCustom.passwd
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    this.current += 1
+                    this.current = 3
                 })
             }
         }

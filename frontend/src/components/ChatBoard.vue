@@ -17,7 +17,9 @@
             </Dropdown-menu>
         </Dropdown>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
-            <label>请选择您要解除禁言的对象</label><br><br>
+            <label>请选择您要解除禁言的对象</label>
+            <br>
+            <br>
             <Checkbox-group v-model="speakList">
                 <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
             </Checkbox-group>
@@ -41,31 +43,50 @@ export default {
         }
     },
     mounted: function () {
-        // 监听
         let self = this
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.id + '.1')
-        self.socket.on('kickOut', function (userid) {
-            console.log('sss')
-            if (self.username === userid) {
-                self.closeWindow()
-            }
-        })
         if (self.teacherName === self.username) {
-            self.socket.on('login', function (count) {
-                console.log(count)
-            })
-            self.socket.on('logout', function (count) {
-                console.log(count)
-            })
+            self.changeStuNum()
+        } else {
+            self.kickOut()
         }
         self.socket.on('message', function (data) {
             let ul = document.getElementById('messages')
             let li = document.createElement('li')
-            // 创建button
+            let button = self.createButton(data['username'], data['message'])
+            li.appendChild(button)
+            ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
+            ul.scrollTop = ul.scrollHeight
+        })
+    },
+    methods: {
+        setButtonAction: function (button, username) {
+            let self = this
+            button.onmousedown = function (oEvent) {
+                if (this.teacherName === this.username) {
+                    if (!oEvent) {
+                        oEvent = window.event
+                    }
+                    if (oEvent.button === 2) {
+                        let menu = document.getElementById('menu')
+                        menu.click()
+                        let show = document.getElementById('show')
+                        let left = oEvent.pageX - 500
+                        let top = oEvent.pageY - 588
+                        show.style = ('position:absolute;left:' + left + 'px;top:' + top + 'px;')
+                        self.choosenUser = username
+                    }
+                }
+            }
+            button.oncontextmenu = function () {
+                return false
+            }
+        },
+        createButton: function (username, message) {
             let button = document.createElement('input')
             button.type = 'button'
-            button.value = data['username'] + ' : ' + data['message']
+            button.value = username + ' : ' + message
             let styleArr = ['background-color:Transparent;', 'border-style:None;', 'outline:none;',
                 'word-wrap: break-word !important;', 'word-break: break-all !important;',
                 'white-space: normal !important;', 'text-align:left;', 'padding-left:10px;',
@@ -75,41 +96,28 @@ export default {
                 style += styleArr[i]
             }
             // 如果判定是本人就给字体加粗
-            if (data['username'] === self.username) {
+            if (username === this.username) {
                 style += 'font-weight:bold;'
             }
             button.style = style
-            button.onmousedown = function (oEvent) {
-                // 如果是老师就有操作权限
-                if (self.teacherName === self.username) {
-                    if (!oEvent) {
-                        oEvent = window.event
-                    }
-                    // 如果是右键则出现
-                    if (oEvent.button === 2) {
-                        let menu = document.getElementById('menu')
-                        menu.click()
-                        let show = document.getElementById('show')
-                        let left = oEvent.pageX - 500
-                        let top = oEvent.pageY - 588
-                        show.style = ('position:absolute;left:' + left + 'px;top:' + top + 'px;')
-                        self.choosenUser = data['username']
-                    }
+            this.setButtonAction(button, username)
+            return button
+        },
+        changeStuNum: function () {
+            this.socket.on('login', function (count) {
+                console.log(count)
+            })
+            this.socket.on('logout', function (count) {
+                console.log(count)
+            })
+        },
+        kickOut: function () {
+            this.socket.on('kickOut', function (userid) {
+                if (this.username === userid) {
+                    this.$Message.warning('您将在 ' + 3 + ' 秒后被踢出直播间')
+                    setTimeout(window.close, 3000)
                 }
-            }
-            // 屏蔽右键菜单
-            button.oncontextmenu = function () {
-                return false
-            }
-            li.appendChild(button)
-            ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
-            ul.scrollTop = ul.scrollHeight
-        })
-    },
-    methods: {
-        closeWindow: function () {
-            this.$Message.warning('您将在 ' + 3 + ' 秒后退出直播间')
-            setTimeout(window.close, 3000)
+            })
         },
         sendMsg: function () {
             let msg = document.getElementById('msgInput').value
@@ -136,57 +144,54 @@ export default {
                 }
             })
         },
-        teacherDoing: function (name) {
-            if (name === 'gag') {
-                this.$Message.warning('您将禁言用户： ' + this.choosenUser)
-                fetch('/gag/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'name': this.choosenUser,
-                        'roomID': this.id
-                    })
-                }).then((response) => response.json()).then((obj) => {
-                    this.gagList.push(this.choosenUser)
+        gag: function () {
+            this.$Message.warning('您将禁言用户： ' + this.choosenUser)
+            fetch('/gag/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': this.choosenUser,
+                    'roomID': this.id
                 })
-            }
-            if (name === 'gagAll') {
-                this.$Message.warning('您将禁言该房间内的所有用户')
-                fetch('/gagAll/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ 'roomID': this.id })
-                }).then((response) => response.json()).then((obj) => {
-                    this.gagList = []
-                    this.gagList = obj.gagList
-                })
-            }
-            if (name === 'allowSpeak') {
-                this.showGagList = true
-            }
-            if (name === 'allowAllSpeak') {
-                this.$Message.success('您将为该房间内的所有用户解禁')
-                fetch('/allowAllSpeak/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ 'roomID': this.id })
-                }).then((response) => response.json()).then((obj) => {
-                    this.gagList = []
-                })
-            }
-            if (name === 'kickOut') {
+            }).then((response) => response.json()).then((obj) => {
+                this.gagList.push(this.choosenUser)
+            })
+        },
+        gagAll: function () {
+            this.$Message.warning('您将禁言该房间内的所有用户')
+            fetch('/gagAll/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'roomID': this.id })
+            }).then((response) => response.json()).then((obj) => {
+                this.gagList = []
+                this.gagList = obj.gagList
+            })
+        },
+        allowAllSpeak: function () {
+            this.$Message.success('您将为该房间内的所有用户解禁')
+            fetch('/allowAllSpeak/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'roomID': this.id })
+            }).then((response) => response.json()).then((obj) => {
+                this.gagList = []
+            })
+        },
+        kickSomeoneOut: function () {
+            if (this.choosenUser !== this.teacherName) {
                 this.$Message.warning('您将踢出用户： ' + this.choosenUser)
                 fetch('/kickOut/', {
                     method: 'post',
@@ -202,6 +207,38 @@ export default {
                 }).then((response) => response.json()).then((obj) => {
                     this.socket.emit('kickOut', this.choosenUser, this.id + '.1')
                 })
+            } else {
+                this.$Message.warning('您不可踢出自己')
+            }
+        },
+        teacherDoing: function (name) {
+            if (name === 'gag') {
+                this.gag()
+            }
+            if (name === 'gagAll') {
+                this.gagAll()
+            }
+            if (name === 'allowSpeak') {
+                this.showGagList = true
+            }
+            if (name === 'allowAllSpeak') {
+                this.allowAllSpeak()
+            }
+            if (name === 'kickOut') {
+                this.kickSomeoneOut()
+            }
+        },
+        resetList: function () {
+            for (let i = this.gagList.length - 1; i >= 0; i--) {
+                let a = this.gagList[i]
+                for (let j = this.speakList.length - 1; j >= 0; j--) {
+                    let b = this.speakList[j]
+                    if (a === b) {
+                        this.gagList.splice(i, 1)
+                        this.speakList.splice(j, 1)
+                        break
+                    }
+                }
             }
         },
         allowSpeak: function () {
@@ -222,18 +259,7 @@ export default {
                     'student': this.speakList
                 })
             }).then((response) => response.json()).then((obj) => {
-                // this.gagList = []
-                for (let i = this.gagList.length - 1; i >= 0; i--) {
-                    let a = this.gagList[i]
-                    for (let j = this.speakList.length - 1; j >= 0; j--) {
-                        let b = this.speakList[j]
-                        if (a === b) {
-                            this.gagList.splice(i, 1)
-                            this.speakList.splice(j, 1)
-                            break
-                        }
-                    }
-                }
+                this.resetList()
             })
         }
     }

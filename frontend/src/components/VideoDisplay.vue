@@ -54,6 +54,20 @@ export default {
         join: function () {
             document.getElementById('join').disabled = true
             document.getElementById('leave').disabled = false
+            this.createClient()
+            this.client.on('error', function (err) {
+                console.log('Got error msg:', err.reason)
+                if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+                    this.client.renewChannelKey('', function () {
+                        console.log('Renew channel key successfully')
+                    }, function (err) {
+                        console.log('Renew channel key failed: ', err)
+                    })
+                }
+            })
+            this.monitorStream()
+        },
+        createClient: function () {
             this.client = AgoraRTC.createClient({ mode: 'interop' })
             this.client.init(this.key, () => {
                 this.client.join(null, this.id, null, (uid) => {
@@ -68,9 +82,7 @@ export default {
                             video: this.isTeacher,
                             screen: false
                         })
-                        if (this.isTeacher === true) {
-                            this.localStream.setVideoProfile('720p_3')
-                        }
+                        this.localStream.setVideoProfile('720p_3')
                         this.localStream.init(() => {
                             this.localStream.play('agora-local')
                             this.client.publish(this.localStream, function (err) {
@@ -86,16 +98,8 @@ export default {
             }, function (err) {
                 console.log('AgoraRTC client init failed', err)
             })
-            this.client.on('error', function (err) {
-                console.log('Got error msg:', err.reason)
-                if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-                    this.client.renewChannelKey('', function () {
-                        console.log('Renew channel key successfully')
-                    }, function (err) {
-                        console.log('Renew channel key failed: ', err)
-                    })
-                }
-            })
+        },
+        monitorStream: function () {
             this.client.on('stream-added', (evt) => {
                 this.client.subscribe(evt.stream, function (err) {
                     console.log('Subscribe stream failed', err)

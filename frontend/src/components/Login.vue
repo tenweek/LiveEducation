@@ -53,7 +53,6 @@ export default {
     },
     methods: {
         getResult: function () {
-            // 获取输入的账号密码
             fetch('/login/', {
                 method: 'post',
                 mode: 'cors',
@@ -61,7 +60,6 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                // 发送json消息需要执行一个序列化操作，发送一个字典类型
                 body: JSON.stringify({
                     'account': this.formCustom.account,
                     'password': this.formCustom.password

@@ -91,29 +91,35 @@ export default {
         }
     },
     methods: {
-        signUp: function () {
+        checkBeforeSignUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
                 this.$Message.error('请不要修改注册邮箱！')
-                return
+                return false
             }
             if (this.formCustom.passwd === '') {
                 this.$Message.error('请输入密码！')
-                return
+                return false
             }
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
                 this.$Message.error('两次输入密码不一致！')
-                return
+                return false
             }
             if (this.formCustom.username === '') {
                 this.$Message.error('用户名不能为空')
-                return
+                return false
             }
             if (this.formCustom.verification === '') {
                 this.$Message.error('请输入验证码！')
-                return
+                return false
             }
             if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error('输入的验证码有误！')
+                return false
+            }
+            return true
+        },
+        signUp: function () {
+            if (!this.checkBeforeSignUp()) {
                 return
             }
             this.$Message.success('注册成功!')
@@ -137,14 +143,20 @@ export default {
                 }
             })
         },
-        getVerification: function () {
+        checkEmail: function () {
             if (this.formCustom.mail === '') {
                 this.$Message.error('请输入邮箱！')
-                return
+                return false
             }
             let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             if (!this.formCustom.mail.match(reg)) {
                 this.$Message.error('邮箱格式有问题！')
+                return false
+            }
+            return true
+        },
+        getVerification: function () {
+            if (!this.checkEmail()) {
                 return
             }
             fetch('/getVerification/', {
@@ -154,7 +166,6 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                // 发送json消息需要执行一个序列化操作，发送一个字典类型
                 body: JSON.stringify({ 'mail': this.formCustom.mail })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.verification === 'exist') {
