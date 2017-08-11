@@ -33,7 +33,9 @@
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
-                <component :is="currentTools" keep-alive></component>
+                <keep-alive>
+                    <component :is="currentTools"></component>
+                </keep-alive>
             </div>
             <div class="composite-container">
                 <div class="video-live">
