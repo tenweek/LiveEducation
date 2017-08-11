@@ -414,7 +414,7 @@ export default {
                     break
             }
         },
-        clear: function (data, xData, yData) {
+        boardClear: function (data, xData, yData) {
             this.context.clearRect(0, 0, this.width, this.height)
             this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
             this.pointer += 1
@@ -432,7 +432,7 @@ export default {
             this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
             this.pointer = this.allImageData.length - 1
         },
-        undo: function (data, xData, yData) {
+        boardUndo: function (data, xData, yData) {
             if (this.pointer === 0) {
                 alert('没有可撤销的操作')
                 return
@@ -443,7 +443,7 @@ export default {
             this.context.putImageData(this.allImageData[this.pointer], 0, 0)
             this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         },
-        redo: function (data, xData, yData) {
+        boardRedo: function (data, xData, yData) {
             if (this.pointer === this.allImageData.length - 1) {
                 alert('已没有可重做的操作')
                 return
@@ -475,7 +475,7 @@ export default {
                     this.ellipse(data, xData, yData)
                     break
                 case 'clear':
-                    this.clear(data, xData, yData)
+                    this.boardClear(data, xData, yData)
                     break
                 case 'textField':
                     this.textBox(data, xData, yData)
@@ -484,10 +484,10 @@ export default {
                     this.font(data, xData, yData)
                     break
                 case 'undo':
-                    this.undo(data, xData, yData)
+                    this.boardUndo(data, xData, yData)
                     break
                 case 'redo':
-                    this.redo(data, xData, yData)
+                    this.boardRedo(data, xData, yData)
                     break
             }
         }
