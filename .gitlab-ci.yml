@@ -1,0 +1,15 @@
+stages；
+    - build
+    - test
+
+cache:
+    paths:
+        - node_modules/
+
+deploy:
+    stage: build
+    script:
+        - pip3 install -r requirments.txt
+        - cd frontend/
+        - npm install
+        - npm run build
