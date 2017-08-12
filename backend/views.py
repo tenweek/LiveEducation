@@ -132,8 +132,7 @@ def createRoom(request):
     authId = req['account']
     teacher = User.objects.get(username=authId)
     Room.objects.create(teacher=teacher, room_name=roomName)
-    response = JsonResponse(
-        {'msg': 'Making a room successfully!'})
+    response = JsonResponse({})
     return response
 
 

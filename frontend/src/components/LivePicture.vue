@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import myMsg from './../warning.js'
 export default {
     name: 'live-picture',
     props: ['roomName', 'teacherName', 'studentNum', 'id'],
@@ -55,13 +56,13 @@ export default {
                     })
                 }).then((response) => response.json()).then((obj) => {
                     if (obj.result === 'cannot') {
-                        this.$Message.error('非常抱歉，您不可再加入该房间！')
+                        this.$Message.error(myMsg.room['cannotJoin'])
                     } else {
                         window.open('./#/live_room/' + this.id)
                     }
                 })
             } else {
-                this.$Message.error('请先登录！')
+                this.$Message.error(myMsg.account['loginNeeded'])
             }
         }
     }

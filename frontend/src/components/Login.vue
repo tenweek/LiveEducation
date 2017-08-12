@@ -23,13 +23,14 @@
 </template>
 
 <script>
+import myMsg from './../warning.js'
 export default {
     name: 'Login',
     components: {},
     data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('请输入密码'))
+                callback(new Error(myMsg.account['passwordNeeded']))
             } else {
                 callback()
             }
@@ -41,11 +42,11 @@ export default {
             },
             ruleCustom: {
                 account: [
-                    { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                    { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
+                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' },
+                    { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
                     { validator: validatePass, trigger: 'blur' }
                 ]
             }
@@ -66,11 +67,11 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
-                    this.$Message.success('登录成功！')
+                    this.$Message.success(myMsg.account['loginSuccess'])
                     document.cookie = 'userAccount=' + this.formCustom.account
                     this.$router.push({ path: '/' })
                 } else {
-                    this.$Message.error('账号或密码不正确！')
+                    this.$Message.error(myMsg.account['loginFailed'])
                 }
             })
         }

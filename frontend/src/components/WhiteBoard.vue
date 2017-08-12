@@ -41,6 +41,7 @@
 
 <script>
 import * as io from 'socket.io-client'
+import myMsg from './../warning.js'
 export default {
     name: 'white-board',
     props: {
@@ -428,7 +429,7 @@ export default {
         },
         boardUndo: function (data, xData, yData) {
             if (this.pointer === 0) {
-                alert('没有可撤销的操作')
+                this.$Message.alert(myMsg.whiteBoard['undoNotExist'])
                 return
             }
             if (this.pointer > 0) {
@@ -439,7 +440,7 @@ export default {
         },
         boardRedo: function (data, xData, yData) {
             if (this.pointer === this.allImageData.length - 1) {
-                alert('已没有可重做的操作')
+                this.$Message.alert(myMsg.whiteBoard['redoNotExist'])
                 return
             }
             if (this.pointer < this.allImageData.length) {
