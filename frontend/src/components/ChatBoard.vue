@@ -1,24 +1,32 @@
 <template>
     <div class="chat-board">
-        <div v-for="message in messages">
-            <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
-                <button class="message" @click="getName(message)">
-                    {{ message }}
-                </button>
-                <Dropdown-menu id="show" slot="list">
-                    <Dropdown-item name="gag">禁言</Dropdown-item>
-                    <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
-                    <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
-                    <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
-                    <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
-                </Dropdown-menu>
-            </Dropdown>
+        <div id="messages">
+            <div v-for="message in messages">
+                <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
+                    <button class="message" @click="getName(message)">
+                        {{ message['msg'] }}
+                    </button>
+                    <Dropdown-menu id="show" slot="list">
+                        <Dropdown-item name="gag">禁言</Dropdown-item>
+                        <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
+                        <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
+                        <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
+                        <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
+                    </Dropdown-menu>
+                </Dropdown>
+            </div>
         </div>
-        <form>
-            <img src="../assets/chat_bottombar_icon_face.png">
-            <input id="msgInput" class="msg-input" autocomplete="off" />
-            <button @click="sendMsg">Send</button>
-        </form>
+        <Form class="form" inline>
+            <Form-item class="item-img">
+                <img class="img" src="../assets/chat_bottombar_icon_face.png">
+            </Form-item>
+            <Form-item class="item-input">
+                <Input v-model="msgInput"></Input>
+            </Form-item>
+            <Form-item class="item-button">
+                <Button type="ghost" class="button" @click="sendMsg">发送</Button>
+            </Form-item>
+        </Form>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
             <label>请选择您要解除禁言的对象</label>
             <br>
@@ -44,7 +52,8 @@ export default {
             choosenUser: '',
             gagList: [],
             speakList: [],
-            messages: []
+            messages: [],
+            msgInput: ''
         }
     },
     mounted: function () {
@@ -58,12 +67,15 @@ export default {
             self.kickOut()
         }
         self.socket.on('message', function (data) {
-            self.messages.push(data['username'] + ' : ' + data['message'])
+            let msg = data['username'] + ' : ' + data['message']
+            self.messages.push({ 'msg': msg, 'user': data['username'] })
+            let scroll = document.getElementById('messages')
+            scroll.scrollTop = scroll.scrollHeight
         })
     },
     methods: {
         getName: function (message) {
-            this.choosenUser = message.split(':')[0].replace(/(^\s*)|(\s*$)/g, '')
+            this.choosenUser = message['user']
         },
         contextMenu: function () {
             return false
@@ -86,11 +98,9 @@ export default {
             })
         },
         sendMsg: function () {
-            let msg = document.getElementById('msgInput').value
-            if (msg === '') {
+            if (this.msgInput === '') {
                 return
             }
-            document.getElementById('msgInput').value = ''
             fetch('/checkGag/', {
                 method: 'post',
                 mode: 'cors',
@@ -104,7 +114,8 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
-                    this.socket.emit('message', { message: msg, username: this.username }, this.id + '.1')
+                    this.socket.emit('message', { message: this.msgInput, username: this.username }, this.id + '.1')
+                    this.msgInput = ''
                 } else {
                     this.$Message.error(myMsg.chatroom['beGaged'])
                 }
@@ -240,33 +251,10 @@ export default {
     box-sizing: border-box;
 }
 
-form {
-    position: absolute;
-    bottom: 30px;
-}
-
 .chat-board {
-    width: 394px;
-    height: 294px;
-}
-
-form input {
-    width: 325px;
-    height: 30px;
-}
-
-form button {
+    width: 100%;
+    height: 100%;
     position: relative;
-    left: -4.5px;
-    width: 70px;
-    height: 30px;
-    background: rgb(130, 224, 255);
-    border: none;
-}
-
-form img {
-    margin-bottom: -10px;
-    height: 30px;
 }
 
 .message {
@@ -286,7 +274,45 @@ form img {
     padding-left: 5px;
 }
 
-#msg-input {
-    width: 292px;
+.form {
+    height: 38px;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+}
+
+.chat-board .form .item-button,
+.chat-board .form .item-img,
+.chat-board .form .item-input {
+    margin-top: 6px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+}
+
+.item-img {
+    width: 9.1%;
+}
+
+.item-input {
+    width: 68.1%;
+}
+
+.item-button {
+    width: 20%;
+}
+
+.img {
+    height: 30px;
+    width: 30px;
+}
+
+.button {
+    color: white;
+    background-color: #1EE494;
+}
+
+#messages {
+    overflow: auto;
+    height: 91%;
 }
 </style>
