@@ -95,7 +95,6 @@ export default {
             for (let i = 0; i < styleArr.length; i++) {
                 style += styleArr[i]
             }
-            // 如果判定是本人就给字体加粗
             if (username === this.username) {
                 style += 'font-weight:bold;'
             }
@@ -104,6 +103,7 @@ export default {
             return button
         },
         changeStuNum: function () {
+            // 这个地方更新在线人数
             this.socket.on('login', function (count) {
                 console.log(count)
             })

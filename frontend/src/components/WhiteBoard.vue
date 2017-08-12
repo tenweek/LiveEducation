@@ -29,14 +29,11 @@
                     <Button type="text" :class="{ active: size === 1 }" id="size-button" @click="size = 1">小</Button>
                 </div>
             </div>
-    
         </div>
-    
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true" style="width: 300px"></input>
             <canvas ref="board" class="canvas" :width="width" :height="height"></canvas>
         </div>
-    
     </div>
 </template>
 
@@ -52,11 +49,9 @@ export default {
             default: true
         }
     },
-
     created: function () {
         this.roomId = this.$route.params.id
     },
-
     data: function () {
         return {
             type: 'pen',
@@ -83,7 +78,6 @@ export default {
             roomId: ''
         }
     },
-
     methods: {
         drawText: function () {
             let input = this.textInput
