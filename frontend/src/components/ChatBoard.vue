@@ -1,21 +1,24 @@
 <template>
     <div class="chat-board">
-        <ul id="messages"></ul>
+        <div v-for="message in messages">
+            <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
+                <button class="message" @click="getName(message)">
+                    {{ message }}
+                </button>
+                <Dropdown-menu id="show" slot="list">
+                    <Dropdown-item name="gag">禁言</Dropdown-item>
+                    <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
+                    <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
+                    <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
+                    <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
+                </Dropdown-menu>
+            </Dropdown>
+        </div>
         <form>
             <img src="../assets/chat_bottombar_icon_face.png">
             <input id="msgInput" class="msg-input" autocomplete="off" />
             <button @click="sendMsg">Send</button>
         </form>
-        <Dropdown trigger="click" @on-click="teacherDoing">
-            <label id="menu"></label>
-            <Dropdown-menu id="show" slot="list">
-                <Dropdown-item name="gag">禁言</Dropdown-item>
-                <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
-                <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
-                <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
-                <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
-            </Dropdown-menu>
-        </Dropdown>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
             <label>请选择您要解除禁言的对象</label>
             <br>
@@ -39,11 +42,13 @@ export default {
             socket: '',
             choosenUser: '',
             gagList: [],
-            speakList: []
+            speakList: [],
+            messages: []
         }
     },
     mounted: function () {
         let self = this
+        document.oncontextmenu = self.contextMenu
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.id + '.1')
         if (self.teacherName === self.username) {
@@ -52,55 +57,15 @@ export default {
             self.kickOut()
         }
         self.socket.on('message', function (data) {
-            let ul = document.getElementById('messages')
-            let li = document.createElement('li')
-            let button = self.createButton(data['username'], data['message'])
-            li.appendChild(button)
-            ul.insertBefore(li, ul.childNodes[ul.childNodes.length])
-            ul.scrollTop = ul.scrollHeight
+            self.messages.push(data['username'] + ' : ' + data['message'])
         })
     },
     methods: {
-        setButtonAction: function (button, username) {
-            let self = this
-            button.onmousedown = function (oEvent) {
-                if (this.teacherName === this.username) {
-                    if (!oEvent) {
-                        oEvent = window.event
-                    }
-                    if (oEvent.button === 2) {
-                        let menu = document.getElementById('menu')
-                        menu.click()
-                        let show = document.getElementById('show')
-                        let left = oEvent.pageX - 500
-                        let top = oEvent.pageY - 588
-                        show.style = ('position:absolute;left:' + left + 'px;top:' + top + 'px;')
-                        self.choosenUser = username
-                    }
-                }
-            }
-            button.oncontextmenu = function () {
-                return false
-            }
+        getName: function (message) {
+            this.choosenUser = message.split(':')[0].replace(/(^\s*)|(\s*$)/g, '')
         },
-        createButton: function (username, message) {
-            let button = document.createElement('input')
-            button.type = 'button'
-            button.value = username + ' : ' + message
-            let styleArr = ['background-color:Transparent;', 'border-style:None;', 'outline:none;',
-                'word-wrap: break-word !important;', 'word-break: break-all !important;',
-                'white-space: normal !important;', 'text-align:left;', 'padding-left:10px;',
-                'float:left;', 'padding-left:0px;', 'width:100%;']
-            let style = ''
-            for (let i = 0; i < styleArr.length; i++) {
-                style += styleArr[i]
-            }
-            if (username === this.username) {
-                style += 'font-weight:bold;'
-            }
-            button.style = style
-            this.setButtonAction(button, username)
-            return button
+        contextMenu: function () {
+            return false
         },
         changeStuNum: function () {
             // 这个地方更新在线人数
@@ -303,15 +268,21 @@ form img {
     height: 30px;
 }
 
-#messages {
-    list-style-type: none;
-    height: 264.5px;
-    width: 395.5px;
-    overflow-y: auto;
-    margin: 0;
-    padding: 0;
-    padding-left: 10px;
-    padding-top: 5px;
+.message {
+    background-color: Transparent;
+    border-style: None;
+    outline: none;
+    word-wrap: break-word !important;
+    word-break: break-all !important;
+    white-space: normal !important;
+    text-align: left;
+    padding-top: 2px;
+    width: 100%;
+}
+
+.set-left {
+    float: left;
+    padding-left: 5px; 
 }
 
 #msg-input {
