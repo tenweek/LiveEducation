@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import myMsg from './../warning.js'
 export default {
     name: 'RecordPicture',
     components: {},
@@ -34,7 +35,7 @@ export default {
             if (this.canWork) {
                 window.open('./#/record_room/')
             } else {
-                this.$Message.error('请先登录！')
+                this.$Message.error(myMsg.account['loginNeeded'])
             }
         }
     }

@@ -33,6 +33,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 import * as io from 'socket.io-client'
+import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
     props: ['id', 'teacherName', 'username'],
@@ -79,7 +80,7 @@ export default {
         kickOut: function () {
             this.socket.on('kickOut', function (userid) {
                 if (this.username === userid) {
-                    this.$Message.warning('您将在 ' + 3 + ' 秒后被踢出直播间')
+                    this.$Message.warning(myMsg.chatroom['getKickedOut'])
                     setTimeout(window.close, 3000)
                 }
             })
@@ -105,7 +106,7 @@ export default {
                 if (obj.result) {
                     this.socket.emit('message', { message: msg, username: this.username }, this.id + '.1')
                 } else {
-                    this.$Message.error('您已被禁言')
+                    this.$Message.error(myMsg.chatroom['beGaged'])
                 }
             })
         },
@@ -127,7 +128,7 @@ export default {
             })
         },
         gagAll: function () {
-            this.$Message.warning('您将禁言该房间内的所有用户')
+            this.$Message.warning(myMsg.chatroom['gagAll'])
             fetch('/gagAll/', {
                 method: 'post',
                 mode: 'cors',
@@ -142,7 +143,7 @@ export default {
             })
         },
         allowAllSpeak: function () {
-            this.$Message.success('您将为该房间内的所有用户解禁')
+            this.$Message.warning(myMsg.chatroom['allowAllSpeak'])
             fetch('/allowAllSpeak/', {
                 method: 'post',
                 mode: 'cors',
@@ -173,7 +174,7 @@ export default {
                     this.socket.emit('kickOut', this.choosenUser, this.id + '.1')
                 })
             } else {
-                this.$Message.warning('您不可踢出自己')
+                this.$Message.warning(myMsg.chatroom['cannotKickOut'])
             }
         },
         teacherDoing: function (name) {
@@ -207,11 +208,11 @@ export default {
             }
         },
         allowSpeak: function () {
-            let s = '您将为该房间内的以下用户解禁：\n'
+            let gagWarning = '您将为该房间内的以下用户解禁：\n'
             for (let i = 0; i < this.speakList.length; i++) {
-                s += (this.speakList[i] + '  ')
+                gagWarning += (this.speakList[i] + '  ')
             }
-            this.$Message.success(s)
+            this.$Message.warning(gagWarning)
             fetch('/allowSpeak/', {
                 method: 'post',
                 mode: 'cors',

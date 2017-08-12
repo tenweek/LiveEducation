@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import myMsg from './../warning.js'
 export default {
     name: 'home-page-header',
     props: ['myOption'],
@@ -130,7 +131,7 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => {
                 // 创建房间后自动进入该房间 目前还没做
-                this.$Message.success(obj.msg)
+                this.$Message.success(myMsg.room['create'])
             })
         },
         changeName: function () {
@@ -147,7 +148,7 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => {
                 this.username = this.newUserName
-                this.$Message.success('您已成功修改昵称！')
+                this.$Message.success(myMsg.account['nameChanged'])
             })
         },
         login: function () {
