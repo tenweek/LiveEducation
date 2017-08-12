@@ -282,7 +282,7 @@ form img {
 
 .set-left {
     float: left;
-    padding-left: 5px; 
+    padding-left: 5px;
 }
 
 #msg-input {
