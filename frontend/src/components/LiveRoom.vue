@@ -143,12 +143,18 @@ export default {
     position: relative;
     border-radius: 5px;
     overflow: hidden;
+    width: 177vmin;
+    height: 100vmin;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header {
     height: 60px;
     width: 100%;
     font-size: 40px;
+    position: fixed;
+    left: 0;
 }
 
 .navigation {
@@ -156,6 +162,10 @@ export default {
     padding: 8px 10px;
     overflow: hidden;
     display: flex;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 100%;
     font-size: 15px;
 }
 
@@ -174,35 +184,38 @@ export default {
 }
 
 .layout-header {
-    width: 1100px;
+    width: 78%;
+    height: 78%;
     display: flex;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 110px;
 }
 
 .teaching-tools {
-    height: 490px;
-    width: 680px;
+    height: 100%;
+    width: 68%;
     border: solid;
     text-align: left;
     overflow: hidden;
 }
 
 .composite-container {
-    width: 400px;
-    height: 490px;
-    margin-left: 20px;
+    width: 30%;
+    height: 100%;
+    margin-left: 2%;
 }
 
 .video-live {
-    height: 190px;
-    width: 400px;
+    height: 30%;
+    width: 100%;
     border: solid;
 }
 
 .chatroom {
-    height: 300px;
-    width: 400px;
+    margin-top: 4%;
+    height: 68%;
+    width: 100%;
     border: solid;
 }
 </style>
