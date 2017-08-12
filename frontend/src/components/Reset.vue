@@ -177,10 +177,12 @@ export default {
 }
 
 #card {
-    margin: 200px auto;
     width: 550px;
-    margin-left: auto;
-    margin-right: auto;
+    position: absolute;
+    top: 50%;
+    margin-top: -214px;
+    left: 50%;
+    margin-left: -275px;
 }
 
 #bg {
