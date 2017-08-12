@@ -1,10 +1,12 @@
 <template>
     <div class="picture">
         <a @click="recordRoom">
-            <img src="./../assets/record.jpg" height="130px">
-            <label class="information">房间名</label>
+            <div class="for-img">
+                <img src="./../assets/record.jpg" width="100%">
+            </div>
+            <label id="information-room-name">房间名</label>
             <br>
-            <label class="information">&nbsp;&nbsp;主讲教师</label>
+            <label id="information-teacher-name">主讲教师</label>
         </a>
     </div>
 </template>
@@ -43,23 +45,28 @@ export default {
 <style scoped>
 .picture {
     background: #efefef;
-    width: 195px;
-    height: 185px;
-    margin-right: 30px;
-    margin-left: 30px;
+    width: 160px;
+    height: 150px;
     margin-top: 15px;
-    float: left;
-    overflow: hidden;
     font-size: 14px;
+    text-align: left;
+}
+
+.for-img {
+    width: 100%;
+    height: 105px;
+}
+
+#information-room-name {
+    padding-left: 6px;
+}
+
+#information-teacher-name {
+    padding-left: 5px;
 }
 
 .picture a {
     color: #464c5b;
-}
-
-.information {
-    position: relative;
-    right: 70px;
 }
 
 .picture:hover {

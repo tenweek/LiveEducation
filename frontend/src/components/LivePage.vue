@@ -10,8 +10,10 @@
             </div>
         </div>
         <div class="list">
-            <live-picture v-for="room in rooms" :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum">
-            </live-picture>
+            <div v-for="room in rooms" class="every-picture">
+                <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" class="live-picture">
+                </live-picture>
+            </div>
         </div>
         <div>
             <page-footer></page-footer>
@@ -63,7 +65,9 @@ export default {
 .list {
     height: auto;
     min-height: 295px;
-    width: 1100px;
+    width: 65%;
+    min-width: 800px;
+    max-width: 1000px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     margin: auto;
@@ -71,12 +75,32 @@ export default {
     background: white;
     padding-top: 8px;
     padding-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .list-picture {
     height: 100%;
+    width: 100%;
+    min-width: 800px;
     padding-top: 5px;
-    padding-left: 35px;
+    padding-left: 4%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.every-picture {
+    width: 20%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 10px;
+}
+
+.live-picture {
+    width: 160px;
+    height: auto;
+    margin: auto;
 }
 
 .navigation {
@@ -97,6 +121,6 @@ export default {
     height: 60px;
     width: 100%;
     font-size: 40px;
-    z-index: 9999;
+    z-index: 50;
 }
 </style>

@@ -5,49 +5,52 @@
         </div>
         <div class="list">
             <div class="list-hint">
-                <div class="icon">
-                    <Icon type="university" class="icon-middle"></Icon>
-                </div>
-                &nbsp;
-                <label class="live-broadcast">正在直播</label>
-                <a href="#/live_page" class="more">
-                    <b>
-                        <label>查看更多
-                            <Icon type="chevron-right"></Icon>
-                        </label>
-                    </b>
+                <Icon type="university" class="icon-middle"></Icon>
+                <input type="text" class="live-broadcast" value="直播课堂" readonly="true" ></input>
+                <a href="#/live_page" class="more">查看更多
+                        <Icon type="chevron-right"></Icon>
                 </a>
             </div>
             <div class="list-picture">
-                <live-picture v-for="room in rooms" :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum">
-                </live-picture>
+                <div  v-for="room in rooms" class="every-picture">
+                    <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" class="live-picture">
+                    </live-picture>
+                </div>
             </div>
         </div>
         <div class="list">
             <div class="list-hint">
-                <div class="icon">
-                    <Icon type="videocamera" class="icon-middle"></Icon>
-                </div>
-                &nbsp;
-                <label class="live-broadcast">录播课堂</label>
-                <a href="#/record-page" class="more">
-                    <b>
-                        <label>查看更多
-                            <Icon type="chevron-right"></Icon>
-                        </label>
-                    </b>
+                <Icon type="university" class="icon-middle"></Icon>
+                <input type="text" class="live-broadcast" value="录播课堂" readonly="true" ></input>
+                <a href="#/live_page" class="more">查看更多
+                        <Icon type="chevron-right"></Icon>
                 </a>
             </div>
             <div class="list-picture">
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
-                <record-picture></record-picture>
+                <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                 <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                 <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                 <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
+                <div class="every-picture">
+                    <record-picture></record-picture>
+                </div>
             </div>
         </div>
         <div>
@@ -113,37 +116,12 @@ export default {
     font-size: 40px;
 }
 
-.navigation {
-    background: #464c5b;
-    padding: 8px 0;
-    overflow: hidden;
-    display: flex;
-}
-
-.navigation-center {
-    margin: 0 auto;
-    font-size: 15px;
-}
-
-.navigation-right {
-    float: right;
-    margin-right: 15px;
-    font-size: 15px;
-}
-
-.navigation-bar:hover {
-    color: gold;
-}
-
-.navigation a {
-    color: #9ba7b5;
-}
-
 .list {
     height: auto;
-    height: auto;
     min-height: 295px;
-    width: 1100px;
+    width: 65%;
+    min-width: 800px;
+    max-width: 1000px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     margin: auto;
@@ -154,8 +132,25 @@ export default {
 
 .list-picture {
     height: 100%;
+    width: 100%;
+    min-width: 800px;
     padding-top: 5px;
-    padding-left: 35px;
+    padding-left: 4%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.every-picture {
+    width: 20%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.live-picture {
+    width: 100%;
+    height: auto;
+    margin: auto;
 }
 
 .list-hint {
@@ -163,18 +158,30 @@ export default {
     line-height: 45px;
     width: 100%;
     font-size: 25px;
-    display: flex;
     padding-left: 20px;
     padding-right: 20px;
     border-bottom: solid;
 }
 
+.icon-middle {
+    float: left;
+    margin-top: 10px;
+}
+
+.live-broadcast {
+    width: 150px;
+    height: 40px;
+    border: none;
+    float: left;
+    margin-left: 10px;
+}
+
 .more {
-    float: right;
     font-size: 15px;
+    float: right;
     color: #464c5b;
-    padding-top: 4px;
-    margin-left: 850px;
+    height: 30px;
+    padding-top: 10px;
 }
 
 .layout-logo {
@@ -186,11 +193,5 @@ export default {
     position: relative;
     top: 15px;
     left: 20px;
-}
-
-.footer {
-    text-align: center;
-    padding: 5px 0 5px;
-    color: #9ea7b4;
 }
 </style>

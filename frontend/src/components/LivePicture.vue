@@ -1,7 +1,9 @@
 <template>
     <div class="picture">
         <a @click="liveRoom">
-            <img src="../assets/papi.jpg" height="130">
+            <div class="for-img">
+                <img src="../assets/papi.jpg" width="100%">
+            </div>
             <label id="information-room-name">房间名:{{ this.roomName }}</label>
             <br>
             <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
@@ -69,14 +71,16 @@ export default {
 <style scoped>
 .picture {
     background: #efefef;
-    width: 195px;
-    height: 185px;
-    margin-right: 30px;
-    margin-left: 30px;
+    width: 160px;
+    height: 150px;
     margin-top: 15px;
-    float: left;
     font-size: 14px;
     text-align: left;
+}
+
+.for-img {
+    width: 100%;
+    height: 105px;
 }
 
 #information-room-name {
