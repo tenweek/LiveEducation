@@ -90,7 +90,11 @@ export default {
 
 .log-in {
     background-color: white;
-    margin: 180px auto;
+    top: 50%;
+    margin-top: -174.5px;
+    left: 50%;
+    margin-left: -252.5px;
+    position: absolute;
     width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);

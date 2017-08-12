@@ -193,7 +193,11 @@ h2 {
 
 .sign-up {
     background-color: rgb(255, 255, 255);
-    margin: 30px auto;
+    position: absolute;
+    margin-left: -252.5px;
+    left: 50%;
+    margin-top: -284.5px;
+    top: 50%;
     width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
