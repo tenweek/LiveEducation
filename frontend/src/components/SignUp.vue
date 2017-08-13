@@ -41,15 +41,15 @@
 </template>
 
 <script>
+import myMsg from './../warning.js'
 export default {
     name: 'sign-up',
     data: function () {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('请输入密码'))
+                callback(new Error(myMsg.account['passwordNeeded']))
             } else {
                 if (this.formCustom.passwdCheck !== '') {
-                    // 对第二个密码框单独验证
                     this.$refs.formCustom.validateField('passwdCheck')
                 }
                 callback()
@@ -57,9 +57,9 @@ export default {
         }
         const validatePassCheck = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('请再次输入密码'))
+                callback(new Error(myMsg.account['passwordAgain']))
             } else if (value !== this.formCustom.passwd) {
-                callback(new Error('两次输入密码不一致!'))
+                callback(new Error(myMsg.account['passwordAgainWrong']))
             } else {
                 callback()
             }
@@ -76,15 +76,15 @@ export default {
             },
             ruleCustom: {
                 mail: [
-                    { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                    { required: true, message: myMsg.account['passwordAgain'], trigger: 'blur' },
+                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
                 ],
                 passwd: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' },
+                    { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 passwdCheck: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' },
+                    { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
                     { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }
@@ -93,27 +93,27 @@ export default {
     methods: {
         checkBeforeSignUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
-                this.$Message.error('请不要修改注册邮箱！')
+                this.$Message.error(myMsg.account['mailNotChange'])
                 return false
             }
             if (this.formCustom.passwd === '') {
-                this.$Message.error('请输入密码！')
+                this.$Message.error(myMsg.account['passwordNeeded'])
                 return false
             }
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
-                this.$Message.error('两次输入密码不一致！')
+                this.$Message.error(myMsg.account['passwordAgainWrong'])
                 return false
             }
             if (this.formCustom.username === '') {
-                this.$Message.error('用户名不能为空')
+                this.$Message.error(myMsg.account['nameNeeded'])
                 return false
             }
             if (this.formCustom.verification === '') {
-                this.$Message.error('请输入验证码！')
+                this.$Message.error(myMsg.account['verificationNeeded'])
                 return false
             }
             if (this.formCustom.verification !== this.formCustom.loginKey) {
-                this.$Message.error('输入的验证码有误！')
+                this.$Message.error(myMsg.account['verificationWrong'])
                 return false
             }
             return true
@@ -122,7 +122,7 @@ export default {
             if (!this.checkBeforeSignUp()) {
                 return
             }
-            this.$Message.success('注册成功!')
+            this.$Message.success(myMsg.account['signupSuccess'])
             fetch('/signUp/', {
                 method: 'post',
                 mode: 'cors',
@@ -139,18 +139,18 @@ export default {
                 if (obj.result) {
                     this.$router.push({ path: '/login' })
                 } else {
-                    this.$Message.error('该用户已被注册过')
+                    this.$Message.error(myMsg.account['nameExist'])
                 }
             })
         },
         checkEmail: function () {
             if (this.formCustom.mail === '') {
-                this.$Message.error('请输入邮箱！')
+                this.$Message.error(myMsg.account['mailNeeded'])
                 return false
             }
             let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             if (!this.formCustom.mail.match(reg)) {
-                this.$Message.error('邮箱格式有问题！')
+                this.$Message.error(myMsg.account['mailFormatWrong'])
                 return false
             }
             return true
@@ -169,7 +169,7 @@ export default {
                 body: JSON.stringify({ 'mail': this.formCustom.mail })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.verification === 'exist') {
-                    this.$Message.error('账号已存在')
+                    this.$Message.error(myMsg.account['accountExist'])
                     return
                 }
                 this.formCustom.loginKey = obj.verification
@@ -193,7 +193,11 @@ h2 {
 
 .sign-up {
     background-color: rgb(255, 255, 255);
-    margin: 30px auto;
+    position: absolute;
+    margin-left: -252.5px;
+    left: 50%;
+    margin-top: -284.5px;
+    top: 50%;
     width: 505px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, .04);
