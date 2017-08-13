@@ -13,9 +13,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
-    created: function () {
-        this.roomid = this.$route.params.id
-    },
+    props: ['id', 'teacherName', 'username'],
     data: function () {
         return {
             code: 'const a = 10   123456789',
@@ -33,7 +31,6 @@ export default {
                 highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true }
             },
             socket: '',
-            roomid: '',
             modeList: [
                 {
                     modeName: 'JavaScript',
@@ -59,17 +56,19 @@ export default {
         }
     },
     mounted: function () {
-        this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForCodeEditor', this.roomid + '.3')
-        var self = this
-        this.socket.on('message', function (mes) {
-            self.code = mes
-        })
+        let self = this
+        self.socket = io.connect('http://localhost:9000')
+        self.socket.emit('joinForCodeEditor', this.id + '.3')
+        if (self.username !== self.teacherName) {
+            this.socket.on('message', function (mes) {
+                self.code = mes['newcode']
+            })
+        }
     },
     watch: {
         code: function (newcode, oldcode) {
-            if (newcode !== oldcode) {
-                this.socket.emit('message', newcode, this.roomid + '.3')
+            if (newcode !== oldcode && this.username === this.teacherName) {
+                this.socket.emit('message', { 'newcode': newcode, 'user': this.username }, this.id + '.3')
             }
         }
     }
