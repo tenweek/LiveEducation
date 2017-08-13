@@ -70,12 +70,13 @@ export default {
             currentImageData: null,
             pointer: 0,
             socket: '',
-            roomId: ''
+            roomId: '',
+            isTeacher: ''
         }
     },
     methods: {
         drawText: function () {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let input = this.textInput
@@ -85,25 +86,25 @@ export default {
             }, this.id + '.0')
         },
         clear: function () {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             this.socket.emit('drawing', { type: 'clear' }, this.id + '.0')
         },
         undo: function () {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             this.socket.emit('drawing', { type: 'undo' }, this.id + '.0')
         },
         redo: function () {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             this.socket.emit('drawing', { type: 'redo' }, this.id + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let color = this.colorBorder
@@ -119,7 +120,7 @@ export default {
             }, this.id + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             if (action === 'mouseup') {
@@ -134,7 +135,7 @@ export default {
             }
         },
         eraserCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let size = this.size
@@ -148,7 +149,7 @@ export default {
             }, this.id + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let color = this.colorBorder
@@ -164,7 +165,7 @@ export default {
             }, this.id + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let colorBorder = this.colorBorder
@@ -184,7 +185,7 @@ export default {
             }, this.id + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let colorBorder = this.colorBorder
@@ -204,7 +205,7 @@ export default {
             }, this.id + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
-            if (!isTeacher) {
+            if (!this.isTeacher) {
                 return
             }
             let colorBorder = this.colorBorder
