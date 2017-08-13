@@ -228,9 +228,13 @@ def changePasswd(request):
 @csrf_exempt
 def changeName(request):
     req = simplejson.load(request)
+    userFilterWithName = User.objects.filter(name=req['newname'])
+    if len(userFilterWithName) != 0:
+        response = JsonResponse({'result': False})
+        return response
     user = User.objects.get(username=req['account'])
     user.name = req['newname']
     user.save()
-    response = JsonResponse({})
+    response = JsonResponse({'result': True})
     return response
 # Create your views here.
