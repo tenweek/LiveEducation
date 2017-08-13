@@ -44,7 +44,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['id', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             showGagList: false,
@@ -110,11 +110,11 @@ export default {
                 },
                 body: JSON.stringify({
                     'name': this.username,
-                    'roomID': this.id
+                    'roomID': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
-                    this.socket.emit('message', { message: this.msgInput, username: this.username }, this.id + '.1')
+                    this.socket.emit('message', { message: this.msgInput, username: this.username }, this.roomId + '.1')
                     this.msgInput = ''
                 } else {
                     this.$Message.error(myMsg.chatroom['beGaged'])
@@ -132,7 +132,7 @@ export default {
                 },
                 body: JSON.stringify({
                     'name': this.choosenUser,
-                    'roomID': this.id
+                    'roomID': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => {
                 this.gagList.push(this.choosenUser)
@@ -147,7 +147,7 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ 'roomID': this.id })
+                body: JSON.stringify({ 'roomID': this.roomId })
             }).then((response) => response.json()).then((obj) => {
                 this.gagList = []
                 this.gagList = obj.gagList
@@ -162,7 +162,7 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ 'roomID': this.id })
+                body: JSON.stringify({ 'roomID': this.roomId })
             }).then((response) => response.json()).then((obj) => {
                 this.gagList = []
             })
@@ -179,10 +179,10 @@ export default {
                     },
                     body: JSON.stringify({
                         'name': this.choosenUser,
-                        'roomID': this.id
+                        'roomID': this.roomId
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    this.socket.emit('kickOut', this.choosenUser, this.id + '.1')
+                    this.socket.emit('kickOut', this.choosenUser, this.roomId + '.1')
                 })
             } else {
                 this.$Message.warning(myMsg.chatroom['cannotKickOut'])
@@ -232,7 +232,7 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'roomID': this.id,
+                    'roomID': this.roomId,
                     'student': this.speakList
                 })
             }).then((response) => response.json()).then((obj) => {

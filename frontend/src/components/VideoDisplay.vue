@@ -30,7 +30,7 @@
 <script>
 export default {
     name: 'video-display',
-    props: ['id', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             client: '',
@@ -70,7 +70,7 @@ export default {
         createClient: function () {
             this.client = AgoraRTC.createClient({ mode: 'interop' })
             this.client.init(this.key, () => {
-                this.client.join(null, this.id, null, (uid) => {
+                this.client.join(null, this.roomId, null, (uid) => {
                     if (this.isTeacher === true) {
                         this.camera = videoSource.value
                         this.microphone = audioSource.value

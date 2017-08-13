@@ -43,7 +43,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'white-board',
-    props: ['id', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username'],
     created: function () {
         this.isTeacher = this.teacherName === this.username
     },
@@ -83,25 +83,25 @@ export default {
             this.socket.emit('drawing', {
                 type: 'drawText',
                 input: input
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         clear: function () {
             if (!this.isTeacher) {
                 return
             }
-            this.socket.emit('drawing', { type: 'clear' }, this.id + '.0')
+            this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
         },
         undo: function () {
             if (!this.isTeacher) {
                 return
             }
-            this.socket.emit('drawing', { type: 'undo' }, this.id + '.0')
+            this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
         },
         redo: function () {
             if (!this.isTeacher) {
                 return
             }
-            this.socket.emit('drawing', { type: 'redo' }, this.id + '.0')
+            this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -117,7 +117,7 @@ export default {
                 buttons: buttons,
                 color: color,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -131,7 +131,7 @@ export default {
                     y: y,
                     action: action,
                     buttons: buttons
-                }, this.id + '.0')
+                }, this.roomId + '.0')
             }
         },
         eraserCommand: function (action, { x, y, buttons }) {
@@ -146,7 +146,7 @@ export default {
                 y: y,
                 buttons: buttons,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -162,7 +162,7 @@ export default {
                 buttons: buttons,
                 color: color,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -182,7 +182,7 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -202,7 +202,7 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
             if (!this.isTeacher) {
@@ -222,7 +222,7 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.id + '.0')
+            }, this.roomId + '.0')
         },
         pen: function (data, xData, yData) {
             this.size = data.size
@@ -522,7 +522,7 @@ export default {
         this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         let self = this
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForWhiteBoard', this.id + '.0')
+        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
         this.socket.on('drawing', function (data) {
             let xData = data.x
             let yData = data.y
