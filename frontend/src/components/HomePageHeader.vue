@@ -2,11 +2,16 @@
     <div class="title">
         <div class="logo">
             <a href="#">
-                <img src="../assets/rabbit.png" height="60">
-                <label id="mdzz">MDZZ</label>
+                <div class="logo-picture">
+                    <img src="../assets/rabbit.png" height="58">
+                </div>
+                <div class="logo-text">
+                    <label>MDZZ</label>
+                </div>
             </a>
         </div>
-        <div class="navigation-center">
+        <Row class="row">
+            <Col class="navigation-center" span="19">
             <a :class="this.myOption === 1 ? 'selected' : 'navigation-bar'" href="#">
                 <Icon type="home"></Icon> 首页</a> |
             <a :class="this.myOption === 2 ? 'selected' : 'navigation-bar'" href="#/live_page">
@@ -14,8 +19,8 @@
             <a :class="this.myOption === 3 ? 'selected' : 'navigation-bar'" href="#/record_page">
                 <Icon type="videocamera"></Icon> 录播</a>
             <template v-if="this.isTeacher === true">
+                |
                 <a class="navigation-bar" @click="showCreateRoom = true">
-                    |&nbsp;
                     <Icon type="ios-plus"></Icon> 创建房间
                 </a>
             </template>
@@ -43,15 +48,15 @@
                     </div>
                 </Upload>
             </Modal>
-        </div>
-        <div class="navigation-right">
+            </Col>
+            <Col class="navigation-right" span="5">
             <template v-if="this.username === ''">
-                <a class="navigation-bar" @click="login">登录</a> |
-                <a class="navigation-bar" @click="signUp">注册</a>
+                <a class="navigation-right-bar" @click="login">登录</a>
+                <a class="navigation-right-bar" @click="signUp">注册</a>
             </template>
             <template v-else>
                 <Dropdown @on-click="dropDownClick">
-                    <a class="navigation-bar" href="javascript:void(0)">
+                    <a class="navigation-right-bar" href="javascript:void(0)">
                         {{ username }}
                         <Icon type="arrow-down-b"></Icon>
                     </a>
@@ -67,11 +72,12 @@
                             <br>
                         </Modal>
                         <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
-                        <Dropdown-item name='logOut'>注销账户</Dropdown-item>
+                        <Dropdown-item name='logOut' divided>注销账户</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </template>
-        </div>
+            </Col>
+        </Row>
     </div>
 </template>
 
@@ -183,45 +189,43 @@ export default {
     height: 60px;
     line-height: 60px;
     width: 100%;
-    padding-left: 30px;
+    padding-left: 50px;
     background: white;
     position: fixed;
     background: #22313F;
-    overflow: hidden;
     display: flex;
     z-index: 50;
 }
 
-.logo {
-    width: 180px;
-    height: 100%;
+.logo-picture {
+    float: left;
 }
 
-#mdzz {
-    color: #ECFFFB;
+.logo-text {
+    width: 140px;
+    font-size: 28px;
     vertical-align: top;
-    font-family: "Comic Sans MS";
-    font-size: 35px;
+    color: #ECFFFB;
+    font-family: "宋体";
+}
+
+.row {
+    width: 100%;
+    min-width: 630px;
 }
 
 .navigation-center {
     font-size: 20px;
     padding-top: 14px;
     color: #9ba7b5;
-    margin-left: 20px;
+    display: flex;
+    padding-left: 20px;
 }
 
 .navigation-right {
     float: right;
-    margin-right: 15px;
     font-size: 20px;
-    padding-top: 14px;
-    position: relative;
-    margin-left: 45%;
-}
-
-.username {
-    color: #E4F1FE;
+    display: flex;
 }
 
 .navigation-center a {
@@ -236,11 +240,38 @@ export default {
     color: #E4F1FE;
 }
 
+.ivu-dropdown-rel {
+    height: 40px;
+}
+
 .navigation-bar:hover {
     color: gold;
 }
 
+.navigation-right-bar:hover {
+    color: gold;
+}
+
+.navigation-bar {
+    padding: 0 10px;
+}
+
+.selected {
+    padding: 0 10px;
+}
+
+.navigation-right-bar {
+    position: relative;
+    top: 14px;
+    padding: 0 10px;
+}
+
 #new-username {
     font-size: 15px;
+}
+
+#user {
+    position: relative;
+    top: 14px;
 }
 </style>
