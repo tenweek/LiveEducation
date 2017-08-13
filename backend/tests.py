@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 
 from django.test import TestCase,Client
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 from backend.models import Room, User, RoomStudent
 import json
 
 
-#测试获取房间
+#共29个测试
+#测试获取房间 2个测试
 class TestGetRooms(TestCase):
     def setUp(self):
         User.objects.create(name = 'wenbin', username = '1352075893@qq.com', is_teacher = 1)
@@ -26,13 +28,13 @@ class TestGetRooms(TestCase):
         Room.objects.create(teacher = self.user, room_name = 'room12')
         self.c = Client()
 
-    def test_type1(self):
+    def test_get_rooms_type1(self):
         request = json.dumps({'type': 1})
         response = self.c.post('/getRooms/',request ,content_type = 'application/json')
         req = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(req['rooms']),8)
 
-    def test_type1(self):
+    def test_get_rooms_type2(self):
         request = json.dumps({'type': 2})
         response = self.c.post('/getRooms/', request, content_type = 'application/json')
         req = json.loads(response.content.decode('utf8'))
@@ -43,7 +45,7 @@ class TestGetRooms(TestCase):
         User.objects.filter().delete()
 
 
-#测试禁言等
+#测试禁言等 11个测试
 class TestSpeakWatch(TestCase):
     def setUp(self):
         User.objects.create(name = 'wenbin1', username = '1352075893@qq.com', is_teacher = 1)
@@ -159,7 +161,7 @@ class TestSpeakWatch(TestCase):
         User.objects.filter().delete()
 
 
-#测试房间管理
+#测试房间管理 6个测试
 class TestAboutRoom(TestCase):
     def setUp(self):
         User.objects.create(name = 'wenbin1', username = '1352075893@qq.com', is_teacher = 1)
@@ -237,10 +239,10 @@ class TestAboutRoom(TestCase):
         User.objects.filter().delete()
 
 
-#测试用户管理
+#测试用户管理 10个测试
 class TestAboutUser(TestCase):
     def setUp(self):
-        User.objects.create(name = 'wenbin1', username = '1352075893@qq.com', is_teacher = 1)
+        User.objects.create_user(name = 'wenbin1', username = '1352075893@qq.com', is_teacher = 1, password = 'smile1314')
         User.objects.create(name = 'wenbin2', username = '1352075896@qq.com', is_teacher = 1)
         User.objects.create(name = 'wenbin3', username = '1352075899@qq.com', is_teacher = 1)
         self.user1 = User.objects.get(name = 'wenbin1')
@@ -268,13 +270,59 @@ class TestAboutUser(TestCase):
         request = json.dumps({'mail': '907836805@qq.com'})
         response = self.c.post('/getVerification/', request, content_type = 'application/json')
         req = json.loads(response.content.decode('utf8'))
-        print(req['verification'])
+        self.assertEqual(len(req['verification']), 6)
 
     def test_change_name(self):
         self.assertEqual(self.user1.name, 'wenbin1')
         request = json.dumps({'account': '1352075893@qq.com', 'newname': 'zhizhi'})
         response = self.c.post('/changeName/', request, content_type = 'application/json')
         self.assertEqual(User.objects.get(username = '1352075893@qq.com').name, 'zhizhi')
+
+    def test_sign_up_false(self):
+        request = json.dumps({'username': 'wenbin1', 'mail': '1352075893@qq.com', 'password': 'smile1314'})
+        response = self.c.post('/signUp/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], False)
+
+    def test_sign_up_true(self):
+        request = json.dumps({'username': 'wenbin4', 'mail': '1352075894@qq.com', 'password': 'smile1314'})
+        response = self.c.post('/signUp/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], True)
+        self.assertEqual(User.objects.get(name = 'wenbin4').username, '1352075894@qq.com')
+    
+    def test_login_true(self):
+        request = json.dumps({'account': '1352075893@qq.com', 'password': 'smile1314'})
+        response = self.c.post('/login/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], True)
+        self.assertEqual(req['name'], 'wenbin1')
+
+    def test_login_false(self):
+        request = json.dumps({'account': '1352075893@qq.com', 'password': 'smile1315'})
+        response = self.c.post('/login/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], False)
+
+    def test_change_password(self):        
+        self.assertEqual(authenticate(username = '1352075893@qq.com', password = 'smile1314'), self.user1)
+        request = json.dumps({'username': '1352075893@qq.com', 'password': 'smile1315'})
+        response = self.c.post('/changePasswd/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], True)
+        self.assertEqual(authenticate(username = '1352075893@qq.com', password = 'smile1315'), self.user1)
+
+    def test_get_rand_none(self):
+        request = json.dumps({'mail': '13702198137@qq.com'})
+        response = self.c.post('/getRand/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['verification'], 'none')
+
+    def test_get_rand_salt(self):
+        request = json.dumps({'mail': '1352075893@qq.com'})
+        response = self.c.post('/getRand/', request, content_type = 'application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(req['verification']), 6)
 
     def tearDown(self):
         RoomStudent.objects.filter().delete()
