@@ -34,7 +34,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools"></component>
+                    <component :is="currentTools" :id="this.id" :teacherName="this.teacherName" :username="this.username"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
