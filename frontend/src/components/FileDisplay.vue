@@ -10,7 +10,7 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['id', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             socket: '',
@@ -32,14 +32,14 @@ export default {
             if (this.nowNum < this.maxNum) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.id + '.2')
+                this.socket.emit('message', this.route, this.roomId + '.2')
             }
         },
         prePicture: function () {
             if (this.nowNum > 1) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.id + '.2')
+                this.socket.emit('message', this.route, this.roomId + '.2')
             }
         },
         modPicture: function () {
@@ -57,7 +57,7 @@ export default {
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForFileDisplay', this.id + '.2')
+        this.socket.emit('joinForFileDisplay', this.roomId + '.2')
         var self = this
         this.socket.on('message', function (msg) {
             self.route = msg

@@ -12,7 +12,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
-    props: ['id', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             code: 'const a = 10   123456789',
@@ -57,7 +57,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinForCodeEditor', this.id + '.3')
+        self.socket.emit('joinForCodeEditor', this.roomId + '.3')
         if (self.username !== self.teacherName) {
             this.socket.on('message', function (mes) {
                 self.code = mes['newcode']
@@ -67,7 +67,7 @@ export default {
     watch: {
         code: function (newcode, oldcode) {
             if (newcode !== oldcode && this.username === this.teacherName) {
-                this.socket.emit('message', { 'newcode': newcode, 'user': this.username }, this.id + '.3')
+                this.socket.emit('message', { 'newcode': newcode, 'user': this.username }, this.roomId + '.3')
             }
         }
     }

@@ -10,7 +10,7 @@
             </div>
             <div class="navigation-center">
                 <label class="information">老师姓名：{{ this.teacherName }}</label>
-                <label class="information">房间ID:{{ this.id }}</label>
+                <label class="information">房间ID:{{ this.roomId }}</label>
                 <label class="information">房间名：{{ this.roomName }}</label>
                 <label class="information">在线人数：{{ this.studentNum }}</label>
             </div>
@@ -34,15 +34,15 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :id="this.id" :teacherName="this.teacherName" :username="this.username"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
                 <div class="video-live">
-                    <video-display :id="this.id" :teacherName="this.teacherName" :username="this.username"></video-display>
+                    <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board :id="this.id" :teacherName="this.teacherName" :username="this.username"></chat-board>
+                    <chat-board :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@ export default {
     data: function () {
         return {
             currentTools: 'WhiteBoard',
-            id: -1,
+            roomId: -1,
             roomName: '',
             teacherName: '',
             studentNum: '',
@@ -83,7 +83,7 @@ export default {
         }
     },
     created: function () {
-        this.id = this.$route.params.id
+        this.roomId = this.$route.params.id
         this.getRoomInfo()
         this.getUsername()
     },
@@ -100,7 +100,7 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'roomID': this.id
+                    'roomID': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => {
                 this.roomName = obj.roomName
