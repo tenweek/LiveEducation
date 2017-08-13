@@ -153,8 +153,13 @@ export default {
                     'newname': this.newUserName
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.username = this.newUserName
-                this.$Message.success(myMsg.account['nameChanged'])
+                this.newUserName = ''
+                if (obj.result) {
+                    this.username = this.newUserName
+                    this.$Message.success(myMsg.account['nameChanged'])
+                } else {
+                    this.$Message.error(myMsg.account['nameExist'])
+                }
             })
         },
         login: function () {
