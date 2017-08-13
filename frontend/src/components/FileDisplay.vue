@@ -10,9 +10,9 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
+    props: ['id', 'teacherName', 'username'],
     data: function () {
         return {
-            roomId: '',
             socket: '',
             baseRoute: '/static/',
             recRoute: '',
@@ -22,7 +22,6 @@ export default {
         }
     },
     created: function () {
-        this.roomId = this.$route.params.id
         this.recRoute = 'ppt/shili-'
         this.nowNum = 1
         this.maxNum = 15
@@ -33,14 +32,14 @@ export default {
             if (this.nowNum < this.maxNum) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('message', this.route, this.id + '.2')
             }
         },
         prePicture: function () {
             if (this.nowNum > 1) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('message', this.route, this.id + '.2')
             }
         },
         modPicture: function () {
@@ -58,7 +57,7 @@ export default {
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('join', this.roomId + '.2')
+        this.socket.emit('joinForFileDisplay', this.id + '.2')
         var self = this
         this.socket.on('message', function (msg) {
             self.route = msg

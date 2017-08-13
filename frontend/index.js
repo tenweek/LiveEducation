@@ -29,6 +29,10 @@ io.on('connection', function (socket) {
         console.log('codeeditor connected')
         socket.join(roomId)
     })
+    socket.on('joinForFileDisplay', function (roomId) {
+        console.log('filedisplay connected')
+        socket.join(roomId)
+    })
     socket.on('message', function (data, roomid) {
         console.log('received')
         io.to(roomid).emit('message', data)

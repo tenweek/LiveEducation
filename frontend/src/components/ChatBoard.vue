@@ -61,11 +61,7 @@ export default {
         document.oncontextmenu = self.contextMenu
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.id + '.1')
-        if (self.teacherName === self.username) {
-            self.changeStuNum()
-        } else {
-            self.kickOut()
-        }
+        self.kickOut()
         self.socket.on('message', function (data) {
             let msg = data['username'] + ' : ' + data['message']
             self.messages.push({ 'msg': msg, 'user': data['username'] })
@@ -76,6 +72,10 @@ export default {
     methods: {
         getName: function (message) {
             this.choosenUser = message['user']
+            if (this.teacherName !== this.username) {
+                let show = document.getElementById('show')
+                show.style.display = 'none'
+            }
         },
         contextMenu: function () {
             return false
