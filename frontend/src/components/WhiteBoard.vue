@@ -38,20 +38,14 @@
 </template>
 
 <script src="/socket.io/socket.io.js"></script>
-
 <script>
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'white-board',
-    props: {
-        operational: {
-            type: Boolean,
-            default: true
-        }
-    },
+    props: ['id', 'teacherName', 'username'],
     created: function () {
-        this.roomId = this.$route.params.id
+        this.isTeacher = this.teacherName === this.username
     },
     data: function () {
         return {
@@ -81,24 +75,37 @@ export default {
     },
     methods: {
         drawText: function () {
+            if (!isTeacher) {
+                return
+            }
             let input = this.textInput
             this.socket.emit('drawing', {
                 type: 'drawText',
                 input: input
-            }, this.roomId + '.0')
-            return
+            }, this.id + '.0')
         },
         clear: function () {
-            this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
-            return
+            if (!isTeacher) {
+                return
+            }
+            this.socket.emit('drawing', { type: 'clear' }, this.id + '.0')
         },
         undo: function () {
-            this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
+            if (!isTeacher) {
+                return
+            }
+            this.socket.emit('drawing', { type: 'undo' }, this.id + '.0')
         },
         redo: function () {
-            this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
+            if (!isTeacher) {
+                return
+            }
+            this.socket.emit('drawing', { type: 'redo' }, this.id + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let color = this.colorBorder
             let size = this.size
             this.socket.emit('drawing', {
@@ -109,9 +116,12 @@ export default {
                 buttons: buttons,
                 color: color,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             if (action === 'mouseup') {
                 this.textField = true
                 this.socket.emit('drawing', {
@@ -120,11 +130,13 @@ export default {
                     y: y,
                     action: action,
                     buttons: buttons
-                }, this.roomId + '.0')
+                }, this.id + '.0')
             }
-            return
         },
         eraserCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let size = this.size
             this.socket.emit('drawing', {
                 type: 'eraser',
@@ -133,9 +145,12 @@ export default {
                 y: y,
                 buttons: buttons,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let color = this.colorBorder
             let size = this.size
             this.socket.emit('drawing', {
@@ -146,9 +161,12 @@ export default {
                 buttons: buttons,
                 color: color,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let colorBorder = this.colorBorder
             let colorFill = this.colorFill
             let fill = this.fill
@@ -163,9 +181,12 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let colorBorder = this.colorBorder
             let colorFill = this.colorFill
             let fill = this.fill
@@ -180,9 +201,12 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
+            if (!isTeacher) {
+                return
+            }
             let colorBorder = this.colorBorder
             let colorFill = this.colorFill
             let fill = this.fill
@@ -197,7 +221,7 @@ export default {
                 colorFill: colorFill,
                 fill: fill,
                 size: size
-            }, this.roomId + '.0')
+            }, this.id + '.0')
         },
         pen: function (data, xData, yData) {
             this.size = data.size
@@ -488,18 +512,16 @@ export default {
         }
     },
     mounted: function () {
-        if (this.operational) {
-            ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
-                this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                    this[`${this.type}Command`](eventName, { x, y, buttons })
-                })
+        ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
+            this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
+                this[`${this.type}Command`](eventName, { x, y, buttons })
             })
-        }
+        })
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         let self = this
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
+        this.socket.emit('joinForWhiteBoard', this.id + '.0')
         this.socket.on('drawing', function (data) {
             let xData = data.x
             let yData = data.y

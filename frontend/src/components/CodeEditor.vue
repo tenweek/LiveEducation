@@ -7,7 +7,6 @@
     </div>
 </template>
 
-
 <script src="/socket.io/socket.io.js"></script>
 <script>
 import * as io from 'socket.io-client'
