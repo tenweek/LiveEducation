@@ -3,9 +3,16 @@
         <div id="messages">
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
-                    <button class="message" @click="getName(message)">
-                        {{ message['msg'] }}
-                    </button>
+                    <template v-if="message['teacherName']===message['user']">
+                        <button class="message" @click="getName(message)" style="font-weight:bold;">
+                            {{ message['msg'] }}
+                        </button>
+                    </template>
+                    <template v-else>
+                        <button class="message" @click="getName(message)">
+                            {{ message['msg'] }}
+                        </button>
+                    </template>
                     <Dropdown-menu id="show" slot="list">
                         <Dropdown-item name="gag">禁言</Dropdown-item>
                         <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
@@ -60,11 +67,15 @@ export default {
         let self = this
         document.oncontextmenu = self.contextMenu
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('join', self.id + '.1')
+        self.socket.emit('join', self.roomId + '.1')
         self.kickOut()
         self.socket.on('message', function (data) {
             let msg = data['username'] + ' : ' + data['message']
-            self.messages.push({ 'msg': msg, 'user': data['username'] })
+            self.messages.push({
+                'msg': msg,
+                'user': data['username'],
+                'teacherName': data['teacherName']
+            })
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
         })
@@ -114,7 +125,11 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
-                    this.socket.emit('message', { message: this.msgInput, username: this.username }, this.roomId + '.1')
+                    this.socket.emit('message', {
+                        message: this.msgInput,
+                        username: this.username,
+                        teacherName: this.teacherName
+                    }, this.roomId + '.1')
                     this.msgInput = ''
                 } else {
                     this.$Message.error(myMsg.chatroom['beGaged'])

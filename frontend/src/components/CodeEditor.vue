@@ -1,9 +1,12 @@
 <template>
     <div class="code-editor">
         <Select v-model='editorOptions.mode' placeholder="language">
-            <option v-for='mode in modeList' value='mode.modeValue' :key='mode.modeName'>{{ mode.modeName }}</option>
+            <option v-for='mode in modeList' value='mode.modeValue' :key='mode.modeName'>
+                {{ mode.modeName }}
+            </option>
         </Select>
-        <codemirror v-model='code' :options='editorOptions' readonly="false"></codemirror>
+        <codemirror id='code' v-model='code' :options='editorOptions'></codemirror>
+        <div>{{ editorOptions.mode }}</div>
     </div>
 </template>
 
@@ -17,6 +20,7 @@ export default {
         return {
             code: 'const a = 10   123456789',
             editorOptions: {
+                readOnly: false,
                 tabSize: 4,
                 mode: 'text/javascript',
                 theme: 'base16-dark',
@@ -57,17 +61,18 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinForCodeEditor', this.roomId + '.3')
+        self.socket.emit('joinForCodeEditor', self.roomId + '.3')
         if (self.username !== self.teacherName) {
-            this.socket.on('message', function (mes) {
-                self.code = mes['newcode']
+            this.editorOptions.readOnly = true
+            this.socket.on('message', function (newcode) {
+                self.code = newcode
             })
         }
     },
     watch: {
         code: function (newcode, oldcode) {
             if (newcode !== oldcode && this.username === this.teacherName) {
-                this.socket.emit('message', { 'newcode': newcode, 'user': this.username }, this.roomId + '.3')
+                this.socket.emit('message', newcode, this.roomId + '.3')
             }
         }
     }
