@@ -44,9 +44,6 @@ import myMsg from './../warning.js'
 export default {
     name: 'white-board',
     props: ['roomId', 'teacherName', 'username'],
-    created: function () {
-        this.isTeacher = this.teacherName === this.username
-    },
     data: function () {
         return {
             type: 'pen',
@@ -70,13 +67,12 @@ export default {
             currentImageData: null,
             pointer: 0,
             socket: '',
-            roomId: '',
-            isTeacher: ''
+            roomId: ''
         }
     },
     methods: {
         drawText: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let input = this.textInput
@@ -86,25 +82,25 @@ export default {
             }, this.roomId + '.0')
         },
         clear: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
         },
         undo: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
         },
         redo: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let color = this.colorBorder
@@ -120,7 +116,7 @@ export default {
             }, this.roomId + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             if (action === 'mouseup') {
@@ -135,7 +131,7 @@ export default {
             }
         },
         eraserCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let size = this.size
@@ -149,7 +145,7 @@ export default {
             }, this.roomId + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let color = this.colorBorder
@@ -165,7 +161,7 @@ export default {
             }, this.roomId + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let colorBorder = this.colorBorder
@@ -185,7 +181,7 @@ export default {
             }, this.roomId + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let colorBorder = this.colorBorder
@@ -205,7 +201,7 @@ export default {
             }, this.roomId + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let colorBorder = this.colorBorder
@@ -454,7 +450,7 @@ export default {
         },
         boardUndo: function (data, xData, yData) {
             if (this.pointer === 0) {
-                this.$Message.alert(myMsg.whiteBoard['undoNotExist'])
+                this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
             }
             if (this.pointer > 0) {
@@ -465,7 +461,7 @@ export default {
         },
         boardRedo: function (data, xData, yData) {
             if (this.pointer === this.allImageData.length - 1) {
-                this.$Message.alert(myMsg.whiteBoard['redoNotExist'])
+                this.$Message.error(myMsg.whiteBoard['redoNotExist'])
                 return
             }
             if (this.pointer < this.allImageData.length) {
