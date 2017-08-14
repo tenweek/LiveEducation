@@ -86,8 +86,25 @@ export default {
         this.roomId = this.$route.params.id
         this.getRoomInfo()
         this.getUsername()
+        window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        changeNum: function () {
+            if (this.username === this.teacherName) {
+                fetch('/changeNum/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'studentNum': this.studentNum,
+                        'roomId': this.roomId
+                    })
+                }).then((response) => response.json()).then((obj) => { })
+            }
+        },
         getNum: function (count) {
             this.studentNum = count
         },

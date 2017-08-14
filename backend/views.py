@@ -12,6 +12,16 @@ import random
 
 
 @csrf_exempt
+def changeNum(request):
+    req = simplejson.load(request)
+    room = Room.objects.get(id=req['roomId'])
+    room.student_num = req['studentNum']
+    room.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
 def kickOut(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])

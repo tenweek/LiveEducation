@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^gagAll/$', views.gagAll),
     url(r'^allowSpeak/$', views.allowSpeak),
     url(r'^allowAllSpeak/$', views.allowAllSpeak),
-    url(r'^kickOut/$', views.kickOut)
+    url(r'^kickOut/$', views.kickOut),
+    url(r'^changeNum/$', views.changeNum)
 ]
