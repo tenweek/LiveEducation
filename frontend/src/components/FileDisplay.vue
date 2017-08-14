@@ -18,50 +18,64 @@ export default {
             recRoute: '',
             route: '',
             maxNum: '',
-            nowNum: ''
+            nowNum: '',
+            isTeacher: false
         }
     },
     created: function () {
         this.recRoute = 'ppt/shili-'
         this.nowNum = 1
         this.maxNum = 15
-        this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+        if (this.teacherName === this.username) {
+            this.isTeacher = true
+            this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+        }
     },
     methods: {
         nextPicture: function () {
             if (this.nowNum < this.maxNum) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
             }
         },
         prePicture: function () {
             if (this.nowNum > 1) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
             }
         },
         modPicture: function () {
-            if (event.keyCode === 39 || event.keyCode === 40) {
-                this.nextPicture()
-            }
-            if (event.keyCode === 37 || event.keyCode === 38) {
-                this.prePicture()
+            if (this.isTeacher) {
+                if (event.keyCode === 39 || event.keyCode === 40) {
+                    this.nextPicture()
+                }
+                if (event.keyCode === 37 || event.keyCode === 38) {
+                    this.prePicture()
+                }
             }
         },
         makeFoucs: function () {
-            var getfocus = document.getElementById('file')
+            let getfocus = document.getElementById('file')
             getfocus.focus()
         }
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForFileDisplay', this.roomId + '.2')
-        var self = this
-        this.socket.on('message', function (msg) {
-            self.route = msg
+        let self = this
+        self.socket.emit('joinForFileDisplay', this.roomId + '.2', this.roomId)
+        self.socket.on('fileDisplayMessage', function (msg) {
+            if (!self.isTeacher) {
+                self.route = msg
+            }
         })
+        if (!self.isTeacher) {
+            self.socket.on('firstPicture', function (msg) {
+                self.route = msg
+                console.log(msg)
+            })
+        }
     }
 }
 </script>
