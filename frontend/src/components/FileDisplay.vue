@@ -44,14 +44,14 @@ export default {
             if (this.nowNum < this.maxNum && this.isTeacher) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
             }
         },
         prePicture: function () {
             if (this.nowNum > 1 && this.isTeacher) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
             }
         },
         modPicture: function () {
@@ -75,13 +75,14 @@ export default {
         self.socket.emit('joinForFileDisplay', this.roomId + '.2', this.roomId)
         self.socket.on('fileDisplayMessage', function (msg) {
             if (!self.isTeacher) {
-                self.route = msg
+                self.nowNum = msg
+                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
             }
         })
         if (!self.isTeacher) {
             self.socket.on('firstPicture', function (msg) {
-                self.route = msg
-                console.log(msg)
+                self.nowNum = msg
+                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
             })
         }
     }
