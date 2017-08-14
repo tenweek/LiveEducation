@@ -10,10 +10,10 @@ server.listen(9000, () => {
     console.log('in 9000')
 })
 
-let onlineCount = {}
-let whiteboardChosen = {}
-let fileChosen = {}
-let codeChosen = {}
+var onlineCount = {}
+var whiteboardChosen = {}
+var fileChosen = {}
+var codeChosen = {}
 var pictureNum = []
 
 io.on('connection', function (socket) {
@@ -29,8 +29,8 @@ io.on('connection', function (socket) {
         }
         onlineCount[id] += 1
         socket.join(roomid)
-        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
-        let num = onlineCount[id] / k
+        var k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
+        var num = onlineCount[id] / k
         io.to(roomid).emit('login', num)
     })
     socket.on('joinForWhiteBoard', function (roomId) {
@@ -77,8 +77,8 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         console.log('disconnect')
         onlineCount[id] -= 1
-        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
-        let num = onlineCount[id] / k
+        var k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
+        var num = onlineCount[id] / k
         io.to(id).emit('logout', num)
     })
 });

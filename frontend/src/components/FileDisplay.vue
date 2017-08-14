@@ -1,6 +1,14 @@
 <template>
     <div class="file-display" id="file" @click="makeFoucs" @keydown="modPicture()" tabindex="0">
-        <img :src="this.route" width="675px" class="my-img" />
+        <div class="ppt-header">PPT放映</div>
+        <img :src="this.route" width="100%" class="my-img" />
+        <div class="ppt-footer">
+            <div class="for-footer">
+        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture"><Icon type="arrow-left-b"></Icon></a>
+        <div class="ppt-num">&nbsp;&nbsp;{{this.nowNum}}&nbsp;of&nbsp;{{this.maxNum}}&nbsp;&nbsp;</div>
+        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture"><Icon type="arrow-right-b"></Icon></a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -33,14 +41,14 @@ export default {
     },
     methods: {
         nextPicture: function () {
-            if (this.nowNum < this.maxNum) {
+            if (this.nowNum < this.maxNum && this.isTeacher) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
                 this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
             }
         },
         prePicture: function () {
-            if (this.nowNum > 1) {
+            if (this.nowNum > 1 && this.isTeacher) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
                 this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
@@ -82,11 +90,58 @@ export default {
 
 <style scoped>
 .my-img {
-    border: 3px solid #000;
+    border: 3px solid #52524E;
 }
 
 .file-display {
-    width: 680px;
-    height: 480px;
+    width: 100%;
+    height: auto;
+    background: #52524E;
+}
+
+.for-footer {
+    width: auto;
+    height: 80px;
+    margin: auto;
+    background: #52524E;
+    display: flex;
+}
+
+.arrow {
+    height: 80px;
+    font-size: 60px;
+    color: white;
+    line-height: 80px;
+}
+
+.ppt-num {
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+}
+
+.arrow:hover {
+    color: #9A9B94;
+}
+
+.ppt-header {
+    background-color: #52524E;
+    width: 100%;
+    height: 50px;
+    border-color: #52524E;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    margin-top: 20px;
+}
+
+.ppt-footer {
+    width: 100%;
+    height: 80px;
+    background-color: #52524E;
+    text-align: center;
+    display: flex;
 }
 </style>
