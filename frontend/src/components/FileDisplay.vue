@@ -10,45 +10,50 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
+    props: ['id', 'teacherName', 'username'],
     data: function () {
         return {
-            roomId: '',
             socket: '',
             baseRoute: '/static/',
             recRoute: '',
             route: '',
             maxNum: '',
-            nowNum: ''
+            nowNum: '',
+            isTeacher: false
         }
     },
     created: function () {
-        this.roomId = this.$route.params.id
         this.recRoute = 'ppt/shili-'
         this.nowNum = 1
         this.maxNum = 15
-        this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+        if (this.teacherName === this.username) {
+            this.isTeacher = true
+            this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+        }
     },
     methods: {
         nextPicture: function () {
             if (this.nowNum < this.maxNum) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('message', this.route, this.id + '.2')
             }
         },
         prePicture: function () {
             if (this.nowNum > 1) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.roomId + '.2')
+                this.socket.emit('message', this.route, this.id + '.2')
             }
         },
         modPicture: function () {
-            if (event.keyCode === 39 || event.keyCode === 40) {
-                this.nextPicture()
-            }
-            if (event.keyCode === 37 || event.keyCode === 38) {
-                this.prePicture()
+            if (this.isTeacher) {
+                if (event.keyCode === 39 || event.keyCode === 40) {
+                    this.nextPicture()
+                }
+                if (event.keyCode === 37 || event.keyCode === 38) {
+                    this.prePicture()
+                }
             }
         },
         makeFoucs: function () {
@@ -58,11 +63,18 @@ export default {
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('join', this.roomId + '.2')
         var self = this
+        this.socket.emit('joinFileDisplay', this.id + '.2')
         this.socket.on('message', function (msg) {
-            self.route = msg
+            if (!self.isTeacher) {
+                self.route = msg
+            }
         })
+        if (this.isTeacher) {
+            self.socket.on('firstPicture', function () {
+                self.socket.emit('message', self.route, self.id + '.2')
+            })
+        }
     }
 }
 </script>

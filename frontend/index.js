@@ -1,6 +1,6 @@
-let app = require('express')()
-let server = require('http').Server(app)
-let io = require('socket.io')(server)
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
 
 app.get('/', function (req, res) {
     res.send('<h1>Hello Wellcome</h1>')
@@ -10,10 +10,10 @@ server.listen(9000, () => {
     console.log('in 9000')
 })
 
-let onlineCount = 0
+var onlineCount = 0
 
 io.on('connection', function (socket) {
-    let id = 0
+    var id = 0
     socket.on('join', function (roomid) {
         id = roomid
         console.log('chatroom connected')
@@ -28,6 +28,11 @@ io.on('connection', function (socket) {
     socket.on('joinForCodeEditor', function (roomId) {
         console.log('codeeditor connected')
         socket.join(roomId)
+    })
+    socket.on('joinFileDisplay', function (roomId) {
+        console.log('filedisplay connected')
+        socket.join(roomId)
+        io.to(roomId).emit('firstPicture')
     })
     socket.on('message', function (data, roomid) {
         console.log('received')
