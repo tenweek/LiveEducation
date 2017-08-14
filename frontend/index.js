@@ -11,6 +11,7 @@ server.listen(9000, () => {
 })
 
 var onlineCount = 0
+var pictureNum = []
 
 io.on('connection', function (socket) {
     var id = 0
@@ -29,10 +30,15 @@ io.on('connection', function (socket) {
         console.log('codeeditor connected')
         socket.join(roomId)
     })
-    socket.on('joinFileDisplay', function (roomId) {
+    socket.on('joinFileDisplay', function (roomId, roomNum) {
         console.log('filedisplay connected')
         socket.join(roomId)
-        io.to(roomId).emit('firstPicture')
+        io.to(roomId).emit('firstPicture', pictureNum[roomNum])
+    })
+    socket.on('fileDisplayMessage', function (data, roomId, roomNum) {
+        console.log('received')
+        pictureNum[roomNum] = data
+        io.to(roomId).emit('fileDisplayMessage', data)
     })
     socket.on('message', function (data, roomid) {
         console.log('received')

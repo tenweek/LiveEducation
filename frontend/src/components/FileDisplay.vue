@@ -36,14 +36,14 @@ export default {
             if (this.nowNum < this.maxNum) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.id + '.2')
+                this.socket.emit('fileDisplayMessage', this.route, this.id + '.2', this.id)
             }
         },
         prePicture: function () {
             if (this.nowNum > 1) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('message', this.route, this.id + '.2')
+                this.socket.emit('fileDisplayMessage', this.route, this.id + '.2', this.id)
             }
         },
         modPicture: function () {
@@ -64,15 +64,15 @@ export default {
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
         var self = this
-        this.socket.emit('joinFileDisplay', this.id + '.2')
-        this.socket.on('message', function (msg) {
+        this.socket.emit('joinFileDisplay', this.id + '.2', this.id)
+        this.socket.on('fileDisplayMessage', function (msg) {
             if (!self.isTeacher) {
                 self.route = msg
             }
         })
-        if (this.isTeacher) {
-            self.socket.on('firstPicture', function () {
-                self.socket.emit('message', self.route, self.id + '.2')
+        if (!this.isTeacher) {
+            this.socket.on('firstPicture', function (msg) {
+                self.route = msg
             })
         }
     }
