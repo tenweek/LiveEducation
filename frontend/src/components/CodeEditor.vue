@@ -1,9 +1,9 @@
 <template>
     <div class="code-editor">
-        <Select v-model='editorOptions.mode' placeholder="language">
-            <option v-for='mode in modeList' value='mode.modeValue' :key='mode.modeName'>
+        <Select v-model='editorOptions.mode' placeholder="language" filterable>
+            <Option v-for='mode in modeList' :value='mode.modeValue' :key='mode.modeName'>
                 {{ mode.modeName }}
-            </option>
+            </Option>
         </Select>
         <codemirror id='code' v-model='code' :options='editorOptions'></codemirror>
         <div>{{ editorOptions.mode }}</div>
