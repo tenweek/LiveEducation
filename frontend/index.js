@@ -10,26 +10,49 @@ server.listen(9000, () => {
     console.log('in 9000')
 })
 
-let onlineCount = 0
+let onlineCount = {}
+let whiteboardChosen = {}
+let fileChosen = {}
+let codeChosen = {}
 
 io.on('connection', function (socket) {
     let id = 0
     socket.on('join', function (roomid) {
         id = roomid
         console.log('chatroom connected')
-        onlineCount++
+        if (!onlineCount[id]) {
+            onlineCount[id] = 0
+            whiteboardChosen[id] = 0
+            fileChosen[id] = 0
+            codeChosen[id] = 0
+        }
+        onlineCount[id] += 1
         socket.join(roomid)
-        io.to(roomid).emit('login', onlineCount)
+        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
+        let num = onlineCount[id] / k
+        io.to(roomid).emit('login', num)
     })
     socket.on('joinForWhiteBoard', function (roomId) {
+        if (!onlineCount[id]) {
+            onlineCount[id] = 0
+            whiteboardChosen[id] = 0
+            fileChosen[id] = 0
+            codeChosen[id] = 0
+        }
+        onlineCount[id] += 1
+        whiteboardChosen[id] = 1
         console.log('whiteboard connected')
         socket.join(roomId)
     })
     socket.on('joinForCodeEditor', function (roomId) {
+        onlineCount[id] += 1
+        codeChosen[id] = 1
         console.log('codeeditor connected')
         socket.join(roomId)
     })
     socket.on('joinForFileDisplay', function (roomId) {
+        onlineCount[id] += 1
+        fileChosen[id] = 1
         console.log('filedisplay connected')
         socket.join(roomId)
     })
@@ -46,7 +69,9 @@ io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         console.log('disconnect')
-        onlineCount--
-        io.to(id).emit('logout', onlineCount)
+        onlineCount[id] -= 1
+        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
+        let num = onlineCount[id] / k
+        io.to(id).emit('logout', num)
     })
 });

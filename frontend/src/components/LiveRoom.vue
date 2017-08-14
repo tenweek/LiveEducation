@@ -42,7 +42,7 @@
                     <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
                 </div>
             </div>
         </div>
@@ -88,6 +88,9 @@ export default {
         this.getUsername()
     },
     methods: {
+        getNum: function (count) {
+            this.studentNum = count
+        },
         changeCurrent: function (name) {
             this.currentTools = name
         },

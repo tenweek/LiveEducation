@@ -79,6 +79,7 @@ export default {
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
         })
+        self.changeStuNum()
     },
     methods: {
         getName: function (message) {
@@ -92,12 +93,12 @@ export default {
             return false
         },
         changeStuNum: function () {
-            // 这个地方更新在线人数
+            let self = this
             this.socket.on('login', function (count) {
-                console.log(count)
+                self.$emit('stuNum', count)
             })
             this.socket.on('logout', function (count) {
-                console.log(count)
+                self.$emit('stuNum', count)
             })
         },
         kickOut: function () {
