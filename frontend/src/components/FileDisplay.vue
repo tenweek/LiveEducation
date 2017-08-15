@@ -2,17 +2,18 @@
     <div class="file-display" id="file" @click="makeFoucs" @keydown="modPicture()" tabindex="0">
         <div class="ppt-header">PPT放映</div>
         <div class="my-img">
-        <img :src="this.route" width="100%" class="my-img" />
+            <img :src="this.route" width="100%" class="my-img" />
         </div>
         <div class="ppt-footer">
             <div class="for-footer">
-        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture"><Icon type="arrow-left-b"></Icon></a>
-        <select name="cars" @change="changePage" id="for-select" class="for-hover ppt-num" :style="this.isTeacher ? 'display:block' : 'display:none'">
-            <option v-for="num in this.maxNum" class="every-option">&nbsp;{{num}}</option>
-        </select>
-        <div class="ppt-num" :style="this.isTeacher ? 'display:none' : 'display:block'">&nbsp;&nbsp;{{this.nowNum}}</div>
-        <div class="ppt-num">&nbsp;of&nbsp;{{this.maxNum}}&nbsp;&nbsp;</div>
-        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture"><Icon type="arrow-right-b"></Icon></a>
+                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture"><Icon type="arrow-left-b"></Icon></a>
+                <div class="for-place">
+                    <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
+                        <option v-for="num in this.maxNum" class="every-option">&nbsp;{{num}}</option>
+                    </select>
+                    <div class="ppt-num">&nbsp;&nbsp;&nbsp;{{this.nowNum}}&nbsp;&nbsp;of&nbsp;&nbsp;{{this.maxNum}}&nbsp;&nbsp;&nbsp;</div>
+                </div>
+                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture"><Icon type="arrow-right-b"></Icon></a>
             </div>
         </div>
     </div>
@@ -102,52 +103,10 @@ export default {
 </script>
 
 <style scoped>
-.my-img {
-    border: 3px solid #52524E;
-    height: auto;
-}
-
 .file-display {
     width: 100%;
     height: auto;
     background: #52524E;
-}
-
-.for-footer {
-    width: auto;
-    height: 80px;
-    margin: auto;
-    background: #52524E;
-    display: flex;
-}
-
-.arrow {
-    height: 80px;
-    font-size: 60px;
-    color: white;
-    line-height: 80px;
-}
-
-.ppt-num {
-    height: 80px;
-    font-size: 30px;
-    color: white;
-    line-height: 80px;
-    background: #52524E;
-    border: none;
-}
-
-.for-hover:hover {
-    color: #9A9B94;
-}
-
-.every-option {
-    background: white;
-    font-size: 10px;
-}
-
-.arrow:hover {
-    color: #9A9B94;
 }
 
 .ppt-header {
@@ -160,6 +119,12 @@ export default {
     text-align: center;
     line-height: 50px;
     margin-top: 20px;
+    border-radius: 20px;
+}
+
+.my-img {
+    border: 3px solid #52524E;
+    height: auto;
 }
 
 .ppt-footer {
@@ -168,5 +133,60 @@ export default {
     background-color: #52524E;
     text-align: center;
     display: flex;
+}
+
+.for-footer {
+    width: auto;
+    height: 80px;
+    margin: auto;
+    display: flex;
+}
+
+.arrow {
+    height: 80px;
+    font-size: 60px;
+    color: white;
+    line-height: 80px;
+}
+
+.arrow:hover {
+    color: #9A9B94;
+}
+
+.for-place {
+    width: auto;
+    position: relative;
+    display: flex;
+    margin: 0;
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+}
+
+.ppt-select {
+    width: 40px;
+    height: 80px;
+    opacity: 0;
+    position: absolute;
+    left: 20px;
+    z-index: 50;
+}
+
+.every-option {
+    background: white;
+    font-size: 10px;
+}
+
+.ppt-num {
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+    text-align: right;
 }
 </style>
