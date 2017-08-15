@@ -43,7 +43,10 @@ io.on('connection', function (socket) {
     })
     socket.on('drawing', function (data, roomId) {
         io.to(roomId).emit('drawing', data)
-    });
+    })
+    socket.on('click', function (data, roomId) {
+        io.to(roomId).emit('click', data)
+    })
     socket.on('disconnect', function () {
         console.log('disconnect')
         onlineCount--

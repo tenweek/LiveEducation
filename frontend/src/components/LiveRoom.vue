@@ -42,7 +42,7 @@
                     <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></video-display>
                 </div>
                 <div class="chatroom">
-                    <chat-board :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
                 </div>
             </div>
         </div>
@@ -86,8 +86,28 @@ export default {
         this.roomId = this.$route.params.id
         this.getRoomInfo()
         this.getUsername()
+        window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        changeNum: function () {
+            if (this.username === this.teacherName) {
+                fetch('/changeNum/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'studentNum': this.studentNum,
+                        'roomId': this.roomId
+                    })
+                }).then((response) => response.json()).then((obj) => { })
+            }
+        },
+        getNum: function (count) {
+            this.studentNum = count
+        },
         changeCurrent: function (name) {
             this.currentTools = name
         },
@@ -155,6 +175,7 @@ export default {
     font-size: 40px;
     position: fixed;
     left: 0;
+    z-index: 50;
 }
 
 .navigation {

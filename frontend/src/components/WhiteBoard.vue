@@ -10,29 +10,32 @@
                 </Button>
             </div>
             <Button class="clear" @click="clear">清空</Button>
-            <Button type="text" :class="{ active: type === 'eraser' }" @click="type = 'eraser'">橡皮擦</Button>
-            <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'">画笔</Button>
-            <Button type="text" :class="{ active: type === 'text' }" @click="type = 'text'">文字</Button>
-            <Button type="text" :class="{ active: type === 'line' }" @click="type = 'line'">直线</Button>
-            <Button type="text" :class="{ active: type === 'rectangle' }" @click="type = 'rectangle'">矩形</Button>
-            <Button type="text" :class="{ active: type === 'circle' }" @click="type = 'circle'">圆形</Button>
-            <Button type="text" :class="{ active: type === 'ellipse' }" @click="type = 'ellipse'">椭圆</Button>
-            <Button type="text" :class="{ active: border === true }" @click="border = !border">边框</Button>
-            <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
+            <Button type="text" :class="{ active: type === 'eraser' }" @click="clickEraser">橡皮擦</Button>
+            <Button type="text" :class="{ active: type === 'pen' }" @click="clickPen">画笔</Button>
+            <Button type="text" :class="{ active: type === 'text' }" @click="clickText">文字</Button>
+            <Button type="text" :class="{ active: type === 'line' }" @click="clickLine">直线</Button>
+            <Button type="text" :class="{ active: type === 'rectangle' }" @click="clickRectangle">矩形</Button>
+            <Button type="text" :class="{ active: type === 'circle' }" @click="clickCircle">圆形</Button>
+            <Button type="text" :class="{ active: type === 'ellipse' }" @click="clickEllipse">椭圆</Button>
+            <Dropdown class="change-size" placement="right-start" @on-click="changeSize">
+                <Button type="text">
+                    粗细
+                    <Icon type="ios-arrow-forward"></Icon>
+                </Button>
+                <Dropdown-menu slot="list">
+                    <Dropdown-item name='small'>小</Dropdown-item></Dropdown-item>
+                    <Dropdown-item name='middle'>中</Dropdown-item>
+                    <Dropdown-item name='large'>大</Dropdown-item>
+                </Dropdown-menu>
+            </Dropdown>
+            <Button type="text" :class="{ active: border === true }" @click="clickBorder">边框</Button>
+            <Button type="text" :class="{ active: fill === true }" @click="clickFill">填充</Button>
             <el-color-picker class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
             <el-color-picker class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
-            <div class="size">
-                <label class="size-label">粗细</label>
-                <div class="size-buttons">
-                    <Button type="text" :class="{ active: size === 5 }" id="size-button" @click="size = 5">大</Button>
-                    <Button type="text" :class="{ active: size === 3 }" id="size-button" @click="size = 3">中</Button>
-                    <Button type="text" :class="{ active: size === 1 }" id="size-button" @click="size = 1">小</Button>
-                </div>
-            </div>
         </div>
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true" style="width: 300px"></input>
-            <canvas ref="board" class="canvas" :width="width" :height="height"></canvas>
+            <canvas ref="board" :class="this.type === 'eraser' ? 'canvas-eraser' : 'canvas-drawing'" :width="width" :height="height"></canvas>
         </div>
     </div>
 </template>
@@ -44,9 +47,6 @@ import myMsg from './../warning.js'
 export default {
     name: 'white-board',
     props: ['roomId', 'teacherName', 'username'],
-    created: function () {
-        this.isTeacher = this.teacherName === this.username
-    },
     data: function () {
         return {
             type: 'pen',
@@ -68,13 +68,87 @@ export default {
             currentImageData: null,
             pointer: 0,
             socket: '',
-            roomId: '',
-            isTeacher: ''
+            roomId: ''
         }
     },
     methods: {
+        changeSize: function (name) {
+            if (name === 'large') {
+                if (this.teacherName !== this.username) {
+                    return
+                }
+                this.socket.emit('click', { type: 'sizeLarge' }, this.roomId + '.0')
+                console.log('点击了size-large, emit之后')
+                console.log(this.size)
+            } else if (name === 'middle') {
+                if (this.teacherName !== this.username) {
+                    return
+                }
+                this.socket.emit('click', { type: 'sizeMiddle' }, this.roomId + '.0')
+            } else {
+                if (this.teacherName !== this.username) {
+                    return
+                }
+                this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
+            }
+            console.log(this.size)
+        },
+        clickEraser: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'eraser' }, this.roomId + '.0')
+        },
+        clickPen: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'pen' }, this.roomId + '.0')
+        },
+        clickText: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'text' }, this.roomId + '.0')
+        },
+        clickLine: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'line' }, this.roomId + '.0')
+        },
+        clickRectangle: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'rectangle' }, this.roomId + '.0')
+        },
+        clickCircle: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'circle' }, this.roomId + '.0')
+        },
+        clickEllipse: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'ellipse' }, this.roomId + '.0')
+        },
+        clickBorder: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'border' }, this.roomId + '.0')
+        },
+        clickFill: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('click', { type: 'fill' }, this.roomId + '.0')
+        },
         drawText: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             let input = this.textInput
@@ -84,41 +158,39 @@ export default {
             }, this.roomId + '.0')
         },
         clear: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
         },
         undo: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
         },
         redo: function () {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let color = this.colorBorder
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'pen',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                color: color,
-                size: size
+                color: this.colorBorder,
+                size: this.size
             }, this.roomId + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
             if (action === 'mouseup') {
@@ -133,93 +205,78 @@ export default {
             }
         },
         eraserCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'eraser',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                size: size
+                size: this.size
             }, this.roomId + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let color = this.colorBorder
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'line',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                color: color,
-                size: size
+                color: this.colorBorder,
+                size: this.size
             }, this.roomId + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let colorBorder = this.colorBorder
-            let colorFill = this.colorFill
-            let fill = this.fill
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'rectangle',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                colorBorder: colorBorder,
-                colorFill: colorFill,
-                fill: fill,
-                size: size
+                colorBorder: this.colorBorder,
+                colorFill: this.colorFill,
+                fill: this.fill,
+                size: this.size
             }, this.roomId + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let colorBorder = this.colorBorder
-            let colorFill = this.colorFill
-            let fill = this.fill
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'circle',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                colorBorder: colorBorder,
-                colorFill: colorFill,
-                fill: fill,
-                size: size
+                colorBorder: this.colorBorder,
+                colorFill: this.colorFill,
+                fill: this.fill,
+                size: this.size
             }, this.roomId + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
-            if (!this.isTeacher) {
+            if (this.teacherName !== this.username) {
                 return
             }
-            let colorBorder = this.colorBorder
-            let colorFill = this.colorFill
-            let fill = this.fill
-            let size = this.size
             this.socket.emit('drawing', {
                 type: 'ellipse',
                 action: action,
                 x: x,
                 y: y,
                 buttons: buttons,
-                colorBorder: colorBorder,
-                colorFill: colorFill,
-                fill: fill,
-                size: size
+                colorBorder: this.colorBorder,
+                colorFill: this.colorFill,
+                fill: this.fill,
+                size: this.size
             }, this.roomId + '.0')
         },
         pen: function (data) {
@@ -235,7 +292,7 @@ export default {
                 const context = this.context
                 const [ox, oy] = this.originPoint
                 context.strokeStyle = this.colorBorder
-                context.linewidth = this.size
+                context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
                 context.lineTo(data.x, data.y)
@@ -291,7 +348,7 @@ export default {
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
                     context.strokeStyle = this.colorBorder
-                    context.linewidth = this.size
+                    context.lineWidth = this.size
                     context.beginPath()
                     context.moveTo(ox, oy)
                     context.lineTo(data.x, data.y)
@@ -325,7 +382,7 @@ export default {
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
                     const [dx, dy] = [data.x - ox, data.y - oy]
-                    context.linewidth = this.size
+                    context.lineWidth = this.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
                     if (this.fill === true) {
@@ -366,7 +423,7 @@ export default {
                     const [ox, oy] = this.originPoint
                     const [dx, dy] = [data.x - ox, data.y - oy]
                     const radius = Math.sqrt(dx * dx, dy * dy)
-                    context.linewidth = this.size
+                    context.lineWidth = this.size
                     context.beginPath()
                     context.arc((ox + data.x) / 2, (data.y + oy) / 2, radius, 0, 2 * Math.PI)
                     if (this.fill === true) {
@@ -407,7 +464,7 @@ export default {
                     const [ox, oy] = this.originPoint
                     const [dx, dy] = [Math.abs(data.x - ox), Math.abs(data.y - oy)]
                     context.strokeStyle = this.colorBorder
-                    context.linewidth = this.size
+                    context.lineWidth = this.size
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                     }
@@ -508,6 +565,47 @@ export default {
                     this.boardRedo(data)
                     break
             }
+        },
+        buttonDoing: function (data) {
+            switch(data.type) {
+                case 'eraser':
+                    console.log('row 523')
+                    this.type = 'eraser'
+                    break
+                case 'pen':
+                    this.type = 'pen'
+                    break
+                case 'text':
+                    this.type = 'text'
+                    break
+                case 'line':
+                    this.type = 'line'
+                    break
+                case 'rectangle':
+                    this.type = 'rectangle'
+                    break
+                case 'circle':
+                    this.type = 'circle'
+                    break
+                case 'ellipse':
+                    this.type = 'ellipse'
+                    break
+                case 'border':
+                    this.border = !this.border
+                    break
+                case 'fill':
+                    this.fill = !this.fill
+                    break
+                case 'sizeLarge':
+                    this.size = 5
+                    break
+                case 'sizeMiddle':
+                    this.size = 3
+                    break
+                case 'sizeSmall':
+                    this.size = 1
+                    break
+            }
         }
     },
     mounted: function () {
@@ -523,6 +621,9 @@ export default {
         this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
         this.socket.on('drawing', function (data) {
             self.whiteBoardDoing(data)
+        })
+        this.socket.on('click', function (data) {
+            self.buttonDoing(data)
         })
     }
 }
@@ -597,9 +698,24 @@ button.active {
 .drawing-board {
     height: 100%;
     width: 100%;
+    background: blue;
 }
 
-.canvas {
-    background: white;
+.canvas-eraser {
+    background: #D4EFDF;
+}
+
+.canvas-eraser:hover {
+    background: #F0B27A;
+    cursor: move;
+}
+
+.canvas-drawing {
+    background: #D4EFDF;
+}
+
+.canvas-drawing:hover {
+    background: #F9E79F;
+    cursor: crosshair;
 }
 </style>
