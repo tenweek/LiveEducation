@@ -22,6 +22,17 @@ def changeNum(request):
 
 
 @csrf_exempt
+def upload(request):
+    nowFile = request.FILES.get('myfile')
+    account = request.COOKIES.get('userAccount')
+    nowUser = User.objects.get(username = account)
+    nowUser.user_img = nowFile
+    nowUser.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
 def kickOut(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
@@ -137,10 +148,12 @@ def getName(request):
 
 @csrf_exempt
 def createRoom(request):
+    print(request.POST)
     req = simplejson.load(request)
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
+    print(teacher.user_img)
     Room.objects.create(teacher=teacher, room_name=roomName)
     response = JsonResponse({})
     return response
@@ -155,10 +168,13 @@ def getRooms(request):
         rooms = Room.objects.order_by('-create_time')
     myroom = []
     for room in rooms:
+        userImg = str(room.teacher.user_img)
+        print(userImg[8:])
         myroom.append({'roomName': room.room_name,
                        'teacherName': room.teacher.name,
                        'id': room.id,
-                       'studentNum': room.student_num})
+                       'studentNum': room.student_num,
+                       'userImg': userImg[8:]})
     response = JsonResponse(
         {'rooms': myroom})
     return response

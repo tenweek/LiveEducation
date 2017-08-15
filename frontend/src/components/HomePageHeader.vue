@@ -39,7 +39,7 @@
                 </Upload>
                 <br>
                 <p>上传封面图</p>
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
+                <Upload name="myfile" action="/upload/">
                     <div class="upload">
                         <Button type="ghost">
                             点击选择图片&nbsp;&nbsp;
@@ -95,7 +95,7 @@ export default {
             isTeacher: false,
             username: '',
             account: '',
-            roomName: '',
+            roomName: 'hello',
             newUserName: ''
         }
     },
