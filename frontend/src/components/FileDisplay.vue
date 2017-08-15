@@ -43,7 +43,7 @@ export default {
     },
     created: function () {
         this.recRoute = 'ppt/shili-'
-        this.nowNum = 2
+        this.nowNum = 1
         this.maxNum = 15
         if (this.teacherName === this.username) {
             this.isTeacher = true
@@ -55,14 +55,14 @@ export default {
             if (this.nowNum < this.maxNum && this.isTeacher) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
             }
         },
         prePicture: function () {
             if (this.nowNum > 1 && this.isTeacher) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
             }
         },
         modPicture: function () {
@@ -80,23 +80,21 @@ export default {
             getfocus.focus()
         },
         changePage: function () {
-            let selected = document.getElementById("for-select")
+            let selected = document.getElementById('for-select')
             this.nowNum = selected.selectedIndex + 1
             this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-            this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
+            this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
         }
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
         let self = this
-        self.socket.emit('joinForFileDisplay', this.roomId + '.2', this.roomId)
-        self.socket.on('fileDisplayMessage', function (msg) {
-            if (!self.isTeacher) {
+        self.socket.emit('joinForFileDisplay', this.roomId + '.2')
+        if (!self.isTeacher) {
+            self.socket.on('fileDisplayMessage', function (msg) {
                 self.nowNum = msg
                 self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
-            }
-        })
-        if (!self.isTeacher) {
+            })
             self.socket.on('firstPicture', function (msg) {
                 self.nowNum = msg
                 self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
