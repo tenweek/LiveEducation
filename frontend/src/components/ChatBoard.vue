@@ -4,7 +4,7 @@
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
                     <template v-if="message['teacherName']===message['user']">
-                        <button class="message" @click="getName(message)" style="font-weight:bold;">
+                        <button class="message-bold" @click="getName(message)">
                             {{ message['msg'] }}
                         </button>
                     </template>
@@ -23,17 +23,9 @@
                 </Dropdown>
             </div>
         </div>
-        <Form class="form" inline>
-            <Form-item class="item-img">
-                <img class="img" src="../assets/chat_bottombar_icon_face.png">
-            </Form-item>
-            <Form-item class="item-input">
-                <Input v-model="msgInput"></Input>
-            </Form-item>
-            <Form-item class="item-button">
-                <Button type="ghost" class="button" @click="sendMsg">发送</Button>
-            </Form-item>
-        </Form>
+        <Input v-model="msgInput">
+            <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
+        </Input>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
             <label>请选择您要解除禁言的对象</label>
             <br>
@@ -257,20 +249,14 @@ export default {
 </script>
 
 <style scoped>
-* {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .chat-board {
     width: 100%;
     height: 100%;
     position: relative;
 }
 
-.message {
+.message,
+.message-bold {
     background-color: Transparent;
     border-style: None;
     outline: none;
@@ -282,46 +268,22 @@ export default {
     width: 100%;
 }
 
+.message-bold {
+    font-weight: bold;
+}
+
 .set-left {
     float: left;
     padding-left: 5px;
 }
 
-.form {
-    height: 38px;
-    width: 100%;
-    position: absolute;
-    bottom: 0px;
+#send-btn {
+    color: #6088BB;
+    background-color: #9EF4E6;
 }
 
-.chat-board .form .item-button,
-.chat-board .form .item-img,
-.chat-board .form .item-input {
-    margin-top: 6px;
-    margin-bottom: 0px;
-    margin-right: 0px;
-}
-
-.item-img {
-    width: 9.1%;
-}
-
-.item-input {
-    width: 68.1%;
-}
-
-.item-button {
-    width: 20%;
-}
-
-.img {
-    height: 30px;
-    width: 30px;
-}
-
-.button {
-    color: white;
-    background-color: #1EE494;
+#send-btn:hover {
+    border-color: #12CC94;
 }
 
 #messages {
