@@ -175,6 +175,7 @@ export default {
     font-size: 40px;
     position: fixed;
     left: 0;
+    z-index: 50;
 }
 
 .navigation {
