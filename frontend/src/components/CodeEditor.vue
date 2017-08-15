@@ -6,7 +6,6 @@
             </Option>
         </Select>
         <codemirror id='code' v-model='code' :options='editorOptions'></codemirror>
-        <div>{{ editorOptions.mode }}</div>
     </div>
 </template>
 
