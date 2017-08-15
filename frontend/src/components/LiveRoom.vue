@@ -15,7 +15,9 @@
                 <label class="information">在线人数：{{ this.studentNum }}</label>
             </div>
             <div class="navigation-right">
-                <Button type="primary" shape="circle" size="small">开始直播</Button>
+                <template v-if="this.teacherName === this.username">
+                    <Button type="primary" shape="circle" size="small">开始直播</Button>
+                </template>
             </div>
         </div>
         <div class="layout-header">
@@ -197,6 +199,7 @@ export default {
 
 .navigation-right {
     margin-right: 15px;
+    width: 64px;
     font-size: 15px;
 }
 
