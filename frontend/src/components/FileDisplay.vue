@@ -80,7 +80,7 @@ export default {
             getfocus.focus()
         },
         changePage: function () {
-            let selected = document.getElementById("for-select")
+            let selected = document.getElementById('for-select')
             this.nowNum = selected.selectedIndex + 1
             this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
             this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
