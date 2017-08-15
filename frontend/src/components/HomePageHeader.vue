@@ -30,7 +30,7 @@
                 <br>
                 <br>
                 <p>上传课件</p>
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
+                <Upload name="file" action="/uploadFile/" data="this.roomName">
                     <div class="upload">
                         <Button type="ghost">点击选择文件&nbsp;&nbsp;
                             <Icon type="folder"></Icon>
@@ -95,8 +95,8 @@ export default {
             isTeacher: false,
             username: '',
             account: '',
-            roomName: 'hello',
-            newUserName: ''
+            roomName: '',
+            newUserName: '123456'
         }
     },
     created: function () {

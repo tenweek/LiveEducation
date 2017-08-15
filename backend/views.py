@@ -8,7 +8,26 @@ import simplejson
 from .models import Room, User, RoomStudent
 
 import random
+import cloudconvert
+import zipfile
+import os
 # Create your views here.
+
+
+@csrf_exempt
+def uploadFile(request):
+    api = cloudconvert.Api('s5LxChVW3zSMd6nPQ4XAd5LkadUmsSPAfvNjzEmqOn0eiCn_7srcI4syT4sO9PmZKPihNicIamPrgwgMPdSzZg')
+    process = api.convert({
+        "inputformat": "pdf",
+        "outputformat": "png",
+        "input": "upload",
+        "filename": "111.pdf",
+        "file": open('./123.pdf', 'rb')
+    })
+    process.wait()
+    process.download('./new.zip')
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt

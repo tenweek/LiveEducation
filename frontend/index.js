@@ -1,6 +1,6 @@
-let app = require('express')()
-let server = require('http').Server(app)
-let io = require('socket.io')(server)
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
 
 app.get('/', function (req, res) {
     res.send('<h1>Hello Wellcome</h1>')
@@ -10,11 +10,11 @@ server.listen(9000, () => {
     console.log('in 9000')
 })
 
-let onlineCount = {}
-let pictureNum = []
+var onlineCount = {}
+var pictureNum = []
 
 io.on('connection', function (socket) {
-    let id = 0
+    var id = 0
     socket.on('join', function (roomid) {
         id = roomid
         console.log('chatroom connected')
