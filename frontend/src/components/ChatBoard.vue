@@ -59,7 +59,7 @@ export default {
         let self = this
         document.oncontextmenu = self.contextMenu
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('join', self.roomId + '.1')
+        self.socket.emit('join', self.roomId + '.1', self.roomId)
         self.kickOut()
         self.socket.on('message', function (data) {
             let msg = data['username'] + ' : ' + data['message']
