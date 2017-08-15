@@ -11,9 +11,6 @@ server.listen(9000, () => {
 })
 
 let onlineCount = {}
-let whiteboardChosen = {}
-let fileChosen = {}
-let codeChosen = {}
 let pictureNum = []
 
 io.on('connection', function (socket) {
@@ -23,37 +20,20 @@ io.on('connection', function (socket) {
         console.log('chatroom connected')
         if (!onlineCount[id]) {
             onlineCount[id] = 0
-            whiteboardChosen[id] = 0
-            fileChosen[id] = 0
-            codeChosen[id] = 0
         }
         onlineCount[id] += 1
         socket.join(roomid)
-        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
-        let num = onlineCount[id] / k
-        io.to(roomid).emit('login', num)
+        io.to(roomid).emit('changeNum', onlineCount[id])
     })
     socket.on('joinForWhiteBoard', function (roomId) {
-        if (!onlineCount[id]) {
-            onlineCount[id] = 0
-            whiteboardChosen[id] = 0
-            fileChosen[id] = 0
-            codeChosen[id] = 0
-        }
-        onlineCount[id] += 1
-        whiteboardChosen[id] = 1
         console.log('whiteboard connected')
         socket.join(roomId)
     })
     socket.on('joinForCodeEditor', function (roomId) {
-        onlineCount[id] += 1
-        codeChosen[id] = 1
         console.log('codeeditor connected')
         socket.join(roomId)
     })
     socket.on('joinForFileDisplay', function (roomId, roomNum) {
-        onlineCount[id] += 1
-        fileChosen[id] = 1
         console.log('filedisplay connected')
         socket.join(roomId)
         io.to(roomId).emit('firstPicture', pictureNum[roomNum])
@@ -73,12 +53,12 @@ io.on('connection', function (socket) {
     })
     socket.on('drawing', function (data, roomId) {
         io.to(roomId).emit('drawing', data)
-    });
-    socket.on('disconnect', function () {
-        console.log('disconnect')
-        onlineCount[id] -= 1
-        let k = whiteboardChosen[id] + fileChosen[id] + codeChosen[id] + 1
-        let num = onlineCount[id] / k
-        io.to(id).emit('logout', num)
+    })
+    socket.on('disconnecting', function (resaon) {
+        const rooms = Object.keys(socket.rooms)
+        if (rooms[1] === id) {
+            onlineCount[id] -= 1
+            io.to(id).emit('changeNum', onlineCount[id])
+        }
     })
 });
