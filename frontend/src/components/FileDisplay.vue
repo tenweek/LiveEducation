@@ -11,9 +11,9 @@
                 </a>
                 <div class="for-place">
                     <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
-                        <option v-for="num in this.maxNum" class="every-option">&nbsp;{{ num }}</option>
+                        <option v-for="page in this.maxPage" class="every-option">&nbsp;{{ page }}</option>
                     </select>
-                    <div class="ppt-num">&nbsp;&nbsp;&nbsp;{{ this.nowNum }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxNum }}&nbsp;&nbsp;&nbsp;</div>
+                    <div class="ppt-page">&nbsp;&nbsp;&nbsp;{{ this.currentPage }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxPage }}&nbsp;&nbsp;&nbsp;</div>
                 </div>
                 <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture">
                     <Icon type="arrow-right-b"></Icon>
@@ -33,36 +33,36 @@ export default {
     data: function () {
         return {
             socket: '',
-            baseRoute: '/static/',
+            baseRoute: 'static/',
             recRoute: '',
             route: '',
-            maxNum: '',
-            nowNum: '',
+            maxPage: '',
+            currentPage: '',
             isTeacher: false
         }
     },
     created: function () {
         this.recRoute = 'ppt/shili-'
-        this.nowNum = 1
-        this.maxNum = 15
+        this.currentPage = 1
+        this.maxPage = 15
         if (this.teacherName === this.username) {
             this.isTeacher = true
-            this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+            this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
         }
     },
     methods: {
         nextPicture: function () {
-            if (this.nowNum < this.maxNum && this.isTeacher) {
-                this.nowNum = this.nowNum + 1
-                this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
+            if (this.currentPage < this.maxPage && this.isTeacher) {
+                this.currentPage = this.currentPage + 1
+                this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+                this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
             }
         },
         prePicture: function () {
-            if (this.nowNum > 1 && this.isTeacher) {
-                this.nowNum = this.nowNum - 1
-                this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
+            if (this.currentPage > 1 && this.isTeacher) {
+                this.currentPage = this.currentPage - 1
+                this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+                this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
             }
         },
         modPicture: function () {
@@ -81,9 +81,9 @@ export default {
         },
         changePage: function () {
             let selected = document.getElementById('for-select')
-            this.nowNum = selected.selectedIndex + 1
-            this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-            this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2')
+            this.currentPage = selected.selectedIndex + 1
+            this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+            this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
         }
     },
     mounted: function () {
@@ -92,12 +92,12 @@ export default {
         self.socket.emit('joinForFileDisplay', this.roomId + '.2')
         if (!self.isTeacher) {
             self.socket.on('fileDisplayMessage', function (msg) {
-                self.nowNum = msg
-                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
+                self.currentPage = msg
+                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
             })
             self.socket.on('firstPicture', function (msg) {
-                self.nowNum = msg
-                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
+                self.currentPage = msg
+                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
             })
         }
     }
@@ -182,7 +182,7 @@ img {
     font-size: 10px;
 }
 
-.ppt-num {
+.ppt-page {
     height: 80px;
     font-size: 30px;
     color: white;
