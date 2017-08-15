@@ -94,10 +94,7 @@ export default {
         },
         changeStuNum: function () {
             let self = this
-            this.socket.on('login', function (count) {
-                self.$emit('stuNum', count)
-            })
-            this.socket.on('logout', function (count) {
+            this.socket.on('changeNum', function (count) {
                 self.$emit('stuNum', count)
             })
         },
