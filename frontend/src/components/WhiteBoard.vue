@@ -1,15 +1,8 @@
 <template>
     <div class="white-board">
         <div class="tools">
-            <div class="undo-redo">
-                <Button class="button-undo-redo" @click="undo">
-                    <Icon type="reply"></Icon>
-                </Button>
-                <Button class="button-undo-redo" @click="redo">
-                    <Icon type="forward"></Icon>
-                </Button>
-            </div>
-            <Button class="clear" @click="clear">清空</Button>
+            <Button type="text" @click="clear">清空</Button>
+            <Button type="text" @click="undo">撤销</Button>
             <Button type="text" :class="{ active: type === 'eraser' }" @click="clickEraser">橡皮擦</Button>
             <Button type="text" :class="{ active: type === 'pen' }" @click="clickPen">画笔</Button>
             <Button type="text" :class="{ active: type === 'text' }" @click="clickText">文字</Button>
@@ -35,7 +28,7 @@
         </div>
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true" style="width: 300px"></input>
-            <canvas ref="board" :class="this.type === 'eraser' ? 'canvas-eraser' : 'canvas-drawing'" :width="width" :height="height"></canvas>
+            <canvas ref="board" :class="this.type === 'eraser' || this.type === 'pen'? 'canvas-eraser' : 'canvas-drawing'" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
         </div>
     </div>
 </template>
@@ -46,15 +39,13 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'white-board',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight'],
     data: function () {
         return {
             type: 'pen',
             context: null,
             originPoint: null,
             lastImageData: null,
-            width: 601,
-            height: 486,
             colorBorder: 'rgba(0, 0, 0, 1)',
             colorFill: 'rgba(255, 255, 255, 1)',
             fill: false,
@@ -71,6 +62,17 @@ export default {
             roomId: ''
         }
     },
+    // watch: {
+    //     whiteBoardWidth: function () {
+    //         console.log('watch WhiteBoard')
+    //         this.width = this.teachingWidth * 0.68 - 77
+    //         console.log(this.width)
+    //     },
+    //     teachingHeight: function () {
+    //         this.height = this.teachingHeight - 35
+    //         console.log(this.height)
+    //     }
+    // },
     methods: {
         changeSize: function (name) {
             if (name === 'large') {
@@ -78,8 +80,6 @@ export default {
                     return
                 }
                 this.socket.emit('click', { type: 'sizeLarge' }, this.roomId + '.0')
-                console.log('点击了size-large, emit之后')
-                console.log(this.size)
             } else if (name === 'middle') {
                 if (this.teacherName !== this.username) {
                     return
@@ -91,7 +91,6 @@ export default {
                 }
                 this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
             }
-            console.log(this.size)
         },
         clickEraser: function () {
             if (this.teacherName !== this.username) {
@@ -169,12 +168,6 @@ export default {
             }
             this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
         },
-        redo: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
-        },
         penCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -182,8 +175,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'pen',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 color: this.colorBorder,
                 size: this.size
@@ -197,12 +190,14 @@ export default {
                 this.textField = true
                 this.socket.emit('drawing', {
                     type: 'textField',
-                    x: x,
-                    y: y,
+                    x: x / this.whiteBoardWidth,
+                    y: y / this.whiteBoardHeight,
+                    color: this.colorBorder,
                     action: action,
                     buttons: buttons
                 }, this.roomId + '.0')
             }
+            console.log(this.colorBorder)
         },
         eraserCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -211,8 +206,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'eraser',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 size: this.size
             }, this.roomId + '.0')
@@ -224,8 +219,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'line',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 color: this.colorBorder,
                 size: this.size
@@ -238,8 +233,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'rectangle',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -254,8 +249,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'circle',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -270,8 +265,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'ellipse',
                 action: action,
-                x: x,
-                y: y,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -283,8 +278,8 @@ export default {
             this.size = data.size
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                this.originPoint = [data.x, data.y]
-                this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
             } else if (data.action === 'mousemove') {
                 if (this.originPoint === null) {
                     return
@@ -295,24 +290,23 @@ export default {
                 context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
-                context.lineTo(data.x, data.y)
+                context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
                 context.stroke()
                 context.closePath()
-                this.originPoint = [data.x, data.y]
+                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
             } else if (data.action === 'mouseup') {
                 this.originPoint = null
                 this.lastImageData = null
-                this.allImageData.length = this.pointer + 1
-                this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                this.pointer = this.allImageData.length - 1
+                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                this.pointer += 1
             }
         },
         eraser: function (data) {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x, data.y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -321,14 +315,13 @@ export default {
                     const context = this.context
                     const [ox, oy] = this.originPoint
                     context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                    this.originPoint = [data.x, data.y]
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
                     break
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.length = this.pointer + 1
-                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                    this.pointer = this.allImageData.length - 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.pointer += 1
                     break
             }
         },
@@ -337,8 +330,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x, data.y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint == null) {
@@ -351,16 +344,15 @@ export default {
                     context.lineWidth = this.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(data.x, data.y)
+                    context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
                     context.stroke()
                     context.closePath()
                     break
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.length = this.pointer + 1
-                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                    this.pointer = this.allImageData.length - 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.pointer += 1
                     break
             }
         },
@@ -371,8 +363,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x, data.y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -381,7 +373,7 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x - ox, data.y - oy]
+                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
                     context.lineWidth = this.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
@@ -398,9 +390,8 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.length = this.pointer + 1
-                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                    this.pointer = this.allImageData.length - 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.pointer += 1
                     break
             }
         },
@@ -411,8 +402,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x, data.y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -421,11 +412,11 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x - ox, data.y - oy]
+                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
                     const radius = Math.sqrt(dx * dx, dy * dy)
                     context.lineWidth = this.size
                     context.beginPath()
-                    context.arc((ox + data.x) / 2, (data.y + oy) / 2, radius, 0, 2 * Math.PI)
+                    context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -439,9 +430,8 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.length = this.pointer + 1
-                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                    this.pointer = this.allImageData.length - 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.pointer += 1
                     break
             }
         },
@@ -452,8 +442,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x, data.y]
-                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -462,14 +452,14 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [Math.abs(data.x - ox), Math.abs(data.y - oy)]
+                    const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
                     context.strokeStyle = this.colorBorder
                     context.lineWidth = this.size
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                     }
                     context.beginPath()
-                    context.ellipse((data.x + ox) / 2, (data.y + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                    context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -483,51 +473,50 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.length = this.pointer + 1
-                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-                    this.pointer = this.allImageData.length - 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.pointer += 1
                     break
             }
         },
         boardClear: function (data) {
-            this.context.clearRect(0, 0, this.width, this.height)
-            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-            this.pointer += 1
+            this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+            this.allImageData = []
+            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+            this.pointer = 0
         },
         textBox: function (data) {
             if (data.action === 'mouseup') {
-                this.textLeft = data.x
-                this.textTop = data.y
+                this.textLeft = data.x * this.whiteBoardWidth
+                this.textTop = data.y * this.whiteBoardHeight
             }
         },
         font: function (data) {
             this.textField = false
+            this.colorBorder = data.color
+            console.log(data.color)
+            // TODO: data.color undefined?不能改变颜色
+            this.context.font = (this.size * 5 + 25) + "px serif"
+            // TODO: 表达式的括号两边要不要加空格？
+            this.context.fillStyle = "red"
             this.context.fillText(data.input, this.textLeft, this.textTop)
             this.textInput = ''
-            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-            this.pointer = this.allImageData.length - 1
+            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+            this.pointer += 1
         },
         boardUndo: function (data) {
             if (this.pointer === 0) {
-                this.$Message.alert(myMsg.whiteBoard['undoNotExist'])
+                this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
-            }
-            if (this.pointer > 0) {
+            } else if (this.pointer === 1) {
+                this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                this.allImageData = []
+                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                this.pointer = 0
+            } else {
                 this.pointer -= 1
+                this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+                this.allImageData.length = this.pointer + 1
             }
-            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
-        },
-        boardRedo: function (data) {
-            if (this.pointer === this.allImageData.length - 1) {
-                this.$Message.alert(myMsg.whiteBoard['redoNotExist'])
-                return
-            }
-            if (this.pointer < this.allImageData.length) {
-                this.pointer += 1
-            }
-            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         },
         whiteBoardDoing: function (data) {
             switch (data.type) {
@@ -561,15 +550,11 @@ export default {
                 case 'undo':
                     this.boardUndo(data)
                     break
-                case 'redo':
-                    this.boardRedo(data)
-                    break
             }
         },
         buttonDoing: function (data) {
-            switch(data.type) {
+            switch (data.type) {
                 case 'eraser':
-                    console.log('row 523')
                     this.type = 'eraser'
                     break
                 case 'pen':
@@ -606,6 +591,9 @@ export default {
                     this.size = 1
                     break
             }
+        },
+        joinDoing: function () {
+
         }
     },
     mounted: function () {
@@ -615,7 +603,7 @@ export default {
             })
         })
         this.context = this.$refs.board.getContext('2d')
-        this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
         let self = this
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
@@ -625,6 +613,9 @@ export default {
         this.socket.on('click', function (data) {
             self.buttonDoing(data)
         })
+        // this.socket.on('login', function () {
+        //     this.socket.emit('click', { image: this.allImageData }, this.roomId + '.0')
+        // })
     }
 }
 </script>
@@ -632,14 +623,6 @@ export default {
 <style scoped>
 #text-field {
     position: relative;
-}
-
-.undo-redo {
-    display: flex;
-}
-
-.button-undo-redo {
-    width: 37px;
 }
 
 .white-board {
@@ -706,8 +689,7 @@ button.active {
 }
 
 .canvas-eraser:hover {
-    background: #F0B27A;
-    cursor: move;
+    cursor: url('../assets/eraser.jpg');
 }
 
 .canvas-drawing {
@@ -715,7 +697,6 @@ button.active {
 }
 
 .canvas-drawing:hover {
-    background: #F9E79F;
     cursor: crosshair;
 }
 </style>
