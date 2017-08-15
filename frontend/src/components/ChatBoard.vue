@@ -24,7 +24,7 @@
             </div>
         </div>
         <Input v-model="msgInput">
-            <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
+        <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
         </Input>
         <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
             <label>请选择您要解除禁言的对象</label>
@@ -249,6 +249,10 @@ export default {
 </script>
 
 <style scoped>
+* {
+    overflow: hidden;
+}
+
 .chat-board {
     width: 100%;
     height: 100%;

@@ -1,6 +1,25 @@
 <template>
-    <div class="file-display" id="file" @click="makeFoucs" @keydown="modPicture()" tabindex="0">
-        <img :src="this.route" width="675px" class="my-img" />
+    <div class="file-display" id="file">
+        <div class="ppt-header">PPT放映</div>
+        <div @click="makeFoucs" @keydown="modPicture()" tabindex="0">
+            <img :src="this.route" />
+        </div>
+        <div class="ppt-footer">
+            <div class="for-footer">
+                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture">
+                    <Icon type="arrow-left-b"></Icon>
+                </a>
+                <div class="for-place">
+                    <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
+                        <option v-for="num in this.maxNum" class="every-option">&nbsp;{{ num }}</option>
+                    </select>
+                    <div class="ppt-num">&nbsp;&nbsp;&nbsp;{{ this.nowNum }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxNum }}&nbsp;&nbsp;&nbsp;</div>
+                </div>
+                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture">
+                    <Icon type="arrow-right-b"></Icon>
+                </a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -24,7 +43,7 @@ export default {
     },
     created: function () {
         this.recRoute = 'ppt/shili-'
-        this.nowNum = 1
+        this.nowNum = 2
         this.maxNum = 15
         if (this.teacherName === this.username) {
             this.isTeacher = true
@@ -33,17 +52,17 @@ export default {
     },
     methods: {
         nextPicture: function () {
-            if (this.nowNum < this.maxNum) {
+            if (this.nowNum < this.maxNum && this.isTeacher) {
                 this.nowNum = this.nowNum + 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
             }
         },
         prePicture: function () {
-            if (this.nowNum > 1) {
+            if (this.nowNum > 1 && this.isTeacher) {
                 this.nowNum = this.nowNum - 1
                 this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
-                this.socket.emit('fileDisplayMessage', this.route, this.roomId + '.2', this.roomId)
+                this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
             }
         },
         modPicture: function () {
@@ -59,6 +78,12 @@ export default {
         makeFoucs: function () {
             let getfocus = document.getElementById('file')
             getfocus.focus()
+        },
+        changePage: function () {
+            let selected = document.getElementById("for-select")
+            this.nowNum = selected.selectedIndex + 1
+            this.route = this.baseRoute + this.recRoute + this.nowNum + '.png'
+            this.socket.emit('fileDisplayMessage', this.nowNum, this.roomId + '.2', this.roomId)
         }
     },
     mounted: function () {
@@ -67,13 +92,14 @@ export default {
         self.socket.emit('joinForFileDisplay', this.roomId + '.2', this.roomId)
         self.socket.on('fileDisplayMessage', function (msg) {
             if (!self.isTeacher) {
-                self.route = msg
+                self.nowNum = msg
+                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
             }
         })
         if (!self.isTeacher) {
             self.socket.on('firstPicture', function (msg) {
-                self.route = msg
-                console.log(msg)
+                self.nowNum = msg
+                self.route = self.baseRoute + self.recRoute + self.nowNum + '.png'
             })
         }
     }
@@ -81,12 +107,90 @@ export default {
 </script>
 
 <style scoped>
-.my-img {
-    border: 3px solid #000;
+.file-display {
+    width: 100%;
+    height: auto;
+    background: #52524E;
 }
 
-.file-display {
-    width: 680px;
-    height: 480px;
+.ppt-header {
+    background-color: #52524E;
+    width: 100%;
+    height: 50px;
+    border-color: #52524E;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 20px;
+}
+
+img {
+    border: 3px solid #52524E;
+    height: auto;
+    width: 100%;
+}
+
+.ppt-footer {
+    width: 100%;
+    height: 80px;
+    background-color: #52524E;
+    text-align: center;
+    display: flex;
+}
+
+.for-footer {
+    width: auto;
+    height: 80px;
+    margin: auto;
+    display: flex;
+}
+
+.arrow {
+    height: 80px;
+    font-size: 60px;
+    color: white;
+    line-height: 80px;
+}
+
+.arrow:hover {
+    color: #9A9B94;
+}
+
+.for-place {
+    width: auto;
+    position: relative;
+    display: flex;
+    margin: 0;
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+}
+
+.ppt-select {
+    width: 40px;
+    height: 80px;
+    opacity: 0;
+    position: absolute;
+    left: 20px;
+    z-index: 50;
+}
+
+.every-option {
+    background: white;
+    font-size: 10px;
+}
+
+.ppt-num {
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+    text-align: right;
 }
 </style>
