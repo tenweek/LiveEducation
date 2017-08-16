@@ -25,7 +25,7 @@ def uploadFile(request):
     print('./'+str(user.user_file))
     filedir = './'+str(user.user_file)
     print(filedir)
-    api = cloudconvert.Api('DMOau_tEMyKTqZzLy2magGSOP1tv6saAWGOzMk5yLlyummHqe7ry3w1TAUpXTouNfzq0FYBhE-_RqXyJDVwXSA')
+    api = cloudconvert.Api('L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
     process = api.convert({
         "inputformat": "pptx",
         "outputformat": "png",
@@ -33,7 +33,15 @@ def uploadFile(request):
         "filename": "123.pptx",
         "file": open(filedir, 'rb')})
     process.wait()
-    process.download('./new.zip')
+    process.download('./frontend/static/pptzip/'+user.name+'.zip')
+    zip_file = zipfile.ZipFile('./frontend/static/pptzip/'+user.name+'.zip')  
+    if os.path.isdir('./frontend/static/ppt/'+user.name):  
+        pass  
+    else:  
+        os.mkdir('./frontend/static/ppt/'+user.name)  
+    for names in zip_file.namelist():  
+        zip_file.extract(names,'./frontend/static/ppt/'+user.name)  
+    zip_file.close()
     response = JsonResponse({})
     return response
 
