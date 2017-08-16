@@ -11,17 +11,12 @@
             </div>
         </div>
         <div class="control-panel">
-            <Button @click="join"><Icon id="join" type="android-arrow-dropright-circle"></Icon></Button>
-            <template v-if="this.username !== this.teacherName">
-                <Button @click="play"><Icon id="play" type="play"></Icon></Button>
-                <Button @click="pause"><Icon id="pause" type="pause"></Icon></Button>
-                <Button @click="mute"><Icon id="volume" type="volume-high"></Icon></Button>
+            <button @click="join"><Icon id="join" type="android-arrow-dropright-circle"></Icon></button>
+            <template v-if="this.username === this.teacherName">
+                <button @click="publish" id="publish"><Icon type="play"></Icon></button>
+                <button @click="unpublish" id="unpublish"><Icon type="stop"></Icon></button>
             </template>
-            <template v-else-if="this.username === this.teacherName">
-                <Button @click="publish"><Icon id="publish" type="play"></Icon></Button>
-                <Button @click="unpublish"><Icon id="unpublish" type="stop"></Icon></Button>
-            </template>
-            <Button @click="showVideo"><Icon id="arrow" type="chevron-up"></Icon></Button>
+            <button @click="showVideo" id="arrow"><Icon type="chevron-up"></Icon></button>
         </div>
         <div id="video">
             <template v-if="this.username === this.teacherName">
@@ -42,7 +37,6 @@ export default {
         return {
             client: '',
             localStream: '',
-            remoteStream: '',
             microphone: '',
             audioSelect: '',
             videoSelect: '',
@@ -60,34 +54,14 @@ export default {
     },
     methods: {
         showVideo: function () {
-            let video = document.getElementById('video')
             let arrow = document.getElementById('arrow')
+            let video = document.getElementById('video')
             if (video.style.display === 'none') {
                 video.style.display = 'inline-block'
-                arrow.type = 'chevron-up'
+                arrow.innerHTML = '<i class="ivu-icon ivu-icon-chevron-up"></i>'
             } else {
                 video.style.display = 'none'
-                arrow.type = 'chevron-down'
-            }
-        },
-        play: function () {
-            document.getElementById('play').disable = true
-            document.getElementById('pause').disable = false
-            this.remoteStream.enableVideo()
-        },
-        pause: function () {
-            document.getElementById('play').disable = false
-            document.getElementById('pause').disable = true
-            this.remoteStream.disableVideo()
-        },
-        mute: function () {
-            let volume = document.getElementById('volume')
-            if (volume.type === 'volume-high') {
-                this.remoteStream.disableAudio()
-                volume.type = 'android-volume-mute'
-            } else {
-                this.remoteStream.enableAudio()
-                volume.type = 'volume-high'
+                arrow.innerHTML = '<i class="ivu-icon ivu-icon-chevron-down"></i>'
             }
         },
         publish: function () {
@@ -96,6 +70,7 @@ export default {
             this.client.publish(this.localStream, function (err) {
                 console.log('Publish local stream error: ' + err)
             })
+            this.localStream.enableVideo()
         },
         unpublish: function () {
             document.getElementById('publish').disable = false
@@ -103,6 +78,7 @@ export default {
             this.client.unpublish(this.localStream, function (err) {
                 console.log('Unpublish local stream failed' + err)
             })
+            this.localStream.disableVideo()
         },
         join: function () {
             document.getElementById('join').disable = true
@@ -159,15 +135,15 @@ export default {
                 })
             })
             this.client.on('stream-subscribed', function (evt) {
-                this.remoteStream = evt.stream
-                this.remoteStream.play('agora-remote')
+                let stream = evt.stream
+                stream.play('agora-remote')
             })
             this.client.on('stream-removed', function (evt) {
-                var stream = evt.stream
+                let stream = evt.stream
                 stream.stop()
             })
             this.client.on('peer-leave', function (evt) {
-                var stream = evt.stream
+                let stream = evt.stream
                 if (stream) {
                     stream.stop()
                     console.log(evt.uid + ' leaved from this channel')
@@ -183,7 +159,7 @@ export default {
         },
         getDevices: function () {
             AgoraRTC.getDevices(function (devices) {
-                for (var i = 0; i !== devices.length; ++i) {
+                for (let i = 0; i !== devices.length; ++i) {
                     let device = devices[i]
                     let option = document.createElement('option')
                     option.value = device.deviceId
@@ -217,5 +193,17 @@ export default {
 
 #divDevice {
     display: none;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(92, 107, 119);
+    border: none;
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.control-panel {
+    text-align: right;
 }
 </style>
