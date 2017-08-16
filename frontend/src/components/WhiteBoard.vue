@@ -593,7 +593,33 @@ export default {
             }
         },
         joinDoing: function () {
-
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('newJoinWhiteBoardMessage', {
+                type: this.type,
+                // x: x / this.whiteBoardWidth,
+                // y: y / this.whiteBoardHeight,
+                border: this.border,
+                fill: this.fill,
+                size: this.size,
+                imageData: this.allImageData
+            }, this.roomId + '.0')
+        },
+        updateMessageDoing: function (data) {
+            if (true) {
+                console.log('updateMessageData')
+                this.allImageData = data.imageData
+                this.type = data.type
+                this.border = this.border
+                this.fill = data.fill
+                this.size = data.size
+                console.log(this.type)
+                this.pointer = this.allImageData.length - 1
+                console.log('同步信息的时候，初始pointer' + this.pointer)
+                console.log(this.allImageData)
+                this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+            }
         }
     },
     mounted: function () {
@@ -613,9 +639,12 @@ export default {
         this.socket.on('click', function (data) {
             self.buttonDoing(data)
         })
-        // this.socket.on('login', function () {
-        //     this.socket.emit('click', { image: this.allImageData }, this.roomId + '.0')
-        // })
+        this.socket.on('newJoin', function () {
+            self.joinDoing()
+        })
+        this.socket.on('updateWhiteBoardMessage', function (data) {
+            self.updateMessageDoing(data)
+        })
     }
 }
 </script>

@@ -183,6 +183,8 @@ export default {
             this.teachingHeight = document.getElementById('teaching').clientHeight
             console.log(this.teachingWidth)
             console.log(this.teachingHeight)
+            // this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
+            // this.whiteBoardHeight = this.teachingHeight - 35
         }
     }
 }

@@ -23,7 +23,9 @@ io.on('connection', function (socket) {
     })
     socket.on('joinForWhiteBoard', function (roomId) {
         console.log('whiteboard connected')
+        console.log('newJoinWB')
         socket.join(roomId)
+        io.to(roomId).emit('newJoin')
     })
     socket.on('joinForCodeEditor', function (roomId) {
         console.log('codeeditor connected')
@@ -46,6 +48,9 @@ io.on('connection', function (socket) {
     })
     socket.on('click', function (data, roomId) {
         io.to(roomId).emit('click', data)
+    })
+    socket.on('newJoinWhiteBoardMessage', function (data, roomId) {
+        io.to(roomId).emit('updateWhiteBoardMessage', data)
     })
     socket.on('disconnect', function () {
         console.log('disconnect')
