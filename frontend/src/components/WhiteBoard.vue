@@ -75,7 +75,61 @@ export default {
     //         console.log(this.height)
     //     }
     // },
+    mounted: function () {
+        ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
+            this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
+                this[`${this.type}Command`](eventName, { x, y, buttons })
+            })
+        })
+        this.context = this.$refs.board.getContext('2d')
+        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+        console.log('WhiteBoard mounted allImageData = ' + this.allImageData)
+        this.canvas = document.getElementById("canvas")
+        this.allDataUrl.push(this.canvas.toDataURL())
+        // let dataURL = canvas.toDataURL()
+        let self = this
+        this.socket = io.connect('http://localhost:9000')
+        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
+        this.socket.on('drawing', function (data) {
+            self.whiteBoardDoing(data)
+        })
+        this.socket.on('click', function (data) {
+            self.buttonDoing(data)
+        })
+        this.socket.on('newJoin', function () {
+            self.joinDoing()
+        })
+        this.socket.on('updateWhiteBoardMessage', function (data) {
+            self.updateMessageDoing(data)
+        })
+        console.log('716------' + this.allDataUrl.length)
+        console.log('717------' + this.allDataUrl[0])
+    },
     methods: {
+        drawLongText: function (text, beginX, beginY) {
+            var textLength = text.length
+            console.log('textLength = ' + textLength)
+            var rowLength = this.whiteBoardWidth - beginX
+            console.log('rowLength = ' + rowLength)
+            var newText = text.split("")
+            var text = ''
+            var count = 0
+            this.context.textAlign = 'left'
+            for (var i = 0; i <= textLength ; i++) {
+                if (i == textLength) {
+                    this.context.fillText(text, beginX, beginY)
+                }
+                if (count <= rowLength && (count + this.context.measureText(newText[0]).width > rowLength)) {
+                    this.context.fillText(text, beginX, beginY)
+                    beginY = beginY + this.size * 5 + 28
+                    text = ""
+                    count = 0
+                }
+                var text = text + newText[0]
+                count += this.context.measureText(newText[0]).width
+                newText.shift()
+            }
+        },
         changeSize: function (name) {
             if (name === 'large') {
                 if (this.teacherName !== this.username) {
@@ -316,9 +370,9 @@ export default {
                 this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
                 console.log('pen操作 allImageData = ' + this.allImageData)
                 this.pointer += 1
-                this.allDataUrl.push(this.canvas.toDataURL)
+                this.allDataUrl.push(this.canvas.toDataURL())
                 // let dataURL = canvas.toDataURL()
-                console.log('kkkkkkkkkkkkkkkkk' + this.allDataUrl.length)
+                console.log('321-----' + this.allDataUrl.length)
                 console.log(this.allDataUrl)
             }
         },
@@ -550,17 +604,16 @@ export default {
             if (data.action === 'mouseup') {
                 this.textLeft = data.x * this.whiteBoardWidth
                 this.textTop = data.y * this.whiteBoardHeight
+                this.colorBorder = data.color
             }
         },
         font: function (data) {
             this.textField = false
-            this.colorBorder = data.color
-            console.log(data.color)
-            // TODO: data.color undefined?不能改变颜色
             this.context.font = (this.size * 5 + 25) + "px serif"
             // TODO: 表达式的括号两边要不要加空格？
-            this.context.fillStyle = "red"
-            this.context.fillText(data.input, this.textLeft, this.textTop)
+            this.context.fillStyle = this.colorBorder
+            this.drawLongText(data.input, this.textLeft, this.textTop)
+            // this.context.fillText(data.input, this.textLeft, this.textTop)
             this.textInput = ''
             this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
             this.pointer += 1
@@ -679,41 +732,14 @@ export default {
                 this.border = this.border
                 this.fill = data.fill
                 this.size = data.size
-                this.pointer = this.allImageData.length - 1
-                console.log('628-------allDataUrl长度 = ' + this.allDataUrl.length)
-                console.log('629-------' + this.allDataUrl)
+                this.pointer = this.allDataUrl.length - 1
+                console.log('683-------pointer = ' + this.pointer)
+                console.log('683-------allDataUrl长度 = ' + this.allDataUrl.length)
+                console.log('684-------' + this.allDataUrl[this.pointer])
                 // this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+                // this.context.drawImage(this.allDataUrl[this.pointer], 0, 0)
             }
         }
-    },
-    mounted: function () {
-        ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
-            this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                this[`${this.type}Command`](eventName, { x, y, buttons })
-            })
-        })
-        this.context = this.$refs.board.getContext('2d')
-        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-        console.log('WhiteBoard mounted allImageData = ' + this.allImageData)
-        this.canvas = document.getElementById("canvas")
-        this.allDataUrl.push(this.canvas.toDataURL)
-        // let dataURL = canvas.toDataURL()
-        let self = this
-        this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
-        this.socket.on('drawing', function (data) {
-            self.whiteBoardDoing(data)
-        })
-        this.socket.on('click', function (data) {
-            self.buttonDoing(data)
-        })
-        this.socket.on('newJoin', function () {
-            self.joinDoing()
-        })
-        this.socket.on('updateWhiteBoardMessage', function (data) {
-            self.updateMessageDoing(data)
-        })
-        console.log('662------' + this.allDataUrl.length)
     }
 }
 </script>
