@@ -517,12 +517,14 @@ export default {
         this.context = this.$refs.board.getContext('2d')
         this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         let self = this
-        this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
-        this.socket.on('drawing', function (data) {
-            let xData = data.x
-            let yData = data.y
-            self.whiteBoardDoing(data, xData, yData)
+        self.socket = io.connect('http://localhost:9000')
+        self.socket.emit('joinForWhiteBoard', self.roomId + '.0')
+        self.socket.on('getStarted', function () {
+            self.socket.on('drawing', function (data) {
+                let xData = data.x
+                let yData = data.y
+                self.whiteBoardDoing(data, xData, yData)
+            })
         })
     }
 }

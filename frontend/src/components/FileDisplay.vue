@@ -91,13 +91,15 @@ export default {
         let self = this
         self.socket.emit('joinForFileDisplay', this.roomId + '.2')
         if (!self.isTeacher) {
-            self.socket.on('fileDisplayMessage', function (msg) {
-                self.currentPage = msg
-                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
-            })
-            self.socket.on('firstPicture', function (msg) {
-                self.currentPage = msg
-                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+            self.socket.on('getStarted', function () {
+                self.socket.on('fileDisplayMessage', function (msg) {
+                    self.currentPage = msg
+                    self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+                })
+                self.socket.on('firstPicture', function (msg) {
+                    self.currentPage = msg
+                    self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+                })
             })
         }
     }

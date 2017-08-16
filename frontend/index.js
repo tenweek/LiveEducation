@@ -18,12 +18,20 @@ let pictureNow = {}
 // 记录基础路径
 const basicPath = './static/'
 
+// .0是白板 .1是聊天室 .2是课件展示 .3是代码编辑器
+
 io.on('connection', function (socket) {
     let id = 0
     let idForLeave = 0
     let nowPath = basicPath + '22/22.txt'
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
+    // 加入房间 用于广播是否开始直播
+    socket.on('joinRoom', function (roomId) {
+        console.log('room connected')
+        socket.join(roomId)
+    })
+    // 四个管道的加入
     socket.on('join', function (roomId, realRoom) {
         id = realRoom
         idForLeave = roomId
@@ -48,11 +56,40 @@ io.on('connection', function (socket) {
         socket.join(roomId)
         io.to(roomId).emit('firstPicture', pictureNow[id])
     })
+    // 开始直播信息
+    socket.on('startLive', function (roomId) {
+        console.log('start live')
+        console.log(roomId)
+        const chatroom = roomId + '.1'
+        const whiteboard = roomId + '.0'
+        const file = roomId + '.2'
+        const code = roomId + '.3'
+        io.to(chatroom).emit('getStarted')
+        io.to(whiteboard).emit('getStarted')
+        io.to(file).emit('getStarted')
+        io.to(code).emit('getStarted')
+    })
+    // 课件展示的消息
     socket.on('fileDisplayMessage', function (data, roomId) {
         console.log('fileDisplayMessage')
+        fs.open(nowPath, 'a', (err, fd) => {
+            if (err) {
+                throw err
+            }
+            let msg = JSON.stringify(data)
+            let now = process.uptime() * 1000 - TIME
+            let message = now + 'whiteboard\n' + msg + '\n'
+            fs.write(fd, message, function (err) {
+                if (err) {
+                    throw err
+                }
+                fs.closeSync(fd)
+            })
+        })
         pictureNow[id] = data
         io.to(roomId).emit('fileDisplayMessage', data)
     })
+    // 代码的消息
     socket.on('codeMessage', function (data, roomId) {
         console.log('codeMessage')
         fs.open(nowPath, 'a', (err, fd) => {
@@ -68,33 +105,9 @@ io.on('connection', function (socket) {
                 fs.closeSync(fd)
             })
         })
-        io.to(roomId).emit('message', data)
+        io.to(roomId).emit('codeMessage', data)
     })
-    socket.on('message', function (data, roomId) {
-        console.log('chatroomMessage')
-        fs.open(nowPath, 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            // let isTeacher = data['isTeacher'] ? 'T' : 'F'
-            // let now = process.uptime() * 1000 - TIME
-            // let message = now + 'chatroom\n' + isTeacher + ':' + data['message'] + '\n'
-            let msg = JSON.stringify(data)
-            let now = process.uptime() * 1000 - TIME
-            let message = now + 'chatroom\n' + msg + '\n'
-            fs.write(fd, message, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
-        io.to(roomId).emit('message', data)
-    })
-    socket.on('kickOut', function (userid, roomId) {
-        console.log('kick ' + userid + ' out')
-        io.to(roomId).emit('kickOut', userid)
-    })
+    // 白板的消息
     socket.on('drawing', function (data, roomId) {
         console.log('drawboardMessage')
         fs.open(nowPath, 'a', (err, fd) => {
@@ -111,8 +124,33 @@ io.on('connection', function (socket) {
                 fs.closeSync(fd)
             })
         })
-        io.to(roomId).emit('whiteboardMessage', data)
+        io.to(roomId).emit('drawing', data)
     })
+    // 聊天室的消息
+    socket.on('message', function (data, roomId) {
+        console.log('chatroomMessage')
+        fs.open(nowPath, 'a', (err, fd) => {
+            if (err) {
+                throw err
+            }
+            let msg = JSON.stringify(data)
+            let now = process.uptime() * 1000 - TIME
+            let message = now + 'chatroom\n' + msg + '\n'
+            fs.write(fd, message, function (err) {
+                if (err) {
+                    throw err
+                }
+                fs.closeSync(fd)
+            })
+        })
+        io.to(roomId).emit('message', data)
+    })
+    // 踢人事件
+    socket.on('kickOut', function (userid, roomId) {
+        console.log('kick ' + userid + ' out')
+        io.to(roomId).emit('kickOut', userid)
+    })
+    // 监听退出事件
     socket.on('disconnecting', function (resaon) {
         const rooms = Object.keys(socket.rooms)
         if (rooms[1] === idForLeave) {

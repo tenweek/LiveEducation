@@ -61,15 +61,17 @@ export default {
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.roomId + '.1', self.roomId)
         self.kickOut()
-        self.socket.on('message', function (data) {
-            self.messages.push({
-                'msg': data['message'],
-                'isTeacher': data['isTeacher']
-            })
-            let scroll = document.getElementById('messages')
-            scroll.scrollTop = scroll.scrollHeight
-        })
         self.changeStuNum()
+        self.socket.on('getStarted', function () {
+            self.socket.on('message', function (data) {
+                self.messages.push({
+                    'msg': data['message'],
+                    'isTeacher': data['isTeacher']
+                })
+                let scroll = document.getElementById('messages')
+                scroll.scrollTop = scroll.scrollHeight
+            })
+        })
     },
     methods: {
         getName: function (message) {
@@ -84,14 +86,15 @@ export default {
         },
         changeStuNum: function () {
             let self = this
-            this.socket.on('changeNum', function (count) {
+            self.socket.on('changeNum', function (count) {
                 self.$emit('stuNum', count)
             })
         },
         kickOut: function () {
-            this.socket.on('kickOut', function (userid) {
-                if (this.username === userid) {
-                    this.$Message.warning(myMsg.chatroom['getKickedOut'])
+            let self = this
+            self.socket.on('kickOut', function (userid) {
+                if (self.username === userid) {
+                    self.$Message.warning(myMsg.chatroom['getKickedOut'])
                     setTimeout(window.close, 3000)
                 }
             })
