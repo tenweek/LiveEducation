@@ -22,7 +22,7 @@
             <div class="list-hint">
                 <Icon type="university" class="icon-middle"></Icon>
                 <input type="text" class="live-broadcast" value="录播课堂" readonly="true" ></input>
-                <a href="#/live_page" class="more">查看更多
+                <a href="#/record_page" class="more">查看更多
                         <Icon type="chevron-right"></Icon>
                 </a>
             </div>
@@ -145,7 +145,6 @@ export default {
     width: 20%;
     margin-left: 2%;
     margin-right: 2%;
-    margin-bottom: 8px;
 }
 
 .live-picture {

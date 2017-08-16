@@ -15,10 +15,12 @@
                 <label class="information">在线人数：{{ this.studentNum }}</label>
             </div>
             <div class="navigation-right">
-                <Button type="primary" shape="circle" size="small">开始直播</Button>
+                <template v-if="this.teacherName === this.username">
+                    <Button type="primary" shape="circle" size="small">开始直播</Button>
+                </template>
             </div>
         </div>
-        <div class="layout-header" id="teaching">
+        <div class="layout-header">
             <div class="teaching-tools">
                 <div class="choose-current">
                     <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
@@ -34,7 +36,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :whiteBoardWidth = "this.whiteBoardWidth" :whiteBoardHeight = "this.whiteBoardHeight"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -79,51 +81,32 @@ export default {
             roomName: '',
             teacherName: '',
             studentNum: '',
-            username: '',
-            teachingWidth: 100,
-            teachingHeight: 100,
-            whiteBoardWidth: 100,
-            whiteBoardHeight: 100
-        }
-    },
-    watch: {
-        teachingWidth: function (newWidth, oldWidth) {
-            if (newWidth !== oldWidth) {
-                console.log('watch LiveRoom')
-                this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
-                console.log(this.whiteBoardWidth)
-            }
-        },
-        teachingHeight: function (newHeight, oldHeight) {
-            if (newHeight !== oldHeight) {
-                this.whiteBoardHeight = this.teachingHeight - 35
-                console.log(this.whiteBoardHeight)
-            }
+            username: ''
         }
     },
     created: function () {
         this.roomId = this.$route.params.id
         this.getRoomInfo()
         this.getUsername()
-        // window.setInterval(this.changeNum, 5000)
+        window.setInterval(this.changeNum, 5000)
     },
     methods: {
-        // changeNum: function () {
-        //     if (this.username === this.teacherName) {
-        //         fetch('/changeNum/', {
-        //             method: 'post',
-        //             mode: 'cors',
-        //             headers: {
-        //                 'Content-Type': 'application/json, text/plain, */*',
-        //                 'Accept': 'application/json'
-        //             },
-        //             body: JSON.stringify({
-        //                 'studentNum': this.studentNum,
-        //                 'roomId': this.roomId
-        //             })
-        //         }).then((response) => response.json()).then((obj) => { })
-        //     }
-        // },
+        changeNum: function () {
+            if (this.username === this.teacherName) {
+                fetch('/changeNum/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'studentNum': this.studentNum,
+                        'roomId': this.roomId
+                    })
+                }).then((response) => response.json()).then((obj) => { })
+            }
+        },
         getNum: function (count) {
             this.studentNum = count
         },
@@ -169,22 +152,6 @@ export default {
                     this.username = obj.name
                 })
             }
-        }
-    },
-    mounted: function () {
-        this.teachingWidth = document.getElementById('teaching').clientWidth
-        this.teachingHeight = document.getElementById('teaching').clientHeight
-        console.log('LiveRoom mounted')
-        console.log(this.teachingWidth)
-        console.log(this.teachingHeight)
-        window.onresize = function () {
-            console.log('window.onresize')
-            this.teachingWidth = document.getElementById('teaching').clientWidth
-            this.teachingHeight = document.getElementById('teaching').clientHeight
-            console.log(this.teachingWidth)
-            console.log(this.teachingHeight)
-            // this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
-            // this.whiteBoardHeight = this.teachingHeight - 35
         }
     }
 }
@@ -232,6 +199,7 @@ export default {
 
 .navigation-right {
     margin-right: 15px;
+    width: 64px;
     font-size: 15px;
 }
 
@@ -246,7 +214,6 @@ export default {
     margin-left: auto;
     margin-right: auto;
     margin-top: 110px;
-    background: red;
 }
 
 .teaching-tools {
@@ -255,7 +222,6 @@ export default {
     border: solid;
     text-align: left;
     overflow: hidden;
-    background: blue;
 }
 
 .composite-container {

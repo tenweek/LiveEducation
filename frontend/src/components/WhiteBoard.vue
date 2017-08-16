@@ -1,34 +1,38 @@
 <template>
     <div class="white-board">
         <div class="tools">
-            <Button type="text" @click="clear">清空</Button>
-            <Button type="text" @click="undo">撤销</Button>
-            <Button type="text" :class="{ active: type === 'eraser' }" @click="clickEraser">橡皮擦</Button>
-            <Button type="text" :class="{ active: type === 'pen' }" @click="clickPen">画笔</Button>
-            <Button type="text" :class="{ active: type === 'text' }" @click="clickText">文字</Button>
-            <Button type="text" :class="{ active: type === 'line' }" @click="clickLine">直线</Button>
-            <Button type="text" :class="{ active: type === 'rectangle' }" @click="clickRectangle">矩形</Button>
-            <Button type="text" :class="{ active: type === 'circle' }" @click="clickCircle">圆形</Button>
-            <Button type="text" :class="{ active: type === 'ellipse' }" @click="clickEllipse">椭圆</Button>
-            <Dropdown class="change-size" placement="right-start" @on-click="changeSize">
-                <Button type="text">
-                    粗细
-                    <Icon type="ios-arrow-forward"></Icon>
+            <div class="undo-redo">
+                <Button class="button-undo-redo" @click="undo">
+                    <Icon type="reply"></Icon>
                 </Button>
-                <Dropdown-menu slot="list">
-                    <Dropdown-item name='small'>小</Dropdown-item></Dropdown-item>
-                    <Dropdown-item name='middle'>中</Dropdown-item>
-                    <Dropdown-item name='large'>大</Dropdown-item>
-                </Dropdown-menu>
-            </Dropdown>
-            <Button type="text" :class="{ active: border === true }" @click="clickBorder">边框</Button>
-            <Button type="text" :class="{ active: fill === true }" @click="clickFill">填充</Button>
+                <Button class="button-undo-redo" @click="redo">
+                    <Icon type="forward"></Icon>
+                </Button>
+            </div>
+            <Button class="clear" @click="clear">清空</Button>
+            <Button type="text" :class="{ active: type === 'eraser' }" @click="type = 'eraser'">橡皮擦</Button>
+            <Button type="text" :class="{ active: type === 'pen' }" @click="type = 'pen'">画笔</Button>
+            <Button type="text" :class="{ active: type === 'text' }" @click="type = 'text'">文字</Button>
+            <Button type="text" :class="{ active: type === 'line' }" @click="type = 'line'">直线</Button>
+            <Button type="text" :class="{ active: type === 'rectangle' }" @click="type = 'rectangle'">矩形</Button>
+            <Button type="text" :class="{ active: type === 'circle' }" @click="type = 'circle'">圆形</Button>
+            <Button type="text" :class="{ active: type === 'ellipse' }" @click="type = 'ellipse'">椭圆</Button>
+            <Button type="text" :class="{ active: border === true }" @click="border = !border">边框</Button>
+            <Button type="text" :class="{ active: fill === true }" @click="fill = !fill">填充</Button>
             <el-color-picker class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
             <el-color-picker class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
+            <div class="size">
+                <label class="size-label">粗细</label>
+                <div class="size-buttons">
+                    <Button type="text" :class="{ active: size === 5 }" id="size-button" @click="size = 5">大</Button>
+                    <Button type="text" :class="{ active: size === 3 }" id="size-button" @click="size = 3">中</Button>
+                    <Button type="text" :class="{ active: size === 1 }" id="size-button" @click="size = 1">小</Button>
+                </div>
+            </div>
         </div>
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true" style="width: 300px"></input>
-            <canvas ref="board" :class="this.type === 'eraser' || this.type === 'pen'? 'canvas-eraser' : 'canvas-drawing'" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
+            <canvas ref="board" class="canvas" :width="width" :height="height"></canvas>
         </div>
     </div>
 </template>
@@ -39,13 +43,17 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'white-board',
-    props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             type: 'pen',
             context: null,
-            originPoint: null,
+            penOriginPoint: null,
+            lineOriginPoint: null,
+            circleOriginPoint: null,
             lastImageData: null,
+            width: 601,
+            height: 486,
             colorBorder: 'rgba(0, 0, 0, 1)',
             colorFill: 'rgba(255, 255, 255, 1)',
             fill: false,
@@ -62,90 +70,7 @@ export default {
             roomId: ''
         }
     },
-    // watch: {
-    //     whiteBoardWidth: function () {
-    //         console.log('watch WhiteBoard')
-    //         this.width = this.teachingWidth * 0.68 - 77
-    //         console.log(this.width)
-    //     },
-    //     teachingHeight: function () {
-    //         this.height = this.teachingHeight - 35
-    //         console.log(this.height)
-    //     }
-    // },
     methods: {
-        changeSize: function (name) {
-            if (name === 'large') {
-                if (this.teacherName !== this.username) {
-                    return
-                }
-                this.socket.emit('click', { type: 'sizeLarge' }, this.roomId + '.0')
-            } else if (name === 'middle') {
-                if (this.teacherName !== this.username) {
-                    return
-                }
-                this.socket.emit('click', { type: 'sizeMiddle' }, this.roomId + '.0')
-            } else {
-                if (this.teacherName !== this.username) {
-                    return
-                }
-                this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
-            }
-        },
-        clickEraser: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'eraser' }, this.roomId + '.0')
-        },
-        clickPen: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'pen' }, this.roomId + '.0')
-        },
-        clickText: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'text' }, this.roomId + '.0')
-        },
-        clickLine: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'line' }, this.roomId + '.0')
-        },
-        clickRectangle: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'rectangle' }, this.roomId + '.0')
-        },
-        clickCircle: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'circle' }, this.roomId + '.0')
-        },
-        clickEllipse: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'ellipse' }, this.roomId + '.0')
-        },
-        clickBorder: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'border' }, this.roomId + '.0')
-        },
-        clickFill: function () {
-            if (this.teacherName !== this.username) {
-                return
-            }
-            this.socket.emit('click', { type: 'fill' }, this.roomId + '.0')
-        },
         drawText: function () {
             if (this.teacherName !== this.username) {
                 return
@@ -168,18 +93,26 @@ export default {
             }
             this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
         },
+        redo: function () {
+            if (this.teacherName !== this.username) {
+                return
+            }
+            this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
+        },
         penCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let color = this.colorBorder
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'pen',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                color: this.colorBorder,
-                size: this.size
+                color: color,
+                size: size
             }, this.roomId + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
@@ -190,191 +123,207 @@ export default {
                 this.textField = true
                 this.socket.emit('drawing', {
                     type: 'textField',
-                    x: x / this.whiteBoardWidth,
-                    y: y / this.whiteBoardHeight,
-                    color: this.colorBorder,
+                    x: x,
+                    y: y,
                     action: action,
                     buttons: buttons
                 }, this.roomId + '.0')
             }
-            console.log(this.colorBorder)
         },
         eraserCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'eraser',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                size: this.size
+                size: size
             }, this.roomId + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let color = this.colorBorder
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'line',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                color: this.colorBorder,
-                size: this.size
+                color: color,
+                size: size
             }, this.roomId + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'rectangle',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                colorBorder: this.colorBorder,
-                colorFill: this.colorFill,
-                fill: this.fill,
-                size: this.size
+                colorBorder: colorBorder,
+                colorFill: colorFill,
+                fill: fill,
+                size: size
             }, this.roomId + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'circle',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                colorBorder: this.colorBorder,
-                colorFill: this.colorFill,
-                fill: this.fill,
-                size: this.size
+                colorBorder: colorBorder,
+                colorFill: colorFill,
+                fill: fill,
+                size: size
             }, this.roomId + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
+            let colorBorder = this.colorBorder
+            let colorFill = this.colorFill
+            let fill = this.fill
+            let size = this.size
             this.socket.emit('drawing', {
                 type: 'ellipse',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x,
+                y: y,
                 buttons: buttons,
-                colorBorder: this.colorBorder,
-                colorFill: this.colorFill,
-                fill: this.fill,
-                size: this.size
+                colorBorder: colorBorder,
+                colorFill: colorFill,
+                fill: fill,
+                size: size
             }, this.roomId + '.0')
         },
-        pen: function (data) {
+        pen: function (data, xData, yData) {
             this.size = data.size
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                this.penOriginPoint = [data.x, data.y]
+                this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
             } else if (data.action === 'mousemove') {
-                if (this.originPoint === null) {
+                if (this.penOriginPoint === null) {
                     return
                 }
                 const context = this.context
-                const [ox, oy] = this.originPoint
+                const [ox, oy] = this.penOriginPoint
                 context.strokeStyle = this.colorBorder
-                context.lineWidth = this.size
+                context.linewidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
-                context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+                context.lineTo(xData, yData)
                 context.stroke()
                 context.closePath()
-                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                this.penOriginPoint = [xData, yData]
             } else if (data.action === 'mouseup') {
-                this.originPoint = null
+                this.penOriginPoint = null
                 this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                this.pointer += 1
+                this.allImageData.length = this.pointer + 1
+                this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                this.pointer = this.allImageData.length - 1
             }
         },
-        eraser: function (data) {
+        eraser: function (data, xData, yData) {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.circleOriginPoint = [xData, yData]
+                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    if (this.circleOriginPoint === null) {
                         return
                     }
                     const context = this.context
-                    const [ox, oy] = this.originPoint
+                    const [ox, oy] = this.circleOriginPoint
                     context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.circleOriginPoint = [xData, yData]
                     break
                 case 'mouseup':
-                    this.originPoint = null
+                    this.circleOriginPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                    this.pointer += 1
+                    this.allImageData.length = this.pointer + 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                    this.pointer = this.allImageData.length - 1
                     break
             }
         },
-        line: function (data) {
+        line: function (data, xData, yData) {
             this.colorBorder = data.color
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.lineOriginPoint = [xData, yData]
+                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
                     break
                 case 'mousemove':
-                    if (this.originPoint == null) {
+                    if (this.lineOriginPoint == null) {
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
+                    const [ox, oy] = this.lineOriginPoint
                     context.strokeStyle = this.colorBorder
-                    context.lineWidth = this.size
+                    context.linewidth = this.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+                    context.lineTo(xData, yData)
                     context.stroke()
                     context.closePath()
                     break
                 case 'mouseup':
-                    this.originPoint = null
+                    this.lineOriginPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                    this.pointer += 1
+                    this.allImageData.length = this.pointer + 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                    this.pointer = this.allImageData.length - 1
                     break
             }
         },
-        rectangle: function (data) {
+        rectangle: function (data, xData, yData) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.circleOriginPoint = [xData, yData]
+                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    if (this.circleOriginPoint === null) {
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
-                    context.lineWidth = this.size
+                    const [ox, oy] = this.circleOriginPoint
+                    const [dx, dy] = [xData - ox, yData - oy]
+                    context.linewidth = this.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
                     if (this.fill === true) {
@@ -388,35 +337,36 @@ export default {
                     context.closePath()
                     break
                 case 'mouseup':
-                    this.originPoint = null
+                    this.circleOriginPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                    this.pointer += 1
+                    this.allImageData.length = this.pointer + 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                    this.pointer = this.allImageData.length - 1
                     break
             }
         },
-        circle: function (data) {
+        circle: function (data, xData, yData) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.circleOriginPoint = [xData, yData]
+                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    if (this.circleOriginPoint === null) {
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
+                    const [ox, oy] = this.circleOriginPoint
+                    const [dx, dy] = [xData - ox, yData - oy]
                     const radius = Math.sqrt(dx * dx, dy * dy)
-                    context.lineWidth = this.size
+                    context.linewidth = this.size
                     context.beginPath()
-                    context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
+                    context.arc((ox + xData) / 2, (yData + oy) / 2, radius, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -428,38 +378,39 @@ export default {
                     context.closePath()
                     break
                 case 'mouseup':
-                    this.originPoint = null
+                    this.circleOriginPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                    this.pointer += 1
+                    this.allImageData.length = this.pointer + 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                    this.pointer = this.allImageData.length - 1
                     break
             }
         },
-        ellipse: function (data) {
+        ellipse: function (data, xData, yData) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.circleOriginPoint = [xData, yData]
+                    this.lastImageData = this.context.getImageData(0, 0, this.width, this.height)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    if (this.circleOriginPoint === null) {
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
+                    const [ox, oy] = this.circleOriginPoint
+                    const [dx, dy] = [xData - ox, yData - oy]
                     context.strokeStyle = this.colorBorder
-                    context.lineWidth = this.size
+                    context.linewidth = this.size
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                     }
                     context.beginPath()
-                    context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                    context.ellipse((xData + ox) / 2, (yData + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -471,154 +422,89 @@ export default {
                     context.closePath()
                     break
                 case 'mouseup':
-                    this.originPoint = null
+                    this.circleOriginPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                    this.pointer += 1
+                    this.allImageData.length = this.pointer + 1
+                    this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+                    this.pointer = this.allImageData.length - 1
                     break
             }
         },
-        boardClear: function (data) {
-            this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
-            this.allImageData = []
-            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-            this.pointer = 0
-        },
-        textBox: function (data) {
-            if (data.action === 'mouseup') {
-                this.textLeft = data.x * this.whiteBoardWidth
-                this.textTop = data.y * this.whiteBoardHeight
-            }
-        },
-        font: function (data) {
-            this.textField = false
-            this.colorBorder = data.color
-            console.log(data.color)
-            // TODO: data.color undefined?不能改变颜色
-            this.context.font = (this.size * 5 + 25) + "px serif"
-            // TODO: 表达式的括号两边要不要加空格？
-            this.context.fillStyle = "red"
-            this.context.fillText(data.input, this.textLeft, this.textTop)
-            this.textInput = ''
-            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+        boardClear: function (data, xData, yData) {
+            this.context.clearRect(0, 0, this.width, this.height)
+            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
             this.pointer += 1
         },
-        boardUndo: function (data) {
+        textBox: function (data, xData, yData) {
+            if (data.action === 'mouseup') {
+                this.textLeft = xData
+                this.textTop = yData
+            }
+        },
+        font: function (data, xData, yData) {
+            this.textField = false
+            this.context.fillText(data.input, this.textLeft, this.textTop)
+            this.textInput = ''
+            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
+            this.pointer = this.allImageData.length - 1
+        },
+        boardUndo: function (data, xData, yData) {
             if (this.pointer === 0) {
                 this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
-            } else if (this.pointer === 1) {
-                this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
-                this.allImageData = []
-                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
-                this.pointer = 0
-            } else {
+            }
+            if (this.pointer > 0) {
                 this.pointer -= 1
-                this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-                this.allImageData.length = this.pointer + 1
             }
+            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         },
-        whiteBoardDoing: function (data) {
-            switch (data.type) {
-                case 'pen':
-                    this.pen(data)
-                    break
-                case 'eraser':
-                    this.eraser(data)
-                    break
-                case 'line':
-                    this.line(data)
-                    break
-                case 'rectangle':
-                    this.rectangle(data)
-                    break
-                case 'circle':
-                    this.circle(data)
-                    break
-                case 'ellipse':
-                    this.ellipse(data)
-                    break
-                case 'clear':
-                    this.boardClear(data)
-                    break
-                case 'textField':
-                    this.textBox(data)
-                    break
-                case 'drawText':
-                    this.font(data)
-                    break
-                case 'undo':
-                    this.boardUndo(data)
-                    break
-            }
-        },
-        buttonDoing: function (data) {
-            switch (data.type) {
-                case 'eraser':
-                    this.type = 'eraser'
-                    break
-                case 'pen':
-                    this.type = 'pen'
-                    break
-                case 'text':
-                    this.type = 'text'
-                    break
-                case 'line':
-                    this.type = 'line'
-                    break
-                case 'rectangle':
-                    this.type = 'rectangle'
-                    break
-                case 'circle':
-                    this.type = 'circle'
-                    break
-                case 'ellipse':
-                    this.type = 'ellipse'
-                    break
-                case 'border':
-                    this.border = !this.border
-                    break
-                case 'fill':
-                    this.fill = !this.fill
-                    break
-                case 'sizeLarge':
-                    this.size = 5
-                    break
-                case 'sizeMiddle':
-                    this.size = 3
-                    break
-                case 'sizeSmall':
-                    this.size = 1
-                    break
-            }
-        },
-        joinDoing: function () {
-            if (this.teacherName !== this.username) {
+        boardRedo: function (data, xData, yData) {
+            if (this.pointer === this.allImageData.length - 1) {
+                this.$Message.error(myMsg.whiteBoard['redoNotExist'])
                 return
             }
-            this.socket.emit('newJoinWhiteBoardMessage', {
-                type: this.type,
-                // x: x / this.whiteBoardWidth,
-                // y: y / this.whiteBoardHeight,
-                border: this.border,
-                fill: this.fill,
-                size: this.size,
-                imageData: this.allImageData
-            }, this.roomId + '.0')
+            if (this.pointer < this.allImageData.length) {
+                this.pointer += 1
+            }
+            this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+            this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         },
-        updateMessageDoing: function (data) {
-            if (true) {
-                console.log('updateMessageData')
-                this.allImageData = data.imageData
-                this.type = data.type
-                this.border = this.border
-                this.fill = data.fill
-                this.size = data.size
-                console.log(this.type)
-                this.pointer = this.allImageData.length - 1
-                console.log('同步信息的时候，初始pointer' + this.pointer)
-                console.log(this.allImageData)
-                this.context.putImageData(this.allImageData[this.pointer], 0, 0)
+        whiteBoardDoing: function (data, xData, yData) {
+            switch (data.type) {
+                case 'pen':
+                    this.pen(data, xData, yData)
+                    break
+                case 'eraser':
+                    this.eraser(data, xData, yData)
+                    break
+                case 'line':
+                    this.line(data, xData, yData)
+                    break
+                case 'rectangle':
+                    this.rectangle(data, xData, yData)
+                    break
+                case 'circle':
+                    this.circle(data, xData, yData)
+                    break
+                case 'ellipse':
+                    this.ellipse(data, xData, yData)
+                    break
+                case 'clear':
+                    this.boardClear(data, xData, yData)
+                    break
+                case 'textField':
+                    this.textBox(data, xData, yData)
+                    break
+                case 'drawText':
+                    this.font(data, xData, yData)
+                    break
+                case 'undo':
+                    this.boardUndo(data, xData, yData)
+                    break
+                case 'redo':
+                    this.boardRedo(data, xData, yData)
+                    break
             }
         }
     },
@@ -629,21 +515,14 @@ export default {
             })
         })
         this.context = this.$refs.board.getContext('2d')
-        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+        this.allImageData.push(this.context.getImageData(0, 0, this.width, this.height))
         let self = this
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
         this.socket.on('drawing', function (data) {
-            self.whiteBoardDoing(data)
-        })
-        this.socket.on('click', function (data) {
-            self.buttonDoing(data)
-        })
-        this.socket.on('newJoin', function () {
-            self.joinDoing()
-        })
-        this.socket.on('updateWhiteBoardMessage', function (data) {
-            self.updateMessageDoing(data)
+            let xData = data.x
+            let yData = data.y
+            self.whiteBoardDoing(data, xData, yData)
         })
     }
 }
@@ -652,6 +531,14 @@ export default {
 <style scoped>
 #text-field {
     position: relative;
+}
+
+.undo-redo {
+    display: flex;
+}
+
+.button-undo-redo {
+    width: 37px;
 }
 
 .white-board {
@@ -710,22 +597,9 @@ button.active {
 .drawing-board {
     height: 100%;
     width: 100%;
-    background: blue;
 }
 
-.canvas-eraser {
-    background: #D4EFDF;
-}
-
-.canvas-eraser:hover {
-    cursor: url('../assets/eraser.jpg');
-}
-
-.canvas-drawing {
-    background: #D4EFDF;
-}
-
-.canvas-drawing:hover {
-    cursor: crosshair;
+.canvas {
+    background: white;
 }
 </style>
