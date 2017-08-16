@@ -24,4 +24,5 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     name = models.CharField(default='', max_length=16, unique=True)
     user_img = models.FileField(upload_to='./frontend/static/cover/')
+    user_file = models.FileField(upload_to='./frontend/static/ppt/')
 # Create your models here.

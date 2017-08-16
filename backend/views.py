@@ -11,19 +11,27 @@ import random
 import cloudconvert
 import zipfile
 import os
+import types
 # Create your views here.
 
 
 @csrf_exempt
 def uploadFile(request):
-    api = cloudconvert.Api('s5LxChVW3zSMd6nPQ4XAd5LkadUmsSPAfvNjzEmqOn0eiCn_7srcI4syT4sO9PmZKPihNicIamPrgwgMPdSzZg')
+    file = request.FILES.get('file')
+    account = request.COOKIES.get('userAccount')
+    user = User.objects.get(username = account)
+    user.user_file = file
+    user.save()
+    print('./'+str(user.user_file))
+    filedir = './'+str(user.user_file)
+    print(filedir)
+    api = cloudconvert.Api('DMOau_tEMyKTqZzLy2magGSOP1tv6saAWGOzMk5yLlyummHqe7ry3w1TAUpXTouNfzq0FYBhE-_RqXyJDVwXSA')
     process = api.convert({
-        "inputformat": "pdf",
+        "inputformat": "pptx",
         "outputformat": "png",
         "input": "upload",
-        "filename": "111.pdf",
-        "file": open('./123.pdf', 'rb')
-    })
+        "filename": "123.pptx",
+        "file": open(filedir, 'rb')})
     process.wait()
     process.download('./new.zip')
     response = JsonResponse({})
