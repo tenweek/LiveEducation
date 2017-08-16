@@ -15,6 +15,8 @@ server.listen(9000, () => {
 let onlineCount = {}
 // 记录房间当前PPT页码
 let pictureNow = {}
+// 记录不同房间的路径
+let path = {}
 // 记录基础路径
 const basicPath = './static/'
 
@@ -23,7 +25,6 @@ const basicPath = './static/'
 io.on('connection', function (socket) {
     let id = 0
     let idForLeave = 0
-    let nowPath = basicPath + '22/22.txt'
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
     // 加入房间 用于广播是否开始直播
@@ -39,6 +40,7 @@ io.on('connection', function (socket) {
         if (!onlineCount[id]) {
             onlineCount[id] = 0
         }
+        path[id] = basicPath + id + '/' + id + '.txt'
         onlineCount[id] += 1
         socket.join(roomId)
         io.to(roomId).emit('changeNum', onlineCount[id])
@@ -52,14 +54,16 @@ io.on('connection', function (socket) {
         socket.join(roomId)
     })
     socket.on('joinForFileDisplay', function (roomId) {
+        let index = parseInt(roomId.split('.')[0])
         console.log('filedisplay connected')
         socket.join(roomId)
-        io.to(roomId).emit('firstPicture', pictureNow[id])
+        if (pictureNow[index]) {
+            io.to(roomId).emit('firstPicture', pictureNow[index])
+        }
     })
     // 开始直播信息
     socket.on('startLive', function (roomId) {
         console.log('start live')
-        console.log(roomId)
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
         const file = roomId + '.2'
@@ -72,7 +76,8 @@ io.on('connection', function (socket) {
     // 课件展示的消息
     socket.on('fileDisplayMessage', function (data, roomId) {
         console.log('fileDisplayMessage')
-        fs.open(nowPath, 'a', (err, fd) => {
+        const index = parseInt(roomId.split('.')[0])
+        fs.open(path[index], 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -86,13 +91,14 @@ io.on('connection', function (socket) {
                 fs.closeSync(fd)
             })
         })
-        pictureNow[id] = data
+        pictureNow[index] = data
         io.to(roomId).emit('fileDisplayMessage', data)
     })
     // 代码的消息
     socket.on('codeMessage', function (data, roomId) {
+        const index = parseInt(roomId.split('.')[0])
         console.log('codeMessage')
-        fs.open(nowPath, 'a', (err, fd) => {
+        fs.open(path[index], 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -110,7 +116,8 @@ io.on('connection', function (socket) {
     // 白板的消息
     socket.on('drawing', function (data, roomId) {
         console.log('drawboardMessage')
-        fs.open(nowPath, 'a', (err, fd) => {
+        const index = parseInt(roomId.split('.')[0])
+        fs.open(path[index], 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -129,7 +136,7 @@ io.on('connection', function (socket) {
     // 聊天室的消息
     socket.on('message', function (data, roomId) {
         console.log('chatroomMessage')
-        fs.open(nowPath, 'a', (err, fd) => {
+        fs.open(path[id], 'a', (err, fd) => {
             if (err) {
                 throw err
             }
