@@ -3,7 +3,7 @@
         <div id="messages">
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
-                    <template v-if="message['teacherName']===message['user']">
+                    <template v-if="message['isTeacher']">
                         <button class="message-bold" @click="getName(message)">
                             {{ message['msg'] }}
                         </button>
@@ -62,11 +62,9 @@ export default {
         self.socket.emit('join', self.roomId + '.1', self.roomId)
         self.kickOut()
         self.socket.on('message', function (data) {
-            let msg = data['username'] + ' : ' + data['message']
             self.messages.push({
-                'msg': msg,
-                'user': data['username'],
-                'teacherName': data['teacherName']
+                'msg': data['message'],
+                'isTeacher': data['isTeacher']
             })
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
@@ -116,9 +114,8 @@ export default {
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
                     this.socket.emit('message', {
-                        message: this.msgInput,
-                        username: this.username,
-                        teacherName: this.teacherName
+                        message: this.username + ' : ' + this.msgInput,
+                        isTeacher: this.username === this.teacherName
                     }, this.roomId + '.1')
                     this.msgInput = ''
                 } else {
