@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^kickOut/$', views.kickOut),
     url(r'^changeNum/$', views.changeNum),
     url(r'^upload/$', views.upload),
-    url(r'^uploadFile/$', views.uploadFile)
+    url(r'^uploadFile/$', views.uploadFile),
+    url(r'^getImg/$', views.getImg)
 ]

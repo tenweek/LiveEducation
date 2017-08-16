@@ -16,6 +16,15 @@ import types
 
 
 @csrf_exempt
+def getImg(request):
+    req = simplejson.load(request)
+    print(req['account'])
+    user = User.objects.get(username = req['account'])
+    response = JsonResponse({'route': str(user.user_img)[8:]})
+    print(str(user.user_img)[8:])
+    return response
+
+@csrf_exempt
 def uploadFile(request):
     file = request.FILES.get('file')
     account = request.COOKIES.get('userAccount')
@@ -62,6 +71,8 @@ def upload(request):
     nowFile = request.FILES.get('myfile')
     account = request.COOKIES.get('userAccount')
     nowUser = User.objects.get(username = account)
+    if nowUser.user_img != '':
+        os.remove('./'+str(nowUser.user_img))
     nowUser.user_img = nowFile
     nowUser.save()
     response = JsonResponse({})
