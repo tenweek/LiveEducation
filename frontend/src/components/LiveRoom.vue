@@ -36,7 +36,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :imgNum="this.imgNum"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -81,7 +81,8 @@ export default {
             roomName: '',
             teacherName: '',
             studentNum: '',
-            username: ''
+            username: '',
+            imgNum: ''
         }
     },
     created: function () {
@@ -128,6 +129,7 @@ export default {
                 this.roomName = obj.roomName
                 this.studentNum = obj.stuNum
                 this.teacherName = obj.teacherName
+                this.imgNum = obj.imgNum
             })
         },
         getUsername: function () {

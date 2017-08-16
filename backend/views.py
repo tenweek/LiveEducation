@@ -34,6 +34,7 @@ def uploadFile(request):
         "file": open(filedir, 'rb')})
     process.wait()
     process.download('./frontend/static/pptzip/'+user.name+'.zip')
+    os.remove(filedir)
     zip_file = zipfile.ZipFile('./frontend/static/pptzip/'+user.name+'.zip')  
     if os.path.isdir('./frontend/static/ppt/'+user.name):  
         pass  
@@ -144,10 +145,12 @@ def gag(request):
 def getRoomInfo(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
+    imgNum = sum([len(x) for _,_,x in os.walk('./frontend/static/ppt/'+room.teacher.name)])
     response = JsonResponse({
         'teacherName': room.teacher.name,
         'stuNum': room.student_num,
-        'roomName': room.room_name
+        'roomName': room.room_name,
+        'imgNum': imgNum
     })
     return response
 

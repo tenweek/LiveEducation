@@ -10,12 +10,12 @@ server.listen(9000, () => {
     console.log('in 9000')
 })
 
-let onlineCount = {}
-let pictureNow = {}
+var onlineCount = {}
+var pictureNow = {}
 
 io.on('connection', function (socket) {
-    let id = 0
-    let idForLeave = 0
+    var id = 0
+    var idForLeave = 0
     socket.on('join', function (roomId, realRoom) {
         id = realRoom
         idForLeave = roomId

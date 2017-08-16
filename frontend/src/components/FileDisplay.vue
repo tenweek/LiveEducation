@@ -29,11 +29,11 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'imgNum'],
     data: function () {
         return {
             socket: '',
-            baseRoute: 'static/',
+            baseRoute: 'static/ppt/',
             recRoute: '',
             route: '',
             maxPage: '',
@@ -42,9 +42,9 @@ export default {
         }
     },
     created: function () {
-        this.recRoute = 'ppt/shili-'
+        this.recRoute = this.teacherName+'/123-'
         this.currentPage = 1
-        this.maxPage = 15
+        this.maxPage = this.imgNum
         if (this.teacherName === this.username) {
             this.isTeacher = true
             this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
