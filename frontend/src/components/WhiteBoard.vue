@@ -27,7 +27,7 @@
             <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
         </div>
         <div class="drawing-board">
-            <input id="text-field" style="top: 200px left: 200px" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
+            <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
             <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
         </div>
     </div>
@@ -37,6 +37,7 @@
 <script>
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
+const MIN = 0.005
 export default {
     name: 'white-board',
     props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
@@ -57,52 +58,25 @@ export default {
             textTop: 0,
             canvas: null,
             allDataUrl: [],
-            allImageData: [],
             currentImageData: null,
             pointer: 0,
             socket: '',
             roomId: ''
         }
     },
-    // watch: {
-    //     teachingToolsWidth: function () {
-    //         console.log('watch WhiteBoard')
-    //         this.width = this.teachingWidth * 0.68 - 77
-    //         console.log(this.width)
-    //     },
-    //     teachingHeight: function () {
-    //         this.height = this.teachingHeight - 35
-    //         console.log(this.height)
-    //     }
-    // },
     watch: {
         type: function () {
             if (this.type === 'eraser') {
-                console.log('82 type = eraser')
-                if (this.size === 1) {
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
-                } else if (this.size === 3) {
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserMiddle.png'), default"
-                } else {
-                    console.log('Large')
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserLarge.png'), default"
-                }
+                this.changeEraserCursor()
             } else if (this.type === 'pen') {
-                console.log('85 type = pen')
-                this.canvas.style.cursor="url('http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png'), default"
+                this.canvas.style.cursor="default"
             } else {
                 this.canvas.style.cursor="crosshair"
             }
         },
         size: function () {
             if (this.type === 'eraser') {
-                if (this.size === 1) {
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
-                } else if (this.size === 3) {
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserMiddle.png'), default"
-                } else {
-                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserLarge.png'), default"
-                }
+                this.changeEraserCursor()
             }
         }
     },
@@ -113,12 +87,9 @@ export default {
             })
         })
         this.context = this.$refs.board.getContext('2d')
-        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
-        console.log('WhiteBoard mounted allImageData = ' + this.allImageData)
         this.canvas = document.getElementById("canvas")
-        this.canvas.style.cursor="url('http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png'), default"
+        this.canvas.style.cursor="default"
         this.allDataUrl.push(this.canvas.toDataURL())
-        // let dataURL = canvas.toDataURL()
         let self = this
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
@@ -134,15 +105,20 @@ export default {
         this.socket.on('updateWhiteBoardMessage', function (data) {
             self.updateMessageDoing(data)
         })
-        console.log('716------' + this.allDataUrl.length)
-        console.log('717------' + this.allDataUrl[0])
     },
     methods: {
+        changeEraserCursor: function () {
+            if (this.size === 1) {
+                this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
+            } else if (this.size === 3) {
+                this.canvas.style.cursor="url('http://localhost:8000/static/eraserMiddle.png'), default"
+            } else {
+                this.canvas.style.cursor="url('http://localhost:8000/static/eraserLarge.png'), default"
+            }
+        },
         drawLongText: function (text, beginX, beginY) {
             var textLength = text.length
-            console.log('textLength = ' + textLength)
             var rowLength = this.teachingToolsWidth - beginX
-            console.log('rowLength = ' + rowLength)
             var newText = text.split("")
             var text = ''
             var count = 0
@@ -276,6 +252,8 @@ export default {
             }
             if (action === 'mouseup') {
                 this.textField = true
+                var textField = document.getElementById('text-field')
+                textField.style.autofocus="true"
                 this.socket.emit('drawing', {
                     type: 'textField',
                     x: x / this.teachingToolsWidth,
@@ -285,7 +263,6 @@ export default {
                     buttons: buttons
                 }, this.roomId + '.0')
             }
-            console.log(this.colorBorder)
         },
         eraserCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -366,24 +343,19 @@ export default {
             this.size = data.size
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                console.log(this.teachingToolsWidth)
-                console.log(this.teachingToolsHeight)
+                // console.log(this.teachingToolsWidth)
+                // console.log(this.teachingToolsHeight)
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             } else if (data.action === 'mousemove') {
                 if (this.originPoint === null) {
                     return
                 }
-                if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                    // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
+                if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
-                    console.log('pen操作 allImageData = ' + this.allImageData)
                     this.pointer += 1
-                    this.allDataUrl.push(this.canvas.toDataURL)
-                    console.log('kkkkkkkkkkkkkkkkk' + this.allDataUrl.length)
-                    console.log(this.allDataUrl)
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     return
                 }
                 const context = this.context
@@ -399,13 +371,8 @@ export default {
             } else if (data.action === 'mouseup') {
                 this.originPoint = null
                 this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
-                console.log('pen操作 allImageData = ' + this.allImageData)
                 this.pointer += 1
                 this.allDataUrl.push(this.canvas.toDataURL())
-                // let dataURL = canvas.toDataURL()
-                console.log('321-----' + this.allDataUrl.length)
-                console.log(this.allDataUrl)
             }
         },
         eraser: function (data) {
@@ -423,7 +390,7 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                        this.allDataUrl.push(this.canvas.toDataURL())
                         this.pointer += 1
                         return
                     }
@@ -435,7 +402,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     this.pointer += 1
                     break
             }
@@ -456,7 +423,7 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                        this.allDataUrl.push(this.canvas.toDataURL())
                         this.pointer += 1
                         return
                     }
@@ -474,7 +441,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     this.pointer += 1
                     break
             }
@@ -497,7 +464,7 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                        this.allDataUrl.push(this.canvas.toDataURL())
                         this.pointer += 1
                         return
                     }
@@ -521,7 +488,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     this.pointer += 1
                     break
             }
@@ -544,7 +511,7 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                        this.allDataUrl.push(this.canvas.toDataURL())
                         this.pointer += 1
                         return
                     }
@@ -569,7 +536,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     this.pointer += 1
                     break
             }
@@ -593,7 +560,7 @@ export default {
                         // TODO 数字改成count
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                        this.allDataUrl.push(this.canvas.toDataURL())
                         this.pointer += 1
                         return
                     }
@@ -621,15 +588,15 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+                    this.allDataUrl.push(this.canvas.toDataURL())
                     this.pointer += 1
                     break
             }
         },
         boardClear: function (data) {
             this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
-            this.allImageData = []
-            this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+            this.allDataUrl = []
+            this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer = 0
         },
         textBox: function (data) {
@@ -642,27 +609,21 @@ export default {
         font: function (data) {
             this.textField = false
             this.context.font = (this.size * 5 + 25) + "px serif"
-            // TODO: 表达式的括号两边要不要加空格？
             this.context.fillStyle = this.colorBorder
             this.drawLongText(data.input, this.textLeft, this.textTop)
-            // this.context.fillText(data.input, this.textLeft, this.textTop)
             this.textInput = ''
-            this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
+            this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer += 1
         },
         boardUndo: function (data) {
             if (this.pointer === 0) {
                 this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
-            } else if (this.pointer === 1) {
-                this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
-                this.allImageData = []
-                this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
-                this.pointer = 0
             } else {
                 this.pointer -= 1
-                this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-                this.allImageData.length = this.pointer + 1
+                this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
+                this.drawDataUrl(this.allDataUrl[this.pointer])
+                this.allDataUrl.length = this.pointer + 1
             }
         },
         whiteBoardDoing: function (data) {
@@ -743,40 +704,32 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            console.log('joinDoing中 allImageData = ' + this.allImageData)
             this.socket.emit('newJoinWhiteBoardMessage', {
                 type: this.type,
-                // x: x / this.teachingToolsWidth,
-                // y: y / this.teachingToolsHeight,
                 border: this.border,
                 fill: this.fill,
                 size: this.size,
                 dataUrl: this.allDataUrl
             }, this.roomId + '.0')
-            console.log('616-------allDataUrl长度 = ' + this.allDataUrl.length)
-            console.log('617------allDataUrl = ' + this.allDataUrl)
         },
         updateMessageDoing: function (data) {
-            if (true) {
-                console.log('==============updateMessageData')
+            if (this.teacherName !== this.username) {
                 this.allDataUrl = data.dataUrl
                 this.type = data.type
                 this.border = this.border
                 this.fill = data.fill
                 this.size = data.size
                 this.pointer = this.allDataUrl.length - 1
-                console.log('683-------pointer = ' + this.pointer)
-                console.log('683-------allDataUrl长度 = ' + this.allDataUrl.length)
-                console.log('684-------' + this.allDataUrl[this.pointer])
-                // this.context.putImageData(this.allImageData[this.pointer], 0, 0)
-                // this.context.drawImage(this.allDataUrl[this.pointer], 0, 0)
-                var img = new Image()
-                var that = this
-                img.onload = function () {
-                    that.context.drawImage(img, 0, 0)
-                }
-                img.src = this.allDataUrl[this.pointer]
+                this.drawDataUrl(this.allDataUrl[this.pointer])
             }
+        },
+        drawDataUrl: function (dataUrl) {
+            var img = new Image()
+            var that = this
+            img.onload = function () {
+                that.context.drawImage(img, 0, 0, that.teachingToolsWidth, that.teachingToolsHeight)
+            }
+            img.src = dataUrl
         }
     }
 }
@@ -816,48 +769,8 @@ button.active {
     margin-left: 8px;
 }
 
-.size {
-    display: flex;
-}
-
-.size-label {
-    width: 25px;
-    height: 54px;
-    font-size: 13px;
-    padding-left: 5px;
-    padding-top: 10px;
-    border: 1px solid #aaa;
-    margin-top: 1px;
-}
-
-.size-buttons {
-    width: 49px;
-}
-
-#size-button {
-    width: 49px;
-    height: 17px;
-    font-size: 8px;
-    padding-top: 1px;
-}
-
 .drawing-board {
     height: 100%;
     width: 100%;
-}
-
-.canvas-pen {
-    background: #D4EFDF;
-    cursor: url("http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png") 0 32, default;
-}
-
-.canvas-drawing {
-    background: #D4EFDF;
-    cursor: crosshair;
-}
-
-.canvas-eraser {
-    background: #D4EFDF;
-    cursor: url('http://localhost:8000/static/eraser.png'), default;
 }
 </style>
