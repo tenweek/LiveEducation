@@ -15,7 +15,7 @@
                     粗细
                     <Icon type="ios-arrow-forward"></Icon>
                 </Button>
-                <Dropdown-menu slot="list">
+                <Dropdown-menu slot="list" v-if="this.teacherName === this.username">
                     <Dropdown-item name='small'>小</Dropdown-item></Dropdown-item>
                     <Dropdown-item name='middle'>中</Dropdown-item>
                     <Dropdown-item name='large'>大</Dropdown-item>
@@ -23,12 +23,12 @@
             </Dropdown>
             <Button type="text" :class="{ active: border === true }" @click="clickBorder">边框</Button>
             <Button type="text" :class="{ active: fill === true }" @click="clickFill">填充</Button>
-            <el-color-picker class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
-            <el-color-picker class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
+            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
+            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
         </div>
         <div class="drawing-board">
             <input id="text-field" style="top: 200px left: 200px" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
-            <canvas ref="board" id="canvas" :class="this.type === 'eraser' || this.type === 'pen'? 'canvas-pen' : 'canvas-drawing'" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
+            <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
         </div>
     </div>
 </template>
@@ -39,7 +39,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'white-board',
-    props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight'],
+    props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
     data: function () {
         return {
             type: 'pen',
@@ -65,7 +65,7 @@ export default {
         }
     },
     // watch: {
-    //     whiteBoardWidth: function () {
+    //     teachingToolsWidth: function () {
     //         console.log('watch WhiteBoard')
     //         this.width = this.teachingWidth * 0.68 - 77
     //         console.log(this.width)
@@ -75,6 +75,37 @@ export default {
     //         console.log(this.height)
     //     }
     // },
+    watch: {
+        type: function () {
+            if (this.type === 'eraser') {
+                console.log('82 type = eraser')
+                if (this.size === 1) {
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
+                } else if (this.size === 3) {
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserMiddle.png'), default"
+                } else {
+                    console.log('Large')
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserLarge.png'), default"
+                }
+            } else if (this.type === 'pen') {
+                console.log('85 type = pen')
+                this.canvas.style.cursor="url('http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png'), default"
+            } else {
+                this.canvas.style.cursor="crosshair"
+            }
+        },
+        size: function () {
+            if (this.type === 'eraser') {
+                if (this.size === 1) {
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
+                } else if (this.size === 3) {
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserMiddle.png'), default"
+                } else {
+                    this.canvas.style.cursor="url('http://localhost:8000/static/eraserLarge.png'), default"
+                }
+            }
+        }
+    },
     mounted: function () {
         ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
             this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
@@ -82,9 +113,10 @@ export default {
             })
         })
         this.context = this.$refs.board.getContext('2d')
-        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
         console.log('WhiteBoard mounted allImageData = ' + this.allImageData)
         this.canvas = document.getElementById("canvas")
+        this.canvas.style.cursor="url('http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png'), default"
         this.allDataUrl.push(this.canvas.toDataURL())
         // let dataURL = canvas.toDataURL()
         let self = this
@@ -109,7 +141,7 @@ export default {
         drawLongText: function (text, beginX, beginY) {
             var textLength = text.length
             console.log('textLength = ' + textLength)
-            var rowLength = this.whiteBoardWidth - beginX
+            var rowLength = this.teachingToolsWidth - beginX
             console.log('rowLength = ' + rowLength)
             var newText = text.split("")
             var text = ''
@@ -231,8 +263,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'pen',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder,
                 size: this.size
@@ -246,8 +278,8 @@ export default {
                 this.textField = true
                 this.socket.emit('drawing', {
                     type: 'textField',
-                    x: x / this.whiteBoardWidth,
-                    y: y / this.whiteBoardHeight,
+                    x: x / this.teachingToolsWidth,
+                    y: y / this.teachingToolsHeight,
                     color: this.colorBorder,
                     action: action,
                     buttons: buttons
@@ -262,8 +294,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'eraser',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 size: this.size
             }, this.roomId + '.0')
@@ -275,8 +307,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'line',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder,
                 size: this.size
@@ -289,8 +321,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'rectangle',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -305,8 +337,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'circle',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -321,8 +353,8 @@ export default {
             this.socket.emit('drawing', {
                 type: 'ellipse',
                 action: action,
-                x: x / this.whiteBoardWidth,
-                y: y / this.whiteBoardHeight,
+                x: x / this.teachingToolsWidth,
+                y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -334,10 +366,10 @@ export default {
             this.size = data.size
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                console.log(this.whiteBoardWidth)
-                console.log(this.whiteBoardHeight)
-                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                console.log(this.teachingToolsWidth)
+                console.log(this.teachingToolsHeight)
+                this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             } else if (data.action === 'mousemove') {
                 if (this.originPoint === null) {
                     return
@@ -346,7 +378,7 @@ export default {
                     // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     console.log('pen操作 allImageData = ' + this.allImageData)
                     this.pointer += 1
                     this.allDataUrl.push(this.canvas.toDataURL)
@@ -360,14 +392,14 @@ export default {
                 context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
-                context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+                context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
                 context.stroke()
                 context.closePath()
-                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
             } else if (data.action === 'mouseup') {
                 this.originPoint = null
                 this.lastImageData = null
-                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                 console.log('pen操作 allImageData = ' + this.allImageData)
                 this.pointer += 1
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -380,8 +412,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -391,19 +423,19 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                         this.pointer += 1
                         return
                     }
                     const context = this.context
                     const [ox, oy] = this.originPoint
                     context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     break
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     this.pointer += 1
                     break
             }
@@ -413,8 +445,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint == null) {
@@ -424,7 +456,7 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                         this.pointer += 1
                         return
                     }
@@ -435,14 +467,14 @@ export default {
                     context.lineWidth = this.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+                    context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
                     context.stroke()
                     context.closePath()
                     break
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     this.pointer += 1
                     break
             }
@@ -454,8 +486,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -465,14 +497,14 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                         this.pointer += 1
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
+                    const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
                     context.lineWidth = this.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
@@ -489,7 +521,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     this.pointer += 1
                     break
             }
@@ -501,8 +533,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -512,18 +544,18 @@ export default {
                         // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                         this.pointer += 1
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
+                    const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
                     const radius = Math.sqrt(dx * dx, dy * dy)
                     context.lineWidth = this.size
                     context.beginPath()
-                    context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
+                    context.arc((ox + data.x * this.teachingToolsWidth) / 2, (data.y * this.teachingToolsHeight + oy) / 2, radius, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -537,7 +569,7 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     this.pointer += 1
                     break
             }
@@ -549,8 +581,8 @@ export default {
             this.size = data.size
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -561,21 +593,21 @@ export default {
                         // TODO 数字改成count
                         this.originPoint = null
                         this.lastImageData = null
-                        this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                        this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                         this.pointer += 1
                         return
                     }
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
+                    const [dx, dy] = [Math.abs(data.x * this.teachingToolsWidth - ox), Math.abs(data.y * this.teachingToolsHeight - oy)]
                     context.strokeStyle = this.colorBorder
                     context.lineWidth = this.size
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                     }
                     context.beginPath()
-                    context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                    context.ellipse((data.x * this.teachingToolsWidth + ox) / 2, (data.y * this.teachingToolsHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -589,21 +621,21 @@ export default {
                 case 'mouseup':
                     this.originPoint = null
                     this.lastImageData = null
-                    this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                    this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                     this.pointer += 1
                     break
             }
         },
         boardClear: function (data) {
-            this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+            this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             this.allImageData = []
-            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+            this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
             this.pointer = 0
         },
         textBox: function (data) {
             if (data.action === 'mouseup') {
-                this.textLeft = data.x * this.whiteBoardWidth
-                this.textTop = data.y * this.whiteBoardHeight
+                this.textLeft = data.x * this.teachingToolsWidth
+                this.textTop = data.y * this.teachingToolsHeight
                 this.colorBorder = data.color
             }
         },
@@ -615,7 +647,7 @@ export default {
             this.drawLongText(data.input, this.textLeft, this.textTop)
             // this.context.fillText(data.input, this.textLeft, this.textTop)
             this.textInput = ''
-            this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+            this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
             this.pointer += 1
         },
         boardUndo: function (data) {
@@ -623,9 +655,9 @@ export default {
                 this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
             } else if (this.pointer === 1) {
-                this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
+                this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                 this.allImageData = []
-                this.allImageData.push(this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight))
+                this.allImageData.push(this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight))
                 this.pointer = 0
             } else {
                 this.pointer -= 1
@@ -714,8 +746,8 @@ export default {
             console.log('joinDoing中 allImageData = ' + this.allImageData)
             this.socket.emit('newJoinWhiteBoardMessage', {
                 type: this.type,
-                // x: x / this.whiteBoardWidth,
-                // y: y / this.whiteBoardHeight,
+                // x: x / this.teachingToolsWidth,
+                // y: y / this.teachingToolsHeight,
                 border: this.border,
                 fill: this.fill,
                 size: this.size,
@@ -738,6 +770,12 @@ export default {
                 console.log('684-------' + this.allDataUrl[this.pointer])
                 // this.context.putImageData(this.allImageData[this.pointer], 0, 0)
                 // this.context.drawImage(this.allDataUrl[this.pointer], 0, 0)
+                var img = new Image()
+                var that = this
+                img.onload = function () {
+                    that.context.drawImage(img, 0, 0)
+                }
+                img.src = this.allDataUrl[this.pointer]
             }
         }
     }
@@ -806,7 +844,6 @@ button.active {
 .drawing-board {
     height: 100%;
     width: 100%;
-    background: blue;
 }
 
 .canvas-pen {
@@ -817,5 +854,10 @@ button.active {
 .canvas-drawing {
     background: #D4EFDF;
     cursor: crosshair;
+}
+
+.canvas-eraser {
+    background: #D4EFDF;
+    cursor: url('http://localhost:8000/static/eraser.png'), default;
 }
 </style>

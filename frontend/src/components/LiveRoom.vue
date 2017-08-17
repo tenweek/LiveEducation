@@ -34,7 +34,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :whiteBoardWidth="this.whiteBoardWidth" :whiteBoardHeight="this.whiteBoardHeight"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -158,12 +158,12 @@ export default {
         this.teachingWidth = document.getElementById('teaching').clientWidth
         this.teachingHeight = document.getElementById('teaching').clientHeight
         console.log('LiveRoom mounted')
-        console.log(this.teachingWidth)
-        console.log(this.teachingHeight)
+        console.log('this.teachingWidth = ' + this.teachingWidth)
+        console.log('this.teachingHeight = ' + this.teachingHeight)
         this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
         this.whiteBoardHeight = this.teachingHeight - 35
-        console.log(this.whiteBoardWidth)
-        console.log(this.whiteBoardHeight)
+        console.log('this.whiteBoardWidth = ' + this.whiteBoardWidth)
+        console.log('this.whiteBoardHeight = ' + this.whiteBoardHeight)
         window.onresize = function () {
             console.log('window.onresize')
             this.teachingWidth = document.getElementById('teaching').clientWidth
