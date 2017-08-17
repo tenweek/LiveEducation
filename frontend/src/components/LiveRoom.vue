@@ -28,11 +28,6 @@
                 </keep-alive>
             </div>
             <div id="buttons-panel">
-                <Tooltip content="切换位置" placement="right-start">
-                    <Button id="swap-button" type="ghost" @click="swap">
-                        <Icon type="arrow-swap"></Icon>
-                    </Button>
-                </Tooltip><br>
                 <template v-if="this.hidden === true">
                     <Tooltip content="弹出右边窗口" placement="right-start">
                         <Button id="pop-up-button" type="ghost" @click="popUp">
@@ -41,6 +36,11 @@
                     </Tooltip>
                 </template>
                 <template v-else>
+                    <Tooltip content="切换位置" placement="right-start">
+                        <Button id="swap-button" type="ghost" @click="swap">
+                            <Icon type="arrow-swap"></Icon>
+                        </Button>
+                    </Tooltip><br>
                     <Tooltip content="隐藏右边窗口" placement="right-start">
                         <Button id="hide-button" type="ghost" @click="hide"> 
                             <Icon type="ios-undo"></Icon>
@@ -108,7 +108,7 @@ export default {
         },
         popUp: function () {
             let rightContent = document.getElementById('right-up-container')
-            rightContent.style.display = 'inline-block'
+            rightContent.style.display = 'block'
             this.hidden = false
         },
         swap: function () {
