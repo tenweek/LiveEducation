@@ -42,7 +42,7 @@ export default {
         }
     },
     created: function () {
-        this.recRoute = this.teacherName+'/123-'
+        this.recRoute = this.teacherName + '/123-'
         this.currentPage = 1
         this.maxPage = this.imgNum
         if (this.teacherName === this.username) {

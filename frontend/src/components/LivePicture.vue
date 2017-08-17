@@ -24,7 +24,7 @@ export default {
     data: function () {
         return {
             stuAccount: '',
-            joinOrNot: false,
+            joinOrNot: false
         }
     },
     created: function () {

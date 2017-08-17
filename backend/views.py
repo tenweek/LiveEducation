@@ -6,7 +6,6 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
 from .models import Room, User, RoomStudent
-
 import random
 import cloudconvert
 import zipfile
@@ -16,44 +15,16 @@ import shutil
 # Create your views here.
 
 
-# need teacherName and roomId
-# change the ppt name to teachername+roomid
-@csrf_exempt
-def closeRoomForFile(request):
-    req = simplejson.load(request)
-    oldDir = './frentend/static/ppt/'+req['teacherName']
-    newDir = './frentend/static/ppt/'+req['teacherName']+req['roomId']
-    response = JsonResponse({})
-    return response
-
-
-# need teachername and roomid
-# will delete the ppt when kill the videoRoom
-@csrf_exempt
-def removeFile(request):
-    req = simplejson.load(request)
-    dir = './frontend/static/ppt/'+req['teacherName']+req['roomId']
-    shutil.rmtree(dir)
-    response = JsonResponse({})
-    return response
-
-
 @csrf_exempt
 def getImg(request):
     req = simplejson.load(request)
-    user = User.objects.get(username = req['account'])
+    user = User.objects.get(username=req['account'])
     response = JsonResponse({'route': str(user.user_img)[8:]})
     return response
 
 
 @csrf_exempt
-def uploadFile(request):
-    file = request.FILES.get('file')
-    account = request.COOKIES.get('userAccount')
-    user = User.objects.get(username = account)
-    user.user_file = file
-    user.save()
-    filedir = './'+str(user.user_file)
+def fileFormat(file):
     oldFormat = "ppt"
     if file.name[-1] == 'x':
         oldFormat = "pptx"
@@ -63,24 +34,43 @@ def uploadFile(request):
         oldFormat = "pdf"
     else:
         oldFormat = "ppt"
-    print(oldFormat)
-    api = cloudconvert.Api('L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
+    return oldFormat
+
+
+@csrf_exempt
+def convertFile(user, file):
+    filedir = './' + str(user.user_file)
+    oldFormat = fileFormat(file)
+    api = cloudconvert.Api(
+        'L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
     process = api.convert({
         "inputformat": oldFormat,
         "outputformat": "png",
         "input": "upload",
-        "filename": "123.pptx",
+        "filename": "123."+oldFormat,
         "file": open(filedir, 'rb')})
     process.wait()
-    process.download('./frontend/static/pptzip/'+user.name+'.zip')
+    process.download('./frontend/static/pptzip/' + user.name + '.zip')
     os.remove(filedir)
-    zip_file = zipfile.ZipFile('./frontend/static/pptzip/'+user.name+'.zip')  
-    if os.path.isdir('./frontend/static/ppt/'+user.name):  
-        pass  
-    else:  
-        os.mkdir('./frontend/static/ppt/'+user.name)  
-    for names in zip_file.namelist():  
-        zip_file.extract(names,'./frontend/static/ppt/'+user.name)  
+    return
+
+
+@csrf_exempt
+def uploadFile(request):
+    file = request.FILES.get('file')
+    account = request.COOKIES.get('userAccount')
+    user = User.objects.get(username=account)
+    user.user_file = file
+    user.save()
+    convertFile(user, file)
+    zip_file = zipfile.ZipFile(
+        './frontend/static/pptzip/' + user.name + '.zip')
+    if os.path.isdir('./frontend/static/ppt/' + user.name):
+        pass
+    else:
+        os.mkdir('./frontend/static/ppt/' + user.name)
+    for names in zip_file.namelist():
+        zip_file.extract(names, './frontend/static/ppt/' + user.name)
     zip_file.close()
     response = JsonResponse({})
     return response
@@ -100,12 +90,12 @@ def changeNum(request):
 def upload(request):
     uploadFile = request.FILES.get('myfile')
     account = request.COOKIES.get('userAccount')
-    uploadUser = User.objects.get(username = account)
+    uploadUser = User.objects.get(username=account)
     oldImg = uploadUser.user_img
     uploadUser.user_img = uploadFile
     uploadUser.save()
     if oldImg != '':
-        os.remove('./'+str(oldImg))
+        os.remove('./' + str(oldImg))
     response = JsonResponse({})
     return response
 
@@ -187,7 +177,8 @@ def gag(request):
 def getRoomInfo(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    imgNum = sum([len(x) for _,_,x in os.walk('./frontend/static/ppt/'+room.teacher.name)])
+    imgNum = sum([len(x) for _, _, x in os.walk(
+        './frontend/static/ppt/' + room.teacher.name)])
     response = JsonResponse({
         'teacherName': room.teacher.name,
         'stuNum': room.student_num,
