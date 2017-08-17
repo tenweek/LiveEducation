@@ -33,6 +33,8 @@
                 <Upload 
                     ref="upload"
                     :on-success="handleSuccess"
+                    :format="['jpg','jpeg','png']"
+                    :on-format-error="imgFormatError"
                     name="myfile"
                     action="/upload/">
                     <div class="upload-img">
@@ -48,6 +50,8 @@
                     :before-upload="handleUpload"
                     :show-upload-list="false"
                     :on-success="upload"
+                    :format="['ppt','pptx','key']"
+                    :on-format-error="fileFormatError"
                     action="/uploadFile/">
                     <div class="upload-file">
                         <Button type="ghost">点击选择文件&nbsp;&nbsp;
@@ -140,6 +144,14 @@ export default {
         }
     },
     methods: {
+        fileFormatError (file) {
+            this.file = null;
+            this.loadingStatus = false;
+            this.$Message.error('文件格式不正确'+'文件 ' + file.name + ' 格式不正确，请上传 ppt  pptx 或 key 格式的图片。');
+        },
+        imgFormatError (file) {
+            this.$Message.error('文件格式不正确'+'文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。');
+        },
         handleUpload (file) {
             this.file = file;
             this.loadingStatus = true;

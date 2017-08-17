@@ -54,9 +54,19 @@ def uploadFile(request):
     user.user_file = file
     user.save()
     filedir = './'+str(user.user_file)
+    oldFormat = "ppt"
+    if file.name[-1] == 'x':
+        oldFormat = "pptx"
+    elif file.name[-1] == 'y':
+        oldFormat = "key"
+    elif file.name[-1] == 'f':
+        oldFormat = "pdf"
+    else:
+        oldFormat = "ppt"
+    print(oldFormat)
     api = cloudconvert.Api('L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
     process = api.convert({
-        "inputformat": "pptx",
+        "inputformat": oldFormat,
         "outputformat": "png",
         "input": "upload",
         "filename": "123.pptx",
@@ -92,7 +102,6 @@ def upload(request):
     account = request.COOKIES.get('userAccount')
     uploadUser = User.objects.get(username = account)
     oldImg = uploadUser.user_img
-    uploadFile.name = uploadUser.name + uploadFile.name[-4:]
     uploadUser.user_img = uploadFile
     uploadUser.save()
     if oldImg != '':
