@@ -76,7 +76,7 @@ export default {
                 return
             }
             let input = this.textInput
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'drawText',
                 input: input
             }, this.roomId + '.0')
@@ -85,19 +85,19 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
+            this.socket.emit('message', { type: 'clear' }, this.roomId + '.0')
         },
         undo: function () {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
+            this.socket.emit('message', { type: 'undo' }, this.roomId + '.0')
         },
         redo: function () {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', { type: 'redo' }, this.roomId + '.0')
+            this.socket.emit('message', { type: 'redo' }, this.roomId + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -105,7 +105,7 @@ export default {
             }
             let color = this.colorBorder
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'pen',
                 action: action,
                 x: x,
@@ -121,7 +121,7 @@ export default {
             }
             if (action === 'mouseup') {
                 this.textField = true
-                this.socket.emit('drawing', {
+                this.socket.emit('message', {
                     type: 'textField',
                     x: x,
                     y: y,
@@ -135,7 +135,7 @@ export default {
                 return
             }
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'eraser',
                 action: action,
                 x: x,
@@ -150,7 +150,7 @@ export default {
             }
             let color = this.colorBorder
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'line',
                 action: action,
                 x: x,
@@ -168,7 +168,7 @@ export default {
             let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'rectangle',
                 action: action,
                 x: x,
@@ -188,7 +188,7 @@ export default {
             let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'circle',
                 action: action,
                 x: x,
@@ -208,7 +208,7 @@ export default {
             let colorFill = this.colorFill
             let fill = this.fill
             let size = this.size
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'ellipse',
                 action: action,
                 x: x,
@@ -520,7 +520,7 @@ export default {
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('joinForWhiteBoard', self.roomId + '.0')
         self.socket.on('getStarted', function () {
-            self.socket.on('drawing', function (data) {
+            self.socket.on('message', function (data) {
                 let xData = data.x
                 let yData = data.y
                 self.whiteBoardDoing(data, xData, yData)

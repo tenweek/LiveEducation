@@ -2,6 +2,7 @@ let app = require('express')()
 let server = require('http').Server(app)
 let io = require('socket.io')(server)
 let fs = require('fs')
+const readline = require('readline')
 
 app.get('/', function (req, res) {
     res.send('<h1>Hello Wellcome</h1>')
@@ -27,6 +28,27 @@ io.on('connection', function (socket) {
     let idForLeave = 0
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
+    socket.on('joinTest', function (roomId) {
+        console.log('聊天室加入')
+        socket.join(roomId)
+        // 像聊天室打印信息
+        const rl = readline.createInterface({
+            input: fs.createReadStream(basicPath + '23/23.txt')
+        });
+        rl.on('line', (line) => {
+            let json = eval('('+line+')')
+            console.log(json)
+            if (json['type'] === 'chatroom') {
+                io.to(roomId).emit('chatroom', json)
+            }else if (json['type']==='file'){
+                console.log('file')
+            }else if(json['type']==='code'){
+                console.log('code')
+            }else {
+                console.log('whiteboard')
+            }
+        })
+    })
     // 加入房间 用于广播是否开始直播
     socket.on('joinRoom', function (roomId) {
         console.log('room connected')
@@ -66,84 +88,23 @@ io.on('connection', function (socket) {
         console.log('start live')
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
-        const file = roomId + '.2'
-        const code = roomId + '.3'
         io.to(chatroom).emit('getStarted')
         io.to(whiteboard).emit('getStarted')
-        io.to(file).emit('getStarted')
-        io.to(code).emit('getStarted')
     })
-    // 课件展示的消息
-    socket.on('fileDisplayMessage', function (data, roomId) {
-        console.log('fileDisplayMessage')
-        const index = parseInt(roomId.split('.')[0])
-        fs.open(path[index], 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            let msg = JSON.stringify(data)
-            let now = process.uptime() * 1000 - TIME
-            let message = now + 'whiteboard\n' + msg + '\n'
-            fs.write(fd, message, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
-        pictureNow[index] = data
-        io.to(roomId).emit('fileDisplayMessage', data)
-    })
-    // 代码的消息
-    socket.on('codeMessage', function (data, roomId) {
-        const index = parseInt(roomId.split('.')[0])
-        console.log('codeMessage')
-        fs.open(path[index], 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            let now = process.uptime() * 1000 - TIME
-            let message = now + 'code\n' + data + '\n'
-            fs.write(fd, message, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
-        io.to(roomId).emit('codeMessage', data)
-    })
-    // 白板的消息
-    socket.on('drawing', function (data, roomId) {
-        console.log('drawboardMessage')
-        const index = parseInt(roomId.split('.')[0])
-        fs.open(path[index], 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            let msg = JSON.stringify(data)
-            let now = process.uptime() * 1000 - TIME
-            let message = now + 'whiteboard\n' + msg + '\n'
-            fs.write(fd, message, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
-        io.to(roomId).emit('drawing', data)
-    })
-    // 聊天室的消息
+    // 接收消息
     socket.on('message', function (data, roomId) {
-        console.log('chatroomMessage')
-        fs.open(path[id], 'a', (err, fd) => {
+        console.log(data['type'])
+        if (data['type'] === 'file') {
+            let index = parseInt(roomId.split('.')[0])
+            pictureNow[index] = data['page']
+        }
+        const index = parseInt(roomId.split('.')[0])
+        fs.open(path[index], 'a', (err, fd) => {
             if (err) {
                 throw err
             }
-            let msg = JSON.stringify(data)
-            let now = process.uptime() * 1000 - TIME
-            let message = now + 'chatroom\n' + msg + '\n'
-            fs.write(fd, message, function (err) {
+            let msg = JSON.stringify(data) + '\n'
+            fs.write(fd, msg, function (err) {
                 if (err) {
                     throw err
                 }
@@ -167,3 +128,4 @@ io.on('connection', function (socket) {
         }
     })
 });
+

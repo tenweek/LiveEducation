@@ -63,17 +63,18 @@ export default {
         self.socket.emit('joinForCodeEditor', self.roomId + '.3')
         if (self.username !== self.teacherName) {
             self.editorOptions.readOnly = true
-            self.socket.on('getStarted', function () {
-                self.socket.on('codeMessage', function (newcode) {
-                    self.code = newcode
-                })
+            self.socket.on('message', function (data) {
+                self.code = data['code']
             })
         }
     },
     watch: {
         code: function (newcode, oldcode) {
             if (newcode !== oldcode && this.username === this.teacherName) {
-                this.socket.emit('codeMessage', newcode, this.roomId + '.3')
+                this.socket.emit('message', {
+                    type: 'code',
+                    code: newcode
+                }, this.roomId + '.3')
             }
         }
     }

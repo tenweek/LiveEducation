@@ -43,9 +43,9 @@ export default {
     },
     created: function () {
         this.recRoute = 'ppt/shili-'
-        this.currentPage = 1
         this.maxPage = 15
         if (this.teacherName === this.username) {
+            this.currentPage = 1
             this.isTeacher = true
             this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
         }
@@ -55,14 +55,20 @@ export default {
             if (this.currentPage < this.maxPage && this.isTeacher) {
                 this.currentPage = this.currentPage + 1
                 this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
-                this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
+                this.socket.emit('message', {
+                    type: 'file',
+                    page: this.currentPage
+                }, this.roomId + '.2')
             }
         },
         prePicture: function () {
             if (this.currentPage > 1 && this.isTeacher) {
                 this.currentPage = this.currentPage - 1
                 this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
-                this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
+                this.socket.emit('message', {
+                    type: 'file',
+                    page: this.currentPage
+                }, this.roomId + '.2')
             }
         },
         modPicture: function () {
@@ -83,7 +89,10 @@ export default {
             let selected = document.getElementById('for-select')
             this.currentPage = selected.selectedIndex + 1
             this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
-            this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
+            this.socket.emit('message', {
+                type: 'file',
+                page: this.currentPage
+            }, this.roomId + '.2')
         }
     },
     mounted: function () {
@@ -91,15 +100,13 @@ export default {
         let self = this
         self.socket.emit('joinForFileDisplay', this.roomId + '.2')
         if (!self.isTeacher) {
-            self.socket.on('getStarted', function () {
-                self.socket.on('fileDisplayMessage', function (msg) {
-                    self.currentPage = msg
-                    self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
-                })
-                self.socket.on('firstPicture', function (msg) {
-                    self.currentPage = msg
-                    self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
-                })
+            self.socket.on('message', function (data) {
+                self.currentPage = data['page']
+                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+            })
+            self.socket.on('firstPicture', function (msg) {
+                self.currentPage = msg
+                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
             })
         }
     }

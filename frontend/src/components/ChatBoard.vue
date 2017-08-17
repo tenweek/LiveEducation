@@ -117,6 +117,7 @@ export default {
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
                     this.socket.emit('message', {
+                        type: 'chatroom',
                         message: this.username + ' : ' + this.msgInput,
                         isTeacher: this.username === this.teacherName
                     }, this.roomId + '.1')
