@@ -27,7 +27,27 @@
                     <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
                 </keep-alive>
             </div>
-            <Button id="swap-button" type="ghost" @click="swap" size="small"><Icon type="arrow-swap"></Icon></Button>
+            <div id="buttons-panel">
+                <Tooltip content="切换位置" placement="right-start">
+                    <Button id="swap-button" type="ghost" @click="swap">
+                        <Icon type="arrow-swap"></Icon>
+                    </Button>
+                </Tooltip><br>
+                <template v-if="this.hidden === true">
+                    <Tooltip content="弹出右边窗口" placement="right-start">
+                        <Button id="pop-up-button" type="ghost" @click="popUp">
+                            <Icon type="ios-redo"></Icon>
+                        </Button>
+                    </Tooltip>
+                </template>
+                <template v-else>
+                    <Tooltip content="隐藏右边窗口" placement="right-start">
+                        <Button id="hide-button" type="ghost" @click="hide"> 
+                            <Icon type="ios-undo"></Icon>
+                        </Button>
+                    </Tooltip>
+                </template>
+            </div>
             <div id="right-container">
                 <div id="right-up-container">
                     <keep-alive>
@@ -70,7 +90,8 @@ export default {
             studentNum: '',
             username: '',
             leftComponent: 'TeachingTools',
-            rightComponent: 'VideoDisplay'
+            rightComponent: 'VideoDisplay',
+            hidden: false
         }
     },
     created: function () {
@@ -80,6 +101,16 @@ export default {
         window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        hide: function () {
+            let rightContent = document.getElementById('right-up-container')
+            rightContent.style.display = 'none'
+            this.hidden = true
+        },
+        popUp: function () {
+            let rightContent = document.getElementById('right-up-container')
+            rightContent.style.display = 'inline-block'
+            this.hidden = false
+        },
         swap: function () {
             let tmp = this.leftComponent
             this.leftComponent = this.rightComponent
@@ -155,7 +186,6 @@ export default {
 }
 
 .live-room {
-   
     background: #f5f7f9;
     position: relative;
     border-radius: 5px;
@@ -230,12 +260,14 @@ export default {
 }
 
 #chatroom {
-    margin-top: 4%;
-    height: 68%;
+    margin-top: 5%;
+    height: 58%;
     width: 100%;
 }
 
-#swap-button {
+#swap-button,
+#pop-up-button,
+#hide-button {
     height: 41px;
     border: none;
 }
