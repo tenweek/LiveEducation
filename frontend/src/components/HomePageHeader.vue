@@ -29,24 +29,42 @@
                 <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
                 <br>
                 <br>
+                <p>上传封面图</p>
+                <Upload 
+                    ref="upload"
+                    :on-success="handleSuccess"
+                    :format="['jpg','jpeg','png']"
+                    :on-format-error="imgFormatError"
+                    name="myfile"
+                    action="/upload/">
+                    <div class="upload-img">
+                            <img :src="this.route">
+                            <div class="upload-cover">
+                                <Icon type="plus"></Icon>
+                            </div>
+                    </div>
+                </Upload>
+                <br>
                 <p>上传课件</p>
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
-                    <div class="upload">
+                <Upload name="file"
+                    :before-upload="handleUpload"
+                    :show-upload-list="false"
+                    :on-success="upload"
+                    :format="['ppt','pptx','key']"
+                    :on-format-error="fileFormatError"
+                    action="/uploadFile/">
+                    <div class="upload-file">
                         <Button type="ghost">点击选择文件&nbsp;&nbsp;
                             <Icon type="folder"></Icon>
                         </Button>
                     </div>
                 </Upload>
-                <br>
-                <p>上传封面图</p>
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
-                    <div class="upload">
-                        <Button type="ghost">
-                            点击选择图片&nbsp;&nbsp;
-                            <Icon type="image"></Icon>
-                        </Button>
-                    </div>
-                </Upload>
+                <div v-if="file !== null">
+                    待上传文件：{{ file.name }} 
+                    <Button type="text" :loading="loadingStatus">
+                        {{ '上传中' }}
+                    </Button>
+                </div>
             </Modal>
             </Col>
             <Col class="navigation-right" span="5">
@@ -96,7 +114,10 @@ export default {
             username: '',
             account: '',
             roomName: '',
-            newUserName: ''
+            newUserName: '',
+            route: '',
+            file: null,
+            loadingStatus: false
         }
     },
     created: function () {
@@ -123,6 +144,42 @@ export default {
         }
     },
     methods: {
+        fileFormatError (file) {
+            this.file = null;
+            this.loadingStatus = false;
+            this.$Message.error('文件格式不正确'+'文件 ' + file.name + ' 格式不正确，请上传 ppt  pptx 或 key 格式的图片。');
+        },
+        imgFormatError (file) {
+            this.$Message.error('文件格式不正确'+'文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。');
+        },
+        handleUpload (file) {
+            this.file = file;
+            this.loadingStatus = true;
+            return true;
+        },
+        upload () {
+                this.file = null;
+                this.loadingStatus = false;
+                this.$Message.success('上传成功')
+        },
+        handleSuccess (res, file) {
+            setTimeout(() => {
+                this.$refs.upload.fileList.splice(0, 1);
+                fetch('/getImg/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'account': this.account
+                    })
+                }).then((response) => response.json()).then((obj) => {
+                    this.route = obj.route
+                })
+            }, 1500);
+        },
         createRoom: function () {
             fetch('/createRoom/', {
                 method: 'post',
@@ -190,6 +247,49 @@ export default {
 </script>
 
 <style scoped>
+.upload-img{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin-right: 4px;
+}
+
+.upload-img img{
+    width: 100%;
+    height: auto;
+    margin: 0;
+    line-height: 100px;
+}
+
+.upload-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+}
+
+.upload-img:hover .upload-cover{
+    display: block;
+}
+.upload-cover i{
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+    margin: 0;
+    line-height: 100px;
+}
+
 .title {
     height: 60px;
     line-height: 60px;
