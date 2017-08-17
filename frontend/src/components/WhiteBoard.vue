@@ -28,7 +28,7 @@
         </div>
         <div class="drawing-board">
             <input id="text-field" style="top: 200px left: 200px" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
-            <canvas ref="board" id="canvas" :class="this.type === 'eraser' || this.type === 'pen'? 'canvas-eraser' : 'canvas-drawing'" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
+            <canvas ref="board" id="canvas" :class="this.type === 'eraser' || this.type === 'pen'? 'canvas-pen' : 'canvas-drawing'" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
         </div>
     </div>
 </template>
@@ -809,20 +809,13 @@ button.active {
     background: blue;
 }
 
-.canvas-eraser {
+.canvas-pen {
     background: #D4EFDF;
-}
-
-.canvas-eraser:hover {
-    cursor: url('https://cloudconvert.com/assets/11e13801/testfiles/svgexample.svg');
+    cursor: url("http://www.useragentman.com/examples/cursor/canvasPainter/canvas_painter_v0.1/images/gimpBrush.png") 0 32, default;
 }
 
 .canvas-drawing {
     background: #D4EFDF;
-}
-
-.canvas-drawing:hover {
     cursor: crosshair;
-    color: blue;
 }
 </style>
