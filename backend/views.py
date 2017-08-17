@@ -12,16 +12,37 @@ import cloudconvert
 import zipfile
 import os
 import types
+import shutil
 # Create your views here.
+
+
+# need teacherName and roomId
+# change the ppt name to teachername+roomid
+@csrf_exempt
+def closeRoomForFile(request):
+    req = simplejson.load(request)
+    oldDir = './frentend/static/ppt/'+req['teacherName']
+    newDir = './frentend/static/ppt/'+req['teacherName']+req['roomId']
+    response = JsonResponse({})
+    return response
+
+
+# need teachername and roomid
+# will delete the ppt when kill the videoRoom
+@csrf_exempt
+def removeFile(request):
+    req = simplejson.load(request)
+    dir = './frontend/static/ppt/'+req['teacherName']+req['roomId']
+    shutil.rmtree(dir)
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt
 def getImg(request):
     req = simplejson.load(request)
-    print(req['account'])
     user = User.objects.get(username = req['account'])
     response = JsonResponse({'route': str(user.user_img)[8:]})
-    print(str(user.user_img)[8:])
     return response
 
 
@@ -32,9 +53,7 @@ def uploadFile(request):
     user = User.objects.get(username = account)
     user.user_file = file
     user.save()
-    print('./'+str(user.user_file))
     filedir = './'+str(user.user_file)
-    print(filedir)
     api = cloudconvert.Api('L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
     process = api.convert({
         "inputformat": "pptx",
@@ -200,12 +219,10 @@ def getName(request):
 
 @csrf_exempt
 def createRoom(request):
-    print(request.POST)
     req = simplejson.load(request)
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
-    print(teacher.user_img)
     Room.objects.create(teacher=teacher, room_name=roomName)
     response = JsonResponse({})
     return response
@@ -221,7 +238,6 @@ def getRooms(request):
     myroom = []
     for room in rooms:
         userImg = str(room.teacher.user_img)
-        print(userImg[8:])
         myroom.append({'roomName': room.room_name,
                        'teacherName': room.teacher.name,
                        'id': room.id,
