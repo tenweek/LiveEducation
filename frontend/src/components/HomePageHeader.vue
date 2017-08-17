@@ -35,9 +35,9 @@
                     :on-success="handleSuccess"
                     name="myfile"
                     action="/upload/">
-                    <div class="upload">
+                    <div class="upload-img">
                             <img :src="this.route">
-                            <div class="demo-upload-list-cover">
+                            <div class="upload-cover">
                                 <Icon type="plus"></Icon>
                             </div>
                     </div>
@@ -46,6 +46,8 @@
                 <p>上传课件</p>
                 <Upload name="file"
                     :before-upload="handleUpload"
+                    :show-upload-list="false"
+                    :on-success="upload"
                     action="/uploadFile/">
                     <div class="upload-file">
                         <Button type="ghost">点击选择文件&nbsp;&nbsp;
@@ -55,8 +57,8 @@
                 </Upload>
                 <div v-if="file !== null">
                     待上传文件：{{ file.name }} 
-                    <Button type="text" @click="upload" :loading="loadingStatus">
-                        {{ loadingStatus ? '上传中' : '点击上传' }}
+                    <Button type="text" :loading="loadingStatus">
+                        {{ '上传中' }}
                     </Button>
                 </div>
             </Modal>
@@ -140,30 +142,31 @@ export default {
     methods: {
         handleUpload (file) {
             this.file = file;
-            return false;
+            this.loadingStatus = true;
+            return true;
         },
         upload () {
-            this.loadingStatus = true;
-            setTimeout(() => {
                 this.file = null;
                 this.loadingStatus = false;
                 this.$Message.success('上传成功')
-            }, 1500);
         },
         handleSuccess (res, file) {
-            fetch('/getImg/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    'account': this.account
+            setTimeout(() => {
+                this.$refs.upload.fileList.splice(0, 1);
+                fetch('/getImg/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'account': this.account
+                    })
+                }).then((response) => response.json()).then((obj) => {
+                    this.route = obj.route
                 })
-            }).then((response) => response.json()).then((obj) => {
-                this.route = obj.route
-            })
+            }, 1500);
         },
         createRoom: function () {
             fetch('/createRoom/', {
@@ -232,12 +235,12 @@ export default {
 </script>
 
 <style scoped>
-.upload{
+.upload-img{
     display: inline-block;
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     text-align: center;
-    line-height: 60px;
+    line-height: 100px;
     border: 1px solid transparent;
     border-radius: 4px;
     overflow: hidden;
@@ -247,13 +250,14 @@ export default {
     margin-right: 4px;
 }
 
-.upload img{
-    width: auto;
-    height: 100%;
-    margin: auto;
+.upload-img img{
+    width: 100%;
+    height: auto;
+    margin: 0;
+    line-height: 100px;
 }
 
-.demo-upload-list-cover{
+.upload-cover{
     display: none;
     position: absolute;
     top: 0;
@@ -263,16 +267,15 @@ export default {
     background: rgba(0,0,0,.6);
 }
 
-.upload:hover .demo-upload-list-cover{
+.upload-img:hover .upload-cover{
     display: block;
 }
-
-.demo-upload-list-cover i{
+.upload-cover i{
     color: #fff;
     font-size: 40px;
     cursor: pointer;
     margin: 0;
-    line-height: 60px;
+    line-height: 100px;
 }
 
 .title {

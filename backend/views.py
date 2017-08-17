@@ -24,6 +24,7 @@ def getImg(request):
     print(str(user.user_img)[8:])
     return response
 
+
 @csrf_exempt
 def uploadFile(request):
     file = request.FILES.get('file')
@@ -68,13 +69,15 @@ def changeNum(request):
 
 @csrf_exempt
 def upload(request):
-    nowFile = request.FILES.get('myfile')
+    uploadFile = request.FILES.get('myfile')
     account = request.COOKIES.get('userAccount')
-    nowUser = User.objects.get(username = account)
-    if nowUser.user_img != '':
-        os.remove('./'+str(nowUser.user_img))
-    nowUser.user_img = nowFile
-    nowUser.save()
+    uploadUser = User.objects.get(username = account)
+    oldImg = uploadUser.user_img
+    uploadFile.name = uploadUser.name + uploadFile.name[-4:]
+    uploadUser.user_img = uploadFile
+    uploadUser.save()
+    if oldImg != '':
+        os.remove('./'+str(oldImg))
     response = JsonResponse({})
     return response
 
