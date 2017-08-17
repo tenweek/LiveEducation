@@ -1,6 +1,6 @@
 <template>
-    <div id="teaching-tools">
-        <Card>
+    <Card>
+        <div id="teaching-tools">
             <Tabs>
                 <Tab-pane label="白板" name="WhiteBoard">
                     <white-board :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></white-board>
@@ -12,8 +12,8 @@
                     <file-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></file-display>
                 </Tab-pane>
            </Tabs>
-        </Card>
-    </div>
+        </div>
+    </Card>
 </template>
 
 <script>

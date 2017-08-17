@@ -1,5 +1,6 @@
 <template>
-    <Card id="chat-board">
+<Card id="chatboard-card">
+    <div id="chat-board">
         <div id="messages">
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
@@ -34,7 +35,8 @@
                 <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
             </Checkbox-group>
         </Modal>
-    </Card>
+    </div>
+</Card>
 </template>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -43,7 +45,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username', 'above:hidden'],
+    props: ['roomId', 'teacherName', 'username', 'aboveHidden'],
     data: function () {
         return {
             showGagList: false,
@@ -244,6 +246,17 @@ export default {
                 this.resetList()
             })
         }
+    },
+    watch: {
+        aboveHidden: function (newVal, oldVal) {
+            if (newVal) {
+                document.getElementById('messages').style.height = '90%'
+                document.getElementById('chat-board').style.height = '76vmin'
+            } else {
+                document.getElementById('messages').style.height = '87%'
+                document.getElementById('chat-board').style.height = '40vmin'
+            }
+        }
     }
 }
 </script>
@@ -253,9 +266,13 @@ export default {
     overflow: hidden;
 }
 
+#chatboard-card {
+    height: 100%;
+}
+
 #chat-board {
     width: 100%;
-    height: 100%;
+    height: 40vmin;
     position: relative;
 }
 
@@ -292,6 +309,6 @@ export default {
 
 #messages {
     overflow: auto;
-    height: 91%;
+    height: 87%;
 }
 </style>
