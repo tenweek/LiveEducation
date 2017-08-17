@@ -1,5 +1,5 @@
 <template>
-    <div class="video-display">
+    <Card class="video-display">
         <div id="divDevice">
             <div class="select">
                 <label for="audioSource">Audio source: </label>
@@ -26,7 +26,7 @@
                 <div id="agora-remote"></div>
             </template>
         </div>
-    </div>
+    </Card>>
 </template>
 
 <script>

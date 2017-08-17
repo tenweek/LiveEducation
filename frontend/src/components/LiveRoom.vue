@@ -1,4 +1,5 @@
 <template>
+<div id="bg">
     <div class="live-room">
         <div class="header">
             <home-page-header></home-page-header>
@@ -21,47 +22,36 @@
             </div>
         </div>
         <div class="layout-header">
-            <div class="teaching-tools">
-                <div class="choose-current">
-                    <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
-                        <Button type="ghost">
-                            教学区
-                            <Icon type="arrow-right-b"></Icon>
-                        </Button>
-                        <Dropdown-menu slot="list">
-                            <Dropdown-item name="WhiteBoard">白板</Dropdown-item>
-                            <Dropdown-item name="CodeEditor">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="FileDisplay">课件展示</Dropdown-item>
-                        </Dropdown-menu>
-                    </Dropdown>
-                </div>
+            <div id="left-container">
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
+                    <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
                 </keep-alive>
             </div>
-            <div class="composite-container">
-                <div class="video-live">
-                    <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></video-display>
+            <Button id="swap-button" type="ghost" @click="swap" size="small"><Icon type="arrow-swap"></Icon></Button>
+            <div id="right-container">
+                <div id="right-up-container">
+                    <keep-alive>
+                        <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
+                    </keep-alive>
                 </div>
-                <div class="chatroom">
+                <Card id="chatroom">
                     <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
-                </div>
+                </Card>
             </div>
         </div>
         <div>
             <page-footer></page-footer>
         </div>
     </div>
+</div>
 </template>
 
 <script>
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
-import FileDisplay from './FileDisplay'
-import ChatBoard from './ChatBoard'
-import CodeEditor from './CodeEditor'
 import VideoDisplay from './VideoDisplay'
-import WhiteBoard from './WhiteBoard'
+import ChatBoard from './ChatBoard'
+import TeachingTools from './TeachingTools'
 
 export default {
     name: 'live-room',
@@ -69,19 +59,18 @@ export default {
         HomePageHeader,
         PageFooter,
         ChatBoard,
-        FileDisplay,
-        CodeEditor,
         VideoDisplay,
-        WhiteBoard
+        TeachingTools
     },
     data: function () {
         return {
-            currentTools: 'WhiteBoard',
             roomId: -1,
             roomName: '',
             teacherName: '',
             studentNum: '',
-            username: ''
+            username: '',
+            leftComponent: 'TeachingTools',
+            rightComponent: 'VideoDisplay'
         }
     },
     created: function () {
@@ -91,6 +80,11 @@ export default {
         window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        swap: function () {
+            let tmp = this.leftComponent
+            this.leftComponent = this.rightComponent
+            this.rightComponent = tmp
+        },
         changeNum: function () {
             if (this.username === this.teacherName) {
                 fetch('/changeNum/', {
@@ -109,9 +103,6 @@ export default {
         },
         getNum: function (count) {
             this.studentNum = count
-        },
-        changeCurrent: function (name) {
-            this.currentTools = name
         },
         getRoomInfo: function () {
             fetch('/getRoomInfo/', {
@@ -159,8 +150,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#bg {
+    background: #f5f7f9;
+}
+
 .live-room {
-    border: 1px solid #d7dde4;
+   
     background: #f5f7f9;
     position: relative;
     border-radius: 5px;
@@ -210,36 +205,38 @@ export default {
 .layout-header {
     width: 78%;
     height: 78%;
+    min-width: 800px;
     display: flex;
     margin-left: auto;
     margin-right: auto;
     margin-top: 110px;
 }
 
-.teaching-tools {
+#left-container {
     height: 100%;
     width: 68%;
-    border: solid;
     text-align: left;
     overflow: hidden;
 }
 
-.composite-container {
+#right-container {
     width: 30%;
     height: 100%;
-    margin-left: 2%;
 }
 
-.video-live {
+#right-up-container {
     height: 30%;
     width: 100%;
-    border: solid;
 }
 
-.chatroom {
+#chatroom {
     margin-top: 4%;
     height: 68%;
     width: 100%;
-    border: solid;
+}
+
+#swap-button {
+    height: 41px;
+    border: none;
 }
 </style>

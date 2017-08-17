@@ -6,16 +6,16 @@
         </div>
         <div class="ppt-footer">
             <div class="for-footer">
-                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture">
+                <a class="arrow" :style="this.teacherName === this.username ? 'display:block' : 'display:none'" @click="prePicture">
                     <Icon type="arrow-left-b"></Icon>
                 </a>
                 <div class="for-place">
-                    <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
+                    <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.teacherName === this.username ? 'display:block' : 'display:none'">
                         <option v-for="page in this.maxPage" class="every-option">&nbsp;{{ page }}</option>
                     </select>
                     <div class="ppt-page">&nbsp;&nbsp;&nbsp;{{ this.currentPage }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxPage }}&nbsp;&nbsp;&nbsp;</div>
                 </div>
-                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture">
+                <a class="arrow" :style="this.teacherName === this.username ? 'display:block' : 'display:none'" @click="nextPicture">
                     <Icon type="arrow-right-b"></Icon>
                 </a>
             </div>
@@ -37,8 +37,7 @@ export default {
             recRoute: '',
             route: '',
             maxPage: '',
-            currentPage: '',
-            isTeacher: false
+            currentPage: ''
         }
     },
     created: function () {
@@ -46,27 +45,26 @@ export default {
         this.currentPage = 1
         this.maxPage = 15
         if (this.teacherName === this.username) {
-            this.isTeacher = true
             this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
         }
     },
     methods: {
         nextPicture: function () {
-            if (this.currentPage < this.maxPage && this.isTeacher) {
+            if (this.currentPage < this.maxPage && this.teacherName === this.username) {
                 this.currentPage = this.currentPage + 1
                 this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
                 this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
             }
         },
         prePicture: function () {
-            if (this.currentPage > 1 && this.isTeacher) {
+            if (this.currentPage > 1 && this.teacherName === this.username) {
                 this.currentPage = this.currentPage - 1
                 this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
                 this.socket.emit('fileDisplayMessage', this.currentPage, this.roomId + '.2')
             }
         },
         modPicture: function () {
-            if (this.isTeacher) {
+            if (this.teacherName === this.username) {
                 if (event.keyCode === 39 || event.keyCode === 40) {
                     this.nextPicture()
                 }
@@ -90,7 +88,7 @@ export default {
         this.socket = io.connect('http://localhost:9000')
         let self = this
         self.socket.emit('joinForFileDisplay', this.roomId + '.2')
-        if (!self.isTeacher) {
+        if (this.teacherName !== this.username) {
             self.socket.on('fileDisplayMessage', function (msg) {
                 self.currentPage = msg
                 self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
