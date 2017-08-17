@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-board">
+    <Card id="chat-board">
         <div id="messages">
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
@@ -34,7 +34,7 @@
                 <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
             </Checkbox-group>
         </Modal>
-    </div>
+    </Card>
 </template>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -43,7 +43,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'above:hidden'],
     data: function () {
         return {
             showGagList: false,
@@ -253,7 +253,7 @@ export default {
     overflow: hidden;
 }
 
-.chat-board {
+#chat-board {
     width: 100%;
     height: 100%;
     position: relative;

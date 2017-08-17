@@ -54,9 +54,9 @@
                         <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></component>
                     </keep-alive>
                 </div>
-                <Card id="chatroom">
-                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
-                </Card>
+                <div id="chatroom">
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-hidden="this.hidden"></chat-board>
+                </div>
             </div>
         </div>
         <div>
@@ -105,11 +105,15 @@ export default {
             let rightContent = document.getElementById('right-up-container')
             rightContent.style.display = 'none'
             this.hidden = true
+            document.getElementById('chatroom').style.marginTop = '0'
+            document.getElementById('chatroom').style.height = '100%'
         },
         popUp: function () {
             let rightContent = document.getElementById('right-up-container')
             rightContent.style.display = 'block'
             this.hidden = false
+            document.getElementById('chatroom').style.marginTop = '2%'
+            document.getElementById('chatroom').style.height = '56%'
         },
         swap: function () {
             let tmp = this.leftComponent
@@ -255,13 +259,12 @@ export default {
 }
 
 #right-up-container {
-    height: 30%;
     width: 100%;
 }
 
 #chatroom {
-    margin-top: 5%;
-    height: 58%;
+    margin-top: 2%;
+    height: 56%;
     width: 100%;
 }
 
