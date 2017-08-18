@@ -41,12 +41,15 @@
     </div>
 </template>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
 import FileDisplayForRecord from './FileDisplayForRecord'
 import WhiteBoardForRecord from './WhiteBoardForRecord'
+import * as io from 'socket.io-client'
+
 export default {
     name: 'record-room',
     components: {
@@ -61,7 +64,14 @@ export default {
             currentTools: 'WhiteBoardForRecord'
         }
     },
-    created: function () { }
+    mounted: function () {
+        let self = this
+        self.socket = io.connect('http://localhost:9000')
+        self.socket.emit('joinTest', 888)
+        self.socket.on('changeCurrent', function (data) {
+            self.currentTools = data['name'] + 'ForRecord'
+        })
+    }
 }
 </script>
 

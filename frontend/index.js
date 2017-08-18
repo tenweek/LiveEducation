@@ -50,6 +50,10 @@ io.on('connection', function (socket) {
                 }, json['time'] - startTime)
             } else if (json['type'] === 'code') {
                 console.log('code')
+            } else if (json['type'] === 'changeComponents') {
+                setTimeout(function () {
+                    io.to(roomId).emit('changeCurrent', json)
+                }, json['time'] - startTime)
             } else {
                 setTimeout(function () {
                     io.to(roomId).emit('whiteboard', json)

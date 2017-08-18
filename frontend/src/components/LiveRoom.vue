@@ -123,7 +123,10 @@ export default {
             this.studentNum = count
         },
         changeCurrent: function (name) {
-            this.currentTools = name
+            this.socket.emit('message', {
+                'type': 'changeComponents',
+                'name': name
+            }, this.roomId)
         },
         getRoomInfo: function () {
             fetch('/getRoomInfo/', {
@@ -167,15 +170,19 @@ export default {
         }
     },
     mounted: function () {
-        this.teachingWidth = document.getElementById('teaching').clientWidth
-        this.teachingHeight = document.getElementById('teaching').clientHeight
-        this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
-        this.whiteBoardHeight = this.teachingHeight - 35
+        let self = this
+        self.socket.on('message', function (data) {
+            self.currentTools = data['name']
+        })
+        self.teachingWidth = document.getElementById('teaching').clientWidth
+        self.teachingHeight = document.getElementById('teaching').clientHeight
+        self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
+        self.whiteBoardHeight = self.teachingHeight - 35
         window.onresize = function () {
-            this.teachingWidth = document.getElementById('teaching').clientWidth
-            this.teachingHeight = document.getElementById('teaching').clientHeight
-            this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
-            this.whiteBoardHeight = this.teachingHeight - 35
+            self.teachingWidth = document.getElementById('teaching').clientWidth
+            self.teachingHeight = document.getElementById('teaching').clientHeight
+            self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
+            self.whiteBoardHeight = self.teachingHeight - 35
         }
     }
 }
