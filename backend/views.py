@@ -47,7 +47,7 @@ def convertFile(user, file):
         "inputformat": oldFormat,
         "outputformat": "png",
         "input": "upload",
-        "filename": "123."+oldFormat,
+        "filename": "123." + oldFormat,
         "file": open(filedir, 'rb')})
     process.wait()
     process.download('./frontend/static/pptzip/' + user.name + '.zip')

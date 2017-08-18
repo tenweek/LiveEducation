@@ -30,6 +30,7 @@ io.on('connection', function (socket) {
     socket.on('joinForWhiteBoard', function (roomId) {
         console.log('whiteboard connected')
         socket.join(roomId)
+        io.to(roomId).emit('newJoin')
     })
     socket.on('joinForCodeEditor', function (roomId) {
         console.log('codeeditor connected')
@@ -56,6 +57,12 @@ io.on('connection', function (socket) {
     socket.on('drawing', function (data, roomId) {
         io.to(roomId).emit('drawing', data)
     })
+    socket.on('click', function (data, roomId) {
+        io.to(roomId).emit('click', data)
+    })
+    socket.on('newJoinWhiteBoardMessage', function (data, roomId) {
+        io.to(roomId).emit('updateWhiteBoardMessage', data)
+    })
     socket.on('disconnecting', function (resaon) {
         const rooms = Object.keys(socket.rooms)
         if (rooms[1] === idForLeave) {
@@ -65,3 +72,4 @@ io.on('connection', function (socket) {
         }
     })
 });
+

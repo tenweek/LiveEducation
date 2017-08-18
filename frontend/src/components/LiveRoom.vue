@@ -20,7 +20,7 @@
                 </template>
             </div>
         </div>
-        <div class="layout-header">
+        <div class="layout-header" id="teaching">
             <div class="teaching-tools">
                 <div class="choose-current">
                     <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
@@ -36,7 +36,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :imgNum="this.imgNum"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -82,7 +82,11 @@ export default {
             teacherName: '',
             studentNum: '',
             username: '',
-            imgNum: ''
+            imgNum: '',
+            teachingWidth: 100,
+            teachingHeight: 100,
+            whiteBoardWidth: 100,
+            whiteBoardHeight: 100
         }
     },
     created: function () {
@@ -155,11 +159,22 @@ export default {
                 })
             }
         }
+    },
+    mounted: function () {
+        this.teachingWidth = document.getElementById('teaching').clientWidth
+        this.teachingHeight = document.getElementById('teaching').clientHeight
+        this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
+        this.whiteBoardHeight = this.teachingHeight - 35
+        window.onresize = function () {
+            this.teachingWidth = document.getElementById('teaching').clientWidth
+            this.teachingHeight = document.getElementById('teaching').clientHeight
+            this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
+            this.whiteBoardHeight = this.teachingHeight - 35
+        }
     }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .live-room {
     border: 1px solid #d7dde4;
