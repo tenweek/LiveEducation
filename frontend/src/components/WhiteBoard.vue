@@ -91,9 +91,15 @@ export default {
         this.initData()
         let self = this
         self.socket.on('message', function (data) {
+            if (self.started === false) {
+                return
+            }
             self.whiteBoardDoing(data)
         })
         self.socket.on('click', function (data) {
+            if (self.started === false) {
+                return
+            }
             self.buttonDoing(data)
         })
         self.socket.on('newJoin', function () {
@@ -238,6 +244,9 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
+            if (action === 'mousemove' && this.originPoint === null) {
+                return
+            }
             this.socket.emit('message', {
                 type: 'pen',
                 action: action,
@@ -269,6 +278,9 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
+            if (action === 'mousemove' && this.originPoint === null) {
+                return
+            }
             this.socket.emit('message', {
                 type: 'eraser',
                 action: action,
@@ -279,6 +291,9 @@ export default {
         },
         lineCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -292,6 +307,9 @@ export default {
         },
         rectangleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -309,6 +327,9 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
+            if (action === 'mousemove' && this.originPoint === null) {
+                return
+            }
             this.socket.emit('message', {
                 type: 'circle',
                 action: action,
@@ -322,6 +343,9 @@ export default {
         },
         ellipseCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -338,8 +362,6 @@ export default {
         pen: function (data) {
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                // console.log(this.teachingToolsWidth)
-                // console.log(this.teachingToolsHeight)
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             } else if (data.action === 'mousemove') {
@@ -600,6 +622,9 @@ export default {
             this.pointer += 1
         },
         boardUndo: function (data) {
+            if (this.started === false) {
+                return
+            }
             if (this.pointer === 0) {
                 this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
