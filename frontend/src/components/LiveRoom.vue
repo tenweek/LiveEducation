@@ -86,21 +86,6 @@ export default {
             whiteBoardHeight: 100
         }
     },
-    // watch: {
-    //     teachingWidth: function (newWidth, oldWidth) {
-    //         if (newWidth !== oldWidth) {
-    //             console.log('watch LiveRoom')
-    //             this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
-    //             console.log(this.whiteBoardWidth)
-    //         }
-    //     },
-    //     teachingHeight: function (newHeight, oldHeight) {
-    //         if (newHeight !== oldHeight) {
-    //             this.whiteBoardHeight = this.teachingHeight - 35
-    //             console.log(this.whiteBoardHeight)
-    //         }
-    //     }
-    // },
     created: function () {
         this.roomId = this.$route.params.id
         this.getRoomInfo()
@@ -157,29 +142,18 @@ export default {
     mounted: function () {
         this.teachingWidth = document.getElementById('teaching').clientWidth
         this.teachingHeight = document.getElementById('teaching').clientHeight
-        console.log('LiveRoom mounted')
-        console.log('this.teachingWidth = ' + this.teachingWidth)
-        console.log('this.teachingHeight = ' + this.teachingHeight)
         this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
         this.whiteBoardHeight = this.teachingHeight - 35
-        console.log('this.whiteBoardWidth = ' + this.whiteBoardWidth)
-        console.log('this.whiteBoardHeight = ' + this.whiteBoardHeight)
         window.onresize = function () {
-            console.log('window.onresize')
             this.teachingWidth = document.getElementById('teaching').clientWidth
             this.teachingHeight = document.getElementById('teaching').clientHeight
-            console.log(this.teachingWidth)
-            console.log(this.teachingHeight)
             this.whiteBoardWidth = this.teachingWidth * 0.68 - 77
             this.whiteBoardHeight = this.teachingHeight - 35
-            console.log(this.whiteBoardWidth)
-            console.log(this.whiteBoardHeight)
         }
     }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .live-room {
     border: 1px solid #d7dde4;

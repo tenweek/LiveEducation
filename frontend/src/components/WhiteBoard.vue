@@ -86,13 +86,8 @@ export default {
                 this[`${this.type}Command`](eventName, { x, y, buttons })
             })
         })
-        this.context = this.$refs.board.getContext('2d')
-        this.canvas = document.getElementById("canvas")
-        this.canvas.style.cursor="default"
-        this.allDataUrl.push(this.canvas.toDataURL())
+        this.initData()
         let self = this
-        this.socket = io.connect('http://localhost:9000')
-        this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
         this.socket.on('drawing', function (data) {
             self.whiteBoardDoing(data)
         })
@@ -107,6 +102,14 @@ export default {
         })
     },
     methods: {
+        initData: function () {
+            this.context = this.$refs.board.getContext('2d')
+            this.canvas = document.getElementById("canvas")
+            this.canvas.style.cursor="default"
+            this.allDataUrl.push(this.canvas.toDataURL())
+            this.socket = io.connect('http://localhost:9000')
+            this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
+        },
         changeEraserCursor: function () {
             if (this.size === 1) {
                 this.canvas.style.cursor="url('http://localhost:8000/static/eraserSmall.png'), default"
@@ -117,42 +120,36 @@ export default {
             }
         },
         drawLongText: function (text, beginX, beginY) {
-            var textLength = text.length
-            var rowLength = this.teachingToolsWidth - beginX
-            var newText = text.split("")
-            var text = ''
-            var count = 0
+            let textLength = text.length
+            let rowLength = this.teachingToolsWidth - beginX
+            let newText = text.split("")
+            let rowText = ""
+            let count = 0
             this.context.textAlign = 'left'
-            for (var i = 0; i <= textLength ; i++) {
+            for (let i = 0; i <= textLength ; i++) {
                 if (i == textLength) {
-                    this.context.fillText(text, beginX, beginY)
+                    this.context.fillText(rowText, beginX, beginY)
                 }
                 if (count <= rowLength && (count + this.context.measureText(newText[0]).width > rowLength)) {
-                    this.context.fillText(text, beginX, beginY)
+                    this.context.fillText(rowText, beginX, beginY)
                     beginY = beginY + this.size * 5 + 28
-                    text = ""
+                    rowText = ""
                     count = 0
                 }
-                var text = text + newText[0]
+                rowText = rowText + newText[0]
                 count += this.context.measureText(newText[0]).width
                 newText.shift()
             }
         },
         changeSize: function (name) {
+            if (this.teacherName !== this.username) {
+                return
+            }
             if (name === 'large') {
-                if (this.teacherName !== this.username) {
-                    return
-                }
                 this.socket.emit('click', { type: 'sizeLarge' }, this.roomId + '.0')
             } else if (name === 'middle') {
-                if (this.teacherName !== this.username) {
-                    return
-                }
                 this.socket.emit('click', { type: 'sizeMiddle' }, this.roomId + '.0')
             } else {
-                if (this.teacherName !== this.username) {
-                    return
-                }
                 this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
             }
         },
@@ -243,7 +240,6 @@ export default {
                 y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder,
-                size: this.size
             }, this.roomId + '.0')
         },
         textCommand: function (action, { x, y, buttons }) {
@@ -252,7 +248,7 @@ export default {
             }
             if (action === 'mouseup') {
                 this.textField = true
-                var textField = document.getElementById('text-field')
+                let textField = document.getElementById('text-field')
                 textField.style.autofocus="true"
                 this.socket.emit('drawing', {
                     type: 'textField',
@@ -274,7 +270,6 @@ export default {
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
                 buttons: buttons,
-                size: this.size
             }, this.roomId + '.0')
         },
         lineCommand: function (action, { x, y, buttons }) {
@@ -288,7 +283,6 @@ export default {
                 y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder,
-                size: this.size
             }, this.roomId + '.0')
         },
         rectangleCommand: function (action, { x, y, buttons }) {
@@ -304,7 +298,6 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill,
-                size: this.size
             }, this.roomId + '.0')
         },
         circleCommand: function (action, { x, y, buttons }) {
@@ -320,7 +313,6 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill,
-                size: this.size
             }, this.roomId + '.0')
         },
         ellipseCommand: function (action, { x, y, buttons }) {
@@ -336,11 +328,9 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill,
-                size: this.size
             }, this.roomId + '.0')
         },
         pen: function (data) {
-            this.size = data.size
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
                 // console.log(this.teachingToolsWidth)
@@ -376,7 +366,6 @@ export default {
             }
         },
         eraser: function (data) {
-            this.size = data.size
             switch (data.action) {
                 case 'mousedown':
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
@@ -387,7 +376,6 @@ export default {
                         return
                     }
                     if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                        // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -409,7 +397,6 @@ export default {
         },
         line: function (data) {
             this.colorBorder = data.color
-            this.size = data.size
             switch (data.action) {
                 case 'mousedown':
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
@@ -420,7 +407,6 @@ export default {
                         return
                     }
                     if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                        // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -450,7 +436,6 @@ export default {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
-            this.size = data.size
             switch (data.action) {
                 case 'mousedown':
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
@@ -461,7 +446,6 @@ export default {
                         return
                     }
                     if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                        // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -497,7 +481,6 @@ export default {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
-            this.size = data.size
             switch (data.action) {
                 case 'mousedown':
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
@@ -508,7 +491,6 @@ export default {
                         return
                     }
                     if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                        // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -545,7 +527,6 @@ export default {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
             this.fill = data.fill
-            this.size = data.size
             switch (data.action) {
                 case 'mousedown':
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
@@ -556,8 +537,6 @@ export default {
                         return
                     }
                     if (data.x < 0.005 || data.x > 0.995 || data.y < 0.005 || data.y > 0.99) {
-                        // TODO:判断x、y不准确，画图速度快了就会有问题。。换成1有问题
-                        // TODO 数字改成count
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -724,8 +703,8 @@ export default {
             }
         },
         drawDataUrl: function (dataUrl) {
-            var img = new Image()
-            var that = this
+            let img = new Image()
+            let that = this
             img.onload = function () {
                 that.context.drawImage(img, 0, 0, that.teachingToolsWidth, that.teachingToolsHeight)
             }
