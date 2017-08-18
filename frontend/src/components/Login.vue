@@ -18,6 +18,10 @@
                     </Form-item>
                 </Form>
             </div>
+            <div id="signup-link">
+                <span>没有账号？马上</span>
+                <router-link to="/signup">注册</router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -91,7 +95,7 @@ export default {
 .log-in {
     background-color: white;
     top: 50%;
-    margin-top: -174.5px;
+    margin-top: -179.5px;
     left: 50%;
     margin-left: -252.5px;
     position: absolute;
@@ -122,7 +126,7 @@ Form {
 #title {
     font-size: x-large;
     position: absolute;
-    margin-left: 223px;
+    margin-left: 228.5px;
     margin-top: -20px;
 }
 
@@ -134,5 +138,15 @@ Form {
 
 #reset-link {
     margin-right: -300px;
+}
+
+#signup-link {
+    margin-top: 49px;
+    margin-bottom: -60px;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    background-color: #ffffd2;
+    height: 45px;
+    padding-top: 14px;
 }
 </style>
