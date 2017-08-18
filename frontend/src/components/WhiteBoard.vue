@@ -255,7 +255,6 @@ export default {
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
-            console.log(action)
         },
         textCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -289,7 +288,6 @@ export default {
                 y: y / this.teachingToolsHeight,
                 buttons: buttons
             }, this.roomId + '.0')
-            console.log(action)
         },
         lineCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -306,7 +304,6 @@ export default {
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
-            console.log(action)
         },
         rectangleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -325,7 +322,6 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
-            console.log(action)
         },
         circleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -344,7 +340,6 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
-            console.log(action)
         },
         ellipseCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -363,13 +358,10 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
-            console.log(action)
         },
         pen: function (data) {
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                // console.log(this.teachingToolsWidth)
-                // console.log(this.teachingToolsHeight)
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             } else if (data.action === 'mousemove') {
