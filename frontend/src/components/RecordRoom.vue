@@ -24,6 +24,9 @@
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
+                <keep-alive>
+                    <component :is="currentTools" :roomId="this.roomId"></component>
+                </keep-alive>
             </div>
             <div class="composite-container">
                 <div class="video-live"></div>
@@ -42,15 +45,21 @@
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
+import FileDisplayForRecord from './FileDisplayForRecord'
 
 export default {
     name: 'record-room',
     components: {
         HomePageHeader,
         PageFooter,
-        ChatBoardForRecord
+        ChatBoardForRecord,
+        FileDisplayForRecord
     },
-    data: function () { },
+    data: function () {
+        return {
+            currentTools: 'FileDisplayForRecord'
+        }
+    },
     created: function () { }
 }
 </script>
