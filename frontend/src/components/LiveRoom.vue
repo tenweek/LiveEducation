@@ -16,7 +16,7 @@
             </div>
             <div class="navigation-right">
                 <template v-if="this.teacherName === this.username">
-                    <Button type="primary" shape="circle" size="small">开始直播</Button>
+                    <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
                 </template>
             </div>
         </div>
@@ -54,7 +54,9 @@
     </div>
 </template>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
+import * as io from 'socket.io-client'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import FileDisplay from './FileDisplay'
@@ -91,11 +93,16 @@ export default {
     },
     created: function () {
         this.roomId = this.$route.params.id
+        this.socket = io.connect('http://localhost:9000')
+        this.socket.emit('joinRoom', this.roomId)
         this.getRoomInfo()
         this.getUsername()
         window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        startLive: function () {
+            this.socket.emit('startLive', this.roomId)
+        },
         changeNum: function () {
             if (this.username === this.teacherName) {
                 fetch('/changeNum/', {

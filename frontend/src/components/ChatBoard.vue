@@ -3,7 +3,7 @@
         <div id="messages">
             <div v-for="message in messages">
                 <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
-                    <template v-if="message['teacherName']===message['user']">
+                    <template v-if="message['isTeacher']">
                         <button class="message-bold" @click="getName(message)">
                             {{ message['msg'] }}
                         </button>
@@ -52,7 +52,8 @@ export default {
             gagList: [],
             speakList: [],
             messages: [],
-            msgInput: ''
+            msgInput: '',
+            started: false
         }
     },
     mounted: function () {
@@ -61,17 +62,18 @@ export default {
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('join', self.roomId + '.1', self.roomId)
         self.kickOut()
+        self.changeStuNum()
         self.socket.on('message', function (data) {
-            let msg = data['username'] + ' : ' + data['message']
             self.messages.push({
-                'msg': msg,
-                'user': data['username'],
-                'teacherName': data['teacherName']
+                'msg': data['message'],
+                'isTeacher': data['isTeacher']
             })
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
         })
-        self.changeStuNum()
+        self.socket.on('getStarted', function () {
+            self.started = true
+        })
     },
     methods: {
         getName: function (message) {
@@ -86,14 +88,15 @@ export default {
         },
         changeStuNum: function () {
             let self = this
-            this.socket.on('changeNum', function (count) {
+            self.socket.on('changeNum', function (count) {
                 self.$emit('stuNum', count)
             })
         },
         kickOut: function () {
-            this.socket.on('kickOut', function (userid) {
-                if (this.username === userid) {
-                    this.$Message.warning(myMsg.chatroom['getKickedOut'])
+            let self = this
+            self.socket.on('kickOut', function (userid) {
+                if (self.username === userid) {
+                    self.$Message.warning(myMsg.chatroom['getKickedOut'])
                     setTimeout(window.close, 3000)
                 }
             })
@@ -114,11 +117,11 @@ export default {
                     'roomID': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => {
-                if (obj.result) {
+                if (obj.result && this.started) {
                     this.socket.emit('message', {
-                        message: this.msgInput,
-                        username: this.username,
-                        teacherName: this.teacherName
+                        type: 'chatroom',
+                        message: this.username + ' : ' + this.msgInput,
+                        isTeacher: this.username === this.teacherName
                     }, this.roomId + '.1')
                     this.msgInput = ''
                 } else {

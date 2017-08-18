@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
 from .models import Room, User, RoomStudent
+import os
+
 import random
 import cloudconvert
 import zipfile
@@ -223,7 +225,10 @@ def createRoom(request):
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
-    Room.objects.create(teacher=teacher, room_name=roomName)
+    room = Room.objects.create(teacher=teacher, room_name=roomName)
+    path = "./frontend/static/" + str(room.id)
+    os.makedirs(path)
+    os.mknod(path + "/" + str(room.id) + ".txt")
     response = JsonResponse({})
     return response
 

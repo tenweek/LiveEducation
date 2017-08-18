@@ -62,7 +62,8 @@ export default {
             currentImageData: null,
             pointer: 0,
             socket: '',
-            roomId: ''
+            roomId: '',
+            started: false
         }
     },
     watch: {
@@ -89,17 +90,20 @@ export default {
         })
         this.initData()
         let self = this
-        this.socket.on('drawing', function (data) {
+        self.socket.on('message', function (data) {
             self.whiteBoardDoing(data)
         })
-        this.socket.on('click', function (data) {
+        self.socket.on('click', function (data) {
             self.buttonDoing(data)
         })
-        this.socket.on('newJoin', function () {
+        self.socket.on('newJoin', function () {
             self.joinDoing()
         })
-        this.socket.on('updateWhiteBoardMessage', function (data) {
+        self.socket.on('updateWhiteBoardMessage', function (data) {
             self.updateMessageDoing(data)
+        })
+        self.socket.on('getStarted', function () {
+            self.started = true
         })
     },
     methods: {
@@ -213,7 +217,7 @@ export default {
                 return
             }
             let input = this.textInput
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'drawText',
                 input: input
             }, this.roomId + '.0')
@@ -222,19 +226,19 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', { type: 'clear' }, this.roomId + '.0')
+            this.socket.emit('message', { type: 'clear' }, this.roomId + '.0')
         },
         undo: function () {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', { type: 'undo' }, this.roomId + '.0')
+            this.socket.emit('message', { type: 'undo' }, this.roomId + '.0')
         },
         penCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'pen',
                 action: action,
                 x: x / this.teachingToolsWidth,
@@ -251,7 +255,7 @@ export default {
                 this.textField = true
                 let textField = document.getElementById('text-field')
                 textField.style.autofocus = 'true'
-                this.socket.emit('drawing', {
+                this.socket.emit('message', {
                     type: 'textField',
                     x: x / this.teachingToolsWidth,
                     y: y / this.teachingToolsHeight,
@@ -265,7 +269,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'eraser',
                 action: action,
                 x: x / this.teachingToolsWidth,
@@ -277,7 +281,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'line',
                 action: action,
                 x: x / this.teachingToolsWidth,
@@ -290,7 +294,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'rectangle',
                 action: action,
                 x: x / this.teachingToolsWidth,
@@ -305,7 +309,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'circle',
                 action: action,
                 x: x / this.teachingToolsWidth,
@@ -320,7 +324,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('drawing', {
+            this.socket.emit('message', {
                 type: 'ellipse',
                 action: action,
                 x: x / this.teachingToolsWidth,
