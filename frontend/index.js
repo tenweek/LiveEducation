@@ -33,18 +33,22 @@ io.on('connection', function (socket) {
         socket.join(roomId)
         // 像聊天室打印信息
         const rl = readline.createInterface({
-            input: fs.createReadStream(basicPath + '23/23.txt')
+            input: fs.createReadStream(basicPath + '1/1.txt')
         });
+        let startTime = 0
         rl.on('line', (line) => {
-            let json = eval('('+line+')')
-            console.log(json)
-            if (json['type'] === 'chatroom') {
-                io.to(roomId).emit('chatroom', json)
-            }else if (json['type']==='file'){
+            let json = eval('(' + line + ')')
+            if (json['type'] === 'time') {
+                startTime = json['startTime']
+            } else if (json['type'] === 'chatroom') {
+                setTimeout(function () {
+                    io.to(roomId).emit('chatroom', json)
+                }, json['time'] - startTime)
+            } else if (json['type'] === 'file') {
                 console.log('file')
-            }else if(json['type']==='code'){
+            } else if (json['type'] === 'code') {
                 console.log('code')
-            }else {
+            } else {
                 console.log('whiteboard')
             }
         })
@@ -88,6 +92,22 @@ io.on('connection', function (socket) {
         console.log('start live')
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
+        fs.open(path[roomId], 'a', (err, fd) => {
+            if (err) {
+                throw err
+            }
+            let data = {
+                'startTime': process.uptime() * 1000,
+                'type': 'time'
+            }
+            let msg = JSON.stringify(data) + '\n'
+            fs.write(fd, msg, function (err) {
+                if (err) {
+                    throw err
+                }
+                fs.closeSync(fd)
+            })
+        })
         io.to(chatroom).emit('getStarted')
         io.to(whiteboard).emit('getStarted')
     })
@@ -103,6 +123,7 @@ io.on('connection', function (socket) {
             if (err) {
                 throw err
             }
+            data['time'] = process.uptime() * 1000
             let msg = JSON.stringify(data) + '\n'
             fs.write(fd, msg, function (err) {
                 if (err) {

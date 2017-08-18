@@ -1,0 +1,7 @@
+{"startTime":9762,"type":"time"}
+{"type":"chatroom","message":"qq : ewq564e","isTeacher":true,"time":10624}
+{"type":"chatroom","message":"qq : qweqweqw","isTeacher":true,"time":11783}
+{"type":"chatroom","message":"qq : eqweqw","isTeacher":true,"time":12614}
+{"type":"chatroom","message":"qq : eqwe8q98w7e1qe7v1qw97e8qv1w","isTeacher":true,"time":17185}
+{"type":"chatroom","message":"qq : eqw","isTeacher":true,"time":17886}
+{"type":"chatroom","message":"qq : qwe7v8qw971e8","isTeacher":true,"time":21140}
