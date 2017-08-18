@@ -40,7 +40,7 @@
                 </Upload>
                 <br>
                 <p>上传课件</p>
-                <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt', 'pptx', 'key', 'pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
+                <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
                     <div class="upload-file">
                         <Button type="ghost">点击选择文件&nbsp;&nbsp;
                             <Icon type="folder"></Icon>
