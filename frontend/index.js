@@ -51,7 +51,9 @@ io.on('connection', function (socket) {
             } else if (json['type'] === 'code') {
                 console.log('code')
             } else {
-                console.log('whiteboard')
+                setTimeout(function () {
+                    io.to(roomId).emit('whiteboard', json)
+                }, json['time'] - startTime)
             }
         })
     })
@@ -117,8 +119,8 @@ io.on('connection', function (socket) {
     // 接收消息
     socket.on('message', function (data, roomId) {
         console.log(data['type'])
+        const index = parseInt(roomId.split('.')[0])
         if (data['type'] === 'file') {
-            let index = parseInt(roomId.split('.')[0])
             pictureNow[index] = {
                 'teacherId': data['teacherId'],
                 'fileNum': data['fileNum'],
@@ -126,7 +128,6 @@ io.on('connection', function (socket) {
                 'maxPage': data['maxPage']
             }
         }
-        const index = parseInt(roomId.split('.')[0])
         fs.open(path[index], 'a', (err, fd) => {
             if (err) {
                 throw err

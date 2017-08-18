@@ -25,7 +25,7 @@
                     </Dropdown>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId"></component>
+                    <component :is="currentTools" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -46,18 +46,19 @@ import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
 import FileDisplayForRecord from './FileDisplayForRecord'
-
+import WhiteBoardForRecord from './WhiteBoardForRecord'
 export default {
     name: 'record-room',
     components: {
         HomePageHeader,
         PageFooter,
         ChatBoardForRecord,
-        FileDisplayForRecord
+        FileDisplayForRecord,
+        WhiteBoardForRecord
     },
     data: function () {
         return {
-            currentTools: 'FileDisplayForRecord'
+            currentTools: 'WhiteBoardForRecord'
         }
     },
     created: function () { }
