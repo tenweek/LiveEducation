@@ -35,15 +35,17 @@ io.on('connection', function (socket) {
         console.log('codeeditor connected')
         socket.join(roomId)
     })
-    socket.on('joinForFileDisplay', function (roomId) {
+    socket.on('joinForFileDisplay', function (roomId, id, isTeacher) {
         console.log('filedisplay connected')
         socket.join(roomId)
-        io.to(roomId).emit('firstPicture', pictureNow[id])
+        if (!isTeacher) {
+            io.to(roomId).emit('firstPicture', pictureNow[id]['teacherId'], pictureNow[id]['fileNum'], pictureNow[id]['currentPage'], pictureNow[id]['maxPage'])
+        }
     })
-    socket.on('fileDisplayMessage', function (data, roomId) {
+    socket.on('fileDisplayMessage', function (teacherId, fileNum, currentPage, maxPage, roomId, id) {
         console.log('received')
-        pictureNow[id] = data
-        io.to(roomId).emit('fileDisplayMessage', data)
+        pictureNow[id] = {'teacherId': teacherId, 'fileNum': fileNum, 'currentPage': currentPage, 'maxPage': maxPage}
+        io.to(roomId).emit('fileDisplayMessage', teacherId, fileNum, currentPage, maxPage)
     })
     socket.on('message', function (data, roomId) {
         console.log('received')
