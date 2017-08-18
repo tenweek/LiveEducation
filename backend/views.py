@@ -36,7 +36,7 @@ def convertFile(user, file):
     filedir = './' + str(user.user_file)
     oldFormat = fileFormat(file)
     api = cloudconvert.Api(
-        'L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
+        '7AoDsm4GZV8LpmYqZHESw4GKqDo1DcZ3ooQtqWR1fhaKZ-Jiva2gC94GVrYRuEEdfkqWVNBHZFGCIYSZAAh3cA')
     process = api.convert({
         "inputformat": oldFormat,
         "outputformat": "png",

@@ -1,2 +1,0 @@
-{"startTime":852506,"type":"time"}
-{"startTime":934367,"type":"time"}
