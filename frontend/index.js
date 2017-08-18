@@ -120,19 +120,19 @@ io.on('connection', function (socket) {
             pictureNow[index] = data['page']
         }
         const index = parseInt(roomId.split('.')[0])
-        fs.open(path[index], 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            data['time'] = process.uptime() * 1000
-            let msg = JSON.stringify(data) + '\n'
-            fs.write(fd, msg, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
+        // fs.open(path[index], 'a', (err, fd) => {
+        //     if (err) {
+        //         throw err
+        //     }
+        //     data['time'] = process.uptime() * 1000
+        //     let msg = JSON.stringify(data) + '\n'
+        //     fs.write(fd, msg, function (err) {
+        //         if (err) {
+        //             throw err
+        //         }
+        //         fs.closeSync(fd)
+        //     })
+        // })
         io.to(roomId).emit('message', data)
     })
     // 踢人事件

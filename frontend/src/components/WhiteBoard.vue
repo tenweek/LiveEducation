@@ -91,9 +91,15 @@ export default {
         this.initData()
         let self = this
         self.socket.on('message', function (data) {
+            if (self.started === false) {
+                return
+            }
             self.whiteBoardDoing(data)
         })
         self.socket.on('click', function (data) {
+            if (self.started === false) {
+                return
+            }
             self.buttonDoing(data)
         })
         self.socket.on('newJoin', function () {
@@ -238,6 +244,9 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
+            if (action === 'mousemove' && this.originPoint === null) {
+                return
+            }
             this.socket.emit('message', {
                 type: 'pen',
                 action: action,
@@ -246,6 +255,7 @@ export default {
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
+            console.log(action)
         },
         textCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
@@ -269,6 +279,9 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
+            if (action === 'mousemove' && this.originPoint === null) {
+                return
+            }
             this.socket.emit('message', {
                 type: 'eraser',
                 action: action,
@@ -276,9 +289,13 @@ export default {
                 y: y / this.teachingToolsHeight,
                 buttons: buttons
             }, this.roomId + '.0')
+            console.log(action)
         },
         lineCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -289,9 +306,13 @@ export default {
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
+            console.log(action)
         },
         rectangleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -304,9 +325,13 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
+            console.log(action)
         },
         circleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -319,9 +344,13 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
+            console.log(action)
         },
         ellipseCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
+                return
+            }
+            if (action === 'mousemove' && this.originPoint === null) {
                 return
             }
             this.socket.emit('message', {
@@ -334,6 +363,7 @@ export default {
                 colorFill: this.colorFill,
                 fill: this.fill
             }, this.roomId + '.0')
+            console.log(action)
         },
         pen: function (data) {
             this.colorBorder = data.color
@@ -600,6 +630,9 @@ export default {
             this.pointer += 1
         },
         boardUndo: function (data) {
+            if (this.started === false) {
+                return
+            }
             if (this.pointer === 0) {
                 this.$Message.error(myMsg.whiteBoard['undoNotExist'])
                 return
