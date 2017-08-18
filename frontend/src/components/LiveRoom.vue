@@ -140,7 +140,6 @@ export default {
                 this.roomName = obj.roomName
                 this.studentNum = obj.stuNum
                 this.teacherName = obj.teacherName
-                this.imgNum = obj.imgNum
             })
         },
         getUsername: function () {

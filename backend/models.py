@@ -25,4 +25,5 @@ class User(AbstractUser):
     name = models.CharField(default='', max_length=16, unique=True)
     user_img = models.FileField(upload_to='./frontend/static/cover/')
     user_file = models.FileField(upload_to='./frontend/static/ppt/')
+    file_num = models.IntegerField(default=0)
 # Create your models here.

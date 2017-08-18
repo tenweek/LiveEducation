@@ -1,27 +1,62 @@
 <template>
-    <div class="file-display" id="file">
-        <div class="ppt-header">PPT放映</div>
-        <div @click="makeFoucs" @keydown="modPicture()" tabindex="0">
-            <img :src="this.route" />
-        </div>
-        <div class="ppt-footer">
-            <div class="for-footer">
-                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture">
-                    <Icon type="arrow-left-b"></Icon>
-                </a>
-                <div class="for-place">
-                    <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
-                        <option v-for="page in this.maxPage" class="every-option">&nbsp;{{ page }}</option>
-                    </select>
-                    <div class="ppt-page">&nbsp;&nbsp;&nbsp;{{ this.currentPage }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxPage }}&nbsp;&nbsp;&nbsp;</div>
+    <div>
+        <template v-if="this.fileNum > 0">
+            <div class="file-display" id="file">
+                <div class="ppt-header">PPT放映</div>
+                <div @click="makeFoucs" @keydown="modPicture()" tabindex="0">
+                    <img :src="this.route" />
                 </div>
-                <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture">
-                    <Icon type="arrow-right-b"></Icon>
-                </a>
+                <div class="ppt-footer">
+                    <div class="for-footer">
+                        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture">
+                            <Icon type="arrow-left-b"></Icon>
+                        </a>
+                        <div class="for-place">
+                            <select @change="changePage" id="for-select" class="ppt-select ppt-num1" :style="this.isTeacher ? 'display:block' : 'display:none'">
+                                <option v-for="page in this.maxPage" class="every-option">&nbsp;{{ page }}</option>
+                            </select>
+                            <div class="ppt-page">&nbsp;&nbsp;&nbsp;{{ this.currentPage }}&nbsp;&nbsp;of&nbsp;&nbsp;{{ this.maxPage }}&nbsp;&nbsp;&nbsp;</div>
+                        </div>
+                        <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="nextPicture">
+                            <Icon type="arrow-right-b"></Icon>
+                        </a>
+                    </div>
+                </div>
+                <div :style="this.isTeacher ? 'display:block':'display:none'">
+                    <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
+                        <div class="upload-file">
+                            <Button type="ghost" style="background:white">点击上传课件&nbsp;&nbsp;
+                                <Icon type="folder"></Icon>
+                            </Button>
+                        </div>
+                    </Upload>
+                    <div v-if="file !== null" style="background:white">
+                        正在上传文件：{{ file.name }}
+                        <Button type="text" :loading="loadingStatus" style="background:white">正在切换课件</Button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </template>
+        <template v-else-if="this.isTeacher">
+            <div class="drag-file">
+                <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" type="drag" action="/uploadFile/">
+                    <div class="upload-file">
+                        <p>
+                            <Icon type="ios-cloud-upload" size="50"></Icon>上传课件</p>
+                    </div>
+                </Upload>
+                <div v-if="file !== null">
+                    正在上传文件：{{ file.name }}
+                    <Button type="text" :loading="loadingStatus">正在切换课件</Button>
+                </div>
+            </div>
+        </template>
+        <template v-else>
+            <div>目前还没有课件，请等待老师上传！！！</div>
+        </template>
     </div>
 </template>
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -29,46 +64,94 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['roomId', 'teacherName', 'username', 'imgNum'],
+    props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
             socket: '',
             baseRoute: 'static/ppt/',
-            recRoute: '',
             route: '',
             maxPage: '',
             currentPage: '',
-            isTeacher: false
+            isTeacher: false,
+            file: null,
+            loadingStatus: false,
+            fileNum: 0,
+            teacherId: ''
         }
     },
     created: function () {
-        this.recRoute = this.teacherName + '/123-'
-        this.currentPage = 1
-        this.maxPage = this.imgNum
         if (this.teacherName === this.username) {
             this.currentPage = 1
             this.isTeacher = true
-            this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+            this.getTeahcerFileInfo()
         }
     },
     methods: {
+        getTeahcerFileInfo: function () {
+            fetch('/getTeacherFileInfo/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': this.teacherName
+                })
+            }).then((response) => response.json()).then((obj) => {
+                this.teacherId = obj.teacherId
+                this.fileNum = obj.fileNum
+                this.maxPage = obj.maxPage
+                this.currentPage = 1
+                this.route = this.baseRoute + this.teacherId + 'and' + this.fileNum + '/user-' + this.currentPage + '.png'
+                this.socket.emit('message', {
+                    'type': 'file',
+                    'teacherId': this.teacherId,
+                    'fileNum': this.fileNum,
+                    'currentPage': this.currentPage,
+                    'maxPage': this.maxPage
+                }, this.roomId + '.2')
+            })
+        },
+        fileFormatError: function (file) {
+            this.file = null
+            this.loadingStatus = false
+            this.$Message.error('文件格式不正确' + '文件 ' + file.name + ' 格式不正确，请上传 ppt  pptx  pdf 或 key 格式的图片。')
+        },
+        handleUpload: function (file) {
+            this.file = file
+            this.loadingStatus = true
+            return true
+        },
+        upload: function () {
+            this.file = null
+            this.loadingStatus = false
+            this.getTeahcerFileInfo()
+            this.$Message.success('上传成功')
+        },
         nextPicture: function () {
             if (this.currentPage < this.maxPage && this.isTeacher) {
                 this.currentPage = this.currentPage + 1
-                this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+                this.route = this.baseRoute + this.teacherId + 'and' + this.fileNum + '/user-' + this.currentPage + '.png'
                 this.socket.emit('message', {
-                    type: 'file',
-                    page: this.currentPage
+                    'type': 'file',
+                    'teacherId': this.teacherId,
+                    'fileNum': this.fileNum,
+                    'currentPage': this.currentPage,
+                    'maxPage': this.maxPage
                 }, this.roomId + '.2')
             }
         },
         prePicture: function () {
             if (this.currentPage > 1 && this.isTeacher) {
                 this.currentPage = this.currentPage - 1
-                this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+                this.route = this.baseRoute + this.teacherId + 'and' + this.fileNum + '/user-' + this.currentPage + '.png'
                 this.socket.emit('message', {
-                    type: 'file',
-                    page: this.currentPage
+                    'type': 'file',
+                    'teacherId': this.teacherId,
+                    'fileNum': this.fileNum,
+                    'currentPage': this.currentPage,
+                    'maxPage': this.maxPage
                 }, this.roomId + '.2')
             }
         },
@@ -89,25 +172,37 @@ export default {
         changePage: function () {
             let selected = document.getElementById('for-select')
             this.currentPage = selected.selectedIndex + 1
-            this.route = this.baseRoute + this.recRoute + this.currentPage + '.png'
+            this.route = this.baseRoute + this.teacherId + 'and' + this.fileNum + '/user-' + this.currentPage + '.png'
             this.socket.emit('message', {
-                type: 'file',
-                page: this.currentPage
+                'type': 'file',
+                'teacherId': this.teacherId,
+                'fileNum': this.fileNum,
+                'currentPage': this.currentPage,
+                'maxPage': this.maxPage
             }, this.roomId + '.2')
         }
     },
     mounted: function () {
         this.socket = io.connect('http://localhost:9000')
         let self = this
-        self.socket.emit('joinForFileDisplay', this.roomId + '.2')
+        if (this.teacherName === this.username) {
+            self.isTeacher = true
+        }
+        self.socket.emit('joinForFileDisplay', self.roomId + '.2', self.isTeacher)
         if (!self.isTeacher) {
             self.socket.on('message', function (data) {
-                self.currentPage = data['page']
-                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+                self.teacherId = data['teacherId']
+                self.fileNum = data['fileNum']
+                self.currentPage = data['currentPage']
+                self.maxPage = data['maxPage']
+                self.route = self.baseRoute + self.teacherId + 'and' + self.fileNum + '/user-' + self.currentPage + '.png'
             })
-            self.socket.on('firstPicture', function (msg) {
-                self.currentPage = msg
-                self.route = self.baseRoute + self.recRoute + self.currentPage + '.png'
+            self.socket.on('firstPicture', function (teacherId, fileNum, currentPage, maxPage) {
+                self.teacherId = teacherId
+                self.fileNum = fileNum
+                self.currentPage = currentPage
+                self.maxPage = maxPage
+                self.route = self.baseRoute + self.teacherId + 'and' + self.fileNum + '/user-' + self.currentPage + '.png'
             })
         }
     }
@@ -115,6 +210,25 @@ export default {
 </script>
 
 <style scoped>
+.drag-file {
+    width: 400px;
+    height: 400px;
+    border: 2px dashed black;
+    margin: auto;
+}
+
+.upload-file Icon {
+    color: #3399ff;
+    font-size: 100px;
+    line-height: 400px;
+}
+
+.upload-file p {
+    color: #3399ff;
+    font-size: 20px;
+    line-height: 400px;
+}
+
 .file-display {
     width: 100%;
     height: auto;

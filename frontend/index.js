@@ -80,12 +80,12 @@ io.on('connection', function (socket) {
         console.log('codeeditor connected')
         socket.join(roomId)
     })
-    socket.on('joinForFileDisplay', function (roomId) {
+    socket.on('joinForFileDisplay', function (roomId, isTeacher) {
         let index = parseInt(roomId.split('.')[0])
         console.log('filedisplay connected')
         socket.join(roomId)
-        if (pictureNow[index]) {
-            io.to(roomId).emit('firstPicture', pictureNow[index])
+        if (!isTeacher) {
+            io.to(roomId).emit('firstPicture', pictureNow[index]['teacherId'], pictureNow[index]['fileNum'], pictureNow[index]['currentPage'], pictureNow[index]['maxPage'])
         }
     })
     // 开始直播信息
@@ -117,7 +117,12 @@ io.on('connection', function (socket) {
         console.log(data['type'])
         if (data['type'] === 'file') {
             let index = parseInt(roomId.split('.')[0])
-            pictureNow[index] = data['page']
+            pictureNow[index] = {
+                'teacherId': data['teacherId'],
+                'fileNum': data['fileNum'],
+                'currentPage': data['currentPage'],
+                'maxPage': data['maxPage']
+            }
         }
         const index = parseInt(roomId.split('.')[0])
         fs.open(path[index], 'a', (err, fd) => {
@@ -155,4 +160,3 @@ io.on('connection', function (socket) {
         }
     })
 });
-
