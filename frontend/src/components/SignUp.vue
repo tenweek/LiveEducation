@@ -187,7 +187,7 @@ h2 {
     color: #000000;
     height: 30px;
     position: absolute;
-    margin-left: 223px;
+    margin-left: 222.5px;
     margin-top: -20px;
 }
 
