@@ -1,7 +1,7 @@
-let app = require('express')()
-let server = require('http').Server(app)
-let io = require('socket.io')(server)
-let fs = require('fs')
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
+var fs = require('fs')
 const readline = require('readline')
 
 app.get('/', function (req, res) {
@@ -13,19 +13,19 @@ server.listen(9000, () => {
 })
 
 // 记录房间当前人数
-let onlineCount = {}
+var onlineCount = {}
 // 记录房间当前PPT页码
-let pictureNow = {}
+var pictureNow = {}
 // 记录不同房间的路径
-let path = {}
+var path = {}
 // 记录基础路径
 const basicPath = './static/'
 
 // .0是白板 .1是聊天室 .2是课件展示 .3是代码编辑器
 
 io.on('connection', function (socket) {
-    let id = 0
-    let idForLeave = 0
+    var id = 0
+    var idForLeave = 0
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
     socket.on('joinTest', function (roomId) {
@@ -35,9 +35,9 @@ io.on('connection', function (socket) {
         const rl = readline.createInterface({
             input: fs.createReadStream(basicPath + '1/1.txt')
         });
-        let startTime = 0
+        var startTime = 0
         rl.on('line', (line) => {
-            let json = eval('(' + line + ')')
+            var json = eval('(' + line + ')')
             if (json['type'] === 'time') {
                 startTime = json['startTime']
             } else if (json['type'] === 'chatroom') {
@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
         socket.join(roomId)
     })
     socket.on('joinForFileDisplay', function (roomId, isTeacher) {
-        let index = parseInt(roomId.split('.')[0])
+        var index = parseInt(roomId.split('.')[0])
         console.log('filedisplay connected')
         socket.join(roomId)
         if (!isTeacher) {
@@ -93,15 +93,15 @@ io.on('connection', function (socket) {
         console.log('start live')
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
-        fs.open(path[roomId], 'a', (err, fd) => {
+        fs.open(String(path[roomId]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
-            let data = {
+            var data = {
                 'startTime': process.uptime() * 1000,
                 'type': 'time'
             }
-            let msg = JSON.stringify(data) + '\n'
+            var msg = JSON.stringify(data) + '\n'
             fs.write(fd, msg, function (err) {
                 if (err) {
                     throw err
@@ -115,8 +115,8 @@ io.on('connection', function (socket) {
     // 接收消息
     socket.on('message', function (data, roomId) {
         console.log(data['type'])
+        const index = parseInt(roomId.split('.')[0])
         if (data['type'] === 'file') {
-            let index = parseInt(roomId.split('.')[0])
             pictureNow[index] = {
                 'teacherId': data['teacherId'],
                 'fileNum': data['fileNum'],
@@ -124,13 +124,12 @@ io.on('connection', function (socket) {
                 'maxPage': data['maxPage']
             }
         }
-        const index = parseInt(roomId.split('.')[0])
-        fs.open(path[index], 'a', (err, fd) => {
+        fs.open(String(path[index]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
             data['time'] = process.uptime() * 1000
-            let msg = JSON.stringify(data) + '\n'
+            var msg = JSON.stringify(data) + '\n'
             fs.write(fd, msg, function (err) {
                 if (err) {
                     throw err

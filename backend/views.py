@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
-from .models import Room, User, RoomStudent
+from .models import Room, User, RoomStudent, VideoRoom
 import os
 
 import random
@@ -15,6 +15,32 @@ import os
 import types
 import shutil
 # Create your views here.
+
+
+@csrf_exempt
+def teaCloseLiveRoom(request):
+    req=simplejson.load(request)
+    teacherRoom = Room.objects.get(id=req['roomId'])
+    RoomStudent.objects.filter(room=teacherRoom).delete()
+    Video.objects.create(teacher=teacherRoom.teacher, room_name=teacherRoom.room_name, live_room_id=teacherRoom.id, video_img=str(teacherRoom.teacher.user_img.name), file_num=teacherRoom.teacher.file_num)
+    oldDir = "./frontend/static/ppt/" + str(teacherRoom.teacher.id) + "and"
+    if teacherRoom.teacher.file_num != 0:
+        for fileNum in range(1, teacherRoom.teacher.file_num + 1):
+            os.rename(oldDir + str(fileNum), oldDir + str(fileNum) + "and" + str(teacherRoom.id))
+    teacherRoom.teacher.user_img = ''
+    teacherRoom.teacher.user_file = ''
+    teacherRoom.teacher.file_num = 0
+    Room.objects.filter(id=req['roomId']).delete()
+
+
+@csrf_exempt
+def killVideoRoom(roomId):
+    videoRoom = VideoRoom.objects.get(live_room_id=roomId)
+    os.remove("./frontend/static/cover/" + videoRoom.video_img)
+    if videoRoom.file_num != 0:
+        for file in range(1, videoRoom.file_num+1):
+            shutil.rmtree("./frontend/static/ppt/" + str(videoRoom.teacher.id) + "and" + str(file) + "and" + str(videoRoom.live_room_id))
+    VideoRoom.objects.filter(live_room_id=roomId).delete()
 
 
 @csrf_exempt
@@ -33,20 +59,20 @@ def fileFormat(file):
 
 @csrf_exempt
 def convertFile(user, file):
-    filedir = './' + str(user.user_file)
+    fileDir = './' + str(user.user_file)
     oldFormat = fileFormat(file)
     api = cloudconvert.Api(
-        'L1LSv8pwJ7Qdd43Qs55ZJSUimEFuI1T1I4cExjNfDCZyb-V0rfxc-6B09KFuFHcl0aooGZ_CR7GiWdrgJ9A5_Q')
+        '7AoDsm4GZV8LpmYqZHESw4GKqDo1DcZ3ooQtqWR1fhaKZ-Jiva2gC94GVrYRuEEdfkqWVNBHZFGCIYSZAAh3cA')
     process = api.convert({
         "inputformat": oldFormat,
         "outputformat": "png",
         "input": "upload",
         "filename": "user." + oldFormat,
-        "file": open(filedir, 'rb')})
+        "file": open(fileDir, 'rb')})
     process.wait()
     process.download('./frontend/static/pptzip/' +
                      str(user.id) + 'and' + str(user.file_num) + '.zip')
-    os.remove(filedir)
+    os.remove(fileDir)
     return
 
 
