@@ -1,55 +1,67 @@
 <template>
-    <div class="live-room">
-        <div class="header">
-            <home-page-header></home-page-header>
-        </div>
-        <div class="navigation">
-            <div class="welcome">
-                <Icon type="university"></Icon>
-                <label>欢迎进入直播间 !</label>
+    <div id="bg">
+        <div class="live-room">
+            <div class="header">
+                <home-page-header></home-page-header>
             </div>
-            <div class="navigation-center">
-                <label class="information">老师姓名：{{ this.teacherName }}</label>
-                <label class="information">房间ID:{{ this.roomId }}</label>
-                <label class="information">房间名：{{ this.roomName }}</label>
-                <label class="information">在线人数：{{ this.studentNum }}</label>
-            </div>
-            <div class="navigation-right">
-                <template v-if="this.teacherName === this.username">
-                    <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
-                </template>
-            </div>
-        </div>
-        <div class="layout-header" id="teaching">
-            <div class="teaching-tools">
-                <div class="choose-current">
-                    <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
-                        <Button type="ghost">
-                            教学区
-                            <Icon type="arrow-right-b"></Icon>
-                        </Button>
-                        <Dropdown-menu slot="list">
-                            <Dropdown-item name="WhiteBoard">白板</Dropdown-item>
-                            <Dropdown-item name="CodeEditor">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="FileDisplay">课件展示</Dropdown-item>
-                        </Dropdown-menu>
-                    </Dropdown>
+            <div class="navigation">
+                <div class="welcome">
+                    <Icon type="university"></Icon>
+                    <label>欢迎进入直播间 !</label>
                 </div>
-                <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
-                </keep-alive>
-            </div>
-            <div class="composite-container">
-                <div class="video-live">
-                    <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></video-display>
+                <div class="navigation-center">
+                    <label class="information">老师姓名：{{ this.teacherName }}</label>
+                    <label class="information">房间ID:{{ this.roomId }}</label>
+                    <label class="information">房间名：{{ this.roomName }}</label>
+                    <label class="information">在线人数：{{ this.studentNum }}</label>
                 </div>
-                <div class="chatroom">
-                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username"></chat-board>
+                <div class="navigation-right">
+                    <template v-if="this.teacherName === this.username">
+                        <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
+                    </template>
                 </div>
             </div>
-        </div>
-        <div>
-            <page-footer></page-footer>
+            <div class="layout-header" id="teaching">
+                <div id="left-container">
+                    <keep-alive>
+                        <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
+                    </keep-alive>
+                </div>
+                <div id="buttons-panel">
+                    <template v-if="this.hidden === true">
+                        <Tooltip content="弹出右边窗口" placement="right-start">
+                            <Button id="pop-up-button" type="ghost" @click="popUp">
+                                <Icon type="ios-redo"></Icon>
+                            </Button>
+                        </Tooltip>
+                    </template>
+                    <template v-else>
+                        <Tooltip content="切换位置" placement="right-start">
+                            <Button id="swap-button" type="ghost" @click="swap">
+                                <Icon type="arrow-swap"></Icon>
+                            </Button>
+                        </Tooltip><br>
+                        <Tooltip content="隐藏右边窗口" placement="right-start">
+                            <Button id="hide-button" type="ghost" @click="hide">
+                                <Icon type="ios-undo"></Icon>
+                            </Button>
+                        </Tooltip>
+                    </template>
+                </div>
+                <div id="right-container">
+                    <div id="right-up-container">
+                        <keep-alive>
+                            <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
+                        </keep-alive>
+                    </div>
+                    <div id="chatroom">
+                        <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-hidden="this.hidden"></chat-board>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <page-footer></page-footer>
+            </div>
         </div>
     </div>
 </template>
@@ -59,11 +71,9 @@
 import * as io from 'socket.io-client'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
-import FileDisplay from './FileDisplay'
-import ChatBoard from './ChatBoard'
-import CodeEditor from './CodeEditor'
 import VideoDisplay from './VideoDisplay'
-import WhiteBoard from './WhiteBoard'
+import ChatBoard from './ChatBoard'
+import TeachingTools from './TeachingTools'
 
 export default {
     name: 'live-room',
@@ -71,24 +81,24 @@ export default {
         HomePageHeader,
         PageFooter,
         ChatBoard,
-        FileDisplay,
-        CodeEditor,
         VideoDisplay,
-        WhiteBoard
+        TeachingTools
     },
     data: function () {
         return {
-            currentTools: 'WhiteBoard',
             roomId: -1,
             roomName: '',
             teacherName: '',
             studentNum: '',
             username: '',
-            imgNum: '',
             teachingWidth: 100,
             teachingHeight: 100,
             whiteBoardWidth: 100,
-            whiteBoardHeight: 100
+            whiteBoardHeight: 100,
+            leftComponent: 'TeachingTools',
+            rightComponent: 'VideoDisplay',
+            hidden: false,
+            socket: ''
         }
     },
     created: function () {
@@ -99,9 +109,41 @@ export default {
         this.getUsername()
         window.setInterval(this.changeNum, 5000)
     },
+    mounted: function () {
+        let self = this
+        self.teachingWidth = document.getElementById('teaching').clientWidth
+        self.teachingHeight = document.getElementById('teaching').clientHeight
+        self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
+        self.whiteBoardHeight = self.teachingHeight - 35
+        window.onresize = function () {
+            self.teachingWidth = document.getElementById('teaching').clientWidth
+            self.teachingHeight = document.getElementById('teaching').clientHeight
+            self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
+            self.whiteBoardHeight = self.teachingHeight - 35
+        }
+    },
     methods: {
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
+        },
+        hide: function () {
+            let rightContent = document.getElementById('right-up-container')
+            rightContent.style.display = 'none'
+            this.hidden = true
+            document.getElementById('chatroom').style.marginTop = '0'
+            document.getElementById('chatroom').style.height = '100%'
+        },
+        popUp: function () {
+            let rightContent = document.getElementById('right-up-container')
+            rightContent.style.display = 'block'
+            this.hidden = false
+            document.getElementById('chatroom').style.marginTop = '2%'
+            document.getElementById('chatroom').style.height = '56%'
+        },
+        swap: function () {
+            let tmp = this.leftComponent
+            this.leftComponent = this.rightComponent
+            this.rightComponent = tmp
         },
         changeNum: function () {
             if (this.username === this.teacherName) {
@@ -121,12 +163,6 @@ export default {
         },
         getNum: function (count) {
             this.studentNum = count
-        },
-        changeCurrent: function (name) {
-            this.socket.emit('message', {
-                'type': 'changeComponents',
-                'name': name
-            }, this.roomId)
         },
         getRoomInfo: function () {
             fetch('/getRoomInfo/', {
@@ -168,29 +204,16 @@ export default {
                 })
             }
         }
-    },
-    mounted: function () {
-        let self = this
-        self.socket.on('message', function (data) {
-            self.currentTools = data['name']
-        })
-        self.teachingWidth = document.getElementById('teaching').clientWidth
-        self.teachingHeight = document.getElementById('teaching').clientHeight
-        self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-        self.whiteBoardHeight = self.teachingHeight - 35
-        window.onresize = function () {
-            self.teachingWidth = document.getElementById('teaching').clientWidth
-            self.teachingHeight = document.getElementById('teaching').clientHeight
-            self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-            self.whiteBoardHeight = self.teachingHeight - 35
-        }
     }
 }
 </script>
 
 <style scoped>
+#bg {
+    background: #f5f7f9;
+}
+
 .live-room {
-    border: 1px solid #d7dde4;
     background: #f5f7f9;
     position: relative;
     border-radius: 5px;
@@ -240,36 +263,39 @@ export default {
 .layout-header {
     width: 78%;
     height: 78%;
+    min-width: 800px;
     display: flex;
     margin-left: auto;
     margin-right: auto;
     margin-top: 110px;
 }
 
-.teaching-tools {
+#left-container {
     height: 100%;
     width: 68%;
-    border: solid;
     text-align: left;
     overflow: hidden;
 }
 
-.composite-container {
+#right-container {
     width: 30%;
     height: 100%;
-    margin-left: 2%;
 }
 
-.video-live {
-    height: 30%;
+#right-up-container {
     width: 100%;
-    border: solid;
 }
 
-.chatroom {
-    margin-top: 4%;
-    height: 68%;
+#chatroom {
+    margin-top: 2%;
+    height: 56%;
     width: 100%;
-    border: solid;
+}
+
+#swap-button,
+#pop-up-button,
+#hide-button {
+    height: 41px;
+    border: none;
 }
 </style>

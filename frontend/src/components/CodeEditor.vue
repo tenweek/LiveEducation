@@ -83,7 +83,7 @@ export default {
 
 <style scoped>
 .code-editor {
-    width: 670px;
-    height: 450px;
+    width: 100%;
+    height: auto;
 }
 </style>
