@@ -11,12 +11,20 @@
             </div>
         </div>
         <div class="control-panel">
-            <button @click="join"><Icon id="join" type="android-arrow-dropright-circle"></Icon></button>
+            <button @click="join">
+                <Icon id="join" type="android-arrow-dropright-circle"></Icon>
+            </button>
             <template v-if="this.username === this.teacherName">
-                <button @click="play" id="play"><Icon type="play"></Icon></button>
-                <button @click="stop" id="stop"><Icon type="stop"></Icon></button>
+                <button @click="play" id="play">
+                    <Icon type="play"></Icon>
+                </button>
+                <button @click="stop" id="stop">
+                    <Icon type="stop"></Icon>
+                </button>
             </template>
-            <button @click="showVideo" id="arrow"><Icon type="chevron-up"></Icon></button>
+            <button @click="showVideo" id="arrow">
+                <Icon type="chevron-up"></Icon>
+            </button>
         </div>
         <div id="video">
             <template v-if="this.username === this.teacherName">
@@ -26,7 +34,7 @@
                 <div id="agora-remote"></div>
             </template>
         </div>
-    </Card>>
+    </Card>
 </template>
 
 <script>
@@ -156,7 +164,8 @@ export default {
 </script>
 
 <style scoped>
-#agora-local, #agora-remote {
+#agora-local,
+#agora-remote {
     width: 100%;
     height: 100%;
     display: inline-block;

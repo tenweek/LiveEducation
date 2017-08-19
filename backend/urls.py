@@ -26,5 +26,7 @@ urlpatterns = [
     url(r'^upload/$', views.upload),
     url(r'^uploadFile/$', views.uploadFile),
     url(r'^getImg/$', views.getImg),
-    url(r'^getTeacherFileInfo/$', views.getTeacherFileInfo)
+    url(r'^getTeacherFileInfo/$', views.getTeacherFileInfo),
+    url(r'^startRecord/$', views.startRecord),
+    url(r'^endRecord/$', views.endRecord)
 ]

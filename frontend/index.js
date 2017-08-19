@@ -99,9 +99,13 @@ io.on('connection', function (socket) {
     // 开始直播信息
     socket.on('startLive', function (roomId) {
         console.log('start live')
+        let date = new Date()
+        const month = date.getMonth() + 1 > 10 ? String(date.getMonth() + 1) : '0' + String(date.getMonth() + 1)
+        const time = String(date.getFullYear()) + month + String(date.getDate())
+        console.log(time)
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
-        fs.open(path[roomId], 'a', (err, fd) => {
+        fs.open(String(path[roomId]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -117,6 +121,7 @@ io.on('connection', function (socket) {
                 fs.closeSync(fd)
             })
         })
+        io.to(roomId).emit('time', time)
         io.to(chatroom).emit('getStarted')
         io.to(whiteboard).emit('getStarted')
     })
@@ -132,7 +137,7 @@ io.on('connection', function (socket) {
                 'maxPage': data['maxPage']
             }
         }
-        fs.open(path[index], 'a', (err, fd) => {
+        fs.open(String(path[index]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -167,3 +172,4 @@ io.on('connection', function (socket) {
         }
     })
 });
+

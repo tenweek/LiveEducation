@@ -6,15 +6,42 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
 from .models import Room, User, RoomStudent
+from glob import glob
 import os
-
 import random
 import cloudconvert
 import zipfile
-import os
 import types
 import shutil
 # Create your views here.
+
+
+@csrf_exempt
+def startRecord(request):
+    req = simplejson.load(request)
+    channel = req['channel']
+    str = './backend/record/Recorder_local \
+        --appId "9b343e8aaaa144928e093b29513634e9" \
+        --uid 0 \
+        --channel "' + channel + '" \
+        --appliteDir "./backend/record/bin/" \
+        --channelProfile 1 \
+        --idle 30 \
+        --recordFileRootDir "./frontend/static/record/"'
+    os.system(str)
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def endRecord(request):
+    req = simplejson.load(request)
+    path = './frontend/static/record/' + \
+        req['time'] + '/' + str(req['channel']) + '*'
+    command = 'python ./backend/video_convert.py ' + path
+    os.system(command)
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt

@@ -59,6 +59,7 @@
                     </div>
                 </div>
             </div>
+            <button @click="endLive">sss</button>
             <div>
                 <page-footer></page-footer>
             </div>
@@ -98,7 +99,8 @@ export default {
             leftComponent: 'TeachingTools',
             rightComponent: 'VideoDisplay',
             hidden: false,
-            socket: ''
+            socket: '',
+            startTime: ''
         }
     },
     created: function () {
@@ -121,10 +123,38 @@ export default {
             self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
             self.whiteBoardHeight = self.teachingHeight - 35
         }
+        self.socket.on('time', function (time) {
+            self.startTime = time
+        })
     },
     methods: {
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
+            fetch('/startRecord/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'channel': this.roomId
+                })
+            }).then((response) => response.json()).then((obj) => { })
+        },
+        endLive: function () {
+            fetch('/endRecord/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'channel': this.roomId,
+                    'time': this.startTime
+                })
+            }).then((response) => response.json()).then((obj) => { })
         },
         hide: function () {
             let rightContent = document.getElementById('right-up-container')
