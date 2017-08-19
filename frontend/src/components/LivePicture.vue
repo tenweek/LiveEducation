@@ -2,7 +2,7 @@
     <div class="picture">
         <a @click="liveRoom">
             <div class="for-img">
-                <img src="../assets/papi.jpg" width="100%">
+                <img :src="this.userImg" width="100%">
             </div>
             <label id="information-room-name">房间名:{{ this.roomName }}</label>
             <br>
@@ -18,7 +18,7 @@
 import myMsg from './../warning.js'
 export default {
     name: 'live-picture',
-    props: ['roomName', 'teacherName', 'studentNum', 'id'],
+    props: ['roomName', 'teacherName', 'studentNum', 'id', 'userImg'],
     components: {
     },
     data: function () {

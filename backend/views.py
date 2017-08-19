@@ -6,9 +6,116 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
 from .models import Room, User, RoomStudent
+import os
 
 import random
+import cloudconvert
+import zipfile
+import os
+import types
+import shutil
 # Create your views here.
+
+
+@csrf_exempt
+def fileFormat(file):
+    oldFormat = "ppt"
+    if file.name[-1] == 'x':
+        oldFormat = "pptx"
+    elif file.name[-1] == 'y':
+        oldFormat = "key"
+    elif file.name[-1] == 'f':
+        oldFormat = "pdf"
+    else:
+        oldFormat = "ppt"
+    return oldFormat
+
+
+@csrf_exempt
+def convertFile(user, file):
+    filedir = './' + str(user.user_file)
+    oldFormat = fileFormat(file)
+    api = cloudconvert.Api(
+        '7AoDsm4GZV8LpmYqZHESw4GKqDo1DcZ3ooQtqWR1fhaKZ-Jiva2gC94GVrYRuEEdfkqWVNBHZFGCIYSZAAh3cA')
+    process = api.convert({
+        "inputformat": oldFormat,
+        "outputformat": "png",
+        "input": "upload",
+        "filename": "user." + oldFormat,
+        "file": open(filedir, 'rb')})
+    process.wait()
+    process.download('./frontend/static/pptzip/' +
+                     str(user.id) + 'and' + str(user.file_num) + '.zip')
+    os.remove(filedir)
+    return
+
+
+@csrf_exempt
+def getTeacherFileInfo(request):
+    req = simplejson.load(request)
+    user = User.objects.get(name=req['name'])
+    pageNum = sum([len(x) for _, _, x in os.walk(
+        './frontend/static/ppt/' + str(user.id) + 'and' + str(user.file_num))])
+    response = JsonResponse({
+        'teacherId': user.id,
+        'fileNum': user.file_num,
+        'maxPage': pageNum
+    })
+    return response
+
+
+# need teacherName and roomId
+# change the ppt name to teachername+roomid
+@csrf_exempt
+def closeRoomForFile(request):
+    req = simplejson.load(request)
+    oldDir = './frentend/static/ppt/' + req['teacherName']
+    newDir = './frentend/static/ppt/' + req['teacherName'] + req['roomId']
+    response = JsonResponse({})
+    return response
+
+
+# need teachername and roomid
+# will delete the ppt when kill the videoRoom
+@csrf_exempt
+def removeFile(request):
+    req = simplejson.load(request)
+    dir = './frontend/static/ppt/' + req['teacherName'] + req['roomId']
+    shutil.rmtree(dir)
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def getImg(request):
+    req = simplejson.load(request)
+    user = User.objects.get(username=req['account'])
+    response = JsonResponse({'route': str(user.user_img)[8:]})
+    return response
+
+
+@csrf_exempt
+def uploadFile(request):
+    file = request.FILES.get('file')
+    account = request.COOKIES.get('userAccount')
+    user = User.objects.get(username=account)
+    user.user_file = file
+    user.file_num += 1
+    user.save()
+    convertFile(user, file)
+    zip_file = zipfile.ZipFile(
+        './frontend/static/pptzip/' + str(user.id) + 'and' + str(user.file_num) + '.zip')
+    if os.path.isdir('./frontend/static/ppt/' + str(user.id) + 'and' + str(user.file_num)):
+        pass
+    else:
+        os.mkdir('./frontend/static/ppt/' +
+                 str(user.id) + 'and' + str(user.file_num))
+    for names in zip_file.namelist():
+        zip_file.extract(names, './frontend/static/ppt/' +
+                         str(user.id) + 'and' + str(user.file_num))
+    zip_file.close()
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt
@@ -17,6 +124,20 @@ def changeNum(request):
     room = Room.objects.get(id=req['roomId'])
     room.student_num = req['studentNum']
     room.save()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def upload(request):
+    uploadFile = request.FILES.get('myfile')
+    account = request.COOKIES.get('userAccount')
+    uploadUser = User.objects.get(username=account)
+    oldImg = uploadUser.user_img
+    uploadUser.user_img = uploadFile
+    uploadUser.save()
+    if oldImg != '':
+        os.remove('./' + str(oldImg))
     response = JsonResponse({})
     return response
 
@@ -141,7 +262,10 @@ def createRoom(request):
     roomName = req['roomName']
     authId = req['account']
     teacher = User.objects.get(username=authId)
-    Room.objects.create(teacher=teacher, room_name=roomName)
+    room = Room.objects.create(teacher=teacher, room_name=roomName)
+    path = "./frontend/static/" + str(room.id)
+    os.makedirs(path)
+    os.mknod(path + "/" + str(room.id) + ".txt")
     response = JsonResponse({})
     return response
 
@@ -155,10 +279,12 @@ def getRooms(request):
         rooms = Room.objects.order_by('-create_time')
     myroom = []
     for room in rooms:
+        userImg = str(room.teacher.user_img)
         myroom.append({'roomName': room.room_name,
                        'teacherName': room.teacher.name,
                        'id': room.id,
-                       'studentNum': room.student_num})
+                       'studentNum': room.student_num,
+                       'userImg': userImg[8:]})
     response = JsonResponse(
         {'rooms': myroom})
     return response

@@ -13,7 +13,7 @@
             </div>
             <div class="list-picture">
                 <div  v-for="room in rooms" class="every-picture">
-                    <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" class="live-picture">
+                    <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" :userImg="room.userImg" class="live-picture">
                     </live-picture>
                 </div>
             </div>
