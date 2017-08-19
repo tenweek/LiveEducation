@@ -1,14 +1,16 @@
 <template>
-    <div class="picture">
-        <a @click="recordRoom">
-            <div class="for-img">
-                <img src="./../assets/record.jpg" width="100%">
-            </div>
-            <label id="information-room-name">房间名</label>
-            <br>
-            <label id="information-teacher-name">主讲教师</label>
-        </a>
-    </div>
+    <Card id="record-picture" padding="8">
+        <div class="picture">
+            <a @click="recordRoom">
+                <div class="for-img">
+                    <img src="./../assets/record.jpg" width="100%">
+                </div>
+                <label id="information-room-name">房间名</label>
+                <br>
+                <label id="information-teacher-name">主讲教师</label>
+            </a>
+        </div>
+    </Card>
 </template>
 
 <script>
@@ -45,17 +47,16 @@ export default {
 
 <style scoped>
 .picture {
-    background: #efefef;
-    width: 160px;
+    width: 100%;
     height: 150px;
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 14px;
     text-align: left;
 }
 
 .for-img {
     width: 100%;
-    height: 105px;
+    height: auto;
 }
 
 #information-room-name {
