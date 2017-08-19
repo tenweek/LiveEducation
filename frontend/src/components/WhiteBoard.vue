@@ -365,32 +365,35 @@ export default {
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
             } else if (data.action === 'mousemove') {
-                if (this.originPoint === null) {
-                    return
-                }
-                if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                    this.originPoint = null
-                    this.lastImageData = null
-                    this.pointer += 1
-                    this.allDataUrl.push(this.canvas.toDataURL())
-                    return
-                }
-                const context = this.context
-                const [ox, oy] = this.originPoint
-                context.strokeStyle = this.colorBorder
-                context.lineWidth = this.size
-                context.beginPath()
-                context.moveTo(ox, oy)
-                context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
-                context.stroke()
-                context.closePath()
-                this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                this.penMousemove(data)
             } else if (data.action === 'mouseup') {
                 this.originPoint = null
                 this.lastImageData = null
                 this.pointer += 1
                 this.allDataUrl.push(this.canvas.toDataURL())
             }
+        },
+        penMousemove: function (data) {
+            if (this.originPoint === null) {
+                return
+            }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.pointer += 1
+                this.allDataUrl.push(this.canvas.toDataURL())
+                return
+            }
+            const context = this.context
+            const [ox, oy] = this.originPoint
+            context.strokeStyle = this.colorBorder
+            context.lineWidth = this.size
+            context.beginPath()
+            context.moveTo(ox, oy)
+            context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
+            context.stroke()
+            context.closePath()
+            this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
         },
         eraser: function (data) {
             switch (data.action) {
@@ -399,20 +402,7 @@ export default {
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
-                        return
-                    }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                        this.originPoint = null
-                        this.lastImageData = null
-                        this.allDataUrl.push(this.canvas.toDataURL())
-                        this.pointer += 1
-                        return
-                    }
-                    const context = this.context
-                    const [ox, oy] = this.originPoint
-                    context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                    this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+                    this.eraserMousemove(data)
                     break
                 case 'mouseup':
                     this.originPoint = null
@@ -421,6 +411,22 @@ export default {
                     this.pointer += 1
                     break
             }
+        },
+        eraserMousemove: function (data) {
+            if (this.originPoint === null) {
+                return
+                }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return
+            }
+            const context = this.context
+            const [ox, oy] = this.originPoint
+            context.clearRect(ox, oy, this.size * 10, this.size * 10)
+            this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
         },
         line: function (data) {
             this.colorBorder = data.color
@@ -430,26 +436,7 @@ export default {
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
-                    if (this.originPoint == null) {
-                        return
-                    }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                        this.originPoint = null
-                        this.lastImageData = null
-                        this.allDataUrl.push(this.canvas.toDataURL())
-                        this.pointer += 1
-                        return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    context.strokeStyle = this.colorBorder
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.moveTo(ox, oy)
-                    context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
-                    context.stroke()
-                    context.closePath()
+                    this.lineMousemove(data)
                     break
                 case 'mouseup':
                     this.originPoint = null
@@ -458,6 +445,28 @@ export default {
                     this.pointer += 1
                     break
             }
+        },
+        lineMousemove: function (data) {
+            if (this.originPoint == null) {
+                return
+            }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return
+            }
+            const context = this.context
+            context.putImageData(this.lastImageData, 0, 0)
+            const [ox, oy] = this.originPoint
+            context.strokeStyle = this.colorBorder
+            context.lineWidth = this.size
+            context.beginPath()
+            context.moveTo(ox, oy)
+            context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
+            context.stroke()
+            context.closePath()
         },
         rectangle: function (data) {
             this.colorBorder = data.colorBorder
@@ -469,32 +478,7 @@ export default {
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
-                        return
-                    }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                        this.originPoint = null
-                        this.lastImageData = null
-                        this.allDataUrl.push(this.canvas.toDataURL())
-                        this.pointer += 1
-                        return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.rect(ox, oy, dx, dy)
-                    if (this.fill === true) {
-                        context.fillStyle = this.colorFill
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.colorBorder
-                        context.stroke()
-                    }
-                    context.closePath()
+                    this.rectangleMousemove(data)
                     break
                 case 'mouseup':
                     this.originPoint = null
@@ -503,6 +487,35 @@ export default {
                     this.pointer += 1
                     break
             }
+        },
+        rectangleMousemove: function (data) {
+            // TODO:拆分函数
+            if (this.originPoint === null) {
+                return
+            }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return
+            }
+            const context = this.context
+            context.putImageData(this.lastImageData, 0, 0)
+            const [ox, oy] = this.originPoint
+            const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
+            context.lineWidth = this.size
+            context.beginPath()
+            context.rect(ox, oy, dx, dy)
+            if (this.fill === true) {
+                context.fillStyle = this.colorFill
+                context.fill()
+            }
+            if (this.border === true) {
+                context.strokeStyle = this.colorBorder
+                context.stroke()
+            }
+            context.closePath()
         },
         circle: function (data) {
             this.colorBorder = data.colorBorder
@@ -514,7 +527,19 @@ export default {
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    this.circleMousemove(data)
+                    break
+                case 'mouseup':
+                    this.originPoint = null
+                    this.lastImageData = null
+                    this.allDataUrl.push(this.canvas.toDataURL())
+                    this.pointer += 1
+                    break
+            }
+        },
+        circleMousemove: function (data) {
+            // TODO:拆分函数
+            if (this.originPoint === null) {
                         return
                     }
                     if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
@@ -541,14 +566,6 @@ export default {
                         context.stroke()
                     }
                     context.closePath()
-                    break
-                case 'mouseup':
-                    this.originPoint = null
-                    this.lastImageData = null
-                    this.allDataUrl.push(this.canvas.toDataURL())
-                    this.pointer += 1
-                    break
-            }
         },
         ellipse: function (data) {
             this.colorBorder = data.colorBorder
@@ -560,7 +577,19 @@ export default {
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
                 case 'mousemove':
-                    if (this.originPoint === null) {
+                    this.ellipseMousemove(data)
+                    break
+                case 'mouseup':
+                    this.originPoint = null
+                    this.lastImageData = null
+                    this.allDataUrl.push(this.canvas.toDataURL())
+                    this.pointer += 1
+                    break
+            }
+        },
+        ellipseMousemove: function (data) {
+            // TODO:拆分函数
+            if (this.originPoint === null) {
                         return
                     }
                     if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
@@ -590,14 +619,6 @@ export default {
                         context.stroke()
                     }
                     context.closePath()
-                    break
-                case 'mouseup':
-                    this.originPoint = null
-                    this.lastImageData = null
-                    this.allDataUrl.push(this.canvas.toDataURL())
-                    this.pointer += 1
-                    break
-            }
         },
         boardClear: function (data) {
             this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
@@ -636,77 +657,53 @@ export default {
             }
         },
         whiteBoardDoing: function (data) {
-            switch (data.type) {
-                case 'pen':
-                    this.pen(data)
-                    break
-                case 'eraser':
-                    this.eraser(data)
-                    break
-                case 'line':
-                    this.line(data)
-                    break
-                case 'rectangle':
-                    this.rectangle(data)
-                    break
-                case 'circle':
-                    this.circle(data)
-                    break
-                case 'ellipse':
-                    this.ellipse(data)
-                    break
-                case 'clear':
-                    this.boardClear(data)
-                    break
-                case 'textField':
-                    this.textBox(data)
-                    break
-                case 'drawText':
-                    this.font(data)
-                    break
-                case 'undo':
-                    this.boardUndo(data)
-                    break
+            if (data.type === 'pen') {
+                this.pen(data)
+            } else if (data.type === 'eraser') {
+                this.eraser(data)
+            } else if (data.type === 'line') {
+                this.line(data)
+            } else if (data.type === 'rectangle') {
+                this.rectangle(data)
+            } else if (data.type === 'circle') {
+                this.circle(data)
+            } else if (data.type === 'ellipse') {
+                this.ellipse(data)
+            } else if (data.type === 'clear') {
+                this.clear(data)
+            } else if (data.type === 'textField') {
+                this.textBox(data)
+            } else if (data.type === 'drawText') {
+                this.font(data)
+            } else if (data.type === 'undo') {
+                this.boardUndo(data)
             }
         },
         buttonDoing: function (data) {
-            switch (data.type) {
-                case 'eraser':
-                    this.type = 'eraser'
-                    break
-                case 'pen':
-                    this.type = 'pen'
-                    break
-                case 'text':
-                    this.type = 'text'
-                    break
-                case 'line':
-                    this.type = 'line'
-                    break
-                case 'rectangle':
-                    this.type = 'rectangle'
-                    break
-                case 'circle':
-                    this.type = 'circle'
-                    break
-                case 'ellipse':
-                    this.type = 'ellipse'
-                    break
-                case 'border':
-                    this.border = !this.border
-                    break
-                case 'fill':
-                    this.fill = !this.fill
-                    break
-                case 'sizeLarge':
-                    this.size = 5
-                    break
-                case 'sizeMiddle':
-                    this.size = 3
-                    break
-                case 'sizeSmall':
-                    this.size = 1
-                    break
+            if (data.type === 'eraser') {
+                this.type = 'eraser'
+            } else if (data.type === 'pen') {
+                this.type = 'pen'
+            } else if (data.type === 'text') {
+                this.type = 'text'
+            } else if (data.type === 'line') {
+                this.type = 'line'
+            } else if (data.type === 'rectangle') {
+                this.type = 'rectangle'
+            } else if (data.type === 'circle') {
+                this.type = 'circle'
+            } else if (data.type === 'ellipse') {
+                this.type = 'ellipse'
+            } else if (data.type === 'border') {
+                this.border = !this.border
+            } else if (data.type === 'fill') {
+                this.fill = !this.fill
+            } else if (data.type === 'sizeLarge') {
+                this.size = 5
+            } else if (data.type === 'sizeMiddle') {
+                this.size = 3
+            } else if (data.type === 'sizeSmall') {
+                this.size = 1
             }
         },
         joinDoing: function () {
