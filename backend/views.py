@@ -18,11 +18,12 @@ import shutil
 
 
 @csrf_exempt
-def teaCloseLiveRoom(request):
+def closeLiveRoom(request):
     req=simplejson.load(request)
     teacherRoom = Room.objects.get(id=req['roomId'])
     RoomStudent.objects.filter(room=teacherRoom).delete()
-    Video.objects.create(teacher=teacherRoom.teacher, room_name=teacherRoom.room_name, live_room_id=teacherRoom.id, video_img=str(teacherRoom.teacher.user_img.name), file_num=teacherRoom.teacher.file_num)
+    print(str(teacherRoom.teacher.user_img)[22:])
+    VideoRoom.objects.create(teacher=teacherRoom.teacher, room_name=teacherRoom.room_name, live_room_id=teacherRoom.id, video_img=str(teacherRoom.teacher.user_img)[22:], file_num=teacherRoom.teacher.file_num)
     oldDir = "./frontend/static/ppt/" + str(teacherRoom.teacher.id) + "and"
     if teacherRoom.teacher.file_num != 0:
         for fileNum in range(1, teacherRoom.teacher.file_num + 1):
@@ -31,6 +32,8 @@ def teaCloseLiveRoom(request):
     teacherRoom.teacher.user_file = ''
     teacherRoom.teacher.file_num = 0
     Room.objects.filter(id=req['roomId']).delete()
+    response = JsonResponse({})
+    return response
 
 
 @csrf_exempt
@@ -41,6 +44,7 @@ def killVideoRoom(roomId):
         for file in range(1, videoRoom.file_num+1):
             shutil.rmtree("./frontend/static/ppt/" + str(videoRoom.teacher.id) + "and" + str(file) + "and" + str(videoRoom.live_room_id))
     VideoRoom.objects.filter(live_room_id=roomId).delete()
+    return
 
 
 @csrf_exempt

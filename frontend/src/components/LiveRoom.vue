@@ -15,8 +15,11 @@
                 <label class="information">在线人数：{{ this.studentNum }}</label>
             </div>
             <div class="navigation-right">
-                <template v-if="this.teacherName === this.username">
+                <template v-if="(this.teacherName === this.username) && !this.started">
                     <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
+                </template>
+                <template v-else-if="this.started">
+                    <Button @click="closeLive" type="primary" shape="circle" size="small">关闭直播</Button>
                 </template>
             </div>
         </div>
@@ -84,11 +87,11 @@ export default {
             teacherName: '',
             studentNum: '',
             username: '',
-            imgNum: '',
             teachingWidth: 100,
             teachingHeight: 100,
             whiteBoardWidth: 100,
-            whiteBoardHeight: 100
+            whiteBoardHeight: 100,
+            started: false
         }
     },
     created: function () {
@@ -100,8 +103,24 @@ export default {
         window.setInterval(this.changeNum, 5000)
     },
     methods: {
+        closeLive: function () {
+            fetch('/closeLiveRoom/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomId': this.roomId
+                })
+            }).then((response) => response.json()).then((obj) => {
+                this.$Message.warning("网页将于三秒后关闭")
+            })
+        },
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
+            this.started = true
         },
         changeNum: function () {
             if (this.username === this.teacherName) {
