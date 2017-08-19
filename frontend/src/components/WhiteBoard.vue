@@ -36,6 +36,18 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 实现教学区白板功能，
+ * 作为子组件插入直播间页面。
+ * 老师端可以对白板进行操作，
+ * 可以选择画笔、直线、几何图形等进行画图，
+ * 有填充、大小选择、橡皮擦、撤销等功能。
+ * 学生端不能对白板操作，
+ * 只能同步看到老师的操作。
+ *
+ * @module WhiteBoard
+ * @class WhiteBoard
+ */
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 const MIN = 0.005
@@ -113,6 +125,11 @@ export default {
         })
     },
     methods: {
+        /**
+         * 初始化数据，在mounted中调用
+         * 
+         * @method initData
+         */
         initData: function () {
             this.context = this.$refs.board.getContext('2d')
             this.canvas = document.getElementById('canvas')
@@ -121,6 +138,12 @@ export default {
             this.socket = io.connect('http://localhost:9000')
             this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
         },
+        /**
+         * 当选择功能为橡皮擦且size值变化时调用，
+         * 根据size的值改变橡皮擦光标的样式
+         *
+         * @method changeEraserCursor
+         */
         changeEraserCursor: function () {
             if (this.size === 1) {
                 this.canvas.style.cursor = "url('http://localhost:8000/static/eraserSmall.png'), default"
@@ -130,6 +153,15 @@ export default {
                 this.canvas.style.cursor = "url('http://localhost:8000/static/eraserLarge.png'), default"
             }
         },
+        /**
+         * 将用户输入到文本输入框中的文字画到白板上，
+         * 并且可以根据白板大小自动换行
+         * 
+         * @method drawLongText
+         * @param text 用户输入的文字
+         * @param beginX 输入文字坐标点的横坐标
+         * @param beginY 输入文字坐标点的纵坐标
+         */
         drawLongText: function (text, beginX, beginY) {
             let textLength = text.length
             let rowLength = this.teachingToolsWidth - beginX
@@ -152,6 +184,9 @@ export default {
                 newText.shift()
             }
         },
+        /**
+         * 用户（创建房间的老师）点击粗细
+         */
         changeSize: function (name) {
             if (this.teacherName !== this.username) {
                 return
