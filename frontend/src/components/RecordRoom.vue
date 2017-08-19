@@ -61,8 +61,12 @@ export default {
     },
     data: function () {
         return {
-            currentTools: 'WhiteBoardForRecord'
+            currentTools: 'WhiteBoardForRecord',
+            roomId: ''
         }
+    },
+    created: function () {
+        this.roomId = this.$route.params.id
     },
     mounted: function () {
         let self = this

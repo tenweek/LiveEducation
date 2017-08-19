@@ -27,29 +27,8 @@
                 </a>
             </div>
             <div class="list-picture">
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
+                <div v-for="videoRoom in videoRooms" class="every-picture">
+                    <record-picture :roomName="videoRoom.roomName" :teacherId="videoRoom.teacherId" :teacherName="videoRoom.teacherName" :liveId="videoRoom.liveId" :userImg="videoRoom.userImg" :videoId="videoRoom.videoId"></record-picture>
                 </div>
             </div>
         </div>
@@ -69,6 +48,7 @@ export default {
     name: 'home-page',
     created: function () {
         this.getRooms()
+        this.getVideoRooms()
     },
     components: {
         LivePicture,
@@ -79,10 +59,24 @@ export default {
     data: function () {
         return {
             rooms: [],
-            option: 1
+            option: 1,
+            videoRooms: []
         }
     },
     methods: {
+        getVideoRooms: function () {
+            fetch('/getVideoRooms/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'type': 2 })
+            }).then((response) => response.json()).then((obj) => {
+                this.videoRooms = obj.rooms
+            })
+        },
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',

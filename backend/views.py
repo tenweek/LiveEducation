@@ -18,6 +18,28 @@ import shutil
 
 
 @csrf_exempt
+def getVideoRooms(request):
+    req = simplejson.load(request)
+    if req['type'] == 1:
+        rooms = VideoRoom.objects.order_by('-create_time')[:8]
+    else:
+        rooms = VideoRoom.objects.order_by('-create_time')
+    myroom = []
+    for room in rooms:
+        userImg = room.video_img
+        myroom.append({
+            'roomName': room.room_name,
+            'teacherId': room.teacher.id,
+            'teacherName': room.teacher.name,
+            'liveId': room.live_room_id,
+            'videoId': room.id,
+            'userImg': userImg})
+    response = JsonResponse(
+        {'rooms': myroom})
+    return response
+
+
+@csrf_exempt
 def closeLiveRoom(request):
     req=simplejson.load(request)
     teacherRoom = Room.objects.get(id=req['roomId'])
@@ -31,6 +53,9 @@ def closeLiveRoom(request):
     teacherRoom.teacher.user_img = ''
     teacherRoom.teacher.user_file = ''
     teacherRoom.teacher.file_num = 0
+    teacherRoom.teacher.save()
+    print(teacherRoom.teacher.user_img)
+    print(teacherRoom.teacher.user_file)
     Room.objects.filter(id=req['roomId']).delete()
     response = JsonResponse({})
     return response

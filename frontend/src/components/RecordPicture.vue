@@ -2,11 +2,11 @@
     <div class="picture">
         <a @click="recordRoom">
             <div class="for-img">
-                <img src="./../assets/record.jpg" width="100%">
+                <img :src="this.route" width="100%">
             </div>
-            <label id="information-room-name">房间名</label>
+            <label id="information-room-name">房间名:{{ this.roomName }}</label>
             <br>
-            <label id="information-teacher-name">主讲教师</label>
+            <label id="information-teacher-name">主讲教师: {{ this.teacherName }}</label>
         </a>
     </div>
 </template>
@@ -15,10 +15,12 @@
 import myMsg from './../warning.js'
 export default {
     name: 'RecordPicture',
+    props: ['roomName', 'teacherId', 'teacherName', 'liveId', 'userImg', 'videoId'],
     components: {},
     data: function () {
         return {
-            canWork: false
+            canWork: false,
+            route: ''
         }
     },
     created: function () {
@@ -29,11 +31,12 @@ export default {
                 this.canWork = true
             }
         }
+        this.route = "/static/cover/" + this.userImg
     },
     methods: {
         recordRoom: function () {
             if (this.canWork) {
-                window.open('./#/record_room/')
+                window.open('./#/record_room/' + this.videoId)
             } else {
                 this.$Message.error(myMsg.account['loginNeeded'])
             }

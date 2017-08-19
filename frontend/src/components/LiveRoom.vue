@@ -16,8 +16,11 @@
                     <label class="information">在线人数：{{ this.studentNum }}</label>
                 </div>
                 <div class="navigation-right">
-                    <template v-if="this.teacherName === this.username">
+                    <template v-if="(this.teacherName === this.username) && !this.started">
                         <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
+                    </template>
+                    <template v-else-if="this.started">
+                        <Button @click="closeLive" type="primary" shape="circle" size="small">关闭直播</Button>
                     </template>
                 </div>
             </div>
@@ -98,7 +101,8 @@ export default {
             leftComponent: 'TeachingTools',
             rightComponent: 'VideoDisplay',
             hidden: false,
-            socket: ''
+            socket: '',
+            started: false
         }
     },
     created: function () {
