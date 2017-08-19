@@ -45,7 +45,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username', 'aboveHidden'],
+    props: ['roomId', 'teacherName', 'username', 'aboveIsHidden'],
     data: function () {
         return {
             showGagList: false,
@@ -251,7 +251,7 @@ export default {
         }
     },
     watch: {
-        aboveHidden: function (newVal, oldVal) {
+        aboveIsHidden: function (newVal, oldVal) {
             if (newVal) {
                 document.getElementById('messages').style.height = '90%'
                 document.getElementById('chat-board').style.height = '76vmin'
