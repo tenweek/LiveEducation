@@ -1,40 +1,42 @@
 <template>
-    <div class="chat-board">
-        <div id="messages">
-            <div v-for="message in messages">
-                <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
-                    <template v-if="message['isTeacher']">
-                        <button class="message-bold" @click="getName(message)">
-                            {{ message['msg'] }}
-                        </button>
-                    </template>
-                    <template v-else>
-                        <button class="message" @click="getName(message)">
-                            {{ message['msg'] }}
-                        </button>
-                    </template>
-                    <Dropdown-menu id="show" slot="list">
-                        <Dropdown-item name="gag">禁言</Dropdown-item>
-                        <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
-                        <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
-                        <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
-                        <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
-                    </Dropdown-menu>
-                </Dropdown>
+    <Card id="chatboard-card">
+        <div id="chat-board">
+            <div id="messages">
+                <div v-for="message in messages">
+                    <Dropdown class="set-left" trigger="click" @on-click="teacherDoing">
+                        <template v-if="message['isTeacher']">
+                            <button class="message-bold" @click="getName(message)">
+                                {{ message['msg'] }}
+                            </button>
+                        </template>
+                        <template v-else>
+                            <button class="message" @click="getName(message)">
+                                {{ message['msg'] }}
+                            </button>
+                        </template>
+                        <Dropdown-menu id="show" slot="list">
+                            <Dropdown-item name="gag">禁言</Dropdown-item>
+                            <Dropdown-item name="gagAll">全局禁言</Dropdown-item>
+                            <Dropdown-item name="allowSpeak">单人解禁</Dropdown-item>
+                            <Dropdown-item name="allowAllSpeak">全局解禁</Dropdown-item>
+                            <Dropdown-item name="kickOut">踢出房间</Dropdown-item>
+                        </Dropdown-menu>
+                    </Dropdown>
+                </div>
             </div>
+            <Input v-model="msgInput">
+            <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
+            </Input>
+            <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
+                <label>请选择您要解除禁言的对象</label>
+                <br>
+                <br>
+                <Checkbox-group v-model="speakList">
+                    <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
+                </Checkbox-group>
+            </Modal>
         </div>
-        <Input v-model="msgInput">
-        <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
-        </Input>
-        <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
-            <label>请选择您要解除禁言的对象</label>
-            <br>
-            <br>
-            <Checkbox-group v-model="speakList">
-                <Checkbox v-for="user in gagList" :label="user">{{ user }}</Checkbox>
-            </Checkbox-group>
-        </Modal>
-    </div>
+    </Card>
 </template>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -43,7 +45,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'aboveHidden'],
     data: function () {
         return {
             showGagList: false,
@@ -247,6 +249,17 @@ export default {
                 this.resetList()
             })
         }
+    },
+    watch: {
+        aboveHidden: function (newVal, oldVal) {
+            if (newVal) {
+                document.getElementById('messages').style.height = '90%'
+                document.getElementById('chat-board').style.height = '76vmin'
+            } else {
+                document.getElementById('messages').style.height = '87%'
+                document.getElementById('chat-board').style.height = '40vmin'
+            }
+        }
     }
 }
 </script>
@@ -256,9 +269,13 @@ export default {
     overflow: hidden;
 }
 
-.chat-board {
-    width: 100%;
+#chatboard-card {
     height: 100%;
+}
+
+#chat-board {
+    width: 100%;
+    height: 40vmin;
     position: relative;
 }
 
@@ -295,6 +312,6 @@ export default {
 
 #messages {
     overflow: auto;
-    height: 91%;
+    height: 87%;
 }
 </style>

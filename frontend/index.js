@@ -29,7 +29,7 @@ io.on('connection', function (socket) {
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
     socket.on('joinTest', function (roomId) {
-        console.log('聊天室加入')
+        console.log('录播室加入')
         socket.join(roomId)
         // 像聊天室打印信息
         const rl = readline.createInterface({
@@ -45,11 +45,19 @@ io.on('connection', function (socket) {
                     io.to(roomId).emit('chatroom', json)
                 }, json['time'] - startTime)
             } else if (json['type'] === 'file') {
-                console.log('file')
+                setTimeout(function () {
+                    io.to(roomId).emit('filedisplay', json)
+                }, json['time'] - startTime)
             } else if (json['type'] === 'code') {
                 console.log('code')
+            } else if (json['type'] === 'changeComponents') {
+                setTimeout(function () {
+                    io.to(roomId).emit('changeCurrent', json)
+                }, json['time'] - startTime)
             } else {
-                console.log('whiteboard')
+                setTimeout(function () {
+                    io.to(roomId).emit('whiteboard', json)
+                }, json['time'] - startTime)
             }
         })
     })

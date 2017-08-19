@@ -24,6 +24,9 @@
                         </Dropdown-menu>
                     </Dropdown>
                 </div>
+                <keep-alive>
+                    <component :is="currentTools" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
+                </keep-alive>
             </div>
             <div class="composite-container">
                 <div class="video-live"></div>
@@ -38,20 +41,37 @@
     </div>
 </template>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
+import FileDisplayForRecord from './FileDisplayForRecord'
+import WhiteBoardForRecord from './WhiteBoardForRecord'
+import * as io from 'socket.io-client'
 
 export default {
     name: 'record-room',
     components: {
         HomePageHeader,
         PageFooter,
-        ChatBoardForRecord
+        ChatBoardForRecord,
+        FileDisplayForRecord,
+        WhiteBoardForRecord
     },
-    data: function () { },
-    created: function () { }
+    data: function () {
+        return {
+            currentTools: 'WhiteBoardForRecord'
+        }
+    },
+    mounted: function () {
+        let self = this
+        self.socket = io.connect('http://localhost:9000')
+        self.socket.emit('joinTest', 888)
+        self.socket.on('changeCurrent', function (data) {
+            self.currentTools = data['name'] + 'ForRecord'
+        })
+    }
 }
 </script>
 
