@@ -15,7 +15,7 @@
                 </Dropdown>
             </div>
             <keep-alive>
-                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.teachingToolsWidth" :teaching-tools-height="this.teachingToolsHeight"></component>
+                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-width="this.containerWidth" :container-height="this.containerHeight"></component>
             </keep-alive>
         </div>
     </Card>
@@ -30,7 +30,7 @@ import CodeEditor from './CodeEditor'
 
 export default {
     name: 'teaching-tools',
-    props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
+    props: ['roomId', 'teacherName', 'username', 'containerWidth', 'containerHeight'],
     components: {
         FileDisplay,
         CodeEditor,

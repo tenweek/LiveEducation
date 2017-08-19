@@ -1,6 +1,6 @@
 <template>
     <div id="bg">
-        <div class="live-room">
+        <div id="live-room">
             <div class="header">
                 <home-page-header></home-page-header>
             </div>
@@ -17,14 +17,15 @@
                 </div>
                 <div class="navigation-right">
                     <template v-if="this.teacherName === this.username">
-                        <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
+                        <Button @click="startLive" type="primary" shape="circle" size="small" id="start-live-button">开始直播</Button>
+                        <Button type="error" shape="circle" size="small" id="stop-live-button">结束直播</Button>
                     </template>
                 </div>
             </div>
-            <div class="layout-header" id="teaching">
+            <div class="layout-header">
                 <div id="left-container">
                     <keep-alive>
-                        <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
+                        <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.leftContainerHeight" :container-width="this.leftContainerWidth"></component>
                     </keep-alive>
                 </div>
                 <div id="buttons-panel">
@@ -51,11 +52,11 @@
                 <div id="right-container">
                     <div id="right-up-container">
                         <keep-alive>
-                            <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
+                            <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.rightUpContainerHeight" :container-width="this.rightUpContainerWidth"></component>
                         </keep-alive>
                     </div>
                     <div id="chatroom">
-                        <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-hidden="this.hidden"></chat-board>
+                        <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden"></chat-board>
                     </div>
                 </div>
             </div>
@@ -91,14 +92,14 @@ export default {
             teacherName: '',
             studentNum: '',
             username: '',
-            teachingWidth: 100,
-            teachingHeight: 100,
-            whiteBoardWidth: 100,
-            whiteBoardHeight: 100,
             leftComponent: 'TeachingTools',
             rightComponent: 'VideoDisplay',
             hidden: false,
-            socket: ''
+            socket: '',
+            leftContainerHeight: 0,
+            leftContainerWidth: 0,
+            rightUpContainerHeight: 0,
+            rightUpContainerWidth: 0
         }
     },
     created: function () {
@@ -111,20 +112,28 @@ export default {
     },
     mounted: function () {
         let self = this
-        self.teachingWidth = document.getElementById('teaching').clientWidth
-        self.teachingHeight = document.getElementById('teaching').clientHeight
-        self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-        self.whiteBoardHeight = self.teachingHeight - 35
+        let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+        document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+        document.getElementById('live-room').style.height = unit + 'px'
+        self.leftContainerWidth = (1.33 * unit * 0.9 * 0.68)
+        self.leftContainerHeight = (0.78 * unit)
+        self.rightUpContainerWidth = (1.33 * unit * 0.9 * 0.3)
+        self.rightUpContainerHeight = (0.78 * unit * 0.3)
         window.onresize = function () {
-            self.teachingWidth = document.getElementById('teaching').clientWidth
-            self.teachingHeight = document.getElementById('teaching').clientHeight
-            self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-            self.whiteBoardHeight = self.teachingHeight - 35
+            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+            document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+            document.getElementById('live-room').style.height = unit + 'px'
+            self.leftContainerWidth = (1.33 * unit * 0.9 * 0.68)
+            self.leftContainerHeight = (0.78 * unit)
+            self.rightUpContainerWidth = (1.33 * unit * 0.9 * 0.3)
+            self.rightUpContainerHeight = (0.78 * unit * 0.3)
         }
     },
     methods: {
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
+            document.getElementById('start-live-button').style.display = 'none'
+            document.getElementById('stop-live-button').style.display = 'inline-block'
         },
         hide: function () {
             let rightContent = document.getElementById('right-up-container')
@@ -213,7 +222,7 @@ export default {
     background: #f5f7f9;
 }
 
-.live-room {
+#live-room {
     background: #f5f7f9;
     position: relative;
     border-radius: 5px;
@@ -222,6 +231,8 @@ export default {
     height: 100vmin;
     margin-left: auto;
     margin-right: auto;
+    min-height: 600px;
+    min-width: 800px;
 }
 
 .header {
@@ -256,12 +267,16 @@ export default {
     font-size: 15px;
 }
 
+#stop-live-button {
+    display: none;
+}
+
 .information {
     margin: 0 auto;
 }
 
 .layout-header {
-    width: 78%;
+    width: 90%;
     height: 78%;
     min-width: 800px;
     display: flex;
