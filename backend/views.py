@@ -146,24 +146,6 @@ def getTeacherFileInfo(request):
 
 
 @csrf_exempt
-def closeRoomForFile(request):
-    req = simplejson.load(request)
-    oldDir = './frentend/static/ppt/' + req['teacherName']
-    newDir = './frentend/static/ppt/' + req['teacherName'] + req['roomId']
-    response = JsonResponse({})
-    return response
-
-
-@csrf_exempt
-def removeFile(request):
-    req = simplejson.load(request)
-    dir = './frontend/static/ppt/' + req['teacherName'] + req['roomId']
-    shutil.rmtree(dir)
-    response = JsonResponse({})
-    return response
-
-
-@csrf_exempt
 def getImg(request):
     req = simplejson.load(request)
     user = User.objects.get(username=req['account'])
