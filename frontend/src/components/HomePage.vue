@@ -6,13 +6,13 @@
         <div class="list">
             <div class="list-hint">
                 <Icon type="university" class="icon-middle"></Icon>
-                <input type="text" class="live-broadcast" value="直播课堂" readonly="true" ></input>
+                <input type="text" class="live-broadcast" value="直播课堂" readonly="true"></input>
                 <a href="#/live_page" class="more">查看更多
-                        <Icon type="chevron-right"></Icon>
+                    <Icon type="chevron-right"></Icon>
                 </a>
             </div>
             <div class="list-picture">
-                <div  v-for="room in rooms" class="every-picture">
+                <div v-for="room in rooms" class="every-picture">
                     <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" :userImg="room.userImg" class="live-picture">
                     </live-picture>
                 </div>
@@ -21,35 +21,14 @@
         <div class="list">
             <div class="list-hint">
                 <Icon type="university" class="icon-middle"></Icon>
-                <input type="text" class="live-broadcast" value="录播课堂" readonly="true" ></input>
+                <input type="text" class="live-broadcast" value="录播课堂" readonly="true"></input>
                 <a href="#/record_page" class="more">查看更多
-                        <Icon type="chevron-right"></Icon>
+                    <Icon type="chevron-right"></Icon>
                 </a>
             </div>
             <div class="list-picture">
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                 <div class="every-picture">
-                    <record-picture></record-picture>
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture>
+                <div v-for="videoRoom in videoRooms" class="every-picture">
+                    <record-picture :roomName="videoRoom.roomName" :teacherName="videoRoom.teacherName" :liveId="videoRoom.liveId" :userImg="videoRoom.userImg"></record-picture>
                 </div>
             </div>
         </div>
@@ -69,6 +48,7 @@ export default {
     name: 'home-page',
     created: function () {
         this.getRooms()
+        this.getVideoRooms()
     },
     components: {
         LivePicture,
@@ -79,10 +59,24 @@ export default {
     data: function () {
         return {
             rooms: [],
-            option: 1
+            option: 1,
+            videoRooms: []
         }
     },
     methods: {
+        getVideoRooms: function () {
+            fetch('/getVideoRooms/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'type': 1 })
+            }).then((response) => response.json()).then((obj) => {
+                this.videoRooms = obj.rooms
+            })
+        },
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',

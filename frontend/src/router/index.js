@@ -38,7 +38,7 @@ export default new Router({
             component: RecordPage
         },
         {
-            path: '/record_room',
+            path: '/record_room/:id',
             component: RecordRoom
         },
         {

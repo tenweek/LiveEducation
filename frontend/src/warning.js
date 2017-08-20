@@ -21,7 +21,10 @@ let myMsg = {
     },
     'room': {
         'create': '您已经成功创建了房间！',
-        'cannotJoin': '非常抱歉，您不可再加入该房间！'
+        'cannotJoin': '非常抱歉，您不可再加入该房间！',
+        'endLive': '该直播间已关闭，您将在 3 秒后离开该房间！',
+        'nameNeeded': '房间名不能为空！',
+        'picNeeded': '请上传一张图片作为您的直播间的封面图！'
     },
     'whiteBoard': {
         'redoNotExist': '没有可重做的操作！',

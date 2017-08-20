@@ -16,8 +16,11 @@
                     <label class="information">在线人数：{{ this.studentNum }}</label>
                 </div>
                 <div class="navigation-right">
-                    <template v-if="this.teacherName === this.username">
+                    <template v-if="(this.teacherName === this.username) && !this.started">
                         <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
+                    </template>
+                    <template v-else-if="this.started">
+                        <Button @click="closeLive" type="primary" shape="circle" size="small">关闭直播</Button>
                     </template>
                 </div>
             </div>
@@ -69,6 +72,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 import * as io from 'socket.io-client'
+import myMsg from './../warning.js'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import VideoDisplay from './VideoDisplay'
@@ -98,7 +102,8 @@ export default {
             leftComponent: 'TeachingTools',
             rightComponent: 'VideoDisplay',
             hidden: false,
-            socket: ''
+            socket: '',
+            started: false
         }
     },
     created: function () {
@@ -121,10 +126,29 @@ export default {
             self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
             self.whiteBoardHeight = self.teachingHeight - 35
         }
+        self.socket.on('closeLive', function () {
+            self.$Message.warning(myMsg.room['endLive'])
+            setTimeout(window.close, 3000)
+        })
     },
     methods: {
+        closeLive: function () {
+            this.socket.emit('closeLive', this.roomId)
+            fetch('/closeLiveRoom/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomId': this.roomId
+                })
+            }).then((response) => response.json()).then((obj) => { })
+        },
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
+            this.started = true
         },
         hide: function () {
             let rightContent = document.getElementById('right-up-container')
@@ -152,7 +176,7 @@ export default {
                     mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
+                        'Accept': 'applica tion/json'
                     },
                     body: JSON.stringify({
                         'studentNum': this.studentNum,

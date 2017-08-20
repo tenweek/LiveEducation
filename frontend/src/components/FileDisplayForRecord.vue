@@ -28,7 +28,7 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId'],
     data: function () {
         return {
             socket: '',
@@ -42,14 +42,13 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', 888)
+        self.socket.emit('joinTest', this.roomId)
         self.socket.on('filedisplay', function (data) {
             self.teacherId = data['teacherId']
             self.fileNum = data['fileNum']
             self.currentPage = data['currentPage']
             self.maxPage = data['maxPage']
-            self.route = self.baseRoute + self.teacherId + 'and' + self.fileNum + '/user-' + self.currentPage + '.png'
-            // this.route = this.baseRoute + this.teacherId + 'and' + this.fileNum + 'and' + this.roomId + '/user-' + this.currentPage + '.png'
+            self.route = self.baseRoute + self.teacherId + 'and' + self.fileNum + 'and' + self.roomId + '/user-' + self.currentPage + '.png'
         })
     }
 }

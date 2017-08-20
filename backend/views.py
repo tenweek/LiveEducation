@@ -5,16 +5,78 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
-from .models import Room, User, RoomStudent
-import os
+from .models import Room, User, RoomStudent, VideoRoom
 
+import os
 import random
 import cloudconvert
 import zipfile
-import os
 import types
 import shutil
 # Create your views here.
+
+
+@csrf_exempt
+def getVideoRoomInfo(request):
+    req = simplejson.load(request)
+    videoRoom = VideoRoom.objects.get(id=req['roomId'])
+    response = JsonResponse({
+        'liveRoomId': videoRoom.live_room_id
+    })
+    return response
+
+
+@csrf_exempt
+def getVideoRooms(request):
+    req = simplejson.load(request)
+    if req['type'] == 1:
+        rooms = VideoRoom.objects.order_by('-create_time')[:8]
+    else:
+        rooms = VideoRoom.objects.order_by('-create_time')
+    myroom = []
+    for room in rooms:
+        userImg = room.video_img
+        myroom.append({
+            'roomName': room.room_name,
+            'teacherName': room.teacher.name,
+            'liveId': room.live_room_id,
+            'userImg': userImg
+        })
+    response = JsonResponse({'rooms': myroom})
+    return response
+
+
+@csrf_exempt
+def closeLiveRoom(request):
+    req = simplejson.load(request)
+    teacherRoom = Room.objects.get(id=req['roomId'])
+    RoomStudent.objects.filter(room=teacherRoom).delete()
+    VideoRoom.objects.create(teacher=teacherRoom.teacher, room_name=teacherRoom.room_name, live_room_id=teacherRoom.id, video_img=str(
+        teacherRoom.teacher.user_img)[22:], file_num=teacherRoom.teacher.file_num)
+    oldDir = "./frontend/static/ppt/" + str(teacherRoom.teacher.id) + "and"
+    if teacherRoom.teacher.file_num != 0:
+        for fileNum in range(1, teacherRoom.teacher.file_num + 1):
+            os.rename(oldDir + str(fileNum), oldDir +
+                      str(fileNum) + "and" + str(teacherRoom.id))
+    teacherRoom.teacher.user_img = ''
+    teacherRoom.teacher.user_file = ''
+    teacherRoom.teacher.file_num = 0
+    teacherRoom.teacher.save()
+    Room.objects.filter(id=req['roomId']).delete()
+    response = JsonResponse({})
+    return response
+
+
+@csrf_exempt
+def killVideoRoom(roomId):
+    videoRoom = VideoRoom.objects.get(live_room_id=roomId)
+    os.remove("./frontend/static/cover/" + videoRoom.video_img)
+    if videoRoom.file_num != 0:
+        for file in range(1, videoRoom.file_num + 1):
+            shutil.rmtree("./frontend/static/ppt/" + str(videoRoom.teacher.id) +
+                          "and" + str(file) + "and" + str(videoRoom.live_room_id))
+    VideoRoom.objects.filter(live_room_id=roomId).delete()
+    return
 
 
 @csrf_exempt
@@ -33,7 +95,7 @@ def fileFormat(file):
 
 @csrf_exempt
 def convertFile(user, file):
-    filedir = './' + str(user.user_file)
+    fileDir = './' + str(user.user_file)
     oldFormat = fileFormat(file)
     api = cloudconvert.Api(
         '7AoDsm4GZV8LpmYqZHESw4GKqDo1DcZ3ooQtqWR1fhaKZ-Jiva2gC94GVrYRuEEdfkqWVNBHZFGCIYSZAAh3cA')
@@ -42,11 +104,11 @@ def convertFile(user, file):
         "outputformat": "png",
         "input": "upload",
         "filename": "user." + oldFormat,
-        "file": open(filedir, 'rb')})
+        "file": open(fileDir, 'rb')})
     process.wait()
     process.download('./frontend/static/pptzip/' +
                      str(user.id) + 'and' + str(user.file_num) + '.zip')
-    os.remove(filedir)
+    os.remove(fileDir)
     return
 
 
@@ -274,9 +336,9 @@ def createRoom(request):
 def getRooms(request):
     req = simplejson.load(request)
     if req['type'] == 1:
-        rooms = Room.objects.order_by('-create_time')[:8]
+        rooms = Room.objects.order_by('-student_num')[:8]
     else:
-        rooms = Room.objects.order_by('-create_time')
+        rooms = Room.objects.order_by('-student_num')
     myroom = []
     for room in rooms:
         userImg = str(room.teacher.user_img)

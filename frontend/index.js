@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
         socket.join(roomId)
         // 像聊天室打印信息
         const rl = readline.createInterface({
-            input: fs.createReadStream(basicPath + '1/1.txt')
+            input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
         });
         let startTime = 0
         rl.on('line', (line) => {
@@ -151,6 +151,11 @@ io.on('connection', function (socket) {
     socket.on('kickOut', function (userid, roomId) {
         console.log('kick ' + userid + ' out')
         io.to(roomId).emit('kickOut', userid)
+    })
+    // 关闭房间
+    socket.on('closeLive', function (roomId) {
+        console.log('close live')
+        io.to(roomId).emit('closeLive')
     })
     socket.on('click', function (data, roomId) {
         io.to(roomId).emit('click', data)

@@ -11,29 +11,8 @@
         </div>
         <div class="list">
             <div class="list-picture">
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
-                </div>
-                <div class="every-picture">
-                    <record-picture></record-picture class="record-picture">
+                <div v-for="room in rooms" class="every-picture">
+                    <record-picture :roomName="room.roomName" :teacherName="room.teacherName" :liveId="room.liveId" :userImg="room.userImg"></record-picture class="record-picture">
                 </div>
             </div>
         </div>
@@ -50,6 +29,9 @@ import PageFooter from './PageFooter'
 
 export default {
     name: 'record-page',
+    created: function () {
+        this.getVideoRooms()
+    },
     components: {
         RecordPicture,
         HomePageHeader,
@@ -57,10 +39,24 @@ export default {
     },
     data: function () {
         return {
-            option: 3
+            option: 3,
+            rooms: []
         }
     },
     methods: {
+        getVideoRooms: function () {
+            fetch('/getVideoRooms/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 'type': 2 })
+            }).then((response) => response.json()).then((obj) => {
+                this.rooms = obj.rooms
+            })
+        }
     }
 }
 </script>

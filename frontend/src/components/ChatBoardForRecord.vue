@@ -37,7 +37,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', 888)
+        self.socket.emit('joinTest', this.roomId)
         self.socket.on('chatroom', function (data) {
             self.messages.push({
                 'msg': data['message'],

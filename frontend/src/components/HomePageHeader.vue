@@ -30,7 +30,7 @@
                 <br>
                 <br>
                 <p>上传封面图</p>
-                <Upload ref="upload" :on-success="handleSuccess" :format="['jpg', 'jpeg', 'png']" :on-format-error="imgFormatError" name="myfile" action="/upload/">
+                <Upload ref="upload" :on-success="handleSuccess" :format="['jpg', 'jpeg', 'png']" :max-size="10240" :on-format-error="imgFormatError" :on-exceeded-size="handleMaxSize" name="myfile" action="/upload/">
                     <div class="upload-img">
                         <img :src="this.route">
                         <div class="upload-cover">
@@ -105,7 +105,8 @@ export default {
             newUserName: '',
             route: '',
             file: null,
-            loadingStatus: false
+            loadingStatus: false,
+            hadImg: false
         }
     },
     created: function () {
@@ -132,6 +133,9 @@ export default {
         }
     },
     methods: {
+        handleMaxSize: function (file) {
+            this.$Message.error('文件 ' + file.name + ' 图片太大，请上传10M以下的图片')
+        },
         fileFormatError: function (file) {
             this.file = null
             this.loadingStatus = false
@@ -164,26 +168,38 @@ export default {
                         'account': this.account
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    this.route = obj.route
+                    setTimeout(() => {
+                        this.route = obj.route
+                        this.hadImg = true
+                    }, 1000)
                 })
             }, 1500)
         },
         createRoom: function () {
-            fetch('/createRoom/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    'roomName': this.roomName,
-                    'account': this.account
+            if (this.roomName === '') {
+                this.$Message.error(myMsg.room['nameNeeded'])
+                return
+            } else if (!this.hadImg) {
+                this.$Message.error(myMsg.room['picNeeded'])
+                return
+            } else {
+                fetch('/createRoom/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'roomName': this.roomName,
+                        'account': this.account
+                    })
+                }).then((response) => response.json()).then((obj) => {
+                    // 创建房间后自动进入该房间 目前还没做
+                    this.hadImg = false
+                    this.$Message.success(myMsg.room['create'])
                 })
-            }).then((response) => response.json()).then((obj) => {
-                // 创建房间后自动进入该房间 目前还没做
-                this.$Message.success(myMsg.room['create'])
-            })
+            }
         },
         changeName: function () {
             fetch('/changeName/', {

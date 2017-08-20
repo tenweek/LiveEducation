@@ -61,13 +61,15 @@ export default {
     },
     data: function () {
         return {
-            currentTools: 'WhiteBoardForRecord'
+            currentTools: 'WhiteBoardForRecord',
+            roomId: ''
         }
     },
-    mounted: function () {
+    created: function () {
         let self = this
+        self.roomId = self.$route.params.id
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', 888)
+        self.socket.emit('joinTest', self.roomId)
         self.socket.on('changeCurrent', function (data) {
             self.currentTools = data['name'] + 'ForRecord'
         })

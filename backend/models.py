@@ -26,4 +26,13 @@ class User(AbstractUser):
     user_img = models.FileField(upload_to='./frontend/static/cover/')
     user_file = models.FileField(upload_to='./frontend/static/ppt/')
     file_num = models.IntegerField(default=0)
+
+
+class VideoRoom(models.Model):
+    teacher = models.ForeignKey('backend.User')
+    room_name = models.CharField(max_length=100)
+    video_img = models.CharField(max_length=100)
+    live_room_id = models.IntegerField(default=0)
+    file_num = models.IntegerField(default=0)
+    create_time = models.DateTimeField(default=timezone.now)
 # Create your models here.
