@@ -102,7 +102,6 @@ io.on('connection', function (socket) {
         let date = new Date()
         const month = date.getMonth() + 1 > 10 ? String(date.getMonth() + 1) : '0' + String(date.getMonth() + 1)
         const time = String(date.getFullYear()) + month + String(date.getDate())
-        console.log(time)
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
         fs.open(String(path[roomId]), 'a', (err, fd) => {
