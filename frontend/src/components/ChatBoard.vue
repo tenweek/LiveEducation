@@ -53,21 +53,21 @@ import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
     /**
-     *表示房间ID号
+     * 表示房间ID号
      *
      * @property roomId
      * @type String
      */
 
     /**
-     *表示创建该房间的老师名字
+     * 表示创建该房间的老师名字
      *
      * @property teacherName
      * @type String
      */
 
     /**
-     *表示进入该房间的用户名字
+     * 表示进入该房间的用户名字
      *
      * @property username
      * @type String
@@ -99,7 +99,7 @@ export default {
              */
             socket: '',
             /**
-             * 表示老师提出或禁言操作时选中的用户
+             * 表示老师踢出或禁言操作时选中的用户
              *
              * @attribute choosenUser
              * @type 
