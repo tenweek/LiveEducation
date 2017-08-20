@@ -81,7 +81,10 @@ export default {
         }
     },
     /**
-     * created函数，
+     * created函数，获取用户账号，
+     * 判断该用户是否登录。
+     *
+     * @method created
      */
     created: function () {
         let arrCookies = document.cookie.split(';')
@@ -96,6 +99,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取房间信息
+         *
+         * @method liveRoom
+         */
         liveRoom: function () {
             // 如果用户已经登录
             if (this.stuAccount) {

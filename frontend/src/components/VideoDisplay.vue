@@ -30,29 +30,126 @@
 </template>
 
 <script>
+/**
+ * 视频直播区域
+ *
+ * @module VideoDisplay
+ * @class VideoDisplay
+ */
 export default {
     name: 'video-display',
+    /**
+     * 表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     * 表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     * 表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
     props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
+            /**
+             * client对象
+             *
+             * @attribute client
+             * @type String
+             * @default ''
+             */
             client: '',
+            /**
+             * 
+             *
+             * @attribute localStream
+             * @type String
+             * @default ''
+             */
             localStream: '',
+            /**
+             * 
+             *
+             * @attribute microphone
+             * @type String
+             * @default ''
+             */
             microphone: '',
+            /**
+             * 
+             *
+             * @attribute audioSelect
+             * @type String
+             * @default ''
+             */
             audioSelect: '',
+            /**
+             * 
+             *
+             * @attribute videoSelect
+             * @type String
+             * @default ''
+             */
             videoSelect: '',
+            /**
+             * 
+             *
+             * @attribute appKey
+             * @type String
+             * @default '9b343e8aaaa144928e093b29513634e9'
+             */
             appKey: '9b343e8aaaa144928e093b29513634e9',
+            /**
+             * 
+             *
+             * @attribute camera
+             * @type String
+             * @default ''
+             */
             camera: '',
+            /**
+             * 判断当前用户是否为老师（创建房间的用户）
+             *
+             * @attribute isTeacher
+             * @type Boolean
+             * @default false
+             */
             isTeacher: false
         }
     },
+    /**
+     * created函数，初始化isTeacher值
+     *
+     * @method created
+     */
     created: function () {
         this.isTeacher = this.username === this.teacherName
     },
+    /**
+     * mounted函数，初始化相关数据
+     *
+     * @method mounted
+     */
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
     },
     methods: {
+        /**
+         * 显示直播视频
+         *
+         * @method showVideo
+         */
         showVideo: function () {
             let arrow = document.getElementById('arrow')
             let video = document.getElementById('video')
@@ -64,16 +161,31 @@ export default {
                 arrow.innerHTML = '<i class="ivu-icon ivu-icon-chevron-down"></i>'
             }
         },
+        /**
+         * 播放视频
+         *
+         * @method play
+         */
         play: function () {
             document.getElementById('stop').disable = false
             document.getElementById('play').disable = true
             this.localStream.enableVideo()
         },
+        /**
+         * 停止播放视频
+         *
+         * @method
+         */
         stop: function () {
             document.getElementById('play').disable = false
             document.getElementById('stop').disable = true
             this.localStream.disableVideo()
         },
+        /**
+         * 老师开始直播
+         *
+         * @method join
+         */
         join: function () {
             document.getElementById('join').disable = true
             this.clientInit()
@@ -89,6 +201,11 @@ export default {
             })
             this.monitorStream()
         },
+        /**
+         * 初始化client对象
+         *
+         * @method clientInit
+         */
         clientInit: function () {
             this.client = AgoraRTC.createClient({ mode: 'interop' })
             this.client.init(this.appKey, () => {
@@ -113,6 +230,11 @@ export default {
                 })
             })
         },
+        /**
+         * 监测音视频流的状态并根据事件执行回调函数
+         *
+         * @method monitorStream
+         */
         monitorStream: function () {
             this.client.on('stream-added', (evt) => {
                 this.client.subscribe(evt.stream)
@@ -132,9 +254,19 @@ export default {
                 }
             })
         },
+        /**
+         * 关闭直播视频
+         *
+         * @method leave
+         */
         leave: function () {
             this.client.leave()
         },
+        /**
+         * 获取用户设备（用户的麦克风和摄像头的使用权限）
+         *
+         * @method getDevices
+         */
         getDevices: function () {
             AgoraRTC.getDevices(function (devices) {
                 for (let i = 0; i !== devices.length; ++i) {

@@ -43,6 +43,12 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 录播间页面
+ *
+ * @module RecordRoom
+ * @class RecordRoom
+ */
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
@@ -61,9 +67,21 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 表示当前选择的工具（白板、PPT、代码编辑器）
+             *
+             * @attribute currentTools
+             * @type String
+             * @default 'WhiteBoardForRecord'
+             */
             currentTools: 'WhiteBoardForRecord'
         }
     },
+    /**
+     * mounted函数，当接收到'changeCurrent'消息时改变相应属性值
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
@@ -75,7 +93,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .record-room {
     border: 1px solid #d7dde4;

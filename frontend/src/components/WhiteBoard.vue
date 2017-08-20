@@ -62,35 +62,35 @@ const MIN = 0.005
 export default {
     name: 'white-board',
     /**
-     *表示房间ID号
+     * 表示房间ID号
      *
      * @property roomId
      * @type String
      */
 
     /**
-     *表示创建该房间的老师名字
+     * 表示创建该房间的老师名字
      *
      * @property teacherName
      * @type String
      */
 
     /**
-     *表示进入该房间的用户名字
+     * 表示进入该房间的用户名字
      *
      * @property username
      * @type String
      */
 
     /**
-     *表示白板区域的宽，根据父组件大小动态变化
+     * 表示白板区域的宽，根据父组件大小动态变化
      *
      * @property teachingToolsWidth
      * @type Number
      */
 
     /**
-     *表示白板区域的长，根据父组件大小动态变化
+     * 表示白板区域的长，根据父组件大小动态变化
      *
      * @property teachingToolsHeight
      * @type Number

@@ -61,3 +61,6 @@
 {"type":"pen","action":"mousemove","x":0.5593712384054379,"y":0.24497991967871485,"buttons":1,"color":"rgba(0, 0, 0, 1)","time":13969}
 {"type":"pen","action":"mouseup","x":0.5593712384054379,"y":0.24497991967871485,"buttons":0,"color":"rgba(0, 0, 0, 1)","time":14105}
 {"type":"pen","action":"mousemove","x":0.5593712384054379,"y":0.24497991967871485,"buttons":0,"color":"rgba(0, 0, 0, 1)","time":14110}
+{"startTime":230859,"type":"time"}
+{"type":"textField","x":0.31862918643347726,"y":0.35943775100401604,"color":"rgba(0, 0, 0, 1)","action":"mouseup","buttons":0,"time":235434}
+{"type":"drawText","input":"","time":242257}

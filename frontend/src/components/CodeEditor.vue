@@ -25,10 +25,43 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
     props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
+            /**
+             * 表示编辑器中输入的代码
+             *
+             * @attribute code
+             * @type String
+             * @default 'const a = 10   123456789'
+             */
             code: 'const a = 10   123456789',
+            /**
+             * 编辑器中的一些设置参数
+             *
+             * @attribute editorOptions
+             * @type Object
+             */
             editorOptions: {
                 readOnly: false,
                 tabSize: 4,
@@ -43,7 +76,20 @@ export default {
                 styleSelectedText: true,
                 highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true }
             },
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 表示语言选择的列表
+             *
+             * @attribute modeList
+             * @type Array
+             */
             modeList: [
                 {
                     modeName: 'JavaScript',
@@ -68,6 +114,11 @@ export default {
             ]
         }
     },
+    /**
+     * mounted函数，连接到socket服务器，并初始化相关数据。
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')

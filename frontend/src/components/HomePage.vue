@@ -64,7 +64,7 @@
  * 直播网站的首页，
  * 包含导航栏、直播列表、录播列表等信息
  *
- * @modules HomePage
+ * @module HomePage
  * @class HomePage
  */
 import LivePicture from './LivePicture'

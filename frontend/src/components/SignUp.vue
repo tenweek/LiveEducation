@@ -41,10 +41,22 @@
 </template>
 
 <script>
+/**
+ * 注册页面
+ *
+ * @module SignUp
+ * @class SignUp
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'sign-up',
     data: function () {
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePass
+         * @readOnly
+         */
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error(myMsg.account['passwordNeeded']))
@@ -55,6 +67,12 @@ export default {
                 callback()
             }
         }
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePassCheck
+         * @readOnly
+         */
         const validatePassCheck = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error(myMsg.account['passwordAgain']))
@@ -65,6 +83,12 @@ export default {
             }
         }
         return {
+            /**
+             * 检验输入合法性
+             *
+             * @attribute formCustom
+             * @type Object
+             */
             formCustom: {
                 mail: '',
                 mailChecked: '',
@@ -74,6 +98,12 @@ export default {
                 vertification: '',
                 loginKey: ''
             },
+            /**
+             * 检验输入合法性
+             *
+             * @attribute ruleCustom
+             * @type Object
+             */
             ruleCustom: {
                 mail: [
                     { required: true, message: myMsg.account['passwordAgain'], trigger: 'blur' },
@@ -91,6 +121,12 @@ export default {
         }
     },
     methods: {
+        /**
+         * 注册前进行输入有效性检查，
+         * 当输入不合法时，弹出消息框提示。
+         *
+         * @method checkBeforeSignUp
+         */
         checkBeforeSignUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.mail) {
                 this.$Message.error(myMsg.account['mailNotChange'])
@@ -118,6 +154,11 @@ export default {
             }
             return true
         },
+        /**
+         * 进行注册
+         *
+         * @method signUp
+         */
         signUp: function () {
             if (!this.checkBeforeSignUp()) {
                 return
@@ -143,6 +184,12 @@ export default {
                 }
             })
         },
+        /**
+         * 检查邮箱输入有效性
+         *
+         * @method checkEmail
+         * @return true表示输入合法，false表示输入不合法，并弹出消息框
+         */
         checkEmail: function () {
             if (this.formCustom.mail === '') {
                 this.$Message.error(myMsg.account['mailNeeded'])
@@ -155,6 +202,11 @@ export default {
             }
             return true
         },
+        /**
+         * 获取验证码
+         *
+         * @method getVerification
+         */
         getVerification: function () {
             if (!this.checkEmail()) {
                 return

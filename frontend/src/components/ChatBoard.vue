@@ -45,8 +45,8 @@
  * 实现聊天室功能，
  * 作为子组件插入直播间页面。
  *
- * @module ChatRoom
- * @class ChatRoom
+ * @module ChatBoard
+ * @class ChatBoard
  */
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
@@ -123,7 +123,7 @@ export default {
              */
             speakList: [],
             /**
-             * 存储所有的发言记录
+             * 存储发言记录
              *
              * @attribute messages
              * @type Array
@@ -175,7 +175,7 @@ export default {
     },
     methods: {
         /**
-         * 
+         * 获取被选中的学生名字
          *
          * @method getName
          * @param message
@@ -198,7 +198,7 @@ export default {
         },
         /**
          * 接收到'changeNum'消息时，发送'stuNum'，
-         * 完成改变学生数量的目的
+         * 改变学生数量
          *
          * @method changeStuNum
          */
@@ -223,7 +223,8 @@ export default {
             })
         },
         /**
-         * 点击发送按钮时响应，将输入框中的文字发送
+         * 发送小时时，首先判断该用户是否被禁言，
+         * 若没有被禁言，向服务器发送'message'消息。
          *
          * @method sendMsg
          */
@@ -256,7 +257,7 @@ export default {
             })
         },
         /**
-         * 
+         * 将被选中的用户禁言
          *
          * @method gag
          */
@@ -278,7 +279,7 @@ export default {
             })
         },
         /**
-         * 
+         * 全局禁言
          *
          * @method gagAll
          */
@@ -298,7 +299,7 @@ export default {
             })
         },
         /**
-         * 
+         * 全局解禁
          *
          * @method allowAllSpeak
          */
@@ -317,7 +318,7 @@ export default {
             })
         },
         /**
-         * 
+         * 将被选中的学生踢出房间
          *
          * @method kickSomeoneOut
          */
@@ -343,7 +344,7 @@ export default {
             }
         },
         /**
-         * 
+         * 老师进行的一些操作
          *
          * @method teacherDoing
          * @param name
@@ -366,7 +367,7 @@ export default {
             }
         },
         /**
-         * 
+         * 更新学生列表
          *
          * @method getName
          */
@@ -384,7 +385,7 @@ export default {
             }
         },
         /**
-         * 
+         * 给特定用户解禁
          *
          * @method allowSpeak
          */

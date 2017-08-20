@@ -68,6 +68,12 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 直播间页面
+ *
+ * @module LiveRoom
+ * @class LiveRoom
+ */
 import * as io from 'socket.io-client'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
@@ -86,21 +92,117 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 房间ID
+             *
+             * @attribute roomId
+             * @type Number
+             * @default -1
+             */
             roomId: -1,
+            /**
+             * 房间名称
+             *
+             * @attribute roomName
+             * @type String
+             * @default ''
+             */
             roomName: '',
+            /**
+             * 老师名字
+             *
+             * @attribute teacherName
+             * @type String
+             * @default ''
+             */
             teacherName: '',
+            /**
+             * 在线人数
+             *
+             * @attribute studentNum
+             * @type String
+             * @default ''
+             */
             studentNum: '',
+            /**
+             * 用户名字
+             *
+             * @attribute username
+             * @type String
+             * @default ''
+             */
             username: '',
+            /**
+             * 教学区域div的宽
+             *
+             * @attribute teachingWidth
+             * @type Number
+             * @default 100
+             */
             teachingWidth: 100,
+            /**
+             * 教学区域div的高
+             *
+             * @attribute teachingHeight
+             * @type Number
+             * @default 100
+             */
             teachingHeight: 100,
+            /**
+             * 白板区域div的宽
+             *
+             * @attribute whiteBoardWidth
+             * @type Number
+             * @default 100
+             */
             whiteBoardWidth: 100,
+            /**
+             * 白板区域div的高
+             *
+             * @attribute whiteBoardHeight
+             * @type Number
+             * @default 100
+             */
             whiteBoardHeight: 100,
+            /**
+             * 表示左边的子组件
+             *
+             * @attribute leftComponent
+             * @type String
+             * @default 'TeachingTools'
+             */
             leftComponent: 'TeachingTools',
+            /**
+             * 表示右边的子组件
+             *
+             * @attribute rightComponent
+             * @type String
+             * @default 'VideoDisplay'
+             */
             rightComponent: 'VideoDisplay',
+            /**
+             * 表示是否隐藏视频区域
+             *
+             * @attribute hidden
+             * @type Boolean
+             * @default false
+             */
             hidden: false,
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: ''
         }
     },
+    /**
+     * created函数，初始化相关数据，客户端发送'joinRoom'消息
+     *
+     * @method created
+     */
     created: function () {
         this.roomId = this.$route.params.id
         this.socket = io.connect('http://localhost:9000')
@@ -109,6 +211,12 @@ export default {
         this.getUsername()
         window.setInterval(this.changeNum, 5000)
     },
+    /**
+     * mounted函数，初始化教学区域和白板区域的长和高，
+     * 并监测窗口大小的改变，实时变化相应参数
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.teachingWidth = document.getElementById('teaching').clientWidth
@@ -123,9 +231,19 @@ export default {
         }
     },
     methods: {
+        /**
+         * 开始直播，发送'startLive'消息
+         *
+         * @method startLive
+         */
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
         },
+        /**
+         * 隐藏视频区域，改变相关div的大小
+         *
+         * @method hide
+         */
         hide: function () {
             let rightContent = document.getElementById('right-up-container')
             rightContent.style.display = 'none'
@@ -133,6 +251,11 @@ export default {
             document.getElementById('chatroom').style.marginTop = '0'
             document.getElementById('chatroom').style.height = '100%'
         },
+        /**
+         * 弹出右边窗口
+         *
+         * @method popUp
+         */
         popUp: function () {
             let rightContent = document.getElementById('right-up-container')
             rightContent.style.display = 'block'
@@ -140,11 +263,21 @@ export default {
             document.getElementById('chatroom').style.marginTop = '2%'
             document.getElementById('chatroom').style.height = '56%'
         },
+        /**
+         * 左右子组件交换位置
+         *
+         * @method swap
+         */
         swap: function () {
             let tmp = this.leftComponent
             this.leftComponent = this.rightComponent
             this.rightComponent = tmp
         },
+        /**
+         * 更新学生数量
+         *
+         * @method changeNum
+         */
         changeNum: function () {
             if (this.username === this.teacherName) {
                 fetch('/changeNum/', {
@@ -161,9 +294,19 @@ export default {
                 }).then((response) => response.json()).then((obj) => { })
             }
         },
+        /**
+         * 获取学生数量
+         *
+         * @method getNum
+         */
         getNum: function (count) {
             this.studentNum = count
         },
+        /**
+         * 获取房间信息
+         *
+         * @method getRoomInfo
+         */
         getRoomInfo: function () {
             fetch('/getRoomInfo/', {
                 method: 'post',
@@ -181,6 +324,11 @@ export default {
                 this.teacherName = obj.teacherName
             })
         },
+        /**
+         * 获取用户名称
+         *
+         * @method getUsername
+         */
         getUsername: function () {
             let arrCookies = document.cookie.split(';')
             let account = ''

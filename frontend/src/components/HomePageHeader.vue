@@ -96,7 +96,7 @@
  * 用户在登录后可以看到自己的个人信息并且有修改昵称、密码等功能，
  * 若用户拥有老师权限则可以进行创建房间。
  *
- * @modules HomePageHeader
+ * @module HomePageHeader
  * @class HomePageHeader
  */
 import myMsg from './../warning.js'

@@ -27,11 +27,23 @@
 </template>
 
 <script>
+/**
+ * 登录页面
+ *
+ * @module Login
+ * @class Login
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'Login',
     components: {},
     data: function () {
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePass
+         * @readOnly
+         */
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error(myMsg.account['passwordNeeded']))
@@ -40,10 +52,22 @@ export default {
             }
         }
         return {
+            /**
+             * 检验输入合法性
+             *
+             * @attribute formCustom
+             * @type Object
+             */
             formCustom: {
                 account: '',
                 password: ''
             },
+            /**
+             * 检验输入合法性
+             *
+             * @attribute ruleCustom
+             * @type Object
+             */
             ruleCustom: {
                 account: [
                     { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
@@ -57,6 +81,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 显示登录的结果
+         *
+         * @method getResult
+         */
         getResult: function () {
             fetch('/login/', {
                 method: 'post',
@@ -84,7 +113,6 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #login-button {
     margin-top: 30px;

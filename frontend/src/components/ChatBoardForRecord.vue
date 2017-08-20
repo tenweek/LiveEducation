@@ -24,16 +24,48 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 实现聊天室的复现，
+ * 作为子组件插入录播间页面。
+ *
+ * @module ChatBoardForRecord
+ * @class ChatBoardForRecord
+ */
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
     props: ['roomId'],
     data: function () {
         return {
+            /**
+             * 表示客户端，负责监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 存储发言记录
+             *
+             * @attribute messages
+             * @type Array
+             * @default []
+             */
             messages: []
         }
     },
+    /**
+     * mounted函数，初始化相关数据，客户端负责监听服务器传来的消息。
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')

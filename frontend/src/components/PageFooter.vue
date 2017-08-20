@@ -5,6 +5,12 @@
 </template>
 
 <script>
+/**
+ * 直播网站的footer
+ *
+ * @module PageFooter
+ * @class PageFooter
+ */
 export default {
     name: 'page-footer',
     data: function () {
