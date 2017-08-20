@@ -32,7 +32,7 @@
 <script>
 export default {
     name: 'video-display',
-    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight'],
     data: function () {
         return {
             client: '',

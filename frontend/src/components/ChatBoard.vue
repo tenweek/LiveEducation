@@ -45,7 +45,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username', 'aboveIsHidden'],
+    props: ['roomId', 'teacherName', 'username', 'aboveIsHidden', 'containerHeight'],
     data: function () {
         return {
             showGagList: false,
@@ -76,6 +76,7 @@ export default {
         self.socket.on('getStarted', function () {
             self.started = true
         })
+        document.getElementById('chat-board').style.height = (this.containerHeight - 32) + 'px'
     },
     methods: {
         getName: function (message) {
@@ -259,6 +260,9 @@ export default {
                 document.getElementById('messages').style.height = '87%'
                 document.getElementById('chat-board').style.height = '40vmin'
             }
+        },
+        containerHeight: function (newVal, oldVal) {
+            document.getElementById('chat-board').style.height = (newVal - 44) + 'px'
         }
     }
 }
@@ -274,8 +278,8 @@ export default {
 }
 
 #chat-board {
-    width: 100%;
-    position: relative;
+    width: 90%;
+    position: absolute;
 }
 
 .message,
@@ -298,6 +302,11 @@ export default {
 .set-left {
     float: left;
     padding-left: 5px;
+}
+
+#input {
+    position: absolute;
+    bottom: 0;
 }
 
 #send-btn {

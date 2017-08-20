@@ -53,10 +53,10 @@
                     </template>
                 </div>
                 <div class="right-up-container" id="video-display">
-                        <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight" :container-width="this.videoDisplayWidth"></video-display>
+                        <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight"></video-display>
                 </div>
                 <div id="chatroom">
-                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden"></chat-board>
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden" :container-height="this.chatBoardHeight"></chat-board>
                 </div>
             </div>
             <div>
@@ -97,7 +97,7 @@ export default {
             teachingToolsHeight: 0,
             teachingToolsWidth: 0,
             videoDisplayHeight: 0,
-            videoDisplayWidth: 0
+            chatBoardHeight: 0
         }
     },
     created: function () {
@@ -117,8 +117,8 @@ export default {
         document.getElementById('live-room').style.height = unit + 'px'
         self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
         self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
-        self.videoDisplayWidth = document.getElementById('video-display').clientWidth
         self.videoDisplayHeight = document.getElementById('video-display').clientHeight
+        self.chatBoardHeight = document.getElementById('chatroom').clientHeight
         window.onresize = function () {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
@@ -127,8 +127,8 @@ export default {
             document.getElementById('live-room').style.height = unit + 'px'
             self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
             self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
-            self.videoDisplayWidth = document.getElementById('video-display').clientWidth
             self.videoDisplayHeight = document.getElementById('video-display').clientHeight
+            self.chatBoardHeight = document.getElementById('chatroom').clientHeight
         }
     },
     methods: {
@@ -147,6 +147,7 @@ export default {
             document.getElementById('chatroom').style.paddingTop = '0'
             document.getElementById('chatroom').style.height = '78%'
             document.getElementById('chatroom').style.top = 'inherit'
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         popUp: function () {
             document.getElementsByClassName('right-up-container')[0].style.display = 'block'
@@ -154,6 +155,7 @@ export default {
             document.getElementById('chatroom').style.paddingTop = '12px'
             document.getElementById('chatroom').style.height = '52.5%'
             document.getElementById('chatroom').style.top = '42%'
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         swap: function () {
             let teachingTools = document.getElementById('teaching-tools')
