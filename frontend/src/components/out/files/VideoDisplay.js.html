@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VideoDisplay.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../classes/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
+                                <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../classes/HomePage.html">HomePage</a></li>
+                                <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/LivePage.html">LivePage</a></li>
+                                <li><a href="../classes/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../classes/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../classes/Login.html">Login</a></li>
+                                <li><a href="../classes/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../classes/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../classes/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../classes/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../classes/Reset.html">Reset</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../classes/VideoDisplay.html">VideoDisplay</a></li>
+                                <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../modules/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
+                                <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../modules/HomePage.html">HomePage</a></li>
+                                <li><a href="../modules/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../modules/LivePage.html">LivePage</a></li>
+                                <li><a href="../modules/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../modules/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../modules/Login.html">Login</a></li>
+                                <li><a href="../modules/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../modules/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../modules/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../modules/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../modules/Reset.html">Reset</a></li>
+                                <li><a href="../modules/SignUp.html">SignUp</a></li>
+                                <li><a href="../modules/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../modules/VideoDisplay.html">VideoDisplay</a></li>
+                                <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: VideoDisplay.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;Card class=&quot;video-display&quot;&gt;
+        &lt;div id=&quot;divDevice&quot;&gt;
+            &lt;div class=&quot;select&quot;&gt;
+                &lt;label for=&quot;audioSource&quot;&gt;Audio source: &lt;/label&gt;
+                &lt;select id=&quot;audioSource&quot;&gt;&lt;/select&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;select&quot;&gt;
+                &lt;label for=&quot;videoSource&quot;&gt;Video source: &lt;/label&gt;
+                &lt;select id=&quot;videoSource&quot;&gt;&lt;/select&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;control-panel&quot;&gt;
+            &lt;button @click=&quot;join&quot;&gt;&lt;Icon id=&quot;join&quot; type=&quot;android-arrow-dropright-circle&quot;&gt;&lt;/Icon&gt;&lt;/button&gt;
+            &lt;template v-if=&quot;this.username === this.teacherName&quot;&gt;
+                &lt;button @click=&quot;play&quot; id=&quot;play&quot;&gt;&lt;Icon type=&quot;play&quot;&gt;&lt;/Icon&gt;&lt;/button&gt;
+                &lt;button @click=&quot;stop&quot; id=&quot;stop&quot;&gt;&lt;Icon type=&quot;stop&quot;&gt;&lt;/Icon&gt;&lt;/button&gt;
+            &lt;/template&gt;
+            &lt;button @click=&quot;showVideo&quot; id=&quot;arrow&quot;&gt;&lt;Icon type=&quot;chevron-up&quot;&gt;&lt;/Icon&gt;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;video&quot;&gt;
+            &lt;template v-if=&quot;this.username === this.teacherName&quot;&gt;
+                &lt;div id=&quot;agora-local&quot;&gt;&lt;/div&gt;
+            &lt;/template&gt;
+            &lt;template v-else&gt;
+                &lt;div id=&quot;agora-remote&quot;&gt;&lt;/div&gt;
+            &lt;/template&gt;
+        &lt;/div&gt;
+    &lt;/Card&gt;&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ * 视频直播区域
+ *
+ * @module VideoDisplay
+ * @class VideoDisplay
+ */
+export default {
+    name: &#x27;video-display&#x27;,
+    /**
+     * 表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     * 表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     * 表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;],
+    data: function () {
+        return {
+            /**
+             * client对象
+             *
+             * @attribute client
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            client: &#x27;&#x27;,
+            /**
+             * 表示本地音视频流
+             *
+             * @attribute localStream
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            localStream: &#x27;&#x27;,
+            /**
+             * 表示用户的麦克风
+             *
+             * @attribute microphone
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            microphone: &#x27;&#x27;,
+            /**
+             * 表示用户麦克风的权限
+             *
+             * @attribute audioSelect
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            audioSelect: &#x27;&#x27;,
+            /**
+             * 表示用户摄像头的权限
+             *
+             * @attribute videoSelect
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            videoSelect: &#x27;&#x27;,
+            /**
+             * 声网提供的项目的aapID
+             *
+             * @attribute appKey
+             * @readOnly
+             * @type String
+             * @default &#x27;9b343e8aaaa144928e093b29513634e9&#x27;
+             */
+            appKey: &#x27;9b343e8aaaa144928e093b29513634e9&#x27;,
+            /**
+             * 表示用户的摄像头
+             *
+             * @attribute camera
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            camera: &#x27;&#x27;,
+            /**
+             * 判断当前用户是否为老师（创建房间的用户）
+             *
+             * @attribute isTeacher
+             * @type Boolean
+             * @default false
+             */
+            isTeacher: false
+        }
+    },
+    /**
+     * created函数，初始化isTeacher值
+     *
+     * @method created
+     */
+    created: function () {
+        this.isTeacher = this.username === this.teacherName
+    },
+    /**
+     * mounted函数，初始化相关数据
+     *
+     * @method mounted
+     */
+    mounted: function () {
+        this.audioSelect = document.querySelector(&#x27;select#audioSource&#x27;)
+        this.videoSelect = document.querySelector(&#x27;select#videoSource&#x27;)
+    },
+    methods: {
+        /**
+         * 显示直播视频
+         *
+         * @method showVideo
+         */
+        showVideo: function () {
+            let arrow = document.getElementById(&#x27;arrow&#x27;)
+            let video = document.getElementById(&#x27;video&#x27;)
+            if (video.style.display === &#x27;none&#x27;) {
+                video.style.display = &#x27;inline-block&#x27;
+                arrow.innerHTML = &#x27;&lt;i class=&quot;ivu-icon ivu-icon-chevron-up&quot;&gt;&lt;/i&gt;&#x27;
+            } else {
+                video.style.display = &#x27;none&#x27;
+                arrow.innerHTML = &#x27;&lt;i class=&quot;ivu-icon ivu-icon-chevron-down&quot;&gt;&lt;/i&gt;&#x27;
+            }
+        },
+        /**
+         * 播放视频
+         *
+         * @method play
+         */
+        play: function () {
+            document.getElementById(&#x27;stop&#x27;).disable = false
+            document.getElementById(&#x27;play&#x27;).disable = true
+            this.localStream.enableVideo()
+        },
+        /**
+         * 停止播放视频
+         *
+         * @method
+         */
+        stop: function () {
+            document.getElementById(&#x27;play&#x27;).disable = false
+            document.getElementById(&#x27;stop&#x27;).disable = true
+            this.localStream.disableVideo()
+        },
+        /**
+         * 老师开始直播
+         *
+         * @method join
+         */
+        join: function () {
+            document.getElementById(&#x27;join&#x27;).disable = true
+            this.clientInit()
+            this.client.on(&#x27;error&#x27;, function (err) {
+                console.log(&#x27;Got error msg:&#x27;, err.reason)
+                if (err.reason === &#x27;DYNAMIC_KEY_TIMEOUT&#x27;) {
+                    this.client.renewChannelKey(&#x27;&#x27;, function () {
+                        console.log(&#x27;Renew channel key successfully&#x27;)
+                    }, function (err) {
+                        console.log(&#x27;Renew channel key failed: &#x27;, err)
+                    })
+                }
+            })
+            this.monitorStream()
+        },
+        /**
+         * 初始化client对象
+         *
+         * @method clientInit
+         */
+        clientInit: function () {
+            this.client = AgoraRTC.createClient({ mode: &#x27;interop&#x27; })
+            this.client.init(this.appKey, () =&gt; {
+                this.client.join(null, this.roomId, null, (uid) =&gt; {
+                    if (this.username === this.teacherName) {
+                        this.camera = videoSource.value
+                        this.microphone = audioSource.value
+                        this.localStream = AgoraRTC.createStream({
+                            streamID: uid,
+                            audio: true,
+                            cameraId: this.camera,
+                            microphoneId: this.microphone,
+                            video: true,
+                            screen: false
+                        })
+                        this.localStream.setVideoProfile(&#x27;720p_3&#x27;)
+                        this.localStream.init(() =&gt; {
+                            this.localStream.play(&#x27;agora-local&#x27;)
+                            this.client.publish(this.localStream)
+                        })
+                    }
+                })
+            })
+        },
+        /**
+         * 监测音视频流的状态并根据事件执行回调函数
+         *
+         * @method monitorStream
+         */
+        monitorStream: function () {
+            this.client.on(&#x27;stream-added&#x27;, (evt) =&gt; {
+                this.client.subscribe(evt.stream)
+            })
+            this.client.on(&#x27;stream-subscribed&#x27;, function (evt) {
+                let stream = evt.stream
+                stream.play(&#x27;agora-remote&#x27;)
+            })
+            this.client.on(&#x27;stream-removed&#x27;, function (evt) {
+                let stream = evt.stream
+                stream.stop()
+            })
+            this.client.on(&#x27;peer-leave&#x27;, function (evt) {
+                let stream = evt.stream
+                if (stream) {
+                    stream.stop()
+                }
+            })
+        },
+        /**
+         * 关闭直播视频
+         *
+         * @method leave
+         */
+        leave: function () {
+            this.client.leave()
+        },
+        /**
+         * 获取用户设备（用户的麦克风和摄像头的使用权限）
+         *
+         * @method getDevices
+         */
+        getDevices: function () {
+            AgoraRTC.getDevices(function (devices) {
+                for (let i = 0; i !== devices.length; ++i) {
+                    let device = devices[i]
+                    let option = document.createElement(&#x27;option&#x27;)
+                    option.value = device.deviceId
+                    if (device.kind === &#x27;audioinput&#x27;) {
+                        option.text = device.label || &#x27;microphone &#x27; + (this.audioSelect.length + 1)
+                        this.audioSelect.appendChild(option)
+                    } else if (device.kind === &#x27;videoinput&#x27;) {
+                        option.text = device.label || &#x27;camera &#x27; + (this.videoSelect.length + 1)
+                        this.videoSelect.appendChild(option)
+                    }
+                }
+            })
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+#agora-local, #agora-remote {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+#video {
+    width: 100%;
+    height: 23vmin;
+}
+
+#divDevice {
+    display: none;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(92, 107, 119);
+    border: none;
+    font-size: 20px;
+    margin-right: 12px;
+    outline: none;
+}
+
+.control-panel {
+    text-align: right;
+}
+&lt;/style&gt;
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

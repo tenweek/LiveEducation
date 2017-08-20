@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>FileDisplayForRecord.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,224 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: FileDisplayForRecord.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div&gt;
+        &lt;template v-if=&quot;this.fileNum &gt; 0&quot;&gt;
+            &lt;div class=&quot;file-display&quot; id=&quot;file&quot;&gt;
+                &lt;div class=&quot;ppt-header&quot;&gt;PPT放映&lt;/div&gt;
+                &lt;div&gt;
+                    &lt;img :src=&quot;this.route&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;ppt-footer&quot;&gt;
+                    &lt;div class=&quot;for-footer&quot;&gt;
+                        &lt;div class=&quot;for-place&quot;&gt;
+                            &lt;div class=&quot;ppt-page&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;{{ this.currentPage }}&amp;nbsp;&amp;nbsp;of&amp;nbsp;&amp;nbsp;{{ this.maxPage }}&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+        &lt;template v-else&gt;
+            &lt;div&gt;目前还没有课件，请等待老师上传！！！&lt;/div&gt;
+        &lt;/template&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
 
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+/**
+ * 实现教学区ppt等文件播放的复现，
+ * 作为子组件插入录播间页面，
+ * 用户不能进行任何操作。
+ *
+ * @module FileDisplayForRecord
+ * @class FileDisplayForRecord
+ */
+import * as io from &#x27;socket.io-client&#x27;
 
-</div>
+export default {
+    name: &#x27;file-display&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
 
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;],
+    data: function () {
+        return {
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
+            socket: &#x27;&#x27;,
+            /**
+             * 表示存放文件的根目录
+             *
+             * @attribute baseRoute
+             * @readOnly
+             * @type String
+             * @default &#x27;static/ppt/&#x27;
+             */
+            baseRoute: &#x27;static/ppt/&#x27;,
+            /**
+             * 表示老师上传文件的完整路径
+             *
+             * @attribute route
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            route: &#x27;&#x27;,
+            /**
+             * 表示老师上传文件的最大页数
+             *
+             * @attribute maxPage
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            maxPage: &#x27;&#x27;,
+            /**
+             * 表示当前页码数
+             *
+             * @attribute currentPage
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            currentPage: &#x27;&#x27;,
+            /**
+             * 表示上传文件的数量
+             *
+             * @attribute fileNum
+             * @type Number
+             * @default 0
+             */
+            fileNum: 0
+        }
+    },
+    /**
+     * mounted函数，初始化相关数据，客户端监听服务器消息
+     *
+     * @method mounted
+     */
+    mounted: function () {
+        let self = this
+        self.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+        self.socket.emit(&#x27;joinTest&#x27;, 888)
+        self.socket.on(&#x27;filedisplay&#x27;, function (data) {
+            self.teacherId = data[&#x27;teacherId&#x27;]
+            self.fileNum = data[&#x27;fileNum&#x27;]
+            self.currentPage = data[&#x27;currentPage&#x27;]
+            self.maxPage = data[&#x27;maxPage&#x27;]
+            self.route = self.baseRoute + self.teacherId + &#x27;and&#x27; + self.fileNum + &#x27;/user-&#x27; + self.currentPage + &#x27;.png&#x27;
+            // this.route = this.baseRoute + this.teacherId + &#x27;and&#x27; + this.fileNum + &#x27;and&#x27; + this.roomId + &#x27;/user-&#x27; + this.currentPage + &#x27;.png&#x27;
+        })
+    }
+}
+&lt;/script&gt;
 
-</div>
+&lt;style scoped&gt;
+.file-display {
+    width: 100%;
+    height: auto;
+    background: #52524E;
+}
 
+.ppt-header {
+    background-color: #52524E;
+    width: 100%;
+    height: 50px;
+    border-color: #52524E;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 20px;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+img {
+    border: 3px solid #52524E;
+    height: auto;
+    width: 100%;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
+.ppt-footer {
+    width: 100%;
+    height: 80px;
+    background-color: #52524E;
+    text-align: center;
+    display: flex;
+}
 
+.for-footer {
+    width: auto;
+    height: 80px;
+    margin: auto;
+    display: flex;
+}
 
-    <div class="yui3-u-1-2">
-    </div>
+.arrow {
+    height: 80px;
+    font-size: 60px;
+    color: white;
+    line-height: 80px;
+}
+
+.arrow:hover {
+    color: #9A9B94;
+}
+
+.for-place {
+    width: auto;
+    position: relative;
+    display: flex;
+    margin: 0;
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+}
+
+.every-option {
+    background: white;
+    font-size: 10px;
+}
+
+.ppt-page {
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+    text-align: right;
+}
+&lt;/style&gt;
+
+    </pre>
 </div>
                     </div>
                 </div>

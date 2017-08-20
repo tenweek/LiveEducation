@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>RecordPicture.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,114 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: RecordPicture.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;Card id=&quot;record-picture&quot; padding=&quot;8&quot;&gt;
+        &lt;div class=&quot;picture&quot;&gt;
+            &lt;a @click=&quot;recordRoom&quot;&gt;
+                &lt;div class=&quot;for-img&quot;&gt;
+                    &lt;img src=&quot;./../assets/record.jpg&quot; width=&quot;100%&quot;&gt;
+                &lt;/div&gt;
+                &lt;label id=&quot;information-room-name&quot;&gt;房间名&lt;/label&gt;
+                &lt;br&gt;
+                &lt;label id=&quot;information-teacher-name&quot;&gt;主讲教师&lt;/label&gt;
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/Card&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script&gt;
+/**
+ * 表示录播房间的缩略图，
+ * 包含老师上传的封面图片及房间信息（房间名称、老师名称），
+ * 作为子组件插入首页或录播详情页。
+ *
+ * @module RecordPicture
+ * @class RecordPicture
+ */
+import myMsg from &#x27;./../warning.js&#x27;
+export default {
+    name: &#x27;RecordPicture&#x27;,
+    components: {},
+    data: function () {
+        return {
+            /**
+             *表示用户是否登录
+             *
+             * @attribute canWork
+             * @type Boolean
+             * @default false
+             */
+            canWork: false
+        }
+    },
+    /**
+     * created函数，判断用户是否登录
+     *
+     * @method created
+     */
+    created: function () {
+        let arrCookies = document.cookie.split(&#x27;;&#x27;)
+        for (let i = 0; i &lt; arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split(&#x27;=&#x27;)
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, &#x27;&#x27;) === &#x27;userAccount&#x27;) {
+                this.canWork = true
+            }
+        }
+    },
+    methods: {
+        /**
+         * 进入录播房间，
+         * 如果用户没有登录，则弹出消息框提示。
+         *
+         * @method recordRoom
+         */
+        recordRoom: function () {
+            if (this.canWork) {
+                window.open(&#x27;./#/record_room/&#x27;)
+            } else {
+                this.$Message.error(myMsg.account[&#x27;loginNeeded&#x27;])
+            }
+        }
+    }
+}
 
-</div>
+&lt;/script&gt;
 
+&lt;style scoped&gt;
+.picture {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+}
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+.for-img {
+    width: 100%;
+    height: auto;
+}
 
-</div>
+#information-room-name {
+    padding-left: 6px;
+}
 
+#information-teacher-name {
+    padding-left: 5px;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+.picture a {
+    color: #464c5b;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+.picture:hover {
+    color: #22313F;
+}
+&lt;/style&gt;
+    </pre>
 </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>LivePage</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,43 +117,202 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1>LivePage Class</h1>
+<div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/LivePage.js.html#l25"><code>LivePage.js:25</code></a>
         </div>
+
+            Module: <a href="../modules/LivePage.html">LivePage</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>直播详情页，
+包含正在直播的所有房间缩略图及信息。</p>
 
 </div>
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab attrs"><a href="#attrs">Attributes</a></li>
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                            <li class="index-item method">
+                                <a href="#method_created">created</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_getRooms">getRooms</a>
+
+                            </li>
+                    </ul>
+                </div>
+
+
+                <div class="index-section attrs">
+                    <h3>Attributes</h3>
+
+                    <ul class="index-list attrs">
+                            <li class="index-item attr">
+                                <a href="#attr_option">option</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_rooms">rooms</a>
+                            </li>
+                    </ul>
+                </div>
+
+        </div>
+
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method_created" class="method item">
+    <h3 class="name"><code>created</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePage.js.html#l38"><code>LivePage.js:38</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>created函数，调用getRooms函数</p>
+
     </div>
 
 
-    <div class="yui3-u-1-2">
+
+
+</div>
+<div id="method_getRooms" class="method item">
+    <h3 class="name"><code>getRooms</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePage.js.html#l72"><code>LivePage.js:72</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>获取房间信息</p>
+
+    </div>
+
+
+
+
+</div>
+            </div>
+
+
+            <div id="attrs" class="api-class-tabpanel">
+                <h2 class="off-left">Attributes</h2>
+
+                    <div id="attr_option" class="attr item">
+                        <a name="config_option"></a> 
+                        <h3 class="name"><code>option</code></h3>
+                        <span class="type">Number</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/LivePage.js.html#l53"><code>LivePage.js:53</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示导航栏的选择（首页、直播、录播）</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> 2 2表示当前处于直播详情页</p>
+                    
+                    
+                    </div>
+                    <div id="attr_rooms" class="attr item">
+                        <a name="config_rooms"></a> 
+                        <h3 class="name"><code>rooms</code></h3>
+                        <span class="type">Array</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/LivePage.js.html#l61"><code>LivePage.js:61</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>存储所有正在直播的房间信息</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> []</p>
+                    
+                    
+                    </div>
+            </div>
+
     </div>
 </div>
                     </div>

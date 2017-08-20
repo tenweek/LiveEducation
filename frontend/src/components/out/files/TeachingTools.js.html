@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>TeachingTools.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,146 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: TeachingTools.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;Card&gt;
+        &lt;div id=&quot;teaching-tools&quot;&gt;
+            &lt;div class=&quot;choose-current&quot;&gt;
+                &lt;Dropdown trigger=&quot;hover&quot; placement=&quot;right-start&quot; @on-click=&quot;changeCurrent&quot;&gt;
+                    &lt;Button type=&quot;ghost&quot;&gt;
+                        教学区
+                        &lt;Icon type=&quot;arrow-right-b&quot;&gt;&lt;/Icon&gt;
+                    &lt;/Button&gt;
+                    &lt;Dropdown-menu slot=&quot;list&quot;&gt;
+                        &lt;Dropdown-item name=&quot;WhiteBoard&quot;&gt;白板&lt;/Dropdown-item&gt;
+                        &lt;Dropdown-item name=&quot;CodeEditor&quot;&gt;代码编辑器&lt;/Dropdown-item&gt;
+                        &lt;Dropdown-item name=&quot;FileDisplay&quot;&gt;课件展示&lt;/Dropdown-item&gt;
+                    &lt;/Dropdown-menu&gt;
+                &lt;/Dropdown&gt;
+            &lt;/div&gt;
+            &lt;keep-alive&gt;
+                &lt;component :is=&quot;currentTools&quot; :roomId=&quot;this.roomId&quot; :teacherName=&quot;this.teacherName&quot; :username=&quot;this.username&quot; :teaching-tools-width=&quot;this.teachingToolsWidth&quot; :teaching-tools-height=&quot;this.teachingToolsHeight&quot;&gt;&lt;/component&gt;
+            &lt;/keep-alive&gt;
+        &lt;/div&gt;
+    &lt;/Card&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+/**
+ * 教学区组件，包含白板、ppt、代码编辑器，
+ * 作为子组件插入到直播间页面。
+ *
+ * @module TeachingTools
+ * @class TeachingTools
+ */
+import * as io from &#x27;socket.io-client&#x27;
+import FileDisplay from &#x27;./FileDisplay&#x27;
+import WhiteBoard from &#x27;./WhiteBoard&#x27;
+import CodeEditor from &#x27;./CodeEditor&#x27;
 
-</div>
+export default {
+    name: &#x27;teaching-tools&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
 
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
 
-</div>
+    /**
+     *表示白板区域的宽，根据父组件大小动态变化
+     *
+     * @property teachingToolsWidth
+     * @type Number
+     */
 
+    /**
+     *表示白板区域的长，根据父组件大小动态变化
+     *
+     * @property teachingToolsHeight
+     * @type Number
+     */
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;, &#x27;teachingToolsWidth&#x27;, &#x27;teachingToolsHeight&#x27;],
+    components: {
+        FileDisplay,
+        CodeEditor,
+        WhiteBoard
+    },
+    data: function () {
+        return {
+            /**
+             * 表示当前选择的工具（白板、PPT、代码编辑器）
+             *
+             * @attribute currentTools
+             * @type String
+             * @default &#x27;WhiteBoard&#x27;
+             */
+            currentTools: &#x27;WhiteBoard&#x27;,
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
+            socket: &#x27;&#x27;
+        }
+    },
+    /**
+     * created函数，连接到socket服务器，并发送&#x27;joinRoom&#x27;消息
+     *
+     * @method created
+     */
+    created: function () {
+        this.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+        this.socket.emit(&#x27;joinRoom&#x27;, this.roomId)
+    },
+    /**
+     * mounted函数，当接收到&#x27;message&#x27;消息时改变相应属性值
+     *
+     * @method mounted
+     */
+    mounted: function () {
+        let self = this
+        self.socket.on(&#x27;message&#x27;, function (data) {
+            self.currentTools = data[&#x27;name&#x27;]
+        })
+    },
+    methods: {
+        /**
+         * 向服务器发送&#x27;message&#x27;消息以改变当前选中的工具
+         *
+         * @method changeCurrent
+         */
+        changeCurrent: function (name) {
+            this.socket.emit(&#x27;message&#x27;, {
+                &#x27;type&#x27;: &#x27;changeComponents&#x27;,
+                &#x27;name&#x27;: name
+            }, this.roomId)
+        }
+    }
+}
+&lt;/script&gt;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

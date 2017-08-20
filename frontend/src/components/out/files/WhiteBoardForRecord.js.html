@@ -38,20 +38,50 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
-                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../classes/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
                                 <li><a href="../classes/HomePage.html">HomePage</a></li>
                                 <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/LivePage.html">LivePage</a></li>
+                                <li><a href="../classes/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../classes/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../classes/Login.html">Login</a></li>
+                                <li><a href="../classes/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../classes/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../classes/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../classes/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../classes/Reset.html">Reset</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../classes/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
                 
                 
                             <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../modules/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../modules/HomePage.html">HomePage</a></li>
+                                <li><a href="../modules/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../modules/LivePage.html">LivePage</a></li>
+                                <li><a href="../modules/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../modules/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../modules/Login.html">Login</a></li>
+                                <li><a href="../modules/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../modules/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../modules/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../modules/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../modules/Reset.html">Reset</a></li>
+                                <li><a href="../modules/SignUp.html">SignUp</a></li>
+                                <li><a href="../modules/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../modules/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
@@ -114,28 +144,177 @@ import myMsg from &#x27;./../warning.js&#x27;
 const MIN = 0.005
 export default {
     name: &#x27;white-board&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+    /**
+     *表示白板区域的宽，根据父组件大小动态变化
+     *
+     * @property teachingToolsWidth
+     * @type Number
+     */
+
+    /**
+     *表示白板区域的长，根据父组件大小动态变化
+     *
+     * @property teachingToolsHeight
+     * @type Number
+     */
     props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;, &#x27;teachingToolsWidth&#x27;, &#x27;teachingToolsHeight&#x27;],
     data: function () {
         return {
+            /**
+             * 表示当前老师选中的绘图功能
+             *
+             * @attribute type
+             * @type String
+             * @default &#x27;pen&#x27;
+             */
             type: &#x27;pen&#x27;,
-            context: null,
+            /**
+             * 获取canvas的上下文，指代页面上的绘图区域，
+             * 用于对白板操作。
+             *
+             * @attribute context
+             * @type null
+             */
+            /**
+             * 表示绘图过程中（mousemove时）上一次鼠标的位置，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute originPoint
+             * @type null
+             */
             originPoint: null,
+            /**
+             * 表示绘图过程中（mousemove时）上一次操作的绘图结果，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute lastImageData
+             * @type null
+             */
             lastImageData: null,
+            /**
+             * 表示画板上边框的颜色（第一个颜色选择器）
+             *
+             * @attribute colorBorder
+             * @type String
+             * @default &#x27;rgba(0, 0, 0, 1)&#x27;
+             */
             colorBorder: &#x27;rgba(0, 0, 0, 1)&#x27;,
+            /**
+             * 表示画板上填充的颜色（第二个颜色选择器）
+             *
+             * @attribute colorFill
+             * @type String
+             * @default &#x27;rgba(255, 255, 255, 1)&#x27;
+             */
             colorFill: &#x27;rgba(255, 255, 255, 1)&#x27;,
+            /**
+             * 表示是否选择&quot;填充&quot;按钮
+             *
+             * @attribute fill
+             * @type Boolean
+             * @default false
+             */
             fill: false,
+            /**
+             * 表示是否选择&quot;边框&quot;按钮
+             *
+             * @attribute border
+             * @type Boolean
+             * @default true
+             */
             border: true,
+            /**
+             * 表示是否选择粗细的大小
+             *
+             * @attribute size
+             * @type Number
+             * @default 1
+             */
             size: 1,
+            /**
+             * 表示文本输入框是否显示
+             *
+             * @attribute textField
+             * @type Boolean
+             * @default false
+             */
             textField: false,
+            /**
+             * 表示文本输入框中输入的文字
+             *
+             * @attribute textInput
+             * @type String
+             * @default &#x27;&#x27;
+             */
             textInput: &#x27;&#x27;,
+            /**
+             * 表示绘制文字时文字起始位置的横坐标
+             *
+             * @attribute textLeft
+             * @type Number
+             * @default 0
+             */
             textLeft: 0,
+            /**
+             * 表示绘制文字时文字起始位置的纵坐标
+             *
+             * @attribute textTop
+             * @type Number
+             * @default 0
+             */
             textTop: 0,
+            /**
+             * 指向canvas画板对象
+             *
+             * @attribute canvas
+             * @type null
+             */
             canvas: null,
+            /**
+             * 存储画板上每次操作对应的图片
+             *
+             * @attribute allDataUrl
+             * @type Array
+             */
             allDataUrl: [],
-            currentImageData: null,
+            /**
+             * 表示一个指针，指向allDataUrl中当前画板的状态，
+             * 在undo操作时前移一个，从而实现undo操作。
+             *
+             * @attribute pointer
+             * @type Number
+             * @default 0
+             */
             pointer: 0,
-            socket: &#x27;&#x27;,
-            roomId: &#x27;&#x27;
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
+            socket: &#x27;&#x27;
         }
     },
     watch: {
@@ -154,6 +333,11 @@ export default {
             }
         }
     },
+    /**
+     * mounted函数，初始化数据，客户端监听服务器消息
+     *
+     * @method mounted
+     */
     mounted: function () {
         this.initData()
         let self = this

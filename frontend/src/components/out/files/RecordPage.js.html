@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>RecordPage.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,151 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: RecordPage.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;record-page&quot;&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;home-page-header :myOption=&quot;this.option&quot;&gt;&lt;/home-page-header&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;navigation&quot;&gt;
+            &lt;div class=&quot;welcome&quot;&gt;
+                &lt;Icon type=&quot;videocamera&quot;&gt;&lt;/Icon&gt;
+                &lt;label&gt;录播课堂：&lt;/label&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;list&quot;&gt;
+            &lt;div class=&quot;list-picture&quot;&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;every-picture&quot;&gt;
+                    &lt;record-picture&gt;&lt;/record-picture class=&quot;record-picture&quot;&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;page-footer&gt;&lt;/page-footer&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script&gt;
+/**
+ * 录播详情页，显示所有录播房间的缩略图及房间信息。
+ *
+ * @module RecordPage
+ * @class RecordPage
+ */
+import RecordPicture from &#x27;./RecordPicture&#x27;
+import HomePageHeader from &#x27;./HomePageHeader&#x27;
+import PageFooter from &#x27;./PageFooter&#x27;
 
-</div>
+export default {
+    name: &#x27;record-page&#x27;,
+    components: {
+        RecordPicture,
+        HomePageHeader,
+        PageFooter
+    },
+    /**
+     * 表示导航栏的选择（首页、直播、录播）
+     *
+     * @attribute option
+     * @type Number
+     * @default 3 3表示当前处于录播详情页
+     */
+    data: function () {
+        return {
+            option: 3
+        }
+    },
+    methods: {
+    }
+}
+&lt;/script&gt;
 
+&lt;style scoped&gt;
+.list {
+    height: auto;
+    min-height: 295px;
+    width: 65%;
+    min-width: 800px;
+    max-width: 1000px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    margin: auto;
+    overflow: hidden;
+    background: white;
+    padding-top: 8px;
+    padding-bottom: 30px;
+}
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+.list-picture {
+    height: 100%;
+    width: 100%;
+    min-width: 800px;
+    padding-top: 5px;
+    padding-left: 4%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
 
-</div>
+.every-picture {
+    width: 20%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 10px;
+}
 
+.record-picture {
+    width: 160px;
+    height: auto;
+    margin: auto;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+.navigation {
+    background: #efefef;
+    padding: 8px 40px;
+    overflow: hidden;
+    display: flex;
+    font-size: 15px;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
+.record-page {
+    background-color: #efefef;
+    height: 50px;
+}
 
-
-    <div class="yui3-u-1-2">
-    </div>
+.header {
+    height: 60px;
+    width: 100%;
+    font-size: 40px;
+    z-index: 50;
+}
+&lt;/style&gt;
+    </pre>
 </div>
                     </div>
                 </div>

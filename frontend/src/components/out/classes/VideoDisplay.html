@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>VideoDisplay</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,26 +117,21 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Class</h1>
+<h1>VideoDisplay Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/VideoDisplay.js.html#l33"><code>VideoDisplay.js:33</code></a>
         </div>
 
-            Module: <a href="../modules/CodeEditor.html">CodeEditor</a>
+            Module: <a href="../modules/VideoDisplay.html">VideoDisplay</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>视频直播区域</p>
 
 </div>
 
@@ -159,7 +154,43 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
+                                <a href="#method_created">created</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#method_mounted">mounted</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_play">play</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_showVideo">showVideo</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_"></a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_clientInit">clientInit</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_getDevices">getDevices</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_join">join</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_leave">leave</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_monitorStream">monitorStream</a>
 
                             </li>
                     </ul>
@@ -189,16 +220,28 @@
 
                     <ul class="index-list attrs">
                             <li class="index-item attr">
-                                <a href="#attr_code">code</a>
+                                <a href="#attr_appKey">appKey</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_editorOptions">editorOptions</a>
+                                <a href="#attr_audioSelect">audioSelect</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_modeList">modeList</a>
+                                <a href="#attr_camera">camera</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_socket">socket</a>
+                                <a href="#attr_client">client</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_isTeacher">isTeacher</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_localStream">localStream</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_microphone">microphone</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_videoSelect">videoSelect</a>
                             </li>
                     </ul>
                 </div>
@@ -208,6 +251,37 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
+<div id="method_created" class="method item">
+    <h3 class="name"><code>created</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l131"><code>VideoDisplay.js:131</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>created函数，初始化isTeacher值</p>
+
+    </div>
+
+
+
+
+</div>
 <div id="method_mounted" class="method item">
     <h3 class="name"><code>mounted</code></h3>
 
@@ -223,7 +297,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l117"><code>CodeEditor.js:117</code></a>
+        <a href="../files/VideoDisplay.js.html#l139"><code>VideoDisplay.js:139</code></a>
         </p>
 
 
@@ -231,7 +305,255 @@
     </div>
 
     <div class="description">
-        <p>mounted函数，连接到socket服务器，并初始化相关数据。</p>
+        <p>mounted函数，初始化相关数据</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_play" class="method item">
+    <h3 class="name"><code>play</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l165"><code>VideoDisplay.js:165</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>播放视频</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_showVideo" class="method item">
+    <h3 class="name"><code>showVideo</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l149"><code>VideoDisplay.js:149</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>显示直播视频</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_" class="method item">
+    <h3 class="name"><code></code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l175"><code>VideoDisplay.js:175</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>停止播放视频</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_clientInit" class="method item">
+    <h3 class="name"><code>clientInit</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l205"><code>VideoDisplay.js:205</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>初始化client对象</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_getDevices" class="method item">
+    <h3 class="name"><code>getDevices</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l266"><code>VideoDisplay.js:266</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>获取用户设备（用户的麦克风和摄像头的使用权限）</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_join" class="method item">
+    <h3 class="name"><code>join</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l185"><code>VideoDisplay.js:185</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>老师开始直播</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_leave" class="method item">
+    <h3 class="name"><code>leave</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l258"><code>VideoDisplay.js:258</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>关闭直播视频</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_monitorStream" class="method item">
+    <h3 class="name"><code>monitorStream</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/VideoDisplay.js.html#l234"><code>VideoDisplay.js:234</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>监测音视频流的状态并根据事件执行回调函数</p>
 
     </div>
 
@@ -255,7 +577,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l28"><code>CodeEditor.js:28</code></a>
+        <a href="../files/VideoDisplay.js.html#l41"><code>VideoDisplay.js:41</code></a>
         </p>
 
 
@@ -280,7 +602,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l35"><code>CodeEditor.js:35</code></a>
+        <a href="../files/VideoDisplay.js.html#l48"><code>VideoDisplay.js:48</code></a>
         </p>
 
 
@@ -305,7 +627,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l42"><code>CodeEditor.js:42</code></a>
+        <a href="../files/VideoDisplay.js.html#l55"><code>VideoDisplay.js:55</code></a>
         </p>
 
 
@@ -324,9 +646,40 @@
             <div id="attrs" class="api-class-tabpanel">
                 <h2 class="off-left">Attributes</h2>
 
-                    <div id="attr_code" class="attr item">
-                        <a name="config_code"></a> 
-                        <h3 class="name"><code>code</code></h3>
+                    <div id="attr_appKey" class="attr item">
+                        <a name="config_appKey"></a> 
+                        <h3 class="name"><code>appKey</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                            <span class="flag readonly">readonly</span>
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/VideoDisplay.js.html#l104"><code>VideoDisplay.js:104</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>声网提供的项目的aapID</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;9b343e8aaaa144928e093b29513634e9&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_audioSelect" class="attr item">
+                        <a name="config_audioSelect"></a> 
+                        <h3 class="name"><code>audioSelect</code></h3>
                         <span class="type">String</span>
                     
                     
@@ -339,25 +692,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l51"><code>CodeEditor.js:51</code></a>
+                            <a href="../files/VideoDisplay.js.html#l88"><code>VideoDisplay.js:88</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示编辑器中输入的代码</p>
+                            <p>表示用户麦克风的权限</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;const a = 10   123456789&#x27;</p>
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
-                    <div id="attr_editorOptions" class="attr item">
-                        <a name="config_editorOptions"></a> 
-                        <h3 class="name"><code>editorOptions</code></h3>
-                        <span class="type">Object</span>
+                    <div id="attr_camera" class="attr item">
+                        <a name="config_camera"></a> 
+                        <h3 class="name"><code>camera</code></h3>
+                        <span class="type">String</span>
                     
                     
                     
@@ -369,24 +722,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l59"><code>CodeEditor.js:59</code></a>
+                            <a href="../files/VideoDisplay.js.html#l113"><code>VideoDisplay.js:113</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>编辑器中的一些设置参数</p>
+                            <p>表示用户的摄像头</p>
                     
                         </div>
                     
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
-                    <div id="attr_modeList" class="attr item">
-                        <a name="config_modeList"></a> 
-                        <h3 class="name"><code>modeList</code></h3>
-                        <span class="type">Array</span>
+                    <div id="attr_client" class="attr item">
+                        <a name="config_client"></a> 
+                        <h3 class="name"><code>client</code></h3>
+                        <span class="type">String</span>
                     
                     
                     
@@ -398,24 +752,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l87"><code>CodeEditor.js:87</code></a>
+                            <a href="../files/VideoDisplay.js.html#l64"><code>VideoDisplay.js:64</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示语言选择的列表</p>
+                            <p>client对象</p>
                     
                         </div>
                     
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
-                    <div id="attr_socket" class="attr item">
-                        <a name="config_socket"></a> 
-                        <h3 class="name"><code>socket</code></h3>
-                        <span class="type">Object</span>
+                    <div id="attr_isTeacher" class="attr item">
+                        <a name="config_isTeacher"></a> 
+                        <h3 class="name"><code>isTeacher</code></h3>
+                        <span class="type">Boolean</span>
                     
                     
                     
@@ -427,14 +782,104 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l79"><code>CodeEditor.js:79</code></a>
+                            <a href="../files/VideoDisplay.js.html#l121"><code>VideoDisplay.js:121</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示客户端，监听服务器传来的消息</p>
+                            <p>判断当前用户是否为老师（创建房间的用户）</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> false</p>
+                    
+                    
+                    </div>
+                    <div id="attr_localStream" class="attr item">
+                        <a name="config_localStream"></a> 
+                        <h3 class="name"><code>localStream</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/VideoDisplay.js.html#l72"><code>VideoDisplay.js:72</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示本地音视频流</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_microphone" class="attr item">
+                        <a name="config_microphone"></a> 
+                        <h3 class="name"><code>microphone</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/VideoDisplay.js.html#l80"><code>VideoDisplay.js:80</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示用户的麦克风</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_videoSelect" class="attr item">
+                        <a name="config_videoSelect"></a> 
+                        <h3 class="name"><code>videoSelect</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/VideoDisplay.js.html#l96"><code>VideoDisplay.js:96</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示用户摄像头的权限</p>
                     
                         </div>
                     

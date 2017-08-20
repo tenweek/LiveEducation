@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>FileDisplayForRecord</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,26 +117,23 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Class</h1>
+<h1>FileDisplayForRecord Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/FileDisplayForRecord.js.html#l27"><code>FileDisplayForRecord.js:27</code></a>
         </div>
 
-            Module: <a href="../modules/CodeEditor.html">CodeEditor</a>
+            Module: <a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>实现教学区ppt等文件播放的复现，
+作为子组件插入录播间页面，
+用户不能进行任何操作。</p>
 
 </div>
 
@@ -189,13 +186,19 @@
 
                     <ul class="index-list attrs">
                             <li class="index-item attr">
-                                <a href="#attr_code">code</a>
+                                <a href="#attr_baseRoute">baseRoute</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_editorOptions">editorOptions</a>
+                                <a href="#attr_currentPage">currentPage</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_modeList">modeList</a>
+                                <a href="#attr_fileNum">fileNum</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_maxPage">maxPage</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_route">route</a>
                             </li>
                             <li class="index-item attr">
                                 <a href="#attr_socket">socket</a>
@@ -223,7 +226,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l117"><code>CodeEditor.js:117</code></a>
+        <a href="../files/FileDisplayForRecord.js.html#l113"><code>FileDisplayForRecord.js:113</code></a>
         </p>
 
 
@@ -231,7 +234,7 @@
     </div>
 
     <div class="description">
-        <p>mounted函数，连接到socket服务器，并初始化相关数据。</p>
+        <p>mounted函数，初始化相关数据，客户端监听服务器消息</p>
 
     </div>
 
@@ -255,7 +258,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l28"><code>CodeEditor.js:28</code></a>
+        <a href="../files/FileDisplayForRecord.js.html#l39"><code>FileDisplayForRecord.js:39</code></a>
         </p>
 
 
@@ -280,7 +283,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l35"><code>CodeEditor.js:35</code></a>
+        <a href="../files/FileDisplayForRecord.js.html#l46"><code>FileDisplayForRecord.js:46</code></a>
         </p>
 
 
@@ -305,7 +308,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l42"><code>CodeEditor.js:42</code></a>
+        <a href="../files/FileDisplayForRecord.js.html#l53"><code>FileDisplayForRecord.js:53</code></a>
         </p>
 
 
@@ -324,9 +327,40 @@
             <div id="attrs" class="api-class-tabpanel">
                 <h2 class="off-left">Attributes</h2>
 
-                    <div id="attr_code" class="attr item">
-                        <a name="config_code"></a> 
-                        <h3 class="name"><code>code</code></h3>
+                    <div id="attr_baseRoute" class="attr item">
+                        <a name="config_baseRoute"></a> 
+                        <h3 class="name"><code>baseRoute</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                            <span class="flag readonly">readonly</span>
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/FileDisplayForRecord.js.html#l70"><code>FileDisplayForRecord.js:70</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示存放文件的根目录</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;static/ppt/&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_currentPage" class="attr item">
+                        <a name="config_currentPage"></a> 
+                        <h3 class="name"><code>currentPage</code></h3>
                         <span class="type">String</span>
                     
                     
@@ -339,25 +373,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l51"><code>CodeEditor.js:51</code></a>
+                            <a href="../files/FileDisplayForRecord.js.html#l95"><code>FileDisplayForRecord.js:95</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示编辑器中输入的代码</p>
+                            <p>表示当前页码数</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;const a = 10   123456789&#x27;</p>
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
-                    <div id="attr_editorOptions" class="attr item">
-                        <a name="config_editorOptions"></a> 
-                        <h3 class="name"><code>editorOptions</code></h3>
-                        <span class="type">Object</span>
+                    <div id="attr_fileNum" class="attr item">
+                        <a name="config_fileNum"></a> 
+                        <h3 class="name"><code>fileNum</code></h3>
+                        <span class="type">Number</span>
                     
                     
                     
@@ -369,24 +403,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l59"><code>CodeEditor.js:59</code></a>
+                            <a href="../files/FileDisplayForRecord.js.html#l103"><code>FileDisplayForRecord.js:103</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>编辑器中的一些设置参数</p>
+                            <p>表示上传文件的数量</p>
                     
                         </div>
                     
+                            <p><strong>Default:</strong> 0</p>
                     
                     
                     </div>
-                    <div id="attr_modeList" class="attr item">
-                        <a name="config_modeList"></a> 
-                        <h3 class="name"><code>modeList</code></h3>
-                        <span class="type">Array</span>
+                    <div id="attr_maxPage" class="attr item">
+                        <a name="config_maxPage"></a> 
+                        <h3 class="name"><code>maxPage</code></h3>
+                        <span class="type">String</span>
                     
                     
                     
@@ -398,17 +433,48 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l87"><code>CodeEditor.js:87</code></a>
+                            <a href="../files/FileDisplayForRecord.js.html#l87"><code>FileDisplayForRecord.js:87</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示语言选择的列表</p>
+                            <p>表示老师上传文件的最大页数</p>
                     
                         </div>
                     
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_route" class="attr item">
+                        <a name="config_route"></a> 
+                        <h3 class="name"><code>route</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/FileDisplayForRecord.js.html#l79"><code>FileDisplayForRecord.js:79</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示老师上传文件的完整路径</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
@@ -427,7 +493,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l79"><code>CodeEditor.js:79</code></a>
+                            <a href="../files/FileDisplayForRecord.js.html#l62"><code>FileDisplayForRecord.js:62</code></a>
                             </p>
                     
                     

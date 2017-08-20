@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>FileDisplay</title>
+    <title>ChatBoard</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,25 +117,22 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>FileDisplay Class</h1>
+<h1>ChatBoard Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/FileDisplay.js.html#l63"><code>FileDisplay.js:63</code></a>
+            Defined in: <a href="../files/ChatBoard.js.html#l44"><code>ChatBoard.js:44</code></a>
         </div>
 
-            Module: <a href="../modules/FileDisplay.html">FileDisplay</a>
+            Module: <a href="../modules/ChatBoard.html">ChatBoard</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区ppt等文件播放功能，
-作为子组件插入直播间页面。
-老师端可以对ppt做上下翻页等操作，
-学生端不能对白板操作，
-只能同步看到老师的操作。</p>
+    <p>实现聊天室功能，
+作为子组件插入直播间页面。</p>
 
 </div>
 
@@ -158,31 +155,43 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_changePage">changePage</a>
+                                <a href="#method_allowAllSpeak">allowAllSpeak</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_created">created</a>
+                                <a href="#method_allowSpeak">allowSpeak</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_fileFormatError">fileFormatError</a>
+                                <a href="#method_changeStuNum">changeStuNum</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_getTeahcerFileInfo">getTeahcerFileInfo</a>
+                                <a href="#method_contextMenu">contextMenu</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_handleUpload">handleUpload</a>
+                                <a href="#method_gag">gag</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_makeFocus">makeFocus</a>
+                                <a href="#method_gagAll">gagAll</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_modPicture">modPicture</a>
+                                <a href="#method_getName">getName</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_getName">getName</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_kickOut">kickOut</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_kickSomeoneOut">kickSomeoneOut</a>
 
                             </li>
                             <li class="index-item method">
@@ -190,15 +199,11 @@
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_nextPicture">nextPicture</a>
+                                <a href="#method_sendMsg">sendMsg</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_prePicture">prePicture</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_upload">upload</a>
+                                <a href="#method_teacherDoing">teacherDoing</a>
 
                             </li>
                     </ul>
@@ -208,6 +213,10 @@
                     <h3>Properties</h3>
 
                     <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_aboveHidden">aboveHidden</a>
+
+                            </li>
                             <li class="index-item property">
                                 <a href="#property_roomId">roomId</a>
 
@@ -228,34 +237,28 @@
 
                     <ul class="index-list attrs">
                             <li class="index-item attr">
-                                <a href="#attr_baseRoute">baseRoute</a>
+                                <a href="#attr_choosenUser">choosenUser</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_currentPage">currentPage</a>
+                                <a href="#attr_gagList">gagList</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_file">file</a>
+                                <a href="#attr_messages">messages</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_fileNum">fileNum</a>
+                                <a href="#attr_msgInput">msgInput</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_isTeacher">isTeacher</a>
-                            </li>
-                            <li class="index-item attr">
-                                <a href="#attr_loadingStatus">loadingStatus</a>
-                            </li>
-                            <li class="index-item attr">
-                                <a href="#attr_maxPage">maxPage</a>
-                            </li>
-                            <li class="index-item attr">
-                                <a href="#attr_route">route</a>
+                                <a href="#attr_showGagList">showGagList</a>
                             </li>
                             <li class="index-item attr">
                                 <a href="#attr_socket">socket</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_teacherId">teacherId</a>
+                                <a href="#attr_speakList">speakList</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_started">started</a>
                             </li>
                     </ul>
                 </div>
@@ -265,8 +268,8 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_changePage" class="method item">
-    <h3 class="name"><code>changePage</code></h3>
+<div id="method_allowAllSpeak" class="method item">
+    <h3 class="name"><code>allowAllSpeak</code></h3>
 
         <span class="paren">()</span>
 
@@ -280,7 +283,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l354"><code>FileDisplay.js:354</code></a>
+        <a href="../files/ChatBoard.js.html#l301"><code>ChatBoard.js:301</code></a>
         </p>
 
 
@@ -288,7 +291,7 @@
     </div>
 
     <div class="description">
-        <p>改变当前页到指定页码</p>
+        <p>全局解禁</p>
 
     </div>
 
@@ -296,8 +299,8 @@
 
 
 </div>
-<div id="method_created" class="method item">
-    <h3 class="name"><code>created</code></h3>
+<div id="method_allowSpeak" class="method item">
+    <h3 class="name"><code>allowSpeak</code></h3>
 
         <span class="paren">()</span>
 
@@ -311,7 +314,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l182"><code>FileDisplay.js:182</code></a>
+        <a href="../files/ChatBoard.js.html#l387"><code>ChatBoard.js:387</code></a>
         </p>
 
 
@@ -319,8 +322,7 @@
     </div>
 
     <div class="description">
-        <p>created函数，如果用户是创建房间的老师，
-获取上传的文件信息，并设置当且页为第一页。</p>
+        <p>给特定用户解禁</p>
 
     </div>
 
@@ -328,62 +330,8 @@
 
 
 </div>
-<div id="method_fileFormatError" class="method item">
-    <h3 class="name"><code>fileFormatError</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>file</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/FileDisplay.js.html#l257"><code>FileDisplay.js:257</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>上传文件时，若文件格式不正确，给出提示</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">file</code>
-                        <span class="type">Object</span>
-
-
-                    <div class="param-description">
-                        <p>表示用户当前想要上传的文件</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-
-
-</div>
-<div id="method_getTeahcerFileInfo" class="method item">
-    <h3 class="name"><code>getTeahcerFileInfo</code></h3>
+<div id="method_changeStuNum" class="method item">
+    <h3 class="name"><code>changeStuNum</code></h3>
 
         <span class="paren">()</span>
 
@@ -397,7 +345,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l225"><code>FileDisplay.js:225</code></a>
+        <a href="../files/ChatBoard.js.html#l199"><code>ChatBoard.js:199</code></a>
         </p>
 
 
@@ -405,8 +353,8 @@
     </div>
 
     <div class="description">
-        <p>获取上传文件的信息，
-在created函数中调用</p>
+        <p>接收到'changeNum'消息时，发送'stuNum'，
+改变学生数量</p>
 
     </div>
 
@@ -414,16 +362,10 @@
 
 
 </div>
-<div id="method_handleUpload" class="method item">
-    <h3 class="name"><code>handleUpload</code></h3>
+<div id="method_contextMenu" class="method item">
+    <h3 class="name"><code>contextMenu</code></h3>
 
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>file</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
 
         <span class="returns-inline">
             <span class="type"></span>
@@ -438,7 +380,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l268"><code>FileDisplay.js:268</code></a>
+        <a href="../files/ChatBoard.js.html#l190"><code>ChatBoard.js:190</code></a>
         </p>
 
 
@@ -446,7 +388,114 @@
     </div>
 
     <div class="description">
-        <p>在上传文件之前要进行的操作</p>
+        <p>屏蔽浏览器右键</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                    <p>false</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_gag" class="method item">
+    <h3 class="name"><code>gag</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ChatBoard.js.html#l259"><code>ChatBoard.js:259</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>将被选中的用户禁言</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_gagAll" class="method item">
+    <h3 class="name"><code>gagAll</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ChatBoard.js.html#l281"><code>ChatBoard.js:281</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>全局禁言</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_getName" class="method item">
+    <h3 class="name"><code>getName</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>message</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ChatBoard.js.html#l177"><code>ChatBoard.js:177</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>获取被选中的学生名字</p>
 
     </div>
 
@@ -455,32 +504,23 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">file</code>
+                        <code class="param-name">message</code>
                         <span class="type">Object</span>
 
 
                     <div class="param-description">
-                        <p>表示用户将要上传的文件</p>
-
+                         
                     </div>
 
                 </li>
             </ul>
         </div>
 
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                    <p>true</p>
-
-            </div>
-        </div>
 
 
 </div>
-<div id="method_makeFocus" class="method item">
-    <h3 class="name"><code>makeFocus</code></h3>
+<div id="method_getName" class="method item">
+    <h3 class="name"><code>getName</code></h3>
 
         <span class="paren">()</span>
 
@@ -494,7 +534,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l345"><code>FileDisplay.js:345</code></a>
+        <a href="../files/ChatBoard.js.html#l369"><code>ChatBoard.js:369</code></a>
         </p>
 
 
@@ -502,7 +542,7 @@
     </div>
 
     <div class="description">
-        <p>当点击 时触发，</p>
+        <p>更新学生列表</p>
 
     </div>
 
@@ -510,8 +550,8 @@
 
 
 </div>
-<div id="method_modPicture" class="method item">
-    <h3 class="name"><code>modPicture</code></h3>
+<div id="method_kickOut" class="method item">
+    <h3 class="name"><code>kickOut</code></h3>
 
         <span class="paren">()</span>
 
@@ -525,7 +565,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l330"><code>FileDisplay.js:330</code></a>
+        <a href="../files/ChatBoard.js.html#l211"><code>ChatBoard.js:211</code></a>
         </p>
 
 
@@ -533,7 +573,38 @@
     </div>
 
     <div class="description">
-        <p>当点击 时触发，</p>
+        <p>用户接收到'kickOut'消息时（被提出房间时），弹出警告框进行提示</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_kickSomeoneOut" class="method item">
+    <h3 class="name"><code>kickSomeoneOut</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ChatBoard.js.html#l320"><code>ChatBoard.js:320</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>将被选中的学生踢出房间</p>
 
     </div>
 
@@ -556,7 +627,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l195"><code>FileDisplay.js:195</code></a>
+        <a href="../files/ChatBoard.js.html#l152"><code>ChatBoard.js:152</code></a>
         </p>
 
 
@@ -564,7 +635,7 @@
     </div>
 
     <div class="description">
-        <p>mounted函数，初始化相关数据，客户端监听服务器消息</p>
+        <p>mounted函数，初始化相关数据，客户端负责监听服务器传来的消息。</p>
 
     </div>
 
@@ -572,8 +643,8 @@
 
 
 </div>
-<div id="method_nextPicture" class="method item">
-    <h3 class="name"><code>nextPicture</code></h3>
+<div id="method_sendMsg" class="method item">
+    <h3 class="name"><code>sendMsg</code></h3>
 
         <span class="paren">()</span>
 
@@ -587,7 +658,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l292"><code>FileDisplay.js:292</code></a>
+        <a href="../files/ChatBoard.js.html#l225"><code>ChatBoard.js:225</code></a>
         </p>
 
 
@@ -595,8 +666,8 @@
     </div>
 
     <div class="description">
-        <p>老师点击下一页按钮或是按下键盘&quot;向下&quot;或&quot;向左&quot;键时响应，
-如果当前页不是最后一页，则进行翻页进入下一页的操作</p>
+        <p>发送小时时，首先判断该用户是否被禁言，
+若没有被禁言，向服务器发送'message'消息。</p>
 
     </div>
 
@@ -604,10 +675,16 @@
 
 
 </div>
-<div id="method_prePicture" class="method item">
-    <h3 class="name"><code>prePicture</code></h3>
+<div id="method_teacherDoing" class="method item">
+    <h3 class="name"><code>teacherDoing</code></h3>
 
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>name</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
 
 
 
@@ -619,7 +696,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l311"><code>FileDisplay.js:311</code></a>
+        <a href="../files/ChatBoard.js.html#l346"><code>ChatBoard.js:346</code></a>
         </p>
 
 
@@ -627,43 +704,26 @@
     </div>
 
     <div class="description">
-        <p>老师点击上一页按钮或是按下键盘&quot;向上&quot;或&quot;向左&quot;键时响应，
-如果当前页不是第一页，则进行返回到上一页的操作</p>
+        <p>老师进行的一些操作</p>
 
     </div>
 
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">name</code>
+                        <span class="type">Object</span>
 
 
+                    <div class="param-description">
+                         
+                    </div>
 
-</div>
-<div id="method_upload" class="method item">
-    <h3 class="name"><code>upload</code></h3>
-
-        <span class="paren">()</span>
-
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/FileDisplay.js.html#l280"><code>FileDisplay.js:280</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>上传文件成功时调用，获取文件信息
-并显示上传成功的消息框。</p>
-
-    </div>
-
+                </li>
+            </ul>
+        </div>
 
 
 
@@ -673,6 +733,31 @@
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
+<div id="property_aboveHidden" class="property item">
+    <h3 class="name"><code>aboveHidden</code></h3>
+    <span class="type">Boolean</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ChatBoard.js.html#l76"><code>ChatBoard.js:76</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>当有新的发言时，显示新的发言，并隐藏最远的一条记录。</p>
+
+    </div>
+
+
+
+</div>
 <div id="property_roomId" class="property item">
     <h3 class="name"><code>roomId</code></h3>
     <span class="type">String</span>
@@ -684,7 +769,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l77"><code>FileDisplay.js:77</code></a>
+        <a href="../files/ChatBoard.js.html#l55"><code>ChatBoard.js:55</code></a>
         </p>
 
 
@@ -709,7 +794,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l84"><code>FileDisplay.js:84</code></a>
+        <a href="../files/ChatBoard.js.html#l62"><code>ChatBoard.js:62</code></a>
         </p>
 
 
@@ -734,7 +819,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/FileDisplay.js.html#l91"><code>FileDisplay.js:91</code></a>
+        <a href="../files/ChatBoard.js.html#l69"><code>ChatBoard.js:69</code></a>
         </p>
 
 
@@ -753,41 +838,10 @@
             <div id="attrs" class="api-class-tabpanel">
                 <h2 class="off-left">Attributes</h2>
 
-                    <div id="attr_baseRoute" class="attr item">
-                        <a name="config_baseRoute"></a> 
-                        <h3 class="name"><code>baseRoute</code></h3>
-                        <span class="type">String</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                            <span class="flag readonly">readonly</span>
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/FileDisplay.js.html#l108"><code>FileDisplay.js:108</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示存放文件的根目录</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;static/ppt/&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="attr_currentPage" class="attr item">
-                        <a name="config_currentPage"></a> 
-                        <h3 class="name"><code>currentPage</code></h3>
-                        <span class="type">String</span>
+                    <div id="attr_choosenUser" class="attr item">
+                        <a name="config_choosenUser"></a> 
+                        <h3 class="name"><code>choosenUser</code></h3>
+                        <span class="type"></span>
                     
                     
                     
@@ -799,14 +853,14 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l133"><code>FileDisplay.js:133</code></a>
+                            <a href="../files/ChatBoard.js.html#l101"><code>ChatBoard.js:101</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示当前页码数</p>
+                            <p>表示老师提出或禁言操作时选中的用户</p>
                     
                         </div>
                     
@@ -814,10 +868,10 @@
                     
                     
                     </div>
-                    <div id="attr_file" class="attr item">
-                        <a name="config_file"></a> 
-                        <h3 class="name"><code>file</code></h3>
-                        <span class="type">Null</span>
+                    <div id="attr_gagList" class="attr item">
+                        <a name="config_gagList"></a> 
+                        <h3 class="name"><code>gagList</code></h3>
+                        <span class="type">Array</span>
                     
                     
                     
@@ -829,24 +883,25 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l149"><code>FileDisplay.js:149</code></a>
+                            <a href="../files/ChatBoard.js.html#l109"><code>ChatBoard.js:109</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示上传的文件</p>
+                            <p>表示要禁言的学生列表</p>
                     
                         </div>
                     
+                            <p><strong>Default:</strong> []</p>
                     
                     
                     </div>
-                    <div id="attr_fileNum" class="attr item">
-                        <a name="config_fileNum"></a> 
-                        <h3 class="name"><code>fileNum</code></h3>
-                        <span class="type">Number</span>
+                    <div id="attr_messages" class="attr item">
+                        <a name="config_messages"></a> 
+                        <h3 class="name"><code>messages</code></h3>
+                        <span class="type">Array</span>
                     
                     
                     
@@ -858,24 +913,54 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l164"><code>FileDisplay.js:164</code></a>
+                            <a href="../files/ChatBoard.js.html#l125"><code>ChatBoard.js:125</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示上传文件的数量</p>
+                            <p>存储发言记录</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> 0</p>
+                            <p><strong>Default:</strong> []</p>
                     
                     
                     </div>
-                    <div id="attr_isTeacher" class="attr item">
-                        <a name="config_isTeacher"></a> 
-                        <h3 class="name"><code>isTeacher</code></h3>
+                    <div id="attr_msgInput" class="attr item">
+                        <a name="config_msgInput"></a> 
+                        <h3 class="name"><code>msgInput</code></h3>
+                        <span class="type">String</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/ChatBoard.js.html#l133"><code>ChatBoard.js:133</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示文本框中输入的文字</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_showGagList" class="attr item">
+                        <a name="config_showGagList"></a> 
+                        <h3 class="name"><code>showGagList</code></h3>
                         <span class="type">Boolean</span>
                     
                     
@@ -888,108 +973,18 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l141"><code>FileDisplay.js:141</code></a>
+                            <a href="../files/ChatBoard.js.html#l85"><code>ChatBoard.js:85</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示当前用户是否是创建房间的老师</p>
+                            <p>表示是否显示要禁言学生列表</p>
                     
                         </div>
                     
                             <p><strong>Default:</strong> false</p>
-                    
-                    
-                    </div>
-                    <div id="attr_loadingStatus" class="attr item">
-                        <a name="config_loadingStatus"></a> 
-                        <h3 class="name"><code>loadingStatus</code></h3>
-                        <span class="type">Boolean</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/FileDisplay.js.html#l156"><code>FileDisplay.js:156</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示上传文件的状态</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> false</p>
-                    
-                    
-                    </div>
-                    <div id="attr_maxPage" class="attr item">
-                        <a name="config_maxPage"></a> 
-                        <h3 class="name"><code>maxPage</code></h3>
-                        <span class="type">String</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/FileDisplay.js.html#l125"><code>FileDisplay.js:125</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示老师上传文件的最大页数</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="attr_route" class="attr item">
-                        <a name="config_route"></a> 
-                        <h3 class="name"><code>route</code></h3>
-                        <span class="type">String</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/FileDisplay.js.html#l117"><code>FileDisplay.js:117</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示老师上传文件的完整路径</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
                     
                     
                     </div>
@@ -1008,14 +1003,14 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l100"><code>FileDisplay.js:100</code></a>
+                            <a href="../files/ChatBoard.js.html#l93"><code>ChatBoard.js:93</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示客户端，监听服务器传来的消息</p>
+                            <p>表示客户端，负责监听服务器传来的消息</p>
                     
                         </div>
                     
@@ -1023,10 +1018,10 @@
                     
                     
                     </div>
-                    <div id="attr_teacherId" class="attr item">
-                        <a name="config_teacherId"></a> 
-                        <h3 class="name"><code>teacherId</code></h3>
-                        <span class="type">String</span>
+                    <div id="attr_speakList" class="attr item">
+                        <a name="config_speakList"></a> 
+                        <h3 class="name"><code>speakList</code></h3>
+                        <span class="type">Array</span>
                     
                     
                     
@@ -1038,18 +1033,49 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/FileDisplay.js.html#l172"><code>FileDisplay.js:172</code></a>
+                            <a href="../files/ChatBoard.js.html#l117"><code>ChatBoard.js:117</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示老师的ID号</p>
+                            <p>表示聊天区域所有发过言的学生列表</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                            <p><strong>Default:</strong> []</p>
+                    
+                    
+                    </div>
+                    <div id="attr_started" class="attr item">
+                        <a name="config_started"></a> 
+                        <h3 class="name"><code>started</code></h3>
+                        <span class="type">Boolean</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/ChatBoard.js.html#l141"><code>ChatBoard.js:141</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>表示老师是否选择开始直播，
+                    在直播前，即started值为false时不能记性发言。</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> false</p>
                     
                     
                     </div>

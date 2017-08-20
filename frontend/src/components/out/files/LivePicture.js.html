@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>LivePicture.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,182 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: LivePicture.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;Card id=&quot;live-picture&quot; padding=&quot;8&quot;&gt;
+        &lt;div class=&quot;picture&quot;&gt;
+            &lt;a @click=&quot;liveRoom&quot;&gt;
+                &lt;div class=&quot;for-img&quot;&gt;
+                    &lt;img :src=&quot;this.userImg&quot; width=&quot;100%&quot;&gt;
+                &lt;/div&gt;
+                &lt;label id=&quot;information-room-name&quot;&gt;房间名:{{ this.roomName }}&lt;/label&gt;
+                &lt;br&gt;
+                &lt;label id=&quot;information-teacher-name&quot;&gt;主讲教师:{{ this.teacherName }}&lt;/label&gt;
+                &lt;label class=&quot;person&quot;&gt;
+                    &lt;Icon type=&quot;person&quot;&gt;&lt;/Icon&gt;{{ this.studentNum }}
+                &lt;/label&gt;
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/Card&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script&gt;
+/**
+ * 表示正在直播房间的缩略图，
+ * 包含老师上传的封面图片及房间信息（房间名称、老师名称、在线人数），
+ * 作为子组件插入首页或直播详情页。
+ *
+ * @module LivePicture
+ * @class LivePicture
+ */
+import myMsg from &#x27;./../warning.js&#x27;
+export default {
+    name: &#x27;live-picture&#x27;,
+    /**
+     * 表示房间名称
+     *
+     * @property roomName
+     */
 
-</div>
+    /**
+     * 表示该直播房间老师名字
+     *
+     * @property teacherName
+     */
 
+    /**
+     * 表示在线人数
+     *
+     * @property studentNum
+     */
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    /**
+     * 表示房间id号
+     *
+     * @property id
+     */
 
-</div>
+    /**
+     * 表示该直播房间的缩略图
+     *
+     * @property userImg
+     */
+    props: [&#x27;roomName&#x27;, &#x27;teacherName&#x27;, &#x27;studentNum&#x27;, &#x27;id&#x27;, &#x27;userImg&#x27;],
+    components: {
+    },
+    data: function () {
+        return {
+            /**
+             * 表示用户账号
+             *
+             * @property stuAccount
+             * @type String
+             * @default &#x27;&#x27;
+             */
+            stuAccount: &#x27;&#x27;,
+            /**
+             * 表示用户选择是否进入该直播房间
+             *
+             * @property joinOrNot
+             * @type Boolean
+             * @default false
+             */
+            joinOrNot: false
+        }
+    },
+    /**
+     * created函数，获取用户账号，
+     * 判断该用户是否登录。
+     *
+     * @method created
+     */
+    created: function () {
+        let arrCookies = document.cookie.split(&#x27;;&#x27;)
+        for (let i = 0; i &lt; arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split(&#x27;=&#x27;)
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, &#x27;&#x27;) === &#x27;userAccount&#x27;) {
+                this.stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, &#x27;&#x27;)
+                break
+            } else {
+                this.stuAccount = &#x27;&#x27;
+            }
+        }
+    },
+    methods: {
+        /**
+         * 获取房间信息
+         *
+         * @method liveRoom
+         */
+        liveRoom: function () {
+            // 如果用户已经登录
+            if (this.stuAccount) {
+                fetch(&#x27;/joinRoom/&#x27;, {
+                    method: &#x27;post&#x27;,
+                    mode: &#x27;cors&#x27;,
+                    headers: {
+                        &#x27;Content-Type&#x27;: &#x27;application/json, text/plain, */*&#x27;,
+                        &#x27;Accept&#x27;: &#x27;application/json&#x27;
+                    },
+                    body: JSON.stringify({
+                        &#x27;roomID&#x27;: this.id,
+                        &#x27;stuAccount&#x27;: this.stuAccount
+                    })
+                }).then((response) =&gt; response.json()).then((obj) =&gt; {
+                    if (obj.result === &#x27;cannot&#x27;) {
+                        this.$Message.error(myMsg.room[&#x27;cannotJoin&#x27;])
+                    } else {
+                        window.open(&#x27;./#/live_room/&#x27; + this.id)
+                    }
+                })
+            } else {
+                this.$Message.error(myMsg.account[&#x27;loginNeeded&#x27;])
+            }
+        }
+    }
+}
+&lt;/script&gt;
 
+&lt;style scoped&gt;
+.picture {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+.for-img {
+    width: 100%;
+    height: 105px;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
+#information-room-name {
+    padding-left: 6px;
+}
 
+#information-teacher-name {
+    padding-left: 5px;
+}
 
-    <div class="yui3-u-1-2">
-    </div>
+.person {
+    float: right;
+    padding-right: 10px;
+}
+
+.picture a {
+    color: #464c5b;
+}
+
+.picture:hover {
+    color: #22313F;
+}
+&lt;/style&gt;
+
+    </pre>
 </div>
                     </div>
                 </div>

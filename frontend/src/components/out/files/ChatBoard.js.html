@@ -38,20 +38,50 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
-                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../classes/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
                                 <li><a href="../classes/HomePage.html">HomePage</a></li>
                                 <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/LivePage.html">LivePage</a></li>
+                                <li><a href="../classes/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../classes/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../classes/Login.html">Login</a></li>
+                                <li><a href="../classes/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../classes/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../classes/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../classes/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../classes/Reset.html">Reset</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../classes/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
                 
                 
                             <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../modules/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../modules/HomePage.html">HomePage</a></li>
+                                <li><a href="../modules/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../modules/LivePage.html">LivePage</a></li>
+                                <li><a href="../modules/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../modules/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../modules/Login.html">Login</a></li>
+                                <li><a href="../modules/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../modules/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../modules/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../modules/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../modules/Reset.html">Reset</a></li>
+                                <li><a href="../modules/SignUp.html">SignUp</a></li>
+                                <li><a href="../modules/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../modules/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
@@ -138,26 +168,115 @@
  * 实现聊天室功能，
  * 作为子组件插入直播间页面。
  *
- * @module ChatRoom
- * @class ChatRoom
+ * @module ChatBoard
+ * @class ChatBoard
  */
 import * as io from &#x27;socket.io-client&#x27;
 import myMsg from &#x27;./../warning.js&#x27;
 export default {
     name: &#x27;chat-board&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+     /**
+      * 当有新的发言时，显示新的发言，并隐藏最远的一条记录。
+      *
+     * @property aboveHidden
+     * @type Boolean
+      */
     props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;, &#x27;aboveHidden&#x27;],
     data: function () {
         return {
+            /**
+             * 表示是否显示要禁言学生列表
+             *
+             * @attribute showGagList
+             * @type Boolean
+             * @default false
+             */
             showGagList: false,
+            /**
+             * 表示客户端，负责监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
             socket: &#x27;&#x27;,
+            /**
+             * 表示老师提出或禁言操作时选中的用户
+             *
+             * @attribute choosenUser
+             * @type 
+             * @default &#x27;&#x27;
+             */
             choosenUser: &#x27;&#x27;,
+            /**
+             * 表示要禁言的学生列表
+             *
+             * @attribute gagList
+             * @type Array
+             * @default []
+             */
             gagList: [],
+            /**
+             * 表示聊天区域所有发过言的学生列表
+             *
+             * @attribute speakList
+             * @type Array
+             * @default []
+             */
             speakList: [],
+            /**
+             * 存储发言记录
+             *
+             * @attribute messages
+             * @type Array
+             * @default []
+             */
             messages: [],
+            /**
+             * 表示文本框中输入的文字
+             *
+             * @attribute msgInput
+             * @type String
+             * @default &#x27;&#x27;
+             */
             msgInput: &#x27;&#x27;,
+            /**
+             * 表示老师是否选择开始直播，
+             * 在直播前，即started值为false时不能记性发言。
+             *
+             * @attribute started
+             * @type Boolean
+             * @default false
+             */
             started: false
         }
     },
+    /**
+     * mounted函数，初始化相关数据，客户端负责监听服务器传来的消息。
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         document.oncontextmenu = self.contextMenu
@@ -179,7 +298,7 @@ export default {
     },
     methods: {
         /**
-         * 
+         * 获取被选中的学生名字
          *
          * @method getName
          * @param message
@@ -192,7 +311,7 @@ export default {
             }
         },
         /**
-         * 
+         * 屏蔽浏览器右键
          *
          * @method contextMenu
          * @return false
@@ -201,7 +320,8 @@ export default {
             return false
         },
         /**
-         * 
+         * 接收到&#x27;changeNum&#x27;消息时，发送&#x27;stuNum&#x27;，
+         * 改变学生数量
          *
          * @method changeStuNum
          */
@@ -212,7 +332,7 @@ export default {
             })
         },
         /**
-         * 
+         * 用户接收到&#x27;kickOut&#x27;消息时（被提出房间时），弹出警告框进行提示
          *
          * @method kickOut
          */
@@ -226,7 +346,8 @@ export default {
             })
         },
         /**
-         * 
+         * 发送小时时，首先判断该用户是否被禁言，
+         * 若没有被禁言，向服务器发送&#x27;message&#x27;消息。
          *
          * @method sendMsg
          */
@@ -259,7 +380,7 @@ export default {
             })
         },
         /**
-         * 
+         * 将被选中的用户禁言
          *
          * @method gag
          */
@@ -281,7 +402,7 @@ export default {
             })
         },
         /**
-         * 
+         * 全局禁言
          *
          * @method gagAll
          */
@@ -301,7 +422,7 @@ export default {
             })
         },
         /**
-         * 
+         * 全局解禁
          *
          * @method allowAllSpeak
          */
@@ -320,7 +441,7 @@ export default {
             })
         },
         /**
-         * 
+         * 将被选中的学生踢出房间
          *
          * @method kickSomeoneOut
          */
@@ -346,7 +467,7 @@ export default {
             }
         },
         /**
-         * 
+         * 老师进行的一些操作
          *
          * @method teacherDoing
          * @param name
@@ -369,7 +490,7 @@ export default {
             }
         },
         /**
-         * 
+         * 更新学生列表
          *
          * @method getName
          */
@@ -387,7 +508,7 @@ export default {
             }
         },
         /**
-         * 
+         * 给特定用户解禁
          *
          * @method allowSpeak
          */

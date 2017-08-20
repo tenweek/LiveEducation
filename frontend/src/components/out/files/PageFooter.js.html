@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>PageFooter.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,39 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: PageFooter.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;footer&quot;&gt;
+        2017 &amp;copy; 光宗耀组
+    &lt;/div&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script&gt;
+/**
+ * 直播网站的footer
+ *
+ * @module PageFooter
+ * @class PageFooter
+ */
+export default {
+    name: &#x27;page-footer&#x27;,
+    data: function () {
+        return {}
+    }
+}
+&lt;/script&gt;
 
-</div>
-
-
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
-
-</div>
-
-
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+&lt;style scoped&gt;
+.footer {
+    text-align: center;
+    padding: 5px 0 5px;
+    color: #9ea7b4;
+}
+&lt;/style&gt;
+    </pre>
 </div>
                     </div>
                 </div>

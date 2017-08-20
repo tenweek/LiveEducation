@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>LivePicture</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,43 +117,343 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1>LivePicture Class</h1>
+<div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/LivePicture.js.html#l20"><code>LivePicture.js:20</code></a>
         </div>
+
+            Module: <a href="../modules/LivePicture.html">LivePicture</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>表示正在直播房间的缩略图，
+包含老师上传的封面图片及房间信息（房间名称、老师名称、在线人数），
+作为子组件插入首页或直播详情页。</p>
 
 </div>
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                            <li class="index-item method">
+                                <a href="#method_created">created</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_liveRoom">liveRoom</a>
+
+                            </li>
+                    </ul>
+                </div>
+
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_id">id</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_joinOrNot">joinOrNot</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_roomName">roomName</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_stuAccount">stuAccount</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_studentNum">studentNum</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_teacherName">teacherName</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_userImg">userImg</a>
+
+                            </li>
+                    </ul>
+                </div>
+
+
+        </div>
+
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method_created" class="method item">
+    <h3 class="name"><code>created</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l83"><code>LivePicture.js:83</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>created函数，获取用户账号，
+判断该用户是否登录。</p>
+
     </div>
 
 
-    <div class="yui3-u-1-2">
+
+
+</div>
+<div id="method_liveRoom" class="method item">
+    <h3 class="name"><code>liveRoom</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l102"><code>LivePicture.js:102</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>获取房间信息</p>
+
+    </div>
+
+
+
+
+</div>
+            </div>
+
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+<div id="property_id" class="property item">
+    <h3 class="name"><code>id</code></h3>
+    <span class="type">Unknown</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l49"><code>LivePicture.js:49</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示房间id号</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_joinOrNot" class="property item">
+    <h3 class="name"><code>joinOrNot</code></h3>
+    <span class="type">Boolean</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l73"><code>LivePicture.js:73</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示用户选择是否进入该直播房间</p>
+
+    </div>
+
+        <p><strong>Default:</strong> false</p>
+
+
+</div>
+<div id="property_roomName" class="property item">
+    <h3 class="name"><code>roomName</code></h3>
+    <span class="type">Unknown</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l31"><code>LivePicture.js:31</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示房间名称</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_stuAccount" class="property item">
+    <h3 class="name"><code>stuAccount</code></h3>
+    <span class="type">String</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l65"><code>LivePicture.js:65</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示用户账号</p>
+
+    </div>
+
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+
+
+</div>
+<div id="property_studentNum" class="property item">
+    <h3 class="name"><code>studentNum</code></h3>
+    <span class="type">Unknown</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l43"><code>LivePicture.js:43</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示在线人数</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_teacherName" class="property item">
+    <h3 class="name"><code>teacherName</code></h3>
+    <span class="type">Unknown</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l37"><code>LivePicture.js:37</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示该直播房间老师名字</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_userImg" class="property item">
+    <h3 class="name"><code>userImg</code></h3>
+    <span class="type">Unknown</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/LivePicture.js.html#l55"><code>LivePicture.js:55</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示该直播房间的缩略图</p>
+
+    </div>
+
+
+
+</div>
+            </div>
+
+
     </div>
 </div>
                     </div>

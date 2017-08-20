@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>Login.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,192 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: Login.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div id=&quot;bg&quot;&gt;
+        &lt;div class=&quot;log-in&quot;&gt;
+            &lt;div&gt;
+                &lt;h2 id=&quot;title&quot;&gt;登录&lt;/h2&gt;
+                &lt;router-link to=&quot;/reset&quot; id=&quot;reset-link&quot;&gt;忘记密码？&lt;/router-link&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;content&quot;&gt;
+                &lt;Form ref=&quot;formCustom&quot; :model=&quot;formCustom&quot; :rules=&quot;ruleCustom&quot; :label-width=&quot;70&quot;&gt;
+                    &lt;Form-item label=&quot;账号&quot; prop=&quot;account&quot;&gt;
+                        &lt;Input placeholder=&quot;请输入注册邮箱&quot; v-model=&quot;formCustom.account&quot;&gt;&lt;/Input&gt;
+                    &lt;/Form-item&gt;
+                    &lt;Form-item label=&quot;密码&quot; prop=&quot;password&quot;&gt;
+                        &lt;Input type=&quot;password&quot; v-model=&quot;formCustom.password&quot; placeholder=&quot;请输入密码&quot;&gt;&lt;/Input&gt;
+                    &lt;/Form-item&gt;
+                    &lt;Form-item&gt;
+                        &lt;Button id=&quot;login-button&quot; type=&quot;primary&quot; @click=&quot;getResult&quot;&gt;登录&lt;/Button&gt;
+                    &lt;/Form-item&gt;
+                &lt;/Form&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;signup-link&quot;&gt;
+                &lt;span&gt;没有账号？马上&lt;/span&gt;
+                &lt;router-link to=&quot;/signup&quot;&gt;注册&lt;/router-link&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script&gt;
+/**
+ * 登录页面
+ *
+ * @module Login
+ * @class Login
+ */
+import myMsg from &#x27;./../warning.js&#x27;
+export default {
+    name: &#x27;Login&#x27;,
+    components: {},
+    data: function () {
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePass
+         * @readOnly
+         */
+        const validatePass = (rule, value, callback) =&gt; {
+            if (value === &#x27;&#x27;) {
+                callback(new Error(myMsg.account[&#x27;passwordNeeded&#x27;]))
+            } else {
+                callback()
+            }
+        }
+        return {
+            /**
+             * 检验输入合法性
+             *
+             * @attribute formCustom
+             * @type Object
+             */
+            formCustom: {
+                account: &#x27;&#x27;,
+                password: &#x27;&#x27;
+            },
+            /**
+             * 检验输入合法性
+             *
+             * @attribute ruleCustom
+             * @type Object
+             */
+            ruleCustom: {
+                account: [
+                    { required: true, message: myMsg.account[&#x27;mailNeeded&#x27;], trigger: &#x27;blur&#x27; },
+                    { type: &#x27;email&#x27;, message: myMsg.account[&#x27;mailFormatWrong&#x27;], trigger: &#x27;blur&#x27; }
+                ],
+                password: [
+                    { required: true, message: myMsg.account[&#x27;passwordNeeded&#x27;], trigger: &#x27;blur&#x27; },
+                    { validator: validatePass, trigger: &#x27;blur&#x27; }
+                ]
+            }
+        }
+    },
+    methods: {
+        /**
+         * 显示登录的结果
+         *
+         * @method getResult
+         */
+        getResult: function () {
+            fetch(&#x27;/login/&#x27;, {
+                method: &#x27;post&#x27;,
+                mode: &#x27;cors&#x27;,
+                headers: {
+                    &#x27;Content-Type&#x27;: &#x27;application/json, text/plain, */*&#x27;,
+                    &#x27;Accept&#x27;: &#x27;application/json&#x27;
+                },
+                body: JSON.stringify({
+                    &#x27;account&#x27;: this.formCustom.account,
+                    &#x27;password&#x27;: this.formCustom.password
+                })
+            }).then((response) =&gt; response.json()).then((obj) =&gt; {
+                if (obj.result) {
+                    this.$Message.success(myMsg.account[&#x27;loginSuccess&#x27;])
+                    document.cookie = &#x27;userAccount=&#x27; + this.formCustom.account
+                    this.$router.push({ path: &#x27;/&#x27; })
+                } else {
+                    this.$Message.error(myMsg.account[&#x27;loginFailed&#x27;])
+                }
+            })
+        }
+    }
+}
 
-</div>
+&lt;/script&gt;
 
+&lt;style scoped&gt;
+#login-button {
+    margin-top: 30px;
+    margin-left: -40px;
+    margin-bottom: -30px;
+}
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+.log-in {
+    background-color: white;
+    top: 50%;
+    margin-top: -179.5px;
+    left: 50%;
+    margin-left: -252.5px;
+    position: absolute;
+    width: 505px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .04);
+    box-sizing: border-box;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
 
-</div>
+Form {
+    margin: 10px 12px;
+}
 
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(&#x27;./../assets/asteroids.jpg&#x27;);
+    background-repeat: repeat;
+    z-index: -1;
+    margin: auto;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+#title {
+    font-size: x-large;
+    position: absolute;
+    margin-left: 228.5px;
+    margin-top: -20px;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
+#content {
+    margin-left: -15px;
+    margin-right: 15px;
+    margin-top: 40px;
+}
 
+#reset-link {
+    margin-right: -300px;
+}
 
-    <div class="yui3-u-1-2">
-    </div>
+#signup-link {
+    margin-top: 49px;
+    margin-bottom: -60px;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    background-color: #ffffd2;
+    height: 45px;
+    padding-top: 14px;
+}
+&lt;/style&gt;
+
+    </pre>
 </div>
                     </div>
                 </div>

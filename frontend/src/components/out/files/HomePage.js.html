@@ -38,20 +38,50 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
-                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../classes/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
                                 <li><a href="../classes/HomePage.html">HomePage</a></li>
                                 <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/LivePage.html">LivePage</a></li>
+                                <li><a href="../classes/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../classes/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../classes/Login.html">Login</a></li>
+                                <li><a href="../classes/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../classes/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../classes/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../classes/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../classes/Reset.html">Reset</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../classes/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
                 
                 
                             <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../modules/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../modules/HomePage.html">HomePage</a></li>
+                                <li><a href="../modules/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../modules/LivePage.html">LivePage</a></li>
+                                <li><a href="../modules/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../modules/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../modules/Login.html">Login</a></li>
+                                <li><a href="../modules/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../modules/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../modules/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../modules/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../modules/Reset.html">Reset</a></li>
+                                <li><a href="../modules/SignUp.html">SignUp</a></li>
+                                <li><a href="../modules/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../modules/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
@@ -157,7 +187,7 @@
  * 直播网站的首页，
  * 包含导航栏、直播列表、录播列表等信息
  *
- * @modules HomePage
+ * @module HomePage
  * @class HomePage
  */
 import LivePicture from &#x27;./LivePicture&#x27;
@@ -175,7 +205,21 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 存储所有房间信息
+             *
+             * @attribute rooms
+             * @type Array
+             * @default []
+             */
             rooms: [],
+            /**
+             * 表示导航栏的选择（首页、直播、录播）
+             *
+             * @attribute option
+             * @type Number
+             * @default 1 1表示当前处于首页
+             */
             option: 1
         }
     },
@@ -211,7 +255,6 @@ export default {
 }
 &lt;/script&gt;
 
-&lt;!-- Add &quot;scoped&quot; attribute to limit CSS to this component only --&gt;
 &lt;style scoped&gt;
 .home-page {
     border: 1px solid #d7dde4;

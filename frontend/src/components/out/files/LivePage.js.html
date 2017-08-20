@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>LivePage.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,167 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: LivePage.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;live-page&quot;&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;home-page-header :myOption=&quot;this.option&quot;&gt;&lt;/home-page-header&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;navigation&quot;&gt;
+            &lt;div class=&quot;welcome&quot;&gt;
+                &lt;Icon type=&quot;university&quot;&gt;&lt;/Icon&gt;
+                &lt;label&gt;当前正在直播：&lt;/label&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;list&quot;&gt;
+            &lt;div v-for=&quot;room in rooms&quot; class=&quot;every-picture&quot;&gt;
+                &lt;live-picture :roomName=&quot;room.roomName&quot; :id=&quot;room.id&quot; :teacherName=&quot;room.teacherName&quot; :studentNum=&quot;room.studentNum&quot; :userImg=&quot;room.userImg&quot; class=&quot;live-picture&quot;&gt;
+                &lt;/live-picture&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;page-footer&gt;&lt;/page-footer&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ * 直播详情页，
+ * 包含正在直播的所有房间缩略图及信息。
+ *
+ * @module LivePage
+ * @class LivePage
+ */
+import LivePicture from &#x27;./LivePicture&#x27;
+import HomePageHeader from &#x27;./HomePageHeader&#x27;
+import PageFooter from &#x27;./PageFooter&#x27;
+
+export default {
+    name: &#x27;live-page&#x27;,
+    /**
+     * created函数，调用getRooms函数
+     *
+     * @method created
+     */
+    created: function () {
+        this.getRooms()
+    },
+    components: {
+        LivePicture,
+        HomePageHeader,
+        PageFooter
+    },
+    data: function () {
+        return {
+            /**
+             * 表示导航栏的选择（首页、直播、录播）
+             *
+             * @attribute option
+             * @type Number
+             * @default 2 2表示当前处于直播详情页
+             */
+            option: 2,
+            /**
+             * 存储所有正在直播的房间信息
+             *
+             * @attribute rooms
+             * @type Array
+             * @default []
+             */
+            rooms: []
+        }
+    },
+    methods: {
+        /**
+         * 获取房间信息
+         *
+         * @method getRooms
+         */
+        getRooms: function () {
+            fetch(&#x27;/getRooms/&#x27;, {
+                method: &#x27;post&#x27;,
+                mode: &#x27;cors&#x27;,
+                headers: {
+                    &#x27;Content-Type&#x27;: &#x27;application/json, text/plain, */*&#x27;,
+                    &#x27;Accept&#x27;: &#x27;application/json&#x27;
+                },
+                body: JSON.stringify({ &#x27;type&#x27;: 2 })
+            }).then((response) =&gt; response.json()).then((obj) =&gt; {
+                this.rooms = obj.rooms
+            })
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.list {
+    height: auto;
+    min-height: 295px;
+    width: 65%;
+    min-width: 800px;
+    max-width: 1000px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    margin: auto;
+    overflow: hidden;
+    background: white;
+    padding-top: 8px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list-picture {
+    height: 100%;
+    width: 100%;
+    min-width: 800px;
+    padding-top: 5px;
+    padding-left: 4%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.every-picture {
+    width: 20%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 10px;
+}
+
+.live-picture {
+    width: 160px;
+    height: auto;
+    margin: auto;
+}
+
+.navigation {
+    background: #efefef;
+    padding: 8px 40px;
+    overflow: hidden;
+    display: flex;
+    font-size: 15px;
+}
 
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+.live-page {
+    background-color: #efefef;
+    height: 50px;
+}
 
-</div>
-
-
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
-
-</div>
-
-
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+.header {
+    height: 60px;
+    width: 100%;
+    font-size: 40px;
+    z-index: 50;
+}
+&lt;/style&gt;
+    </pre>
 </div>
                     </div>
                 </div>

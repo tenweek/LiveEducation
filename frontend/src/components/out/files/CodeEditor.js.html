@@ -38,20 +38,50 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
-                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../classes/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
                                 <li><a href="../classes/HomePage.html">HomePage</a></li>
                                 <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/LivePage.html">LivePage</a></li>
+                                <li><a href="../classes/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../classes/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../classes/Login.html">Login</a></li>
+                                <li><a href="../classes/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../classes/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../classes/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../classes/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../classes/Reset.html">Reset</a></li>
+                                <li><a href="../classes/SignUp.html">SignUp</a></li>
+                                <li><a href="../classes/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../classes/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
                 
                 
                             <ul id="api-modules" class="apis modules">
-                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/ChatBoard.html">ChatBoard</a></li>
+                                <li><a href="../modules/ChatBoardForRecord.html">ChatBoardForRecord</a></li>
                                 <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
                                 <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/FileDisplayForRecord.html">FileDisplayForRecord</a></li>
+                                <li><a href="../modules/HomePage.html">HomePage</a></li>
+                                <li><a href="../modules/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../modules/LivePage.html">LivePage</a></li>
+                                <li><a href="../modules/LivePicture.html">LivePicture</a></li>
+                                <li><a href="../modules/LiveRoom.html">LiveRoom</a></li>
+                                <li><a href="../modules/Login.html">Login</a></li>
+                                <li><a href="../modules/PageFooter.html">PageFooter</a></li>
+                                <li><a href="../modules/RecordPage.html">RecordPage</a></li>
+                                <li><a href="../modules/RecordPicture.html">RecordPicture</a></li>
+                                <li><a href="../modules/RecordRoom.html">RecordRoom</a></li>
+                                <li><a href="../modules/Reset.html">Reset</a></li>
+                                <li><a href="../modules/SignUp.html">SignUp</a></li>
+                                <li><a href="../modules/TeachingTools.html">TeachingTools</a></li>
+                                <li><a href="../modules/VideoDisplay.html">VideoDisplay</a></li>
                                 <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
                                 <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
                             </ul>
@@ -118,10 +148,43 @@
 import * as io from &#x27;socket.io-client&#x27;
 export default {
     name: &#x27;code-editor&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
     props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;],
     data: function () {
         return {
+            /**
+             * 表示编辑器中输入的代码
+             *
+             * @attribute code
+             * @type String
+             * @default &#x27;const a = 10   123456789&#x27;
+             */
             code: &#x27;const a = 10   123456789&#x27;,
+            /**
+             * 编辑器中的一些设置参数
+             *
+             * @attribute editorOptions
+             * @type Object
+             */
             editorOptions: {
                 readOnly: false,
                 tabSize: 4,
@@ -136,7 +199,20 @@ export default {
                 styleSelectedText: true,
                 highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true }
             },
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
             socket: &#x27;&#x27;,
+            /**
+             * 表示语言选择的列表
+             *
+             * @attribute modeList
+             * @type Array
+             */
             modeList: [
                 {
                     modeName: &#x27;JavaScript&#x27;,
@@ -161,6 +237,11 @@ export default {
             ]
         }
     },
+    /**
+     * mounted函数，连接到socket服务器，并初始化相关数据。
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.socket = io.connect(&#x27;http://localhost:9000&#x27;)

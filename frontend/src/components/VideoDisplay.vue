@@ -70,7 +70,7 @@ export default {
              */
             client: '',
             /**
-             * 
+             * 表示本地音视频流
              *
              * @attribute localStream
              * @type String
@@ -78,7 +78,7 @@ export default {
              */
             localStream: '',
             /**
-             * 
+             * 表示用户的麦克风
              *
              * @attribute microphone
              * @type String
@@ -86,7 +86,7 @@ export default {
              */
             microphone: '',
             /**
-             * 
+             * 表示用户麦克风的权限
              *
              * @attribute audioSelect
              * @type String
@@ -94,7 +94,7 @@ export default {
              */
             audioSelect: '',
             /**
-             * 
+             * 表示用户摄像头的权限
              *
              * @attribute videoSelect
              * @type String
@@ -102,15 +102,16 @@ export default {
              */
             videoSelect: '',
             /**
-             * 
+             * 声网提供的项目的aapID
              *
              * @attribute appKey
+             * @readOnly
              * @type String
              * @default '9b343e8aaaa144928e093b29513634e9'
              */
             appKey: '9b343e8aaaa144928e093b29513634e9',
             /**
-             * 
+             * 表示用户的摄像头
              *
              * @attribute camera
              * @type String

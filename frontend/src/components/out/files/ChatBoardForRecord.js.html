@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>ChatBoardForRecord.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,143 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: ChatBoardForRecord.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;chat-board&quot;&gt;
+        &lt;div id=&quot;messages&quot;&gt;
+            &lt;div v-for=&quot;message in messages&quot;&gt;
+                &lt;Dropdown class=&quot;set-left&quot; trigger=&quot;click&quot;&gt;
+                    &lt;template v-if=&quot;message[&#x27;isTeacher&#x27;]&quot;&gt;
+                        &lt;button class=&quot;message-bold&quot;&gt;
+                            {{ message[&#x27;msg&#x27;] }}
+                        &lt;/button&gt;
+                    &lt;/template&gt;
+                    &lt;template v-else&gt;
+                        &lt;button class=&quot;message&quot;&gt;
+                            {{ message[&#x27;msg&#x27;] }}
+                        &lt;/button&gt;
+                    &lt;/template&gt;
+                &lt;/Dropdown&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;Input&gt;
+        &lt;Button id=&quot;send-btn&quot; slot=&quot;append&quot;&gt;发送&lt;/Button&gt;
+        &lt;/Input&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+/**
+ * 实现聊天室的复现，
+ * 作为子组件插入录播间页面。
+ *
+ * @module ChatBoardForRecord
+ * @class ChatBoardForRecord
+ */
+import * as io from &#x27;socket.io-client&#x27;
+export default {
+    name: &#x27;chat-board&#x27;,
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+    props: [&#x27;roomId&#x27;],
+    data: function () {
+        return {
+            /**
+             * 表示客户端，负责监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default &#x27;&#x27;
+             */
+            socket: &#x27;&#x27;,
+            /**
+             * 存储发言记录
+             *
+             * @attribute messages
+             * @type Array
+             * @default []
+             */
+            messages: []
+        }
+    },
+    /**
+     * mounted函数，初始化相关数据，客户端负责监听服务器传来的消息。
+     *
+     * @method mounted
+     */
+    mounted: function () {
+        let self = this
+        self.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+        self.socket.emit(&#x27;joinTest&#x27;, 888)
+        self.socket.on(&#x27;chatroom&#x27;, function (data) {
+            self.messages.push({
+                &#x27;msg&#x27;: data[&#x27;message&#x27;],
+                &#x27;isTeacher&#x27;: data[&#x27;isTeacher&#x27;]
+            })
+            let scroll = document.getElementById(&#x27;messages&#x27;)
+            scroll.scrollTop = scroll.scrollHeight
+        })
+    }
+}
+&lt;/script&gt;
 
-</div>
+&lt;style scoped&gt;
+* {
+    overflow: hidden;
+}
 
+.chat-board {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+.message,
+.message-bold {
+    background-color: Transparent;
+    border-style: None;
+    outline: none;
+    word-wrap: break-word !important;
+    word-break: break-all !important;
+    white-space: normal !important;
+    text-align: left;
+    padding-top: 2px;
+    width: 100%;
+}
 
-</div>
+.message-bold {
+    font-weight: bold;
+}
 
+.set-left {
+    float: left;
+    padding-left: 5px;
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+#send-btn {
+    color: #6088BB;
+    background-color: #9EF4E6;
+}
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
+#send-btn:hover {
+    border-color: #12CC94;
+}
 
+#messages {
+    overflow: auto;
+    height: 91%;
+}
+&lt;/style&gt;
 
-    <div class="yui3-u-1-2">
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

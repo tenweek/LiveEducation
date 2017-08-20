@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>Reset</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,26 +117,21 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Class</h1>
+<h1>Reset Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/Reset.js.html#l55"><code>Reset.js:55</code></a>
         </div>
 
-            Module: <a href="../modules/CodeEditor.html">CodeEditor</a>
+            Module: <a href="../modules/Reset.html">Reset</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>重置密码页</p>
 
 </div>
 
@@ -146,7 +141,6 @@
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
             <li class="api-class-tab attrs"><a href="#attrs">Attributes</a></li>
     </ul>
 
@@ -159,46 +153,43 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_mounted">mounted</a>
+                                <a href="#method_changePasswd">changePasswd</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_checkKey">checkKey</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_next">next</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_next">next</a>
 
                             </li>
                     </ul>
                 </div>
 
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
-                            <li class="index-item property">
-                                <a href="#property_roomId">roomId</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_teacherName">teacherName</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_username">username</a>
-
-                            </li>
-                    </ul>
-                </div>
 
                 <div class="index-section attrs">
                     <h3>Attributes</h3>
 
                     <ul class="index-list attrs">
                             <li class="index-item attr">
-                                <a href="#attr_code">code</a>
+                                <a href="#attr_current">current</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_editorOptions">editorOptions</a>
+                                <a href="#attr_formCustom">formCustom</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_modeList">modeList</a>
+                                <a href="#attr_ruleCustom">ruleCustom</a>
                             </li>
                             <li class="index-item attr">
-                                <a href="#attr_socket">socket</a>
+                                <a href="#attr_validatePass">validatePass</a>
+                            </li>
+                            <li class="index-item attr">
+                                <a href="#attr_validatePassCheck">validatePassCheck</a>
                             </li>
                     </ul>
                 </div>
@@ -208,8 +199,8 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_mounted" class="method item">
-    <h3 class="name"><code>mounted</code></h3>
+<div id="method_changePasswd" class="method item">
+    <h3 class="name"><code>changePasswd</code></h3>
 
         <span class="paren">()</span>
 
@@ -223,7 +214,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l117"><code>CodeEditor.js:117</code></a>
+        <a href="../files/Reset.js.html#l187"><code>Reset.js:187</code></a>
         </p>
 
 
@@ -231,7 +222,100 @@
     </div>
 
     <div class="description">
-        <p>mounted函数，连接到socket服务器，并初始化相关数据。</p>
+        <p>修改密码</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_checkKey" class="method item">
+    <h3 class="name"><code>checkKey</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/Reset.js.html#l175"><code>Reset.js:175</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>检验验证码有效性</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_next" class="method item">
+    <h3 class="name"><code>next</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/Reset.js.html#l142"><code>Reset.js:142</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>进度条进入下一个状态</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_next" class="method item">
+    <h3 class="name"><code>next</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/Reset.js.html#l151"><code>Reset.js:151</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>进度条进入下一个状态</p>
 
     </div>
 
@@ -241,93 +325,14 @@
 </div>
             </div>
 
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
-
-<div id="property_roomId" class="property item">
-    <h3 class="name"><code>roomId</code></h3>
-    <span class="type">String</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/CodeEditor.js.html#l28"><code>CodeEditor.js:28</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        <p>表示房间ID号</p>
-
-    </div>
-
-
-
-</div>
-<div id="property_teacherName" class="property item">
-    <h3 class="name"><code>teacherName</code></h3>
-    <span class="type">String</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/CodeEditor.js.html#l35"><code>CodeEditor.js:35</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        <p>表示创建该房间的老师名字</p>
-
-    </div>
-
-
-
-</div>
-<div id="property_username" class="property item">
-    <h3 class="name"><code>username</code></h3>
-    <span class="type">String</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/CodeEditor.js.html#l42"><code>CodeEditor.js:42</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        <p>表示进入该房间的用户名字</p>
-
-    </div>
-
-
-
-</div>
-            </div>
 
             <div id="attrs" class="api-class-tabpanel">
                 <h2 class="off-left">Attributes</h2>
 
-                    <div id="attr_code" class="attr item">
-                        <a name="config_code"></a> 
-                        <h3 class="name"><code>code</code></h3>
-                        <span class="type">String</span>
+                    <div id="attr_current" class="attr item">
+                        <a name="config_current"></a> 
+                        <h3 class="name"><code>current</code></h3>
+                        <span class="type">Number</span>
                     
                     
                     
@@ -339,24 +344,24 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l51"><code>CodeEditor.js:51</code></a>
+                            <a href="../files/Reset.js.html#l98"><code>Reset.js:98</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示编辑器中输入的代码</p>
+                            <p>表示当前正在执行的操作（进度条状态）</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;const a = 10   123456789&#x27;</p>
+                            <p><strong>Default:</strong> 0</p>
                     
                     
                     </div>
-                    <div id="attr_editorOptions" class="attr item">
-                        <a name="config_editorOptions"></a> 
-                        <h3 class="name"><code>editorOptions</code></h3>
+                    <div id="attr_formCustom" class="attr item">
+                        <a name="config_formCustom"></a> 
+                        <h3 class="name"><code>formCustom</code></h3>
                         <span class="type">Object</span>
                     
                     
@@ -369,52 +374,23 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l59"><code>CodeEditor.js:59</code></a>
+                            <a href="../files/Reset.js.html#l106"><code>Reset.js:106</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>编辑器中的一些设置参数</p>
+                            <p>检验输入合法性</p>
                     
                         </div>
                     
                     
                     
                     </div>
-                    <div id="attr_modeList" class="attr item">
-                        <a name="config_modeList"></a> 
-                        <h3 class="name"><code>modeList</code></h3>
-                        <span class="type">Array</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/CodeEditor.js.html#l87"><code>CodeEditor.js:87</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示语言选择的列表</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="attr_socket" class="attr item">
-                        <a name="config_socket"></a> 
-                        <h3 class="name"><code>socket</code></h3>
+                    <div id="attr_ruleCustom" class="attr item">
+                        <a name="config_ruleCustom"></a> 
+                        <h3 class="name"><code>ruleCustom</code></h3>
                         <span class="type">Object</span>
                     
                     
@@ -427,18 +403,77 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l79"><code>CodeEditor.js:79</code></a>
+                            <a href="../files/Reset.js.html#l119"><code>Reset.js:119</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示客户端，监听服务器传来的消息</p>
+                            <p>检验输入合法性</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="attr_validatePass" class="attr item">
+                        <a name="config_validatePass"></a> 
+                        <h3 class="name"><code>validatePass</code></h3>
+                        <span class="type">Object</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                            <span class="flag readonly">readonly</span>
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/Reset.js.html#l64"><code>Reset.js:64</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>检验输入合法性</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="attr_validatePassCheck" class="attr item">
+                        <a name="config_validatePassCheck"></a> 
+                        <h3 class="name"><code>validatePassCheck</code></h3>
+                        <span class="type">Object</span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                            <span class="flag readonly">readonly</span>
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/Reset.js.html#l81"><code>Reset.js:81</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>检验输入合法性</p>
+                    
+                        </div>
+                    
                     
                     
                     </div>

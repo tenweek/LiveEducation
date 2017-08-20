@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>RecordRoom.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,44 +117,178 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: RecordRoom.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;record-room&quot;&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;home-page-header&gt;&lt;/home-page-header&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;navigation&quot;&gt;
+            &lt;div class=&quot;welcome&quot;&gt;
+                &lt;Icon type=&quot;university&quot;&gt;&lt;/Icon&gt;
+                &lt;label&gt;欢迎进入录播间 !&lt;/label&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;layout-header&quot;&gt;
+            &lt;div class=&quot;teaching-tools&quot;&gt;
+                &lt;div class=&quot;choose-current&quot;&gt;
+                    &lt;Dropdown trigger=&quot;hover&quot; placement=&quot;right-start&quot; @on-click=&quot;changeCurrent&quot;&gt;
+                        &lt;Button type=&quot;ghost&quot;&gt;
+                            教学区
+                            &lt;Icon type=&quot;arrow-right-b&quot;&gt;&lt;/Icon&gt;
+                        &lt;/Button&gt;
+                        &lt;Dropdown-menu slot=&quot;list&quot;&gt;
+                            &lt;Dropdown-item name=&quot;WhiteBoard&quot;&gt;白板&lt;/Dropdown-item&gt;
+                            &lt;Dropdown-item name=&quot;CodeEditor&quot;&gt;代码编辑器&lt;/Dropdown-item&gt;
+                            &lt;Dropdown-item name=&quot;FileDisplay&quot;&gt;课件展示&lt;/Dropdown-item&gt;
+                        &lt;/Dropdown-menu&gt;
+                    &lt;/Dropdown&gt;
+                &lt;/div&gt;
+                &lt;keep-alive&gt;
+                    &lt;component :is=&quot;currentTools&quot; :roomId=&quot;this.roomId&quot; :teachingToolsWidth=&quot;400&quot; :teachingToolsHeight=&quot;400&quot;&gt;&lt;/component&gt;
+                &lt;/keep-alive&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;composite-container&quot;&gt;
+                &lt;div class=&quot;video-live&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;chatroom&quot;&gt;
+                    &lt;chat-board-for-record :roomId=&quot;this.roomId&quot;&gt;&lt;/chat-board-for-record&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;page-footer&gt;&lt;/page-footer&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+/**
+ * 录播间页面
+ *
+ * @module RecordRoom
+ * @class RecordRoom
+ */
+import HomePageHeader from &#x27;./HomePageHeader&#x27;
+import PageFooter from &#x27;./PageFooter&#x27;
+import ChatBoardForRecord from &#x27;./ChatBoardForRecord&#x27;
+import FileDisplayForRecord from &#x27;./FileDisplayForRecord&#x27;
+import WhiteBoardForRecord from &#x27;./WhiteBoardForRecord&#x27;
+import * as io from &#x27;socket.io-client&#x27;
+
+export default {
+    name: &#x27;record-room&#x27;,
+    components: {
+        HomePageHeader,
+        PageFooter,
+        ChatBoardForRecord,
+        FileDisplayForRecord,
+        WhiteBoardForRecord
+    },
+    data: function () {
+        return {
+            /**
+             * 表示当前选择的工具（白板、PPT、代码编辑器）
+             *
+             * @attribute currentTools
+             * @type String
+             * @default &#x27;WhiteBoardForRecord&#x27;
+             */
+            currentTools: &#x27;WhiteBoardForRecord&#x27;
+        }
+    },
+    /**
+     * mounted函数，当接收到&#x27;changeCurrent&#x27;消息时改变相应属性值
+     *
+     * @method mounted
+     */
+    mounted: function () {
+        let self = this
+        self.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+        self.socket.emit(&#x27;joinTest&#x27;, 888)
+        self.socket.on(&#x27;changeCurrent&#x27;, function (data) {
+            self.currentTools = data[&#x27;name&#x27;] + &#x27;ForRecord&#x27;
+        })
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.record-room {
+    border: 1px solid #d7dde4;
+    background: #f5f7f9;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 177vmin;
+    height: 100vmin;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header {
+    height: 60px;
+    width: 100%;
+    font-size: 40px;
+    position: fixed;
+    left: 0;
+    z-index: 50;
+}
+
+.navigation {
+    background: #efefef;
+    padding: 8px 10px;
+    overflow: hidden;
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 100%;
+    font-size: 15px;
+}
 
 
-        <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
-        </div>
+.layout-header {
+    width: 78%;
+    height: 78%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 110px;
+}
 
-</div>
+.teaching-tools {
+    height: 100%;
+    width: 68%;
+    border: solid;
+    text-align: left;
+    overflow: hidden;
+}
 
+.composite-container {
+    width: 30%;
+    height: 100%;
+    margin-left: 2%;
+}
 
-<div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+.video-live {
+    height: 30%;
+    width: 100%;
+    border: solid;
+}
 
-</div>
+.chatroom {
+    margin-top: 4%;
+    height: 68%;
+    width: 100%;
+    border: solid;
+}
+&lt;/style&gt;
 
-
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/CodeEditor.html">
-                        CodeEditor
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

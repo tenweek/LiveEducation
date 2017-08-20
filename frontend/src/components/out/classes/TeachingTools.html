@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CodeEditor</title>
+    <title>TeachingTools</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -117,26 +117,22 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CodeEditor Class</h1>
+<h1>TeachingTools Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/CodeEditor.js.html#l14"><code>CodeEditor.js:14</code></a>
+            Defined in: <a href="../files/TeachingTools.js.html#l26"><code>TeachingTools.js:26</code></a>
         </div>
 
-            Module: <a href="../modules/CodeEditor.html">CodeEditor</a>
+            Module: <a href="../modules/TeachingTools.html">TeachingTools</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>实现教学区代码编辑器功能，
-作为子组件插入直播间页面。
-老师端可以选择不同语言输入代码，
-并同步到学生端。
-学生端不能对代码编辑器进行操作，
-只能同步看到老师的操作。</p>
+    <p>教学区组件，包含白板、ppt、代码编辑器，
+作为子组件插入到直播间页面。</p>
 
 </div>
 
@@ -159,6 +155,14 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
+                                <a href="#method_changeCurrent">changeCurrent</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_created">created</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#method_mounted">mounted</a>
 
                             </li>
@@ -178,6 +182,14 @@
 
                             </li>
                             <li class="index-item property">
+                                <a href="#property_teachingToolsHeight">teachingToolsHeight</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_teachingToolsWidth">teachingToolsWidth</a>
+
+                            </li>
+                            <li class="index-item property">
                                 <a href="#property_username">username</a>
 
                             </li>
@@ -189,13 +201,7 @@
 
                     <ul class="index-list attrs">
                             <li class="index-item attr">
-                                <a href="#attr_code">code</a>
-                            </li>
-                            <li class="index-item attr">
-                                <a href="#attr_editorOptions">editorOptions</a>
-                            </li>
-                            <li class="index-item attr">
-                                <a href="#attr_modeList">modeList</a>
+                                <a href="#attr_currentTools">currentTools</a>
                             </li>
                             <li class="index-item attr">
                                 <a href="#attr_socket">socket</a>
@@ -208,6 +214,68 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
+<div id="method_changeCurrent" class="method item">
+    <h3 class="name"><code>changeCurrent</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/TeachingTools.js.html#l121"><code>TeachingTools.js:121</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>向服务器发送'message'消息以改变当前选中的工具</p>
+
+    </div>
+
+
+
+
+</div>
+<div id="method_created" class="method item">
+    <h3 class="name"><code>created</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/TeachingTools.js.html#l100"><code>TeachingTools.js:100</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>created函数，连接到socket服务器，并发送'joinRoom'消息</p>
+
+    </div>
+
+
+
+
+</div>
 <div id="method_mounted" class="method item">
     <h3 class="name"><code>mounted</code></h3>
 
@@ -223,7 +291,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l117"><code>CodeEditor.js:117</code></a>
+        <a href="../files/TeachingTools.js.html#l109"><code>TeachingTools.js:109</code></a>
         </p>
 
 
@@ -231,7 +299,7 @@
     </div>
 
     <div class="description">
-        <p>mounted函数，连接到socket服务器，并初始化相关数据。</p>
+        <p>mounted函数，当接收到'message'消息时改变相应属性值</p>
 
     </div>
 
@@ -255,7 +323,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l28"><code>CodeEditor.js:28</code></a>
+        <a href="../files/TeachingTools.js.html#l40"><code>TeachingTools.js:40</code></a>
         </p>
 
 
@@ -280,7 +348,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l35"><code>CodeEditor.js:35</code></a>
+        <a href="../files/TeachingTools.js.html#l47"><code>TeachingTools.js:47</code></a>
         </p>
 
 
@@ -288,6 +356,56 @@
 
     <div class="description">
         <p>表示创建该房间的老师名字</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_teachingToolsHeight" class="property item">
+    <h3 class="name"><code>teachingToolsHeight</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/TeachingTools.js.html#l68"><code>TeachingTools.js:68</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示白板区域的长，根据父组件大小动态变化</p>
+
+    </div>
+
+
+
+</div>
+<div id="property_teachingToolsWidth" class="property item">
+    <h3 class="name"><code>teachingToolsWidth</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/TeachingTools.js.html#l61"><code>TeachingTools.js:61</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>表示白板区域的宽，根据父组件大小动态变化</p>
 
     </div>
 
@@ -305,7 +423,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/CodeEditor.js.html#l42"><code>CodeEditor.js:42</code></a>
+        <a href="../files/TeachingTools.js.html#l54"><code>TeachingTools.js:54</code></a>
         </p>
 
 
@@ -324,9 +442,9 @@
             <div id="attrs" class="api-class-tabpanel">
                 <h2 class="off-left">Attributes</h2>
 
-                    <div id="attr_code" class="attr item">
-                        <a name="config_code"></a> 
-                        <h3 class="name"><code>code</code></h3>
+                    <div id="attr_currentTools" class="attr item">
+                        <a name="config_currentTools"></a> 
+                        <h3 class="name"><code>currentTools</code></h3>
                         <span class="type">String</span>
                     
                     
@@ -339,76 +457,18 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l51"><code>CodeEditor.js:51</code></a>
+                            <a href="../files/TeachingTools.js.html#l82"><code>TeachingTools.js:82</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>表示编辑器中输入的代码</p>
+                            <p>表示当前选择的工具（白板、PPT、代码编辑器）</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;const a = 10   123456789&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="attr_editorOptions" class="attr item">
-                        <a name="config_editorOptions"></a> 
-                        <h3 class="name"><code>editorOptions</code></h3>
-                        <span class="type">Object</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/CodeEditor.js.html#l59"><code>CodeEditor.js:59</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>编辑器中的一些设置参数</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="attr_modeList" class="attr item">
-                        <a name="config_modeList"></a> 
-                        <h3 class="name"><code>modeList</code></h3>
-                        <span class="type">Array</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/CodeEditor.js.html#l87"><code>CodeEditor.js:87</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>表示语言选择的列表</p>
-                    
-                        </div>
-                    
+                            <p><strong>Default:</strong> &#x27;WhiteBoard&#x27;</p>
                     
                     
                     </div>
@@ -427,7 +487,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/CodeEditor.js.html#l79"><code>CodeEditor.js:79</code></a>
+                            <a href="../files/TeachingTools.js.html#l90"><code>TeachingTools.js:90</code></a>
                             </p>
                     
                     
