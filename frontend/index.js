@@ -132,7 +132,7 @@ io.on('connection', function (socket) {
                 'maxPage': data['maxPage']
             }
         }
-        fs.open(path[index], 'a', (err, fd) => {
+        fs.open(String(path[index]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }

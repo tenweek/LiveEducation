@@ -1,17 +1,19 @@
 <template>
-    <div class="picture">
-        <a @click="liveRoom">
-            <div class="for-img">
-                <img :src="this.userImg" width="100%">
-            </div>
-            <label id="information-room-name">房间名:{{ this.roomName }}</label>
-            <br>
-            <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
-            <label class="person">
-                <Icon type="person"></Icon>{{ this.studentNum }}
-            </label>
-        </a>
-    </div>
+    <Card id="live-picture" padding="8">
+        <div class="picture">
+            <a @click="liveRoom">
+                <div class="for-img">
+                    <img :src="this.userImg" width="100%">
+                </div>
+                <label id="information-room-name">房间名:{{ this.roomName }}</label>
+                <br>
+                <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
+                <label class="person">
+                    <Icon type="person"></Icon>{{ this.studentNum }}
+                </label>
+            </a>
+        </div>
+    </Card>
 </template>
 
 <script>
@@ -71,10 +73,9 @@ export default {
 
 <style scoped>
 .picture {
-    background: #efefef;
-    width: 160px;
+    width: 100%;
     height: 150px;
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 14px;
     text-align: left;
 }

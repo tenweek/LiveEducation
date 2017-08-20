@@ -179,7 +179,7 @@ export default {
     methods: {
         /**
          * 初始化数据，在mounted中调用
-         * 
+         *
          * @method initData
          */
         initData: function () {
@@ -208,7 +208,7 @@ export default {
         /**
          * 将用户输入到文本输入框中的文字画到白板上，
          * 并且可以根据白板大小自动换行
-         * 
+         *
          * @method drawLongText
          * @param text 用户输入的文字
          * @param beginX 输入文字坐标点的横坐标
@@ -657,7 +657,7 @@ export default {
         eraserMousemove: function (data) {
             if (this.originPoint === null) {
                 return
-                }
+            }
             if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
@@ -818,32 +818,32 @@ export default {
         circleMousemove: function (data) {
             // TODO:拆分函数
             if (this.originPoint === null) {
-                        return
-                    }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                        this.originPoint = null
-                        this.lastImageData = null
-                        this.allDataUrl.push(this.canvas.toDataURL())
-                        this.pointer += 1
-                        return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
-                    const radius = Math.sqrt(dx * dx, dy * dy)
-                    context.lineWidth = this.size
-                    context.beginPath()
-                    context.arc((ox + data.x * this.teachingToolsWidth) / 2, (data.y * this.teachingToolsHeight + oy) / 2, radius, 0, 2 * Math.PI)
-                    if (this.fill === true) {
-                        context.fillStyle = this.colorFill
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.colorBorder
-                        context.stroke()
-                    }
-                    context.closePath()
+                return
+            }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return
+            }
+            const context = this.context
+            context.putImageData(this.lastImageData, 0, 0)
+            const [ox, oy] = this.originPoint
+            const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
+            const radius = Math.sqrt(dx * dx, dy * dy)
+            context.lineWidth = this.size
+            context.beginPath()
+            context.arc((ox + data.x * this.teachingToolsWidth) / 2, (data.y * this.teachingToolsHeight + oy) / 2, radius, 0, 2 * Math.PI)
+            if (this.fill === true) {
+                context.fillStyle = this.colorFill
+                context.fill()
+            }
+            if (this.border === true) {
+                context.strokeStyle = this.colorBorder
+                context.stroke()
+            }
+            context.closePath()
         },
         /**
          * 根据接收到的信息对画板进行画椭圆操作
@@ -880,35 +880,35 @@ export default {
         ellipseMousemove: function (data) {
             // TODO:拆分函数
             if (this.originPoint === null) {
-                        return
-                    }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                        this.originPoint = null
-                        this.lastImageData = null
-                        this.allDataUrl.push(this.canvas.toDataURL())
-                        this.pointer += 1
-                        return
-                    }
-                    const context = this.context
-                    context.putImageData(this.lastImageData, 0, 0)
-                    const [ox, oy] = this.originPoint
-                    const [dx, dy] = [Math.abs(data.x * this.teachingToolsWidth - ox), Math.abs(data.y * this.teachingToolsHeight - oy)]
-                    context.strokeStyle = this.colorBorder
-                    context.lineWidth = this.size
-                    if (this.fill === true) {
-                        context.fillStyle = this.colorFill
-                    }
-                    context.beginPath()
-                    context.ellipse((data.x * this.teachingToolsWidth + ox) / 2, (data.y * this.teachingToolsHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
-                    if (this.fill === true) {
-                        context.fillStyle = this.colorFill
-                        context.fill()
-                    }
-                    if (this.border === true) {
-                        context.strokeStyle = this.colorBorder
-                        context.stroke()
-                    }
-                    context.closePath()
+                return
+            }
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return
+            }
+            const context = this.context
+            context.putImageData(this.lastImageData, 0, 0)
+            const [ox, oy] = this.originPoint
+            const [dx, dy] = [Math.abs(data.x * this.teachingToolsWidth - ox), Math.abs(data.y * this.teachingToolsHeight - oy)]
+            context.strokeStyle = this.colorBorder
+            context.lineWidth = this.size
+            if (this.fill === true) {
+                context.fillStyle = this.colorFill
+            }
+            context.beginPath()
+            context.ellipse((data.x * this.teachingToolsWidth + ox) / 2, (data.y * this.teachingToolsHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+            if (this.fill === true) {
+                context.fillStyle = this.colorFill
+                context.fill()
+            }
+            if (this.border === true) {
+                context.strokeStyle = this.colorBorder
+                context.stroke()
+            }
+            context.closePath()
         },
         /**
          * 在'whiteBoardDoing'函数中调用，
