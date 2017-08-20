@@ -6,6 +6,7 @@
             </Option>
         </Select>
         <codemirror id='code' v-model='code' :options='editorOptions'></codemirror>
+        <div>{{ editorOptions.mode }}</div>
     </div>
 </template>
 
@@ -52,7 +53,7 @@ export default {
                 },
                 {
                     modeName: 'PHP',
-                    modeValue: 'application/x-httpd-php'
+                    modeValue: 'text/x-php'
                 }
             ]
         }
@@ -62,19 +63,16 @@ export default {
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('joinForCodeEditor', self.roomId + '.3')
         if (self.username !== self.teacherName) {
-            self.editorOptions.readOnly = true
-            self.socket.on('message', function (data) {
-                self.code = data['code']
+            this.editorOptions.readOnly = true
+            this.socket.on('message', function (newcode) {
+                self.code = newcode
             })
         }
     },
     watch: {
         code: function (newcode, oldcode) {
             if (newcode !== oldcode && this.username === this.teacherName) {
-                this.socket.emit('message', {
-                    type: 'code',
-                    code: newcode
-                }, this.roomId + '.3')
+                this.socket.emit('message', newcode, this.roomId + '.3')
             }
         }
     }
@@ -83,7 +81,7 @@ export default {
 
 <style scoped>
 .code-editor {
-    width: 100%;
-    height: auto;
+    width: 670px;
+    height: 450px;
 }
 </style>
