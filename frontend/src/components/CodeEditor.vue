@@ -52,7 +52,7 @@ export default {
                 },
                 {
                     modeName: 'PHP',
-                    modeValue: 'application/x-httpd-php'
+                    modeValue: 'text/x-php'
                 }
             ]
         }
@@ -83,7 +83,7 @@ export default {
 
 <style scoped>
 .code-editor {
-    width: 100%;
-    height: auto;
+    width: 670px;
+    height: 450px;
 }
 </style>
