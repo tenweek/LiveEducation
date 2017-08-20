@@ -12,16 +12,11 @@
         <div class="layout-header">
             <div class="teaching-tools">
                 <div class="choose-current">
-                    <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
+                    <Dropdown trigger="hover" placement="right-start">
                         <Button type="ghost">
                             教学区
                             <Icon type="arrow-right-b"></Icon>
                         </Button>
-                        <Dropdown-menu slot="list">
-                            <Dropdown-item name="WhiteBoard">白板</Dropdown-item>
-                            <Dropdown-item name="CodeEditor">代码编辑器</Dropdown-item>
-                            <Dropdown-item name="FileDisplay">课件展示</Dropdown-item>
-                        </Dropdown-menu>
                     </Dropdown>
                 </div>
                 <keep-alive>
@@ -29,7 +24,9 @@
                 </keep-alive>
             </div>
             <div class="composite-container">
-                <div class="video-live"></div>
+                <div class="video-live">
+                    <video :src=videoPath id="video" autoplay="autoplay"></video>
+                </div>
                 <div class="chatroom">
                     <chat-board-for-record :roomId="this.roomId"></chat-board-for-record>
                 </div>
@@ -62,12 +59,15 @@ export default {
     data: function () {
         return {
             currentTools: 'WhiteBoardForRecord',
-            roomId: ''
+            roomId: '',
+            videoPath: ''
         }
     },
     created: function () {
         let self = this
         self.roomId = self.$route.params.id
+        alert('bb')
+        self.videoPath = './../../static/record/' + self.roomId + '.mp4'
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('joinTest', self.roomId)
         self.socket.on('changeCurrent', function (data) {
@@ -147,5 +147,10 @@ export default {
     height: 68%;
     width: 100%;
     border: solid;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
 }
 </style>
