@@ -133,6 +133,18 @@ export default {
         })
         self.socket.on('time', function (time) {
             self.startTime = time
+            fetch('/startRecord/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'channel': self.roomId,
+                    'time': self.startTime
+                })
+            }).then((response) => response.json()).then((obj) => { })
         })
     },
     methods: {
@@ -146,8 +158,6 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'channel': this.roomId,
-                    'time': this.startTime,
                     'roomId': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => { })
@@ -155,17 +165,6 @@ export default {
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
             this.started = true
-            fetch('/startRecord/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    'channel': this.roomId
-                })
-            }).then((response) => response.json()).then((obj) => { })
         },
         hide: function () {
             let rightContent = document.getElementById('right-up-container')

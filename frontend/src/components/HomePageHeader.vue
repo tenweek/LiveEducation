@@ -195,7 +195,8 @@ export default {
                         'account': this.account
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    // 创建房间后自动进入该房间 目前还没做
+                    // 创建房间后进行房间缺少信息
+                    // window.open('./#/live_room/' + obj.roomId)
                     this.hadImg = false
                     this.$Message.success(myMsg.room['create'])
                 })

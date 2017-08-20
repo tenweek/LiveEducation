@@ -44,19 +44,26 @@ def getVideoRooms(request):
     response = JsonResponse({'rooms': myroom})
     return response
 
+
 @csrf_exempt
 def startRecord(request):
     req = simplejson.load(request)
     channel = req['channel']
-    str = './backend/record/Recorder_local \
+    connect = './backend/record/Recorder_local \
         --appId "9b343e8aaaa144928e093b29513634e9" \
         --uid 0 \
         --channel "' + channel + '" \
         --appliteDir "./backend/record/bin/" \
         --channelProfile 1 \
-        --idle 30 \
+        --idle 3 \
         --recordFileRootDir "./frontend/static/record/"'
-    os.system(str)
+    os.system(connect)
+    path = './frontend/static/record/' + \
+        req['time'] + '/' + str(req['channel']) + '*'
+    command = 'python ./backend/video_convert.py ' + path
+    os.system(command)
+    os.system('mv ' + path + '/*.mp4 ' +
+              './frontend/static/record/' + str(req['channel']) + '.mp4')
     response = JsonResponse({})
     return response
 
@@ -77,10 +84,6 @@ def closeLiveRoom(request):
     teacherRoom.teacher.user_file = ''
     teacherRoom.teacher.file_num = 0
     teacherRoom.teacher.save()
-    path = './frontend/static/record/' + \
-        req['time'] + '/' + str(req['channel']) + '*'
-    command = 'python ./backend/video_convert.py ' + path
-    os.system(command)
     Room.objects.filter(id=req['roomId']).delete()
     response = JsonResponse({})
     return response
@@ -343,7 +346,7 @@ def createRoom(request):
     path = "./frontend/static/" + str(room.id)
     os.makedirs(path)
     os.mknod(path + "/" + str(room.id) + ".txt")
-    response = JsonResponse({})
+    response = JsonResponse({'roomId': room.id})
     return response
 
 
