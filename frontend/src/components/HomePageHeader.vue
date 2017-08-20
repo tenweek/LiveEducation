@@ -88,6 +88,17 @@
 </template>
 
 <script>
+/**
+ * 页面的导航栏部分，
+ * 在首页、直播间、录播间、直播详情页、录播详情页作为子组件插入。
+ * 包含了直播网站的logo、名字等信息，有首页、直播、录播、登录注册等选项，
+ * 点击可进入相关页面。
+ * 用户在登录后可以看到自己的个人信息并且有修改昵称、密码等功能，
+ * 若用户拥有老师权限则可以进行创建房间。
+ *
+ * @modules HomePageHeader
+ * @class HomePageHeader
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'home-page-header',
@@ -108,6 +119,11 @@ export default {
             loadingStatus: false
         }
     },
+    /**
+     * created函数
+     *
+     * @method created
+     */
     created: function () {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
@@ -132,11 +148,27 @@ export default {
         }
     },
     methods: {
+        /**
+         * 老师在创建房间上传文件时，
+         * 若文件格式不正确（支持ppt、pptx、key格式），
+         * 显示error消息框进行提示
+         *
+         * @method fileFormatError
+         * @param file 表示用户想要上传的文件
+         */
         fileFormatError: function (file) {
             this.file = null
             this.loadingStatus = false
             this.$Message.error('文件 ' + file.name + ' 格式不正确，请上传ppt、pptx或key格式的图片')
         },
+        /**
+         * 用户在创建房间上传封面图的时候，
+         * 若图片格式不正确（支持jpg、png格式），
+         * 显示error消息框进行提示
+         *
+         * @method imgFormatError
+         * @param file 用户想要上传的文件
+         */
         imgFormatError: function (file) {
             this.$Message.error('文件 ' + file.name + ' 格式不正确，请上传jpg或png格式的图片')
         },

@@ -60,6 +60,13 @@
 </template>
 
 <script>
+/**
+ * 直播网站的首页，
+ * 包含导航栏、直播列表、录播列表等信息
+ *
+ * @modules HomePage
+ * @class HomePage
+ */
 import LivePicture from './LivePicture'
 import RecordPicture from './RecordPicture'
 import HomePageHeader from './HomePageHeader'
@@ -67,9 +74,6 @@ import PageFooter from './PageFooter'
 
 export default {
     name: 'home-page',
-    created: function () {
-        this.getRooms()
-    },
     components: {
         LivePicture,
         RecordPicture,
@@ -82,7 +86,21 @@ export default {
             option: 1
         }
     },
+    /**
+     * created函数，调用getRooms函数，
+     * 获取房间信息
+     *
+     * @method created
+     */
+    created: function () {
+        this.getRooms()
+    },
     methods: {
+        /**
+         * 获取正在直播及录播房间信息
+         *
+         * @method getRooms
+         */
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',

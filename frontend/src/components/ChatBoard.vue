@@ -41,6 +41,13 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 实现聊天室功能，
+ * 作为子组件插入直播间页面。
+ *
+ * @module ChatRoom
+ * @class ChatRoom
+ */
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
@@ -78,6 +85,12 @@ export default {
         })
     },
     methods: {
+        /**
+         * 
+         *
+         * @method getName
+         * @param message
+         */
         getName: function (message) {
             this.choosenUser = message['user']
             if (this.teacherName !== this.username) {
@@ -85,15 +98,31 @@ export default {
                 show.style.display = 'none'
             }
         },
+        /**
+         * 
+         *
+         * @method contextMenu
+         * @return false
+         */
         contextMenu: function () {
             return false
         },
+        /**
+         * 
+         *
+         * @method changeStuNum
+         */
         changeStuNum: function () {
             let self = this
             self.socket.on('changeNum', function (count) {
                 self.$emit('stuNum', count)
             })
         },
+        /**
+         * 
+         *
+         * @method kickOut
+         */
         kickOut: function () {
             let self = this
             self.socket.on('kickOut', function (userid) {
@@ -103,6 +132,11 @@ export default {
                 }
             })
         },
+        /**
+         * 
+         *
+         * @method sendMsg
+         */
         sendMsg: function () {
             if (this.msgInput === '') {
                 return
@@ -131,6 +165,11 @@ export default {
                 }
             })
         },
+        /**
+         * 
+         *
+         * @method gag
+         */
         gag: function () {
             this.$Message.warning('您将禁言用户： ' + this.choosenUser)
             fetch('/gag/', {
@@ -148,6 +187,11 @@ export default {
                 this.gagList.push(this.choosenUser)
             })
         },
+        /**
+         * 
+         *
+         * @method gagAll
+         */
         gagAll: function () {
             this.$Message.warning(myMsg.chatroom['gagAll'])
             fetch('/gagAll/', {
@@ -163,6 +207,11 @@ export default {
                 this.gagList = obj.gagList
             })
         },
+        /**
+         * 
+         *
+         * @method allowAllSpeak
+         */
         allowAllSpeak: function () {
             this.$Message.warning(myMsg.chatroom['allowAllSpeak'])
             fetch('/allowAllSpeak/', {
@@ -177,6 +226,11 @@ export default {
                 this.gagList = []
             })
         },
+        /**
+         * 
+         *
+         * @method kickSomeoneOut
+         */
         kickSomeoneOut: function () {
             if (this.choosenUser !== this.teacherName) {
                 this.$Message.warning('您将踢出用户： ' + this.choosenUser)
@@ -198,6 +252,12 @@ export default {
                 this.$Message.warning(myMsg.chatroom['cannotKickOut'])
             }
         },
+        /**
+         * 
+         *
+         * @method teacherDoing
+         * @param name
+         */
         teacherDoing: function (name) {
             if (name === 'gag') {
                 this.gag()
@@ -215,6 +275,11 @@ export default {
                 this.kickSomeoneOut()
             }
         },
+        /**
+         * 
+         *
+         * @method getName
+         */
         resetList: function () {
             for (let i = this.gagList.length - 1; i >= 0; i--) {
                 let a = this.gagList[i]
@@ -228,6 +293,11 @@ export default {
                 }
             }
         },
+        /**
+         * 
+         *
+         * @method allowSpeak
+         */
         allowSpeak: function () {
             let gagWarning = '您将为该房间内的以下用户解禁：\n'
             for (let i = 0; i < this.speakList.length; i++) {

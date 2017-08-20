@@ -1,0 +1,1559 @@
+{
+    "project": {},
+    "files": {
+        "ChatBoard.js": {
+            "name": "ChatBoard.js",
+            "modules": {
+                "ChatRoom": 1
+            },
+            "classes": {
+                "ChatRoom": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "CodeEditor.js": {
+            "name": "CodeEditor.js",
+            "modules": {
+                "CodeEditor": 1
+            },
+            "classes": {
+                "CodeEditor": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "FileDisplay.js": {
+            "name": "FileDisplay.js",
+            "modules": {
+                "FileDisplay": 1
+            },
+            "classes": {
+                "FileDisplay": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "HomePage.js": {
+            "name": "HomePage.js",
+            "modules": {},
+            "classes": {
+                "HomePage": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "HomePageHeader.js": {
+            "name": "HomePageHeader.js",
+            "modules": {},
+            "classes": {
+                "HomePageHeader": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "WhiteBoard.js": {
+            "name": "WhiteBoard.js",
+            "modules": {
+                "WhiteBoard": 1
+            },
+            "classes": {
+                "WhiteBoard": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "WhiteBoardForRecord.js": {
+            "name": "WhiteBoardForRecord.js",
+            "modules": {
+                "WhiteBoardForRecord": 1
+            },
+            "classes": {
+                "WhiteBoardForRecord": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "ChatRoom": {
+            "name": "ChatRoom",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "ChatRoom": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "ChatBoard.js",
+            "line": 44,
+            "description": "实现聊天室功能，\n作为子组件插入直播间页面。"
+        },
+        "CodeEditor": {
+            "name": "CodeEditor",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "CodeEditor": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "CodeEditor.js",
+            "line": 14,
+            "description": "实现教学区代码编辑器功能，\n作为子组件插入直播间页面。\n老师端可以选择不同语言输入代码，\n并同步到学生端。\n学生端不能对代码编辑器进行操作，\n只能同步看到老师的操作。"
+        },
+        "FileDisplay": {
+            "name": "FileDisplay",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "FileDisplay": 1,
+                "HomePage": 1,
+                "HomePageHeader": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "HomePageHeader.js",
+            "line": 91,
+            "description": "实现教学区ppt等文件播放功能，\n作为子组件插入直播间页面。\n老师端可以对ppt做上下翻页等操作，\n学生端不能对白板操作，\n只能同步看到老师的操作。"
+        },
+        "WhiteBoard": {
+            "name": "WhiteBoard",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "WhiteBoard": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "WhiteBoard.js",
+            "line": 39,
+            "description": "实现教学区白板功能，\n作为子组件插入直播间页面。\n老师端可以对白板进行操作，\n可以选择画笔、直线、几何图形等进行画图，\n有填充、大小选择、橡皮擦、撤销等功能。\n学生端不能对白板操作，\n只能同步看到老师的操作。"
+        },
+        "WhiteBoardForRecord": {
+            "name": "WhiteBoardForRecord",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "WhiteBoardForRecord": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "WhiteBoardForRecord.js",
+            "line": 11,
+            "description": "实现教学区白板的复现，\n作为子组件插入录播间页面，\n用户不能对白板操作。"
+        }
+    },
+    "classes": {
+        "ChatRoom": {
+            "name": "ChatRoom",
+            "shortname": "ChatRoom",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ChatRoom",
+            "namespace": "",
+            "file": "ChatBoard.js",
+            "line": 44,
+            "description": "实现聊天室功能，\n作为子组件插入直播间页面。"
+        },
+        "CodeEditor": {
+            "name": "CodeEditor",
+            "shortname": "CodeEditor",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "CodeEditor",
+            "namespace": "",
+            "file": "CodeEditor.js",
+            "line": 14,
+            "description": "实现教学区代码编辑器功能，\n作为子组件插入直播间页面。\n老师端可以选择不同语言输入代码，\n并同步到学生端。\n学生端不能对代码编辑器进行操作，\n只能同步看到老师的操作。"
+        },
+        "FileDisplay": {
+            "name": "FileDisplay",
+            "shortname": "FileDisplay",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FileDisplay",
+            "namespace": "",
+            "file": "FileDisplay.js",
+            "line": 63,
+            "description": "实现教学区ppt等文件播放功能，\n作为子组件插入直播间页面。\n老师端可以对ppt做上下翻页等操作，\n学生端不能对白板操作，\n只能同步看到老师的操作。"
+        },
+        "HomePage": {
+            "name": "HomePage",
+            "shortname": "HomePage",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FileDisplay",
+            "namespace": "",
+            "file": "HomePage.js",
+            "line": 63,
+            "description": "直播网站的首页，\n包含导航栏、直播列表、录播列表等信息",
+            "modules": "HomePage"
+        },
+        "HomePageHeader": {
+            "name": "HomePageHeader",
+            "shortname": "HomePageHeader",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FileDisplay",
+            "namespace": "",
+            "file": "HomePageHeader.js",
+            "line": 91,
+            "description": "页面的导航栏部分，\n在首页、直播间、录播间、直播详情页、录播详情页作为子组件插入。\n包含了直播网站的logo、名字等信息，有首页、直播、录播、登录注册等选项，\n点击可进入相关页面。\n用户在登录后可以看到自己的个人信息并且有修改昵称、密码等功能，\n若用户拥有老师权限则可以进行创建房间。",
+            "modules": "HomePageHeader"
+        },
+        "WhiteBoard": {
+            "name": "WhiteBoard",
+            "shortname": "WhiteBoard",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "WhiteBoard",
+            "namespace": "",
+            "file": "WhiteBoard.js",
+            "line": 39,
+            "description": "实现教学区白板功能，\n作为子组件插入直播间页面。\n老师端可以对白板进行操作，\n可以选择画笔、直线、几何图形等进行画图，\n有填充、大小选择、橡皮擦、撤销等功能。\n学生端不能对白板操作，\n只能同步看到老师的操作。"
+        },
+        "WhiteBoardForRecord": {
+            "name": "WhiteBoardForRecord",
+            "shortname": "WhiteBoardForRecord",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "WhiteBoardForRecord",
+            "namespace": "",
+            "file": "WhiteBoardForRecord.js",
+            "line": 11,
+            "description": "实现教学区白板的复现，\n作为子组件插入录播间页面，\n用户不能对白板操作。"
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "ChatBoard.js",
+            "line": 88,
+            "itemtype": "method",
+            "name": "getName",
+            "params": [
+                {
+                    "name": "message",
+                    "description": ""
+                }
+            ],
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 101,
+            "itemtype": "method",
+            "name": "contextMenu",
+            "return": {
+                "description": "false"
+            },
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 110,
+            "itemtype": "method",
+            "name": "changeStuNum",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 121,
+            "itemtype": "method",
+            "name": "kickOut",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 135,
+            "itemtype": "method",
+            "name": "sendMsg",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 168,
+            "itemtype": "method",
+            "name": "gag",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 190,
+            "itemtype": "method",
+            "name": "gagAll",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 210,
+            "itemtype": "method",
+            "name": "allowAllSpeak",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 229,
+            "itemtype": "method",
+            "name": "kickSomeoneOut",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 255,
+            "itemtype": "method",
+            "name": "teacherDoing",
+            "params": [
+                {
+                    "name": "name",
+                    "description": ""
+                }
+            ],
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 278,
+            "itemtype": "method",
+            "name": "getName",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "ChatBoard.js",
+            "line": 296,
+            "itemtype": "method",
+            "name": "allowSpeak",
+            "class": "ChatRoom",
+            "module": "ChatRoom"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 92,
+            "description": "created函数，如果用户是创建房间的老师，\n获取上传的文件信息，并设置当且页为第一页。",
+            "itemtype": "method",
+            "name": "created",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 130,
+            "description": "获取上传文件的信息，\n在created函数中调用",
+            "itemtype": "method",
+            "name": "getTeahcerFileInfo",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 162,
+            "description": "上传文件时，若文件格式不正确，给出提示",
+            "itemtype": "method",
+            "name": "fileFormatError",
+            "params": [
+                {
+                    "name": "file",
+                    "description": "表示用户当前想要上传的文件"
+                }
+            ],
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 173,
+            "itemtype": "method",
+            "name": "handleUpload",
+            "params": [
+                {
+                    "name": "file",
+                    "description": "表示用户将要上传的文件"
+                }
+            ],
+            "return": {
+                "description": "true"
+            },
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 185,
+            "description": "上传文件成功时调用，获取文件信息\n并显示上传成功的消息框。",
+            "itemtype": "method",
+            "name": "upload",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 197,
+            "description": "老师点击下一页按钮或是按下键盘\"向下\"或\"向左\"键时响应，\n如果当前页不是最后一页，则进行翻页进入下一页的操作",
+            "itemtype": "method",
+            "name": "nextPicture",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 216,
+            "description": "老师点击上一页按钮或是按下键盘\"向上\"或\"向左\"键时响应，\n如果当前页不是第一页，则进行返回到上一页的操作",
+            "itemtype": "method",
+            "name": "prePicture",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 235,
+            "description": "当点击 时触发，",
+            "itemtype": "method",
+            "name": "modPicture",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 250,
+            "description": "当点击 时触发，",
+            "itemtype": "method",
+            "name": "makeFocus",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "FileDisplay.js",
+            "line": 259,
+            "description": "改变当前页到指定页码",
+            "itemtype": "method",
+            "name": "changePage",
+            "class": "FileDisplay",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "HomePage.js",
+            "line": 89,
+            "description": "created函数，调用getRooms函数，\n获取房间信息",
+            "itemtype": "method",
+            "name": "created",
+            "class": "HomePage",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "HomePage.js",
+            "line": 99,
+            "description": "获取正在直播及录播房间信息",
+            "itemtype": "method",
+            "name": "getRooms",
+            "class": "HomePage",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "HomePageHeader.js",
+            "line": 122,
+            "description": "created函数",
+            "itemtype": "method",
+            "name": "created",
+            "class": "HomePageHeader",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "HomePageHeader.js",
+            "line": 151,
+            "description": "老师在创建房间上传文件时，\n若文件格式不正确（支持ppt、pptx、key格式），\n显示error消息框进行提示",
+            "itemtype": "method",
+            "name": "fileFormatError",
+            "params": [
+                {
+                    "name": "file",
+                    "description": "表示用户想要上传的文件"
+                }
+            ],
+            "class": "HomePageHeader",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "HomePageHeader.js",
+            "line": 164,
+            "description": "用户在创建房间上传封面图的时候，\n若图片格式不正确（支持jpg、png格式），\n显示error消息框进行提示",
+            "itemtype": "method",
+            "name": "imgFormatError",
+            "params": [
+                {
+                    "name": "file",
+                    "description": "用户想要上传的文件"
+                }
+            ],
+            "class": "HomePageHeader",
+            "module": "FileDisplay"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 53,
+            "description": "用于判断鼠标在画图过程中是否移出canvas",
+            "itemtype": "attribute",
+            "name": "MIN",
+            "readonly": "",
+            "default": "0.005",
+            "type": "Number",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 64,
+            "description": "表示房间ID号",
+            "itemtype": "property",
+            "name": "roomId",
+            "type": "String",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 71,
+            "description": "表示创建该房间的老师名字",
+            "itemtype": "property",
+            "name": "teacherName",
+            "type": "String",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 78,
+            "description": "表示正在观看直播的用户名字",
+            "itemtype": "property",
+            "name": "username",
+            "type": "String",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 85,
+            "description": "表示白板区域的宽，根据父组件大小动态变化",
+            "itemtype": "property",
+            "name": "teachingToolsWidth",
+            "type": "Number",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 92,
+            "description": "表示白板区域的长，根据父组件大小动态变化",
+            "itemtype": "property",
+            "name": "teachingToolsHeight",
+            "type": "Number",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 101,
+            "description": "表示当前老师选中的功能",
+            "itemtype": "attribute",
+            "name": "type",
+            "type": "String",
+            "default": "'pen'",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 109,
+            "description": "用于表示",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 180,
+            "description": "初始化数据，在mounted中调用",
+            "itemtype": "method",
+            "name": "initData",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 193,
+            "description": "当选择功能为橡皮擦且size值变化时调用，\n根据size的值改变橡皮擦光标的样式",
+            "itemtype": "method",
+            "name": "changeEraserCursor",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 208,
+            "description": "将用户输入到文本输入框中的文字画到白板上，\n并且可以根据白板大小自动换行",
+            "itemtype": "method",
+            "name": "drawLongText",
+            "params": [
+                {
+                    "name": "text",
+                    "description": "用户输入的文字"
+                },
+                {
+                    "name": "beginX",
+                    "description": "输入文字坐标点的横坐标"
+                },
+                {
+                    "name": "beginY",
+                    "description": "输入文字坐标点的纵坐标"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 239,
+            "description": "用户（创建房间的老师）点击粗细选择大小时触发，\n箱服务器发送click消息，data中包含\"size\"的信息",
+            "itemtype": "method",
+            "name": "changeSize",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 257,
+            "description": "用户（创建房间的老师）点击橡皮擦按钮时触发，\n向服务器发送click消息，data中包含\"橡皮擦\"信息",
+            "itemtype": "method",
+            "name": "clickEraser",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 269,
+            "description": "用户（创建房间的老师）点击画笔按钮时触发，\n向服务器发送click消息，data中包含\"画笔\"信息",
+            "itemtype": "method",
+            "name": "clickPen",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 281,
+            "description": "用户（创建房间的老师）点击文字按钮时触发，\n向服务器发送click消息，data中包含\"文字\"信息",
+            "itemtype": "method",
+            "name": "clickPen",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 293,
+            "description": "用户（创建房间的老师）点击直线按钮时触发，\n向服务器发送click消息，data中包含\"直线\"信息",
+            "itemtype": "method",
+            "name": "clickLine",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 305,
+            "description": "用户（创建房间的老师）点击矩形按钮时触发，\n向服务器发送click消息，data中包含\"矩形\"信息",
+            "itemtype": "method",
+            "name": "clickRectangle",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 317,
+            "description": "用户（创建房间的老师）点击圆形按钮时触发，\n向服务器发送click消息，data中包含\"圆形\"信息",
+            "itemtype": "method",
+            "name": "clickCircle",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 329,
+            "description": "用户（创建房间的老师）点击椭圆按钮时触发，\n向服务器发送click消息，data中包含\"椭圆\"信息",
+            "itemtype": "method",
+            "name": "clickEllipse",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 341,
+            "description": "用户（创建房间的老师）点击边框按钮时触发，\n向服务器发送click消息，data中包含\"边框\"信息",
+            "itemtype": "method",
+            "name": "clickBorder",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 353,
+            "description": "用户（创建房间的老师）点击填充按钮时触发，\n向服务器发送click消息，data中包含\"填充\"信息",
+            "itemtype": "method",
+            "name": "clickFill",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 365,
+            "description": "用户（创建房间的老师）在文本框输入文字后按下回车键是响应，\n向服务器发送'message'消息，包含输入的文字信息",
+            "itemtype": "method",
+            "name": "drawText",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 381,
+            "description": "用户（创建房间的老师）按下清空按钮时响应，\n向服务器发送'message'消息，包含\"清空\"信息",
+            "itemtype": "method",
+            "name": "clear",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 393,
+            "description": "用户（创建房间的老师）按下撤销按钮时响应，\n向服务器发送'message'消息，包含\"撤销\"信息",
+            "itemtype": "method",
+            "name": "undo",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 405,
+            "description": "用户（创建房间的老师）使用画笔功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "penCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示当前鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 429,
+            "description": "用户（创建房间的老师）使用文字功能对白板进行操作的时候响应，\n向服务器发送操作的数据（在mouseup的时候响应）",
+            "itemtype": "method",
+            "name": "textCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示当前鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 455,
+            "description": "用户（创建房间的老师）使用橡皮擦功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "eraserCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示当前鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 478,
+            "description": "用户（创建房间的老师）使用直线功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "lineCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 502,
+            "description": "用户（创建房间的老师）使用画矩形功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "rectangleCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 528,
+            "description": "用户（创建房间的老师）使用画圆功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "circleCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 554,
+            "description": "用户（创建房间的老师）使用画椭圆功能对白板进行操作的时候响应，\n向服务器发送操作的数据",
+            "itemtype": "method",
+            "name": "penCommand",
+            "params": [
+                {
+                    "name": "action",
+                    "description": "表示鼠标事件，包括mousedown、mousemove、mouseup"
+                },
+                {
+                    "name": "其中x、y表示鼠标在白板上的坐标",
+                    "description": "",
+                    "type": "X, y, buttons"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 580,
+            "description": "根据接收到的信息对画板进行画笔操作",
+            "itemtype": "method",
+            "name": "pen",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 600,
+            "description": "当从服务器接收到的信息是画笔操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "penMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 628,
+            "description": "根据接收到的信息对画板进行橡皮擦操作",
+            "itemtype": "method",
+            "name": "eraser",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 651,
+            "description": "当从服务器接收到的信息是橡皮擦操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "eraserMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 673,
+            "description": "根据接收到的信息对画板进行直线操作",
+            "itemtype": "method",
+            "name": "line",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 697,
+            "description": "当从服务器接收到的信息是直线操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "lineMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 725,
+            "description": "根据接收到的信息对画板进行画矩形操作",
+            "itemtype": "method",
+            "name": "rectangle",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 751,
+            "description": "当从服务器接收到的信息是画矩形操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "rectangleMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 786,
+            "description": "根据接收到的信息对画板进行画圆形操作",
+            "itemtype": "method",
+            "name": "circle",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 812,
+            "description": "当从服务器接收到的信息是画圆形操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "circleMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 848,
+            "description": "根据接收到的信息对画板进行画椭圆操作",
+            "itemtype": "method",
+            "name": "ellipse",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 874,
+            "description": "当从服务器接收到的信息是画椭圆操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "ellipseMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 913,
+            "description": "在'whiteBoardDoing'函数中调用，\n接收到服务器消息后清空画板",
+            "itemtype": "method",
+            "name": "boardClear",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含\"清空\"信息"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 926,
+            "description": "在'whiteBoardDoing'函数中调用，\n根据服务器传来的信息更新自己的数据，\n同步到老师端。",
+            "itemtype": "method",
+            "name": "textBox",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含文字坐标、颜色等信息"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 941,
+            "description": "在'whiteBoardDoing'函数中调用，\n将指定文本内容画到画板上",
+            "itemtype": "method",
+            "name": "font",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含文本内容等信息"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 957,
+            "description": "在'whiteBoardDoing'函数中调用，\n接收到服务器端的信息后，执行undo操作",
+            "itemtype": "method",
+            "name": "boardUndo",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 977,
+            "description": "当用户接收到'message'消息时，对画板进行绘图操作",
+            "itemtype": "method",
+            "name": "whiteBoardDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包括在画板上操作的坐标、颜色、形状等信息"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 1006,
+            "description": "用户在开始直播后接收到'click'消息后，\n根据传输数据的类型，改变相应属性，完成点击按钮事件的响应。",
+            "itemtype": "method",
+            "name": "buttonDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器端接收到的信息，包括点击的按钮类型"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 1040,
+            "description": "当用户（创建房间的老师）接收到'newJoin'消息时调用，\n老师直播过程中有新的用户进入房间，\n老师就把自己对白板操作的信息都发送到服务器，\n以达到学生同步的目的。",
+            "itemtype": "method",
+            "name": "joinDoing",
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 1060,
+            "description": "当用户接收到'updateWhiteBoardMessage'消息时调用\n（老师直播过程中有新的用户进入房间），\n将自己的信息同步到老师端",
+            "itemtype": "method",
+            "name": "updateMessageDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括老师端对画板操作的所有信息"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoard.js",
+            "line": 1079,
+            "description": "将指定dataURL画到canvas上",
+            "itemtype": "method",
+            "name": "drawDataUrl",
+            "params": [
+                {
+                    "name": "dataUrl",
+                    "description": "将要画到canvas上的base64编码的图形对象"
+                }
+            ],
+            "class": "WhiteBoard",
+            "module": "WhiteBoard"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 78,
+            "description": "初始化数据，在mounted中调用",
+            "itemtype": "method",
+            "name": "initData",
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 91,
+            "description": "当选择功能为橡皮擦且size值变化时调用，\n根据size的值改变橡皮擦光标的样式",
+            "itemtype": "method",
+            "name": "changeEraserCursor",
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 106,
+            "description": "将指定文字画到白板上，\n并且可以根据白板大小自动换行",
+            "itemtype": "method",
+            "name": "drawLongText",
+            "params": [
+                {
+                    "name": "text",
+                    "description": "输入的文字"
+                },
+                {
+                    "name": "beginX",
+                    "description": "输入文字坐标点的横坐标"
+                },
+                {
+                    "name": "beginY",
+                    "description": "输入文字坐标点的纵坐标"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 137,
+            "description": "根据接收到的信息对画板进行画笔操作",
+            "itemtype": "method",
+            "name": "pen",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 157,
+            "description": "当从服务器接收到的信息是画笔操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "penMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 185,
+            "description": "根据接收到的信息对画板进行橡皮擦操作",
+            "itemtype": "method",
+            "name": "eraser",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 208,
+            "description": "当从服务器接收到的信息是橡皮擦操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "eraserMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 230,
+            "description": "根据接收到的信息对画板进行直线操作",
+            "itemtype": "method",
+            "name": "line",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 254,
+            "description": "当从服务器接收到的信息是直线操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "lineMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 282,
+            "description": "根据接收到的信息对画板进行画矩形操作",
+            "itemtype": "method",
+            "name": "rectangle",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 308,
+            "description": "当从服务器接收到的信息是画矩形操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "rectangleMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 343,
+            "description": "根据接收到的信息对画板进行画圆形操作",
+            "itemtype": "method",
+            "name": "circle",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 369,
+            "description": "当从服务器接收到的信息是画圆形操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "circleMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 405,
+            "description": "根据接收到的信息对画板进行画椭圆操作",
+            "itemtype": "method",
+            "name": "ellipse",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包含对画板操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 431,
+            "description": "当从服务器接收到的信息是画椭圆操作，且鼠标事件为mousemove时调用。",
+            "itemtype": "method",
+            "name": "ellipseMousemove",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括对画板进行操作的数据"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 470,
+            "description": "在'whiteBoardDoing'函数中调用，\n接收到服务器消息后清空画板",
+            "itemtype": "method",
+            "name": "boardClear",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含\"清空\"信息"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 483,
+            "description": "在'whiteBoardDoing'函数中调用，\n根据服务器传来的信息更新自己的数据，\n同步到老师端。",
+            "itemtype": "method",
+            "name": "textBox",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含文字坐标、颜色等信息"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 498,
+            "description": "在'whiteBoardDoing'函数中调用，\n将指定文本内容画到画板上",
+            "itemtype": "method",
+            "name": "font",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的数据，包含文本内容等信息"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 514,
+            "description": "在'whiteBoardDoing'函数中调用，\n接收到服务器端的信息后，执行undo操作",
+            "itemtype": "method",
+            "name": "boardUndo",
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 531,
+            "description": "当用户接收到'message'消息时，对画板进行绘图操作",
+            "itemtype": "method",
+            "name": "whiteBoardDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收到的信息，包括在画板上操作的坐标、颜色、形状等信息"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 560,
+            "description": "用户在开始直播后接收到'click'消息后，\n根据传输数据的类型，改变相应属性，完成点击按钮事件的响应。",
+            "itemtype": "method",
+            "name": "buttonDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器端接收到的信息，包括点击的按钮类型"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 594,
+            "description": "当用户接收到'updateWhiteBoardMessage'消息时调用\n（老师直播过程中有新的用户进入房间），\n将自己的信息同步到老师端",
+            "itemtype": "method",
+            "name": "updateMessageDoing",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "从服务器接收的信息，包括老师端对画板操作的所有信息"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        },
+        {
+            "file": "WhiteBoardForRecord.js",
+            "line": 613,
+            "description": "将指定dataURL画到canvas上",
+            "itemtype": "method",
+            "name": "drawDataUrl",
+            "params": [
+                {
+                    "name": "dataUrl",
+                    "description": "将要画到canvas上的base64编码的图形对象"
+                }
+            ],
+            "class": "WhiteBoardForRecord",
+            "module": "WhiteBoardForRecord"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: modules",
+            "line": " HomePage.js:63"
+        },
+        {
+            "message": "unknown tag: modules",
+            "line": " HomePageHeader.js:91"
+        },
+        {
+            "message": "Missing item type\n用于表示",
+            "line": " WhiteBoard.js:109"
+        }
+    ]
+}

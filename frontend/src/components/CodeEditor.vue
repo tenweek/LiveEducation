@@ -11,6 +11,17 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 实现教学区代码编辑器功能，
+ * 作为子组件插入直播间页面。
+ * 老师端可以选择不同语言输入代码，
+ * 并同步到学生端。
+ * 学生端不能对代码编辑器进行操作，
+ * 只能同步看到老师的操作。
+ *
+ * @module CodeEditor
+ * @class CodeEditor
+ */
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',

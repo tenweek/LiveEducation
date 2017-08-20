@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FileDisplay.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/HomePage.html">HomePage</a></li>
+                                <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: FileDisplay.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div&gt;
+        &lt;template v-if=&quot;this.fileNum &gt; 0&quot;&gt;
+            &lt;div class=&quot;file-display&quot; id=&quot;file&quot;&gt;
+                &lt;div class=&quot;ppt-header&quot;&gt;PPT放映&lt;/div&gt;
+                &lt;div @click=&quot;makeFoucs&quot; @keydown=&quot;modPicture()&quot; tabindex=&quot;0&quot;&gt;
+                    &lt;img :src=&quot;this.route&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;ppt-footer&quot;&gt;
+                    &lt;div class=&quot;for-footer&quot;&gt;
+                        &lt;a class=&quot;arrow&quot; :style=&quot;this.isTeacher ? &#x27;display:block&#x27; : &#x27;display:none&#x27;&quot; @click=&quot;prePicture&quot;&gt;
+                            &lt;Icon type=&quot;arrow-left-b&quot;&gt;&lt;/Icon&gt;
+                        &lt;/a&gt;
+                        &lt;div class=&quot;for-place&quot;&gt;
+                            &lt;select @change=&quot;changePage&quot; id=&quot;for-select&quot; class=&quot;ppt-select ppt-num1&quot; :style=&quot;this.isTeacher ? &#x27;display:block&#x27; : &#x27;display:none&#x27;&quot;&gt;
+                                &lt;option v-for=&quot;page in this.maxPage&quot; class=&quot;every-option&quot;&gt;&amp;nbsp;{{ page }}&lt;/option&gt;
+                            &lt;/select&gt;
+                            &lt;div class=&quot;ppt-page&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;{{ this.currentPage }}&amp;nbsp;&amp;nbsp;of&amp;nbsp;&amp;nbsp;{{ this.maxPage }}&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;a class=&quot;arrow&quot; :style=&quot;this.isTeacher ? &#x27;display:block&#x27; : &#x27;display:none&#x27;&quot; @click=&quot;nextPicture&quot;&gt;
+                            &lt;Icon type=&quot;arrow-right-b&quot;&gt;&lt;/Icon&gt;
+                        &lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div :style=&quot;this.isTeacher ? &#x27;display:block&#x27;:&#x27;display:none&#x27;&quot;&gt;
+                    &lt;Upload name=&quot;file&quot; :before-upload=&quot;handleUpload&quot; :show-upload-list=&quot;false&quot; :on-success=&quot;upload&quot; :format=&quot;[&#x27;ppt&#x27;,&#x27;pptx&#x27;,&#x27;key&#x27;,&#x27;pdf&#x27;]&quot; :on-format-error=&quot;fileFormatError&quot; action=&quot;/uploadFile/&quot;&gt;
+                        &lt;div class=&quot;upload-file&quot;&gt;
+                            &lt;Button type=&quot;ghost&quot; style=&quot;background:white&quot;&gt;点击上传课件&amp;nbsp;&amp;nbsp;
+                                &lt;Icon type=&quot;folder&quot;&gt;&lt;/Icon&gt;
+                            &lt;/Button&gt;
+                        &lt;/div&gt;
+                    &lt;/Upload&gt;
+                    &lt;div v-if=&quot;file !== null&quot; style=&quot;background:white&quot;&gt;
+                        正在上传文件：{{ file.name }}
+                        &lt;Button type=&quot;text&quot; :loading=&quot;loadingStatus&quot; style=&quot;background:white&quot;&gt;正在切换课件&lt;/Button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+        &lt;template v-else-if=&quot;this.isTeacher&quot;&gt;
+            &lt;div class=&quot;drag-file&quot;&gt;
+                &lt;Upload name=&quot;file&quot; :before-upload=&quot;handleUpload&quot; :show-upload-list=&quot;false&quot; :on-success=&quot;upload&quot; :format=&quot;[&#x27;ppt&#x27;,&#x27;pptx&#x27;,&#x27;key&#x27;,&#x27;pdf&#x27;]&quot; :on-format-error=&quot;fileFormatError&quot; type=&quot;drag&quot; action=&quot;/uploadFile/&quot;&gt;
+                    &lt;div class=&quot;upload-file&quot;&gt;
+                        &lt;p&gt;
+                            &lt;Icon type=&quot;ios-cloud-upload&quot; size=&quot;50&quot;&gt;&lt;/Icon&gt;上传课件&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/Upload&gt;
+                &lt;div v-if=&quot;file !== null&quot;&gt;
+                    正在上传文件：{{ file.name }}
+                    &lt;Button type=&quot;text&quot; :loading=&quot;loadingStatus&quot;&gt;正在切换课件&lt;/Button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+        &lt;template v-else&gt;
+            &lt;div&gt;目前还没有课件，请等待老师上传！！！&lt;/div&gt;
+        &lt;/template&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+/**
+ * 实现教学区ppt等文件播放功能，
+ * 作为子组件插入直播间页面。
+ * 老师端可以对ppt做上下翻页等操作，
+ * 学生端不能对白板操作，
+ * 只能同步看到老师的操作。
+ *
+ * @module FileDisplay
+ * @class FileDisplay
+ */
+import * as io from &#x27;socket.io-client&#x27;
+
+export default {
+    name: &#x27;file-display&#x27;,
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;],
+    data: function () {
+        return {
+            socket: &#x27;&#x27;,
+            baseRoute: &#x27;static/ppt/&#x27;,
+            route: &#x27;&#x27;,
+            maxPage: &#x27;&#x27;,
+            currentPage: &#x27;&#x27;,
+            isTeacher: false,
+            file: null,
+            loadingStatus: false,
+            fileNum: 0,
+            teacherId: &#x27;&#x27;
+        }
+    },
+    /**
+     * created函数，如果用户是创建房间的老师，
+     * 获取上传的文件信息，并设置当且页为第一页。
+     *
+     * @method created
+     */
+    created: function () {
+        if (this.teacherName === this.username) {
+            this.currentPage = 1
+            this.isTeacher = true
+            this.getTeahcerFileInfo()
+        }
+    },
+    mounted: function () {
+        this.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+        let self = this
+        if (this.teacherName === this.username) {
+            self.isTeacher = true
+        }
+        self.socket.emit(&#x27;joinForFileDisplay&#x27;, self.roomId + &#x27;.2&#x27;, self.isTeacher)
+        if (!self.isTeacher) {
+            self.socket.on(&#x27;message&#x27;, function (data) {
+                self.teacherId = data[&#x27;teacherId&#x27;]
+                self.fileNum = data[&#x27;fileNum&#x27;]
+                self.currentPage = data[&#x27;currentPage&#x27;]
+                self.maxPage = data[&#x27;maxPage&#x27;]
+                self.route = self.baseRoute + self.teacherId + &#x27;and&#x27; + self.fileNum + &#x27;/user-&#x27; + self.currentPage + &#x27;.png&#x27;
+            })
+            self.socket.on(&#x27;firstPicture&#x27;, function (teacherId, fileNum, currentPage, maxPage) {
+                self.teacherId = teacherId
+                self.fileNum = fileNum
+                self.currentPage = currentPage
+                self.maxPage = maxPage
+                self.route = self.baseRoute + self.teacherId + &#x27;and&#x27; + self.fileNum + &#x27;/user-&#x27; + self.currentPage + &#x27;.png&#x27;
+            })
+        }
+    },
+    methods: {
+        /**
+         * 获取上传文件的信息，
+         * 在created函数中调用
+         *
+         * @method getTeahcerFileInfo
+         */
+        getTeahcerFileInfo: function () {
+            fetch(&#x27;/getTeacherFileInfo/&#x27;, {
+                method: &#x27;post&#x27;,
+                mode: &#x27;cors&#x27;,
+                headers: {
+                    &#x27;Content-Type&#x27;: &#x27;application/json, text/plain, */*&#x27;,
+                    &#x27;Accept&#x27;: &#x27;application/json&#x27;
+                },
+                body: JSON.stringify({
+                    &#x27;name&#x27;: this.teacherName
+                })
+            }).then((response) =&gt; response.json()).then((obj) =&gt; {
+                this.teacherId = obj.teacherId
+                this.fileNum = obj.fileNum
+                this.maxPage = obj.maxPage
+                this.currentPage = 1
+                this.route = this.baseRoute + this.teacherId + &#x27;and&#x27; + this.fileNum + &#x27;/user-&#x27; + this.currentPage + &#x27;.png&#x27;
+                this.socket.emit(&#x27;message&#x27;, {
+                    &#x27;type&#x27;: &#x27;file&#x27;,
+                    &#x27;teacherId&#x27;: this.teacherId,
+                    &#x27;fileNum&#x27;: this.fileNum,
+                    &#x27;currentPage&#x27;: this.currentPage,
+                    &#x27;maxPage&#x27;: this.maxPage
+                }, this.roomId + &#x27;.2&#x27;)
+            })
+        },
+        /**
+         * 上传文件时，若文件格式不正确，给出提示
+         *
+         * @method fileFormatError
+         * @param file 表示用户当前想要上传的文件
+         */
+        fileFormatError: function (file) {
+            this.file = null
+            this.loadingStatus = false
+            this.$Message.error(&#x27;文件格式不正确&#x27; + &#x27;文件 &#x27; + file.name + &#x27; 格式不正确，请上传 ppt  pptx  pdf 或 key 格式的图片。&#x27;)
+        },
+        /**
+         * 
+         *
+         * @method handleUpload
+         * @param file 表示用户将要上传的文件
+         * @return true
+         */
+        handleUpload: function (file) {
+            this.file = file
+            this.loadingStatus = true
+            return true
+        },
+        /**
+         * 上传文件成功时调用，获取文件信息
+         * 并显示上传成功的消息框。
+         *
+         * @method upload
+         */
+        upload: function () {
+            this.file = null
+            this.loadingStatus = false
+            this.getTeahcerFileInfo()
+            this.$Message.success(&#x27;上传成功&#x27;)
+        },
+        /**
+         * 老师点击下一页按钮或是按下键盘&quot;向下&quot;或&quot;向左&quot;键时响应，
+         * 如果当前页不是最后一页，则进行翻页进入下一页的操作
+         *
+         * @method nextPicture
+         */
+        nextPicture: function () {
+            if (this.currentPage &lt; this.maxPage &amp;&amp; this.isTeacher) {
+                this.currentPage = this.currentPage + 1
+                this.route = this.baseRoute + this.teacherId + &#x27;and&#x27; + this.fileNum + &#x27;/user-&#x27; + this.currentPage + &#x27;.png&#x27;
+                this.socket.emit(&#x27;message&#x27;, {
+                    &#x27;type&#x27;: &#x27;file&#x27;,
+                    &#x27;teacherId&#x27;: this.teacherId,
+                    &#x27;fileNum&#x27;: this.fileNum,
+                    &#x27;currentPage&#x27;: this.currentPage,
+                    &#x27;maxPage&#x27;: this.maxPage
+                }, this.roomId + &#x27;.2&#x27;)
+            }
+        },
+        /**
+         * 老师点击上一页按钮或是按下键盘&quot;向上&quot;或&quot;向左&quot;键时响应，
+         * 如果当前页不是第一页，则进行返回到上一页的操作
+         *
+         * @method prePicture
+         */
+        prePicture: function () {
+            if (this.currentPage &gt; 1 &amp;&amp; this.isTeacher) {
+                this.currentPage = this.currentPage - 1
+                this.route = this.baseRoute + this.teacherId + &#x27;and&#x27; + this.fileNum + &#x27;/user-&#x27; + this.currentPage + &#x27;.png&#x27;
+                this.socket.emit(&#x27;message&#x27;, {
+                    &#x27;type&#x27;: &#x27;file&#x27;,
+                    &#x27;teacherId&#x27;: this.teacherId,
+                    &#x27;fileNum&#x27;: this.fileNum,
+                    &#x27;currentPage&#x27;: this.currentPage,
+                    &#x27;maxPage&#x27;: this.maxPage
+                }, this.roomId + &#x27;.2&#x27;)
+            }
+        },
+        /**
+         * 当点击 时触发，
+         * 
+         * @method modPicture
+         */
+        modPicture: function () {
+            if (this.isTeacher) {
+                if (event.keyCode === 39 || event.keyCode === 40) {
+                    this.nextPicture()
+                }
+                if (event.keyCode === 37 || event.keyCode === 38) {
+                    this.prePicture()
+                }
+            }
+        },
+        /**
+         * 当点击 时触发，
+         * 
+         * @method makeFocus
+         */
+        makeFoucs: function () {
+            let getfocus = document.getElementById(&#x27;file&#x27;)
+            getfocus.focus()
+        },
+        /**
+         * 改变当前页到指定页码
+         *
+         * @method changePage
+         */
+        changePage: function () {
+            let selected = document.getElementById(&#x27;for-select&#x27;)
+            this.currentPage = selected.selectedIndex + 1
+            this.route = this.baseRoute + this.teacherId + &#x27;and&#x27; + this.fileNum + &#x27;/user-&#x27; + this.currentPage + &#x27;.png&#x27;
+            this.socket.emit(&#x27;message&#x27;, {
+                &#x27;type&#x27;: &#x27;file&#x27;,
+                &#x27;teacherId&#x27;: this.teacherId,
+                &#x27;fileNum&#x27;: this.fileNum,
+                &#x27;currentPage&#x27;: this.currentPage,
+                &#x27;maxPage&#x27;: this.maxPage
+            }, this.roomId + &#x27;.2&#x27;)
+        }
+    }
+}
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.drag-file {
+    width: 400px;
+    height: 400px;
+    border: 2px dashed black;
+    margin: auto;
+}
+
+.upload-file Icon {
+    color: #3399ff;
+    font-size: 100px;
+    line-height: 400px;
+}
+
+.upload-file p {
+    color: #3399ff;
+    font-size: 20px;
+    line-height: 400px;
+}
+
+.file-display {
+    width: 100%;
+    height: auto;
+    background: #52524E;
+}
+
+.ppt-header {
+    background-color: #52524E;
+    width: 100%;
+    height: 50px;
+    border-color: #52524E;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 20px;
+}
+
+img {
+    border: 3px solid #52524E;
+    height: auto;
+    width: 100%;
+}
+
+.ppt-footer {
+    width: 100%;
+    height: 80px;
+    background-color: #52524E;
+    text-align: center;
+    display: flex;
+}
+
+.for-footer {
+    width: auto;
+    height: 80px;
+    margin: auto;
+    display: flex;
+}
+
+.arrow {
+    height: 80px;
+    font-size: 60px;
+    color: white;
+    line-height: 80px;
+}
+
+.arrow:hover {
+    color: #9A9B94;
+}
+
+.for-place {
+    width: auto;
+    position: relative;
+    display: flex;
+    margin: 0;
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+}
+
+.ppt-select {
+    width: 40px;
+    height: 80px;
+    opacity: 0;
+    position: absolute;
+    left: 20px;
+    z-index: 50;
+}
+
+.every-option {
+    background: white;
+    font-size: 10px;
+}
+
+.ppt-page {
+    height: 80px;
+    font-size: 30px;
+    color: white;
+    line-height: 80px;
+    background: #52524E;
+    border: none;
+    text-align: right;
+}
+&lt;/style&gt;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

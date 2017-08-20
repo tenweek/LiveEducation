@@ -1,41 +1,134 @@
-<template>
-    <div class="white-board">
-        <div class="tools">
-            <Button type="text" @click="clear">清空</Button>
-            <Button type="text" @click="undo">撤销</Button>
-            <Button type="text" :class="{ active: type === 'eraser' }" @click="clickEraser">橡皮擦</Button>
-            <Button type="text" :class="{ active: type === 'pen' }" @click="clickPen">画笔</Button>
-            <Button type="text" :class="{ active: type === 'text' }" @click="clickText">文字</Button>
-            <Button type="text" :class="{ active: type === 'line' }" @click="clickLine">直线</Button>
-            <Button type="text" :class="{ active: type === 'rectangle' }" @click="clickRectangle">矩形</Button>
-            <Button type="text" :class="{ active: type === 'circle' }" @click="clickCircle">圆形</Button>
-            <Button type="text" :class="{ active: type === 'ellipse' }" @click="clickEllipse">椭圆</Button>
-            <Dropdown class="change-size" placement="right-start" @on-click="changeSize">
-                <Button type="text">
-                    粗细
-                    <Icon type="ios-arrow-forward"></Icon>
-                </Button>
-                <Dropdown-menu slot="list" v-if="this.teacherName === this.username">
-                    <Dropdown-item name='small'>小</Dropdown-item>
-                    </Dropdown-item>
-                    <Dropdown-item name='middle'>中</Dropdown-item>
-                    <Dropdown-item name='large'>大</Dropdown-item>
-                </Dropdown-menu>
-            </Dropdown>
-            <Button type="text" :class="{ active: border === true }" @click="clickBorder">边框</Button>
-            <Button type="text" :class="{ active: fill === true }" @click="clickFill">填充</Button>
-            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
-            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WhiteBoard.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
         </div>
-        <div class="drawing-board">
-            <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
-            <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
         </div>
     </div>
-</template>
+    <div id="bd" class="yui3-g">
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/HomePage.html">HomePage</a></li>
+                                <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: WhiteBoard.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;white-board&quot;&gt;
+        &lt;div class=&quot;tools&quot;&gt;
+            &lt;Button type=&quot;text&quot; @click=&quot;clear&quot;&gt;清空&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; @click=&quot;undo&quot;&gt;撤销&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;eraser&#x27; }&quot; @click=&quot;clickEraser&quot;&gt;橡皮擦&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;pen&#x27; }&quot; @click=&quot;clickPen&quot;&gt;画笔&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;text&#x27; }&quot; @click=&quot;clickText&quot;&gt;文字&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;line&#x27; }&quot; @click=&quot;clickLine&quot;&gt;直线&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;rectangle&#x27; }&quot; @click=&quot;clickRectangle&quot;&gt;矩形&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;circle&#x27; }&quot; @click=&quot;clickCircle&quot;&gt;圆形&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: type === &#x27;ellipse&#x27; }&quot; @click=&quot;clickEllipse&quot;&gt;椭圆&lt;/Button&gt;
+            &lt;Dropdown class=&quot;change-size&quot; placement=&quot;right-start&quot; @on-click=&quot;changeSize&quot;&gt;
+                &lt;Button type=&quot;text&quot;&gt;
+                    粗细
+                    &lt;Icon type=&quot;ios-arrow-forward&quot;&gt;&lt;/Icon&gt;
+                &lt;/Button&gt;
+                &lt;Dropdown-menu slot=&quot;list&quot; v-if=&quot;this.teacherName === this.username&quot;&gt;
+                    &lt;Dropdown-item name=&#x27;small&#x27;&gt;小&lt;/Dropdown-item&gt;
+                    &lt;/Dropdown-item&gt;
+                    &lt;Dropdown-item name=&#x27;middle&#x27;&gt;中&lt;/Dropdown-item&gt;
+                    &lt;Dropdown-item name=&#x27;large&#x27;&gt;大&lt;/Dropdown-item&gt;
+                &lt;/Dropdown-menu&gt;
+            &lt;/Dropdown&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: border === true }&quot; @click=&quot;clickBorder&quot;&gt;边框&lt;/Button&gt;
+            &lt;Button type=&quot;text&quot; :class=&quot;{ active: fill === true }&quot; @click=&quot;clickFill&quot;&gt;填充&lt;/Button&gt;
+            &lt;el-color-picker v-if=&quot;this.teacherName === this.username&quot; class=&quot;color-selected&quot; v-model=&quot;colorBorder&quot; show-alpha&gt;&lt;/el-color-picker&gt;
+            &lt;el-color-picker v-if=&quot;this.teacherName === this.username&quot; class=&quot;color-selected&quot; v-model=&quot;colorFill&quot; show-alpha&gt;&lt;/el-color-picker&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;drawing-board&quot;&gt;
+            &lt;input id=&quot;text-field&quot; @keyup.enter=&quot;drawText&quot; v-show=&quot;this.textField === true&quot; v-model=&quot;textInput&quot; placeholder=&quot;请输入...&quot; autofocus=&quot;true&quot;&gt;&lt;/input&gt;
+            &lt;canvas ref=&quot;board&quot; id=&quot;canvas&quot; :width=&quot;teachingToolsWidth&quot; :height=&quot;teachingToolsHeight&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
 /**
  * 实现教学区白板功能，
  * 作为子组件插入直播间页面。
@@ -48,8 +141,8 @@
  * @module WhiteBoard
  * @class WhiteBoard
  */
-import * as io from 'socket.io-client'
-import myMsg from './../warning.js'
+import * as io from &#x27;socket.io-client&#x27;
+import myMsg from &#x27;./../warning.js&#x27;
 /**
  * 用于判断鼠标在画图过程中是否移出canvas
  *
@@ -60,7 +153,7 @@ import myMsg from './../warning.js'
  */
 const MIN = 0.005
 export default {
-    name: 'white-board',
+    name: &#x27;white-board&#x27;,
     /**
      *表示房间ID号
      *
@@ -95,7 +188,7 @@ export default {
      * @property teachingToolsHeight
      * @type Number
      */
-    props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;, &#x27;teachingToolsWidth&#x27;, &#x27;teachingToolsHeight&#x27;],
     data: function () {
         return {
             /**
@@ -103,76 +196,76 @@ export default {
              *
              * @attribute type
              * @type String
-             * @default 'pen'
+             * @default &#x27;pen&#x27;
              */
-            type: 'pen',
+            type: &#x27;pen&#x27;,
             /**
              * 用于表示
              */
             context: null,
             originPoint: null,
             lastImageData: null,
-            colorBorder: 'rgba(0, 0, 0, 1)',
-            colorFill: 'rgba(255, 255, 255, 1)',
+            colorBorder: &#x27;rgba(0, 0, 0, 1)&#x27;,
+            colorFill: &#x27;rgba(255, 255, 255, 1)&#x27;,
             fill: false,
             border: true,
             size: 1,
             textField: false,
-            textInput: '',
+            textInput: &#x27;&#x27;,
             textLeft: 0,
             textTop: 0,
             canvas: null,
             allDataUrl: [],
             currentImageData: null,
             pointer: 0,
-            socket: '',
-            roomId: '',
+            socket: &#x27;&#x27;,
+            roomId: &#x27;&#x27;,
             started: false
         }
     },
     watch: {
         type: function () {
-            if (this.type === 'eraser') {
+            if (this.type === &#x27;eraser&#x27;) {
                 this.changeEraserCursor()
-            } else if (this.type === 'pen') {
-                this.canvas.style.cursor = 'default'
+            } else if (this.type === &#x27;pen&#x27;) {
+                this.canvas.style.cursor = &#x27;default&#x27;
             } else {
-                this.canvas.style.cursor = 'crosshair'
+                this.canvas.style.cursor = &#x27;crosshair&#x27;
             }
         },
         size: function () {
-            if (this.type === 'eraser') {
+            if (this.type === &#x27;eraser&#x27;) {
                 this.changeEraserCursor()
             }
         }
     },
     mounted: function () {
-        ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
-            this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
-                this[`${this.type}Command`](eventName, { x, y, buttons })
+        [&#x27;mousemove&#x27;, &#x27;mousedown&#x27;, &#x27;mouseup&#x27;].map((eventName) =&gt; {
+            this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) =&gt; {
+                this[&#x60;${this.type}Command&#x60;](eventName, { x, y, buttons })
             })
         })
         this.initData()
         let self = this
-        self.socket.on('message', function (data) {
+        self.socket.on(&#x27;message&#x27;, function (data) {
             if (self.started === false) {
                 return
             }
             self.whiteBoardDoing(data)
         })
-        self.socket.on('click', function (data) {
+        self.socket.on(&#x27;click&#x27;, function (data) {
             if (self.started === false) {
                 return
             }
             self.buttonDoing(data)
         })
-        self.socket.on('newJoin', function () {
+        self.socket.on(&#x27;newJoin&#x27;, function () {
             self.joinDoing()
         })
-        self.socket.on('updateWhiteBoardMessage', function (data) {
+        self.socket.on(&#x27;updateWhiteBoardMessage&#x27;, function (data) {
             self.updateMessageDoing(data)
         })
-        self.socket.on('getStarted', function () {
+        self.socket.on(&#x27;getStarted&#x27;, function () {
             self.started = true
         })
     },
@@ -183,12 +276,12 @@ export default {
          * @method initData
          */
         initData: function () {
-            this.context = this.$refs.board.getContext('2d')
-            this.canvas = document.getElementById('canvas')
-            this.canvas.style.cursor = 'default'
+            this.context = this.$refs.board.getContext(&#x27;2d&#x27;)
+            this.canvas = document.getElementById(&#x27;canvas&#x27;)
+            this.canvas.style.cursor = &#x27;default&#x27;
             this.allDataUrl.push(this.canvas.toDataURL())
-            this.socket = io.connect('http://localhost:9000')
-            this.socket.emit('joinForWhiteBoard', this.roomId + '.0')
+            this.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+            this.socket.emit(&#x27;joinForWhiteBoard&#x27;, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 当选择功能为橡皮擦且size值变化时调用，
@@ -198,11 +291,11 @@ export default {
          */
         changeEraserCursor: function () {
             if (this.size === 1) {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserSmall.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserSmall.png&#x27;), default&quot;
             } else if (this.size === 3) {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserMiddle.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserMiddle.png&#x27;), default&quot;
             } else {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserLarge.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserLarge.png&#x27;), default&quot;
             }
         },
         /**
@@ -217,18 +310,18 @@ export default {
         drawLongText: function (text, beginX, beginY) {
             let textLength = text.length
             let rowLength = this.teachingToolsWidth - beginX
-            let newText = text.split('')
-            let rowText = ''
+            let newText = text.split(&#x27;&#x27;)
+            let rowText = &#x27;&#x27;
             let count = 0
-            this.context.textAlign = 'left'
-            for (let i = 0; i <= textLength; i++) {
+            this.context.textAlign = &#x27;left&#x27;
+            for (let i = 0; i &lt;= textLength; i++) {
                 if (i === textLength) {
                     this.context.fillText(rowText, beginX, beginY)
                 }
-                if (count <= rowLength && (count + this.context.measureText(newText[0]).width > rowLength)) {
+                if (count &lt;= rowLength &amp;&amp; (count + this.context.measureText(newText[0]).width &gt; rowLength)) {
                     this.context.fillText(rowText, beginX, beginY)
                     beginY = beginY + this.size * 5 + 28
-                    rowText = ''
+                    rowText = &#x27;&#x27;
                     count = 0
                 }
                 rowText = rowText + newText[0]
@@ -238,7 +331,7 @@ export default {
         },
         /**
          * 用户（创建房间的老师）点击粗细选择大小时触发，
-         * 箱服务器发送click消息，data中包含"size"的信息
+         * 箱服务器发送click消息，data中包含&quot;size&quot;的信息
          *
          * @method changeSize
          */
@@ -246,17 +339,17 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (name === 'large') {
-                this.socket.emit('click', { type: 'sizeLarge' }, this.roomId + '.0')
-            } else if (name === 'middle') {
-                this.socket.emit('click', { type: 'sizeMiddle' }, this.roomId + '.0')
+            if (name === &#x27;large&#x27;) {
+                this.socket.emit(&#x27;click&#x27;, { type: &#x27;sizeLarge&#x27; }, this.roomId + &#x27;.0&#x27;)
+            } else if (name === &#x27;middle&#x27;) {
+                this.socket.emit(&#x27;click&#x27;, { type: &#x27;sizeMiddle&#x27; }, this.roomId + &#x27;.0&#x27;)
             } else {
-                this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
+                this.socket.emit(&#x27;click&#x27;, { type: &#x27;sizeSmall&#x27; }, this.roomId + &#x27;.0&#x27;)
             }
         },
         /**
          * 用户（创建房间的老师）点击橡皮擦按钮时触发，
-         * 向服务器发送click消息，data中包含"橡皮擦"信息
+         * 向服务器发送click消息，data中包含&quot;橡皮擦&quot;信息
          *
          * @method clickEraser
          */
@@ -264,11 +357,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'eraser' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;eraser&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击画笔按钮时触发，
-         * 向服务器发送click消息，data中包含"画笔"信息
+         * 向服务器发送click消息，data中包含&quot;画笔&quot;信息
          *
          * @method clickPen
          */
@@ -276,11 +369,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'pen' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;pen&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击文字按钮时触发，
-         * 向服务器发送click消息，data中包含"文字"信息
+         * 向服务器发送click消息，data中包含&quot;文字&quot;信息
          *
          * @method clickPen
          */
@@ -288,11 +381,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'text' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;text&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击直线按钮时触发，
-         * 向服务器发送click消息，data中包含"直线"信息
+         * 向服务器发送click消息，data中包含&quot;直线&quot;信息
          *
          * @method clickLine
          */
@@ -300,11 +393,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'line' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;line&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击矩形按钮时触发，
-         * 向服务器发送click消息，data中包含"矩形"信息
+         * 向服务器发送click消息，data中包含&quot;矩形&quot;信息
          *
          * @method clickRectangle
          */
@@ -312,11 +405,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'rectangle' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;rectangle&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击圆形按钮时触发，
-         * 向服务器发送click消息，data中包含"圆形"信息
+         * 向服务器发送click消息，data中包含&quot;圆形&quot;信息
          *
          * @method clickCircle
          */
@@ -324,11 +417,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'circle' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;circle&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击椭圆按钮时触发，
-         * 向服务器发送click消息，data中包含"椭圆"信息
+         * 向服务器发送click消息，data中包含&quot;椭圆&quot;信息
          *
          * @method clickEllipse
          */
@@ -336,11 +429,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'ellipse' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;ellipse&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击边框按钮时触发，
-         * 向服务器发送click消息，data中包含"边框"信息
+         * 向服务器发送click消息，data中包含&quot;边框&quot;信息
          *
          * @method clickBorder
          */
@@ -348,11 +441,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'border' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;border&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）点击填充按钮时触发，
-         * 向服务器发送click消息，data中包含"填充"信息
+         * 向服务器发送click消息，data中包含&quot;填充&quot;信息
          *
          * @method clickFill
          */
@@ -360,11 +453,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('click', { type: 'fill' }, this.roomId + '.0')
+            this.socket.emit(&#x27;click&#x27;, { type: &#x27;fill&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）在文本框输入文字后按下回车键是响应，
-         * 向服务器发送'message'消息，包含输入的文字信息
+         * 向服务器发送&#x27;message&#x27;消息，包含输入的文字信息
          *
          * @method drawText
          */
@@ -373,14 +466,14 @@ export default {
                 return
             }
             let input = this.textInput
-            this.socket.emit('message', {
-                type: 'drawText',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;drawText&#x27;,
                 input: input
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）按下清空按钮时响应，
-         * 向服务器发送'message'消息，包含"清空"信息
+         * 向服务器发送&#x27;message&#x27;消息，包含&quot;清空&quot;信息
          *
          * @method clear
          */
@@ -388,11 +481,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('message', { type: 'clear' }, this.roomId + '.0')
+            this.socket.emit(&#x27;message&#x27;, { type: &#x27;clear&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）按下撤销按钮时响应，
-         * 向服务器发送'message'消息，包含"撤销"信息
+         * 向服务器发送&#x27;message&#x27;消息，包含&quot;撤销&quot;信息
          *
          * @method undo
          */
@@ -400,7 +493,7 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('message', { type: 'undo' }, this.roomId + '.0')
+            this.socket.emit(&#x27;message&#x27;, { type: &#x27;undo&#x27; }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用画笔功能对白板进行操作的时候响应，
@@ -414,17 +507,17 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'pen',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;pen&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用文字功能对白板进行操作的时候响应，
@@ -438,18 +531,18 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mouseup') {
+            if (action === &#x27;mouseup&#x27;) {
                 this.textField = true
-                let textField = document.getElementById('text-field')
-                textField.style.autofocus = 'true'
-                this.socket.emit('message', {
-                    type: 'textField',
+                let textField = document.getElementById(&#x27;text-field&#x27;)
+                textField.style.autofocus = &#x27;true&#x27;
+                this.socket.emit(&#x27;message&#x27;, {
+                    type: &#x27;textField&#x27;,
                     x: x / this.teachingToolsWidth,
                     y: y / this.teachingToolsHeight,
                     color: this.colorBorder,
                     action: action,
                     buttons: buttons
-                }, this.roomId + '.0')
+                }, this.roomId + &#x27;.0&#x27;)
             }
         },
         /**
@@ -464,16 +557,16 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'eraser',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;eraser&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
                 buttons: buttons
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用直线功能对白板进行操作的时候响应，
@@ -487,17 +580,17 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'line',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;line&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
                 buttons: buttons,
                 color: this.colorBorder
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用画矩形功能对白板进行操作的时候响应，
@@ -511,11 +604,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'rectangle',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;rectangle&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
@@ -523,7 +616,7 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用画圆功能对白板进行操作的时候响应，
@@ -537,11 +630,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'circle',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;circle&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
@@ -549,7 +642,7 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 用户（创建房间的老师）使用画椭圆功能对白板进行操作的时候响应，
@@ -563,11 +656,11 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            if (action === 'mousemove' && this.originPoint === null) {
+            if (action === &#x27;mousemove&#x27; &amp;&amp; this.originPoint === null) {
                 return
             }
-            this.socket.emit('message', {
-                type: 'ellipse',
+            this.socket.emit(&#x27;message&#x27;, {
+                type: &#x27;ellipse&#x27;,
                 action: action,
                 x: x / this.teachingToolsWidth,
                 y: y / this.teachingToolsHeight,
@@ -575,7 +668,7 @@ export default {
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
                 fill: this.fill
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
          * 根据接收到的信息对画板进行画笔操作
@@ -585,12 +678,12 @@ export default {
          */
         pen: function (data) {
             this.colorBorder = data.color
-            if (data.action === 'mousedown') {
+            if (data.action === &#x27;mousedown&#x27;) {
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
-            } else if (data.action === 'mousemove') {
+            } else if (data.action === &#x27;mousemove&#x27;) {
                 this.penMousemove(data)
-            } else if (data.action === 'mouseup') {
+            } else if (data.action === &#x27;mouseup&#x27;) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.pointer += 1
@@ -607,7 +700,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.pointer += 1
@@ -633,14 +726,14 @@ export default {
          */
         eraser: function (data) {
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.eraserMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -658,7 +751,7 @@ export default {
             if (this.originPoint === null) {
                 return
                 }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -679,14 +772,14 @@ export default {
         line: function (data) {
             this.colorBorder = data.color
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.lineMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -704,7 +797,7 @@ export default {
             if (this.originPoint == null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -733,14 +826,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.rectangleMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -759,7 +852,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -794,14 +887,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.circleMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -820,7 +913,7 @@ export default {
             if (this.originPoint === null) {
                         return
                     }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                    if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -856,14 +949,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.ellipseMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -882,7 +975,7 @@ export default {
             if (this.originPoint === null) {
                         return
                     }
-                    if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                    if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                         this.originPoint = null
                         this.lastImageData = null
                         this.allDataUrl.push(this.canvas.toDataURL())
@@ -911,11 +1004,11 @@ export default {
                     context.closePath()
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 接收到服务器消息后清空画板
          *
          * @method boardClear
-         * @param data 从服务器接收到的数据，包含"清空"信息
+         * @param data 从服务器接收到的数据，包含&quot;清空&quot;信息
          */
         boardClear: function (data) {
             this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
@@ -924,7 +1017,7 @@ export default {
             this.pointer = 0
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 根据服务器传来的信息更新自己的数据，
          * 同步到老师端。
          *
@@ -932,14 +1025,14 @@ export default {
          * @param data 从服务器接收到的数据，包含文字坐标、颜色等信息
          */
         textBox: function (data) {
-            if (data.action === 'mouseup') {
+            if (data.action === &#x27;mouseup&#x27;) {
                 this.textLeft = data.x * this.teachingToolsWidth
                 this.textTop = data.y * this.teachingToolsHeight
                 this.colorBorder = data.color
             }
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 将指定文本内容画到画板上
          *
          * @method font
@@ -947,15 +1040,15 @@ export default {
          */
         font: function (data) {
             this.textField = false
-            this.context.font = (this.size * 5 + 25) + 'px serif'
+            this.context.font = (this.size * 5 + 25) + &#x27;px serif&#x27;
             this.context.fillStyle = this.colorBorder
             this.drawLongText(data.input, this.textLeft, this.textTop)
-            this.textInput = ''
+            this.textInput = &#x27;&#x27;
             this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer += 1
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 接收到服务器端的信息后，执行undo操作
          *
          * @method boardUndo
@@ -965,7 +1058,7 @@ export default {
                 return
             }
             if (this.pointer === 0) {
-                this.$Message.error(myMsg.whiteBoard['undoNotExist'])
+                this.$Message.error(myMsg.whiteBoard[&#x27;undoNotExist&#x27;])
                 return
             } else {
                 this.pointer -= 1
@@ -975,70 +1068,70 @@ export default {
             }
         },
         /**
-         * 当用户接收到'message'消息时，对画板进行绘图操作
+         * 当用户接收到&#x27;message&#x27;消息时，对画板进行绘图操作
          *
          * @method whiteBoardDoing
          * @param data 从服务器接收到的信息，包括在画板上操作的坐标、颜色、形状等信息
          */
         whiteBoardDoing: function (data) {
-            if (data.type === 'pen') {
+            if (data.type === &#x27;pen&#x27;) {
                 this.pen(data)
-            } else if (data.type === 'eraser') {
+            } else if (data.type === &#x27;eraser&#x27;) {
                 this.eraser(data)
-            } else if (data.type === 'line') {
+            } else if (data.type === &#x27;line&#x27;) {
                 this.line(data)
-            } else if (data.type === 'rectangle') {
+            } else if (data.type === &#x27;rectangle&#x27;) {
                 this.rectangle(data)
-            } else if (data.type === 'circle') {
+            } else if (data.type === &#x27;circle&#x27;) {
                 this.circle(data)
-            } else if (data.type === 'ellipse') {
+            } else if (data.type === &#x27;ellipse&#x27;) {
                 this.ellipse(data)
-            } else if (data.type === 'clear') {
+            } else if (data.type === &#x27;clear&#x27;) {
                 this.boardClear(data)
-            } else if (data.type === 'textField') {
+            } else if (data.type === &#x27;textField&#x27;) {
                 this.textBox(data)
-            } else if (data.type === 'drawText') {
+            } else if (data.type === &#x27;drawText&#x27;) {
                 this.font(data)
-            } else if (data.type === 'undo') {
+            } else if (data.type === &#x27;undo&#x27;) {
                 this.boardUndo()
             }
         },
         /**
-         * 用户在开始直播后接收到'click'消息后，
+         * 用户在开始直播后接收到&#x27;click&#x27;消息后，
          * 根据传输数据的类型，改变相应属性，完成点击按钮事件的响应。
          *
          * @method buttonDoing
          * @param data 从服务器端接收到的信息，包括点击的按钮类型
          */
         buttonDoing: function (data) {
-            if (data.type === 'eraser') {
-                this.type = 'eraser'
-            } else if (data.type === 'pen') {
-                this.type = 'pen'
-            } else if (data.type === 'text') {
-                this.type = 'text'
-            } else if (data.type === 'line') {
-                this.type = 'line'
-            } else if (data.type === 'rectangle') {
-                this.type = 'rectangle'
-            } else if (data.type === 'circle') {
-                this.type = 'circle'
-            } else if (data.type === 'ellipse') {
-                this.type = 'ellipse'
-            } else if (data.type === 'border') {
+            if (data.type === &#x27;eraser&#x27;) {
+                this.type = &#x27;eraser&#x27;
+            } else if (data.type === &#x27;pen&#x27;) {
+                this.type = &#x27;pen&#x27;
+            } else if (data.type === &#x27;text&#x27;) {
+                this.type = &#x27;text&#x27;
+            } else if (data.type === &#x27;line&#x27;) {
+                this.type = &#x27;line&#x27;
+            } else if (data.type === &#x27;rectangle&#x27;) {
+                this.type = &#x27;rectangle&#x27;
+            } else if (data.type === &#x27;circle&#x27;) {
+                this.type = &#x27;circle&#x27;
+            } else if (data.type === &#x27;ellipse&#x27;) {
+                this.type = &#x27;ellipse&#x27;
+            } else if (data.type === &#x27;border&#x27;) {
                 this.border = !this.border
-            } else if (data.type === 'fill') {
+            } else if (data.type === &#x27;fill&#x27;) {
                 this.fill = !this.fill
-            } else if (data.type === 'sizeLarge') {
+            } else if (data.type === &#x27;sizeLarge&#x27;) {
                 this.size = 5
-            } else if (data.type === 'sizeMiddle') {
+            } else if (data.type === &#x27;sizeMiddle&#x27;) {
                 this.size = 3
-            } else if (data.type === 'sizeSmall') {
+            } else if (data.type === &#x27;sizeSmall&#x27;) {
                 this.size = 1
             }
         },
         /**
-         * 当用户（创建房间的老师）接收到'newJoin'消息时调用，
+         * 当用户（创建房间的老师）接收到&#x27;newJoin&#x27;消息时调用，
          * 老师直播过程中有新的用户进入房间，
          * 老师就把自己对白板操作的信息都发送到服务器，
          * 以达到学生同步的目的。
@@ -1049,16 +1142,16 @@ export default {
             if (this.teacherName !== this.username) {
                 return
             }
-            this.socket.emit('newJoinWhiteBoardMessage', {
+            this.socket.emit(&#x27;newJoinWhiteBoardMessage&#x27;, {
                 type: this.type,
                 border: this.border,
                 fill: this.fill,
                 size: this.size,
                 dataUrl: this.allDataUrl
-            }, this.roomId + '.0')
+            }, this.roomId + &#x27;.0&#x27;)
         },
         /**
-         * 当用户接收到'updateWhiteBoardMessage'消息时调用
+         * 当用户接收到&#x27;updateWhiteBoardMessage&#x27;消息时调用
          * （老师直播过程中有新的用户进入房间），
          * 将自己的信息同步到老师端
          *
@@ -1092,9 +1185,9 @@ export default {
         }
     }
 }
-</script>
+&lt;/script&gt;
 
-<style scoped>
+&lt;style scoped&gt;
 #text-field {
     position: absolute;
     width: 300px;
@@ -1132,4 +1225,23 @@ button.active {
     height: 100%;
     width: 100%;
 }
-</style>
+&lt;/style&gt;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

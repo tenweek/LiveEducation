@@ -1,13 +1,106 @@
-<template>
-    <div class="white-board">
-        <div class="drawing-board">
-            <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WhiteBoardForRecord.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
         </div>
     </div>
-</template>
+    <div id="bd" class="yui3-g">
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../classes/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../classes/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../classes/HomePage.html">HomePage</a></li>
+                                <li><a href="../classes/HomePageHeader.html">HomePageHeader</a></li>
+                                <li><a href="../classes/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../classes/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/ChatRoom.html">ChatRoom</a></li>
+                                <li><a href="../modules/CodeEditor.html">CodeEditor</a></li>
+                                <li><a href="../modules/FileDisplay.html">FileDisplay</a></li>
+                                <li><a href="../modules/WhiteBoard.html">WhiteBoard</a></li>
+                                <li><a href="../modules/WhiteBoardForRecord.html">WhiteBoardForRecord</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: WhiteBoardForRecord.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;template&gt;
+    &lt;div class=&quot;white-board&quot;&gt;
+        &lt;div class=&quot;drawing-board&quot;&gt;
+            &lt;canvas ref=&quot;board&quot; id=&quot;canvas&quot; :width=&quot;teachingToolsWidth&quot; :height=&quot;teachingToolsHeight&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
 /**
  * 实现教学区白板的复现，
  * 作为子组件插入录播间页面，
@@ -16,47 +109,47 @@
  * @module WhiteBoardForRecord
  * @class WhiteBoardForRecord
  */
-import * as io from 'socket.io-client'
-import myMsg from './../warning.js'
+import * as io from &#x27;socket.io-client&#x27;
+import myMsg from &#x27;./../warning.js&#x27;
 const MIN = 0.005
 export default {
-    name: 'white-board',
-    props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
+    name: &#x27;white-board&#x27;,
+    props: [&#x27;roomId&#x27;, &#x27;teacherName&#x27;, &#x27;username&#x27;, &#x27;teachingToolsWidth&#x27;, &#x27;teachingToolsHeight&#x27;],
     data: function () {
         return {
-            type: 'pen',
+            type: &#x27;pen&#x27;,
             context: null,
             originPoint: null,
             lastImageData: null,
-            colorBorder: 'rgba(0, 0, 0, 1)',
-            colorFill: 'rgba(255, 255, 255, 1)',
+            colorBorder: &#x27;rgba(0, 0, 0, 1)&#x27;,
+            colorFill: &#x27;rgba(255, 255, 255, 1)&#x27;,
             fill: false,
             border: true,
             size: 1,
             textField: false,
-            textInput: '',
+            textInput: &#x27;&#x27;,
             textLeft: 0,
             textTop: 0,
             canvas: null,
             allDataUrl: [],
             currentImageData: null,
             pointer: 0,
-            socket: '',
-            roomId: ''
+            socket: &#x27;&#x27;,
+            roomId: &#x27;&#x27;
         }
     },
     watch: {
         type: function () {
-            if (this.type === 'eraser') {
+            if (this.type === &#x27;eraser&#x27;) {
                 this.changeEraserCursor()
-            } else if (this.type === 'pen') {
-                this.canvas.style.cursor = 'default'
+            } else if (this.type === &#x27;pen&#x27;) {
+                this.canvas.style.cursor = &#x27;default&#x27;
             } else {
-                this.canvas.style.cursor = 'crosshair'
+                this.canvas.style.cursor = &#x27;crosshair&#x27;
             }
         },
         size: function () {
-            if (this.type === 'eraser') {
+            if (this.type === &#x27;eraser&#x27;) {
                 this.changeEraserCursor()
             }
         }
@@ -64,13 +157,13 @@ export default {
     mounted: function () {
         this.initData()
         let self = this
-        self.socket.on('whiteboard', function (data) {
+        self.socket.on(&#x27;whiteboard&#x27;, function (data) {
             self.whiteBoardDoing(data)
         })
-        self.socket.on('click', function (data) {
+        self.socket.on(&#x27;click&#x27;, function (data) {
             self.buttonDoing(data)
         })
-        self.socket.on('updateWhiteBoardMessage', function (data) {
+        self.socket.on(&#x27;updateWhiteBoardMessage&#x27;, function (data) {
             self.updateMessageDoing(data)
         })
     },
@@ -81,12 +174,12 @@ export default {
          * @method initData
          */
         initData: function () {
-            this.context = this.$refs.board.getContext('2d')
-            this.canvas = document.getElementById('canvas')
-            this.canvas.style.cursor = 'default'
+            this.context = this.$refs.board.getContext(&#x27;2d&#x27;)
+            this.canvas = document.getElementById(&#x27;canvas&#x27;)
+            this.canvas.style.cursor = &#x27;default&#x27;
             this.allDataUrl.push(this.canvas.toDataURL())
-            this.socket = io.connect('http://localhost:9000')
-            this.socket.emit('joinTest', 888)
+            this.socket = io.connect(&#x27;http://localhost:9000&#x27;)
+            this.socket.emit(&#x27;joinTest&#x27;, 888)
         },
         /**
          * 当选择功能为橡皮擦且size值变化时调用，
@@ -96,11 +189,11 @@ export default {
          */
         changeEraserCursor: function () {
             if (this.size === 1) {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserSmall.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserSmall.png&#x27;), default&quot;
             } else if (this.size === 3) {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserMiddle.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserMiddle.png&#x27;), default&quot;
             } else {
-                this.canvas.style.cursor = "url('http://localhost:8000/static/eraserLarge.png'), default"
+                this.canvas.style.cursor = &quot;url(&#x27;http://localhost:8000/static/eraserLarge.png&#x27;), default&quot;
             }
         },
         /**
@@ -115,18 +208,18 @@ export default {
         drawLongText: function (text, beginX, beginY) {
             let textLength = text.length
             let rowLength = this.teachingToolsWidth - beginX
-            let newText = text.split('')
-            let rowText = ''
+            let newText = text.split(&#x27;&#x27;)
+            let rowText = &#x27;&#x27;
             let count = 0
-            this.context.textAlign = 'left'
-            for (let i = 0; i <= textLength; i++) {
+            this.context.textAlign = &#x27;left&#x27;
+            for (let i = 0; i &lt;= textLength; i++) {
                 if (i === textLength) {
                     this.context.fillText(rowText, beginX, beginY)
                 }
-                if (count <= rowLength && (count + this.context.measureText(newText[0]).width > rowLength)) {
+                if (count &lt;= rowLength &amp;&amp; (count + this.context.measureText(newText[0]).width &gt; rowLength)) {
                     this.context.fillText(rowText, beginX, beginY)
                     beginY = beginY + this.size * 5 + 28
-                    rowText = ''
+                    rowText = &#x27;&#x27;
                     count = 0
                 }
                 rowText = rowText + newText[0]
@@ -142,12 +235,12 @@ export default {
          */
         pen: function (data) {
             this.colorBorder = data.color
-            if (data.action === 'mousedown') {
+            if (data.action === &#x27;mousedown&#x27;) {
                 this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                 this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
-            } else if (data.action === 'mousemove') {
+            } else if (data.action === &#x27;mousemove&#x27;) {
                 this.penMousemove(data)
-            } else if (data.action === 'mouseup') {
+            } else if (data.action === &#x27;mouseup&#x27;) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.pointer += 1
@@ -164,7 +257,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.pointer += 1
@@ -190,14 +283,14 @@ export default {
          */
         eraser: function (data) {
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.eraserMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -215,7 +308,7 @@ export default {
             if (this.originPoint === null) {
                 return
                 }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -236,14 +329,14 @@ export default {
         line: function (data) {
             this.colorBorder = data.color
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.lineMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -261,7 +354,7 @@ export default {
             if (this.originPoint == null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -290,14 +383,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.rectangleMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -316,7 +409,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -351,14 +444,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.circleMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -377,7 +470,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -413,14 +506,14 @@ export default {
             this.colorFill = data.colorFill
             this.fill = data.fill
             switch (data.action) {
-                case 'mousedown':
+                case &#x27;mousedown&#x27;:
                     this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
                     this.lastImageData = this.context.getImageData(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
                     break
-                case 'mousemove':
+                case &#x27;mousemove&#x27;:
                     this.ellipseMousemove(data)
                     break
-                case 'mouseup':
+                case &#x27;mouseup&#x27;:
                     this.originPoint = null
                     this.lastImageData = null
                     this.allDataUrl.push(this.canvas.toDataURL())
@@ -439,7 +532,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+            if (data.x &lt; MIN || data.x &gt; (1 - MIN) || data.y &lt; MIN || data.y &gt; (1 - MIN)) {
                 this.originPoint = null
                 this.lastImageData = null
                 this.allDataUrl.push(this.canvas.toDataURL())
@@ -468,11 +561,11 @@ export default {
             context.closePath()
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 接收到服务器消息后清空画板
          *
          * @method boardClear
-         * @param data 从服务器接收到的数据，包含"清空"信息
+         * @param data 从服务器接收到的数据，包含&quot;清空&quot;信息
          */
         boardClear: function (data) {
             this.context.clearRect(0, 0, this.teachingToolsWidth, this.teachingToolsHeight)
@@ -481,7 +574,7 @@ export default {
             this.pointer = 0
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 根据服务器传来的信息更新自己的数据，
          * 同步到老师端。
          *
@@ -489,14 +582,14 @@ export default {
          * @param data 从服务器接收到的数据，包含文字坐标、颜色等信息
          */
         textBox: function (data) {
-            if (data.action === 'mouseup') {
+            if (data.action === &#x27;mouseup&#x27;) {
                 this.textLeft = data.x * this.teachingToolsWidth
                 this.textTop = data.y * this.teachingToolsHeight
                 this.colorBorder = data.color
             }
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 将指定文本内容画到画板上
          *
          * @method font
@@ -504,22 +597,22 @@ export default {
          */
         font: function (data) {
             this.textField = false
-            this.context.font = (this.size * 5 + 25) + 'px serif'
+            this.context.font = (this.size * 5 + 25) + &#x27;px serif&#x27;
             this.context.fillStyle = this.colorBorder
             this.drawLongText(data.input, this.textLeft, this.textTop)
-            this.textInput = ''
+            this.textInput = &#x27;&#x27;
             this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer += 1
         },
         /**
-         * 在'whiteBoardDoing'函数中调用，
+         * 在&#x27;whiteBoardDoing&#x27;函数中调用，
          * 接收到服务器端的信息后，执行undo操作
          *
          * @method boardUndo
          */
         boardUndo: function (data) {
             if (this.pointer === 0) {
-                this.$Message.error(myMsg.whiteBoard['undoNotExist'])
+                this.$Message.error(myMsg.whiteBoard[&#x27;undoNotExist&#x27;])
                 return
             } else {
                 this.pointer -= 1
@@ -529,70 +622,70 @@ export default {
             }
         },
         /**
-         * 当用户接收到'message'消息时，对画板进行绘图操作
+         * 当用户接收到&#x27;message&#x27;消息时，对画板进行绘图操作
          *
          * @method whiteBoardDoing
          * @param data 从服务器接收到的信息，包括在画板上操作的坐标、颜色、形状等信息
          */
         whiteBoardDoing: function (data) {
-            if (data.type === 'pen') {
+            if (data.type === &#x27;pen&#x27;) {
                 this.pen(data)
-            } else if (data.type === 'eraser') {
+            } else if (data.type === &#x27;eraser&#x27;) {
                 this.eraser(data)
-            } else if (data.type === 'line') {
+            } else if (data.type === &#x27;line&#x27;) {
                 this.line(data)
-            } else if (data.type === 'rectangle') {
+            } else if (data.type === &#x27;rectangle&#x27;) {
                 this.rectangle(data)
-            } else if (data.type === 'circle') {
+            } else if (data.type === &#x27;circle&#x27;) {
                 this.circle(data)
-            } else if (data.type === 'ellipse') {
+            } else if (data.type === &#x27;ellipse&#x27;) {
                 this.ellipse(data)
-            } else if (data.type === 'clear') {
+            } else if (data.type === &#x27;clear&#x27;) {
                 this.clear(data)
-            } else if (data.type === 'textField') {
+            } else if (data.type === &#x27;textField&#x27;) {
                 this.textBox(data)
-            } else if (data.type === 'drawText') {
+            } else if (data.type === &#x27;drawText&#x27;) {
                 this.font(data)
-            } else if (data.type === 'undo') {
+            } else if (data.type === &#x27;undo&#x27;) {
                 this.boardUndo(data)
             }
         },
         /**
-         * 用户在开始直播后接收到'click'消息后，
+         * 用户在开始直播后接收到&#x27;click&#x27;消息后，
          * 根据传输数据的类型，改变相应属性，完成点击按钮事件的响应。
          *
          * @method buttonDoing
          * @param data 从服务器端接收到的信息，包括点击的按钮类型
          */
         buttonDoing: function (data) {
-            if (data.type === 'eraser') {
-                this.type = 'eraser'
-            } else if (data.type === 'pen') {
-                this.type = 'pen'
-            } else if (data.type === 'text') {
-                this.type = 'text'
-            } else if (data.type === 'line') {
-                this.type = 'line'
-            } else if (data.type === 'rectangle') {
-                this.type = 'rectangle'
-            } else if (data.type === 'circle') {
-                this.type = 'circle'
-            } else if (data.type === 'ellipse') {
-                this.type = 'ellipse'
-            } else if (data.type === 'border') {
+            if (data.type === &#x27;eraser&#x27;) {
+                this.type = &#x27;eraser&#x27;
+            } else if (data.type === &#x27;pen&#x27;) {
+                this.type = &#x27;pen&#x27;
+            } else if (data.type === &#x27;text&#x27;) {
+                this.type = &#x27;text&#x27;
+            } else if (data.type === &#x27;line&#x27;) {
+                this.type = &#x27;line&#x27;
+            } else if (data.type === &#x27;rectangle&#x27;) {
+                this.type = &#x27;rectangle&#x27;
+            } else if (data.type === &#x27;circle&#x27;) {
+                this.type = &#x27;circle&#x27;
+            } else if (data.type === &#x27;ellipse&#x27;) {
+                this.type = &#x27;ellipse&#x27;
+            } else if (data.type === &#x27;border&#x27;) {
                 this.border = !this.border
-            } else if (data.type === 'fill') {
+            } else if (data.type === &#x27;fill&#x27;) {
                 this.fill = !this.fill
-            } else if (data.type === 'sizeLarge') {
+            } else if (data.type === &#x27;sizeLarge&#x27;) {
                 this.size = 5
-            } else if (data.type === 'sizeMiddle') {
+            } else if (data.type === &#x27;sizeMiddle&#x27;) {
                 this.size = 3
-            } else if (data.type === 'sizeSmall') {
+            } else if (data.type === &#x27;sizeSmall&#x27;) {
                 this.size = 1
             }
         },
         /**
-         * 当用户接收到'updateWhiteBoardMessage'消息时调用
+         * 当用户接收到&#x27;updateWhiteBoardMessage&#x27;消息时调用
          * （老师直播过程中有新的用户进入房间），
          * 将自己的信息同步到老师端
          *
@@ -626,9 +719,9 @@ export default {
         }
     }
 }
-</script>
+&lt;/script&gt;
 
-<style scoped>
+&lt;style scoped&gt;
 .white-board {
     height: 100%;
     display: flex;
@@ -639,4 +732,23 @@ export default {
     height: 100%;
     width: 100%;
 }
-</style>
+&lt;/style&gt;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
