@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.test import TestCase, Client
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
-from backend.models import Room, User, RoomStudent
+from backend.models import Room, User, RoomStudent, VideoRoom
 import json
 
 
@@ -208,7 +208,7 @@ class TestSpeakWatch(TestCase):
         User.objects.filter().delete()
 
 
-#测试房间管理 6个测试
+#测试房间管理 8个测试
 class TestAboutRoom(TestCase):
     def setUp(self):
         User.objects.create(
@@ -244,6 +244,13 @@ class TestAboutRoom(TestCase):
             room=self.myroom1, student=self.user3)
         self.c = Client()
 
+    def testChangeNum(self):
+        self.assertEqual(self.myroom1.student_num, 10)
+        request = json.dumps({'roomId': self.myroom1.id, 'studentNum': 30})
+        response = self.c.post('/changeNum/', request,
+                               content_type='application/json')
+        self.assertEqual(Room.objects.get(teacher=self.user1).student_num, 30)
+
     def testGetRoomInfo(self):
         request = json.dumps({'roomID': self.myroom1.id})
         response = self.c.post('/getRoomInfo/', request,
@@ -275,6 +282,16 @@ class TestAboutRoom(TestCase):
         req = json.loads(response.content.decode('utf8'))
         self.assertEqual(req['result'], 'cannot')
 
+    def testJoinRoom3(self):
+        self.assertEqual(RoomStudent.objects.get(
+            room=self.myroom1, student=self.user2).can_watch, True)
+        request = json.dumps(
+            {'roomID': self.myroom1.id, 'stuAccount': '1352075896@qq.com'})
+        response = self.c.post('/joinRoom/', request,
+                               content_type='application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], self.myroom1.id)
+
     def testGetNameTrue(self):
         request = json.dumps({'account': '1352075893@qq.com'})
         response = self.c.post('/getName/', request,
@@ -297,7 +314,6 @@ class TestAboutRoom(TestCase):
         response = self.c.post('/createRoom/', request,
                                content_type='application/json')
         req = json.loads(response.content.decode('utf8'))
-        self.assertEqual(req['msg'], 'Making a room successfully!')
         self.assertEqual(Room.objects.get(
             teacher=self.user4).room_name, 'room4')
 
@@ -307,7 +323,7 @@ class TestAboutRoom(TestCase):
         User.objects.filter().delete()
 
 
-#测试用户管理 10个测试
+#测试用户管理 11个测试
 class TestAboutUser(TestCase):
     def setUp(self):
         User.objects.create_user(
@@ -345,7 +361,18 @@ class TestAboutUser(TestCase):
         req = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(req['verification']), 6)
 
-    def testChangeName(self):
+    def testChangeNameTrue(self):
+        self.assertEqual(self.user1.name, 'wenbin1')
+        request = json.dumps(
+            {'account': '1352075893@qq.com', 'newname': 'wenbin2'})
+        response = self.c.post('/changeName/', request,
+                               content_type='application/json')
+        self.assertEqual(User.objects.get(
+            username='1352075893@qq.com').name, 'wenbin1')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(req['result']), False)
+
+    def testChangeNameTrue(self):
         self.assertEqual(self.user1.name, 'wenbin1')
         request = json.dumps(
             {'account': '1352075893@qq.com', 'newname': 'zhizhi'})
@@ -353,6 +380,8 @@ class TestAboutUser(TestCase):
                                content_type='application/json')
         self.assertEqual(User.objects.get(
             username='1352075893@qq.com').name, 'zhizhi')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['result'], True)
 
     def testSignUpFalse(self):
         request = json.dumps(
@@ -417,6 +446,52 @@ class TestAboutUser(TestCase):
 
     def tearDown(self):
         RoomStudent.objects.filter().delete()
+        Room.objects.filter().delete()
+        User.objects.filter().delete()
+
+
+#测试上传系统 3个测试
+class TestAboutUpload(TestCase):
+    def setUp(self):
+        User.objects.create(
+            name='wenbin', username='1352075893@qq.com', is_teacher=1)
+        self.user = User.objects.get(name='wenbin')
+        VideoRoom.objects.create(teacher=self.user, room_name='room1', video_img='qwer', live_room_id=1, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room2', video_img='qwerq', live_room_id=2, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room3', video_img='qwera', live_room_id=3, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room4', video_img='qwers', live_room_id=4, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room5', video_img='qwerd', live_room_id=5, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room6', video_img='qwerx', live_room_id=6, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room7', video_img='qwerf', live_room_id=7, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room8', video_img='qwerg', live_room_id=8, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room9', video_img='qwert', live_room_id=9, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room10', video_img='qwerr', live_room_id=10, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room11', video_img='qwegr', live_room_id=11, file_num='2')
+        VideoRoom.objects.create(teacher=self.user, room_name='room12', video_img='qwerg', live_room_id=12, file_num='2')
+        self.c = Client()
+
+    def testGetVideoRoomsType1(self):
+        request = json.dumps({'type': 1})
+        response = self.c.post('/getVideoRooms/', request,
+                               content_type='application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(req['rooms']), 8)
+    
+    def testGetVideoRoomsType2(self):
+        request = json.dumps({'type': 2})
+        response = self.c.post('/getVideoRooms/', request,
+                               content_type='application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(req['rooms']), 12)
+
+    def testGetVideoRoomInfo(self):
+        request = json.dumps({'roomId': 1})
+        response = self.c.post('/getVideoRoomInfo/', request,
+                               content_type='application/json')
+        req = json.loads(response.content.decode('utf8'))
+        self.assertEqual(req['liveRoomId'], 1)
+
+    def tearDown(self):
         Room.objects.filter().delete()
         User.objects.filter().delete()
 # Create your tests here.
