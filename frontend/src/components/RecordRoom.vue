@@ -12,12 +12,10 @@
         <div class="layout-header">
             <div class="teaching-tools">
                 <div class="choose-current">
-                    <Dropdown trigger="hover" placement="right-start">
-                        <Button type="ghost">
-                            教学区
-                            <Icon type="arrow-right-b"></Icon>
-                        </Button>
-                    </Dropdown>
+                    <Button type="ghost">
+                        教学区
+                        <Icon type="arrow-right-b"></Icon>
+                    </Button>
                 </div>
                 <keep-alive>
                     <component :is="currentTools" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
@@ -66,7 +64,6 @@ export default {
     created: function () {
         let self = this
         self.roomId = self.$route.params.id
-        alert('bb')
         self.videoPath = './../../static/record/' + self.roomId + '.mp4'
         self.socket = io.connect('http://localhost:9000')
         self.socket.emit('joinTest', self.roomId)
