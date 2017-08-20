@@ -14,11 +14,10 @@ Vue.use(iView)
 Vue.use(ElementUI)
 Vue.use(VueCodeMirror)
 
-require('codemirror/mode/python/python.js');
-require('codemirror/mode/clike/clike.js');   //c/c++/c#
-require('codemirror/mode/javascript/javascript.js');
-require('codemirror/mode/php/php.js');
-
+require('codemirror/mode/python/python.js')
+require('codemirror/mode/clike/clike.js')
+require('codemirror/mode/javascript/javascript.js')
+require('codemirror/mode/php/php.js')
 
 /* eslint-disable no-new */
 new Vue({
