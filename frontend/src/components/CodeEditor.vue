@@ -1,5 +1,5 @@
 <template>
-    <div class="code-editor">
+    <div id="code-editor">
         <Select v-model='editorOptions.mode' placeholder="language" filterable>
             <Option v-for='mode in modeList' :value='mode.modeValue' :key='mode.modeName'>
                 {{ mode.modeName }}
@@ -14,7 +14,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth', 'isOnLeft'],
     data: function () {
         return {
             code: 'const a = 10   123456789',
@@ -76,14 +76,17 @@ export default {
                     code: newcode
                 }, this.roomId + '.3')
             }
+        },
+        containerHeight: function (newVal, oldVal) {
+            document.getElementById('code-editor').style.height = (newVal - 32) + 'px'
         }
     }
 }
 </script>
 
 <style scoped>
-.code-editor {
-    width: 670px;
-    height: 450px;
+#code-editor {
+    width: 100%;
+    height: auto;
 }
 </style>

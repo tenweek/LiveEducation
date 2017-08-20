@@ -1,6 +1,6 @@
 <template>
     <div id="bg">
-        <div class="live-room">
+        <div id="live-room">
             <div class="header">
                 <home-page-header></home-page-header>
             </div>
@@ -16,21 +16,17 @@
                     <label class="information">在线人数：{{ this.studentNum }}</label>
                 </div>
                 <div class="navigation-right">
-                    <template v-if="(this.teacherName === this.username) && !this.started">
-                        <Button @click="startLive" type="primary" shape="circle" size="small">开始直播</Button>
-                    </template>
-                    <template v-else-if="this.started">
-                        <Button @click="closeLive" type="primary" shape="circle" size="small">关闭直播</Button>
+                    <template v-if="this.teacherName === this.username">
+                        <Button @click="startLive" type="primary" shape="circle" size="small" id="start-live-button">开始直播</Button>
+                        <Button @click="closeLive" type="error" shape="circle" size="small" id="stop-live-button">结束直播</Button>
                     </template>
                 </div>
             </div>
-            <div class="layout-header" id="teaching">
-                <div id="left-container">
-                    <keep-alive>
-                        <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
-                    </keep-alive>
+            <div class="layout-header">
+                <div class="left-container" id="teaching-tools">
+                    <teaching-tools :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.teachingToolsHeight" :container-width="this.teachingToolsWidth" :tools-on-left="this.toolsOnLeft"></teaching-tools>
                 </div>
-                <div id="buttons-panel">
+                <div class="buttons-panel">
                     <template v-if="this.hidden === true">
                         <Tooltip content="弹出右边窗口" placement="right-start">
                             <Button id="pop-up-button" type="ghost" @click="popUp">
@@ -45,21 +41,22 @@
                             </Button>
                         </Tooltip><br>
                         <Tooltip content="隐藏右边窗口" placement="right-start">
-                            <Button id="hide-button" type="ghost" @click="hide">
+                            <Button id="hide-button" type="ghost" @click="hideRight">
                                 <Icon type="ios-undo"></Icon>
+                            </Button>
+                        </Tooltip><br>
+                        <Tooltip content="隐藏左边窗口" placement="right-start">
+                            <Button id="hide-button" type="ghost" @click="hideLeft">
+                                <Icon type="ios-redo"></Icon>
                             </Button>
                         </Tooltip>
                     </template>
                 </div>
-                <div id="right-container">
-                    <div id="right-up-container">
-                        <keep-alive>
-                            <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.whiteBoardWidth" :teaching-tools-height="this.whiteBoardHeight"></component>
-                        </keep-alive>
-                    </div>
-                    <div id="chatroom">
-                        <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-hidden="this.hidden"></chat-board>
-                    </div>
+                <div class="right-up-container" id="video-display">
+                    <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight"></video-display>
+                </div>
+                <div id="chatroom">
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden" :container-height="this.chatBoardHeight"></chat-board>
                 </div>
             </div>
             <div>
@@ -95,16 +92,14 @@ export default {
             teacherName: '',
             studentNum: '',
             username: '',
-            teachingWidth: 100,
-            teachingHeight: 100,
-            whiteBoardWidth: 100,
-            whiteBoardHeight: 100,
-            leftComponent: 'TeachingTools',
-            rightComponent: 'VideoDisplay',
             hidden: false,
             socket: '',
-            started: false,
-            startTime: ''
+            startTime: '',
+            toolsOnLeft: true,
+            teachingToolsHeight: 0,
+            teachingToolsWidth: 0,
+            videoDisplayHeight: 0,
+            chatBoardHeight: 0
         }
     },
     created: function () {
@@ -117,15 +112,25 @@ export default {
     },
     mounted: function () {
         let self = this
-        self.teachingWidth = document.getElementById('teaching').clientWidth
-        self.teachingHeight = document.getElementById('teaching').clientHeight
-        self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-        self.whiteBoardHeight = self.teachingHeight - 35
+        document.getElementById('bg').style.height = window.innerHeight + 'px'
+        document.getElementById('bg').style.width = window.innerWidth + 'px'
+        let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+        document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+        document.getElementById('live-room').style.height = unit + 'px'
+        self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+        self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+        self.videoDisplayHeight = document.getElementById('video-display').clientHeight
+        self.chatBoardHeight = document.getElementById('chatroom').clientHeight
         window.onresize = function () {
-            self.teachingWidth = document.getElementById('teaching').clientWidth
-            self.teachingHeight = document.getElementById('teaching').clientHeight
-            self.whiteBoardWidth = self.teachingWidth * 0.68 - 77
-            self.whiteBoardHeight = self.teachingHeight - 35
+            document.getElementById('bg').style.height = window.innerHeight + 'px'
+            document.getElementById('bg').style.width = window.innerWidth + 'px'
+            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+            document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+            document.getElementById('live-room').style.height = unit + 'px'
+            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            self.videoDisplayHeight = document.getElementById('video-display').clientHeight
+            self.chatBoardHeight = document.getElementById('chatroom').clientHeight
         }
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
@@ -164,26 +169,39 @@ export default {
         },
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
-            this.started = true
+            document.getElementById('start-live-button').style.display = 'none'
+            document.getElementById('stop-live-button').style.display = 'inline-block'
         },
-        hide: function () {
-            let rightContent = document.getElementById('right-up-container')
-            rightContent.style.display = 'none'
+        hideLeft: function () {
+            this.swap()
+            this.hideRight()
+        },
+        hideRight: function () {
+            document.getElementsByClassName('right-up-container')[0].style.display = 'none'
             this.hidden = true
-            document.getElementById('chatroom').style.marginTop = '0'
-            document.getElementById('chatroom').style.height = '100%'
+            document.getElementById('chatroom').style.paddingTop = '0'
+            document.getElementById('chatroom').style.height = '78%'
+            document.getElementById('chatroom').style.top = 'inherit'
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         popUp: function () {
-            let rightContent = document.getElementById('right-up-container')
-            rightContent.style.display = 'block'
+            document.getElementsByClassName('right-up-container')[0].style.display = 'block'
             this.hidden = false
-            document.getElementById('chatroom').style.marginTop = '2%'
-            document.getElementById('chatroom').style.height = '56%'
+            document.getElementById('chatroom').style.paddingTop = '12px'
+            document.getElementById('chatroom').style.height = '52.5%'
+            document.getElementById('chatroom').style.top = '42%'
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         swap: function () {
-            let tmp = this.leftComponent
-            this.leftComponent = this.rightComponent
-            this.rightComponent = tmp
+            let teachingTools = document.getElementById('teaching-tools')
+            teachingTools.className = teachingTools.className === 'left-container' ? 'right-up-container' : 'left-container'
+            let videoDisplay = document.getElementById('video-display')
+            videoDisplay.className = videoDisplay.className === 'left-container' ? 'right-up-container' : 'left-container'
+            this.toolsOnLeft = !this.toolsOnLeft
+            this.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            this.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            this.videoDisplayWidth = document.getElementById('video-display').clientWidth
+            this.videoDisplayHeight = document.getElementById('video-display').clientHeight
         },
         changeNum: function () {
             if (this.username === this.teacherName) {
@@ -251,9 +269,11 @@ export default {
 <style scoped>
 #bg {
     background: #f5f7f9;
+    min-height: 600px;
+    min-width: 800px;
 }
 
-.live-room {
+#live-room {
     background: #f5f7f9;
     position: relative;
     border-radius: 5px;
@@ -262,6 +282,8 @@ export default {
     height: 100vmin;
     margin-left: auto;
     margin-right: auto;
+    min-height: 600px;
+    min-width: 800px;
 }
 
 .header {
@@ -296,12 +318,16 @@ export default {
     font-size: 15px;
 }
 
+#stop-live-button {
+    display: none;
+}
+
 .information {
     margin: 0 auto;
 }
 
 .layout-header {
-    width: 78%;
+    width: 90%;
     height: 78%;
     min-width: 800px;
     display: flex;
@@ -310,26 +336,35 @@ export default {
     margin-top: 110px;
 }
 
-#left-container {
-    height: 100%;
-    width: 68%;
+.left-container {
+    position: absolute;
+    left: 0;
+    height: 78%;
+    width: 67%;
     text-align: left;
     overflow: hidden;
 }
 
-#right-container {
-    width: 30%;
-    height: 100%;
-}
-
-#right-up-container {
-    width: 100%;
+.right-up-container {
+    display: block;
+    height: 27%;
+    position: absolute;
+    left: 70%;
+    width: 30%
 }
 
 #chatroom {
-    margin-top: 2%;
-    height: 56%;
-    width: 100%;
+    position: absolute;
+    left: 70%;
+    top: 42%;
+    padding-top: 12px;
+    height: 52.5%;
+    width: 30%;
+}
+
+.buttons-panel {
+    position: absolute;
+    left: 66.4%;
 }
 
 #swap-button,

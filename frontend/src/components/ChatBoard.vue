@@ -24,7 +24,7 @@
                     </Dropdown>
                 </div>
             </div>
-            <Input v-model="msgInput">
+            <Input v-model="msgInput" id="input">
             <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
             </Input>
             <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
@@ -45,7 +45,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username', 'aboveHidden'],
+    props: ['roomId', 'teacherName', 'username', 'aboveIsHidden', 'containerHeight'],
     data: function () {
         return {
             showGagList: false,
@@ -76,6 +76,7 @@ export default {
         self.socket.on('getStarted', function () {
             self.started = true
         })
+        document.getElementById('chat-board').style.height = (this.containerHeight - 32) + 'px'
     },
     methods: {
         getName: function (message) {
@@ -251,7 +252,7 @@ export default {
         }
     },
     watch: {
-        aboveHidden: function (newVal, oldVal) {
+        aboveIsHidden: function (newVal, oldVal) {
             if (newVal) {
                 document.getElementById('messages').style.height = '90%'
                 document.getElementById('chat-board').style.height = '76vmin'
@@ -259,6 +260,9 @@ export default {
                 document.getElementById('messages').style.height = '87%'
                 document.getElementById('chat-board').style.height = '40vmin'
             }
+        },
+        containerHeight: function (newVal, oldVal) {
+            document.getElementById('chat-board').style.height = (newVal - 44) + 'px'
         }
     }
 }
@@ -274,9 +278,8 @@ export default {
 }
 
 #chat-board {
-    width: 100%;
-    height: 40vmin;
-    position: relative;
+    width: 90%;
+    position: absolute;
 }
 
 .message,
@@ -299,6 +302,12 @@ export default {
 .set-left {
     float: left;
     padding-left: 5px;
+}
+
+#input {
+    top: auto;
+    position: absolute;
+    bottom: 0;
 }
 
 #send-btn {

@@ -64,7 +64,7 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth', 'isOnLeft'],
     data: function () {
         return {
             socket: '',

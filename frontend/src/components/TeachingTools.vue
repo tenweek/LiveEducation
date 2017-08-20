@@ -1,6 +1,6 @@
 <template>
-    <Card>
-        <div id="teaching-tools">
+    <Card class="teaching-tools">
+        <div>
             <div class="choose-current">
                 <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
                     <Button type="ghost">
@@ -15,7 +15,7 @@
                 </Dropdown>
             </div>
             <keep-alive>
-                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :teaching-tools-width="this.teachingToolsWidth" :teaching-tools-height="this.teachingToolsHeight"></component>
+                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :white-board-width="this.whiteBoardWidth" :white-board-height="this.whiteBoardHeight" :is-on-left="this.toolsOnLeft"></component>
             </keep-alive>
         </div>
     </Card>
@@ -30,7 +30,7 @@ import CodeEditor from './CodeEditor'
 
 export default {
     name: 'teaching-tools',
-    props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth', 'toolsOnLeft'],
     components: {
         FileDisplay,
         CodeEditor,
@@ -39,7 +39,9 @@ export default {
     data: function () {
         return {
             currentTools: 'WhiteBoard',
-            socket: ''
+            socket: '',
+            whiteBoardHeight: 0,
+            whiteBoardWidth: 0
         }
     },
     methods: {
@@ -59,6 +61,21 @@ export default {
         self.socket.on('message', function (data) {
             self.currentTools = data['name']
         })
+    },
+    watch: {
+        containerHeight: function (newVal, oldVal) {
+            this.whiteBoardWidth = newVal - 74 - 32
+        },
+        containerWidth: function (newVal, oldVal) {
+            this.whiteBoardWidth = newVal - 32 - 32
+        }
     }
 }
 </script>
+
+<style scoped>
+.teaching-tools {
+    width: 100%;
+    height: 100%;
+}
+</style>
