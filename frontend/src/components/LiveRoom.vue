@@ -23,12 +23,10 @@
                 </div>
             </div>
             <div class="layout-header">
-                <div id="left-container">
-                    <keep-alive>
-                        <component :is="this.leftComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.leftContainerHeight" :container-width="this.leftContainerWidth"></component>
-                    </keep-alive>
+                <div class="left-container" id="teaching-tools">
+                    <teaching-tools :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.teachingToolsHeight" :container-width="this.teachingToolsWidth" :tools-on-left="this.toolsOnLeft"></teaching-tools>
                 </div>
-                <div id="buttons-panel">
+                <div class="buttons-panel">
                     <template v-if="this.hidden === true">
                         <Tooltip content="弹出右边窗口" placement="right-start">
                             <Button id="pop-up-button" type="ghost" @click="popUp">
@@ -43,21 +41,22 @@
                             </Button>
                         </Tooltip><br>
                         <Tooltip content="隐藏右边窗口" placement="right-start">
-                            <Button id="hide-button" type="ghost" @click="hide">
+                            <Button id="hide-button" type="ghost" @click="hideRight">
                                 <Icon type="ios-undo"></Icon>
+                            </Button>
+                        </Tooltip><br>
+                        <Tooltip content="隐藏左边窗口" placement="right-start">
+                            <Button id="hide-button" type="ghost" @click="hideLeft">
+                                <Icon type="ios-redo"></Icon>
                             </Button>
                         </Tooltip>
                     </template>
                 </div>
-                <div id="right-container">
-                    <div id="right-up-container">
-                        <keep-alive>
-                            <component :is="this.rightComponent" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.rightUpContainerHeight" :container-width="this.rightUpContainerWidth"></component>
-                        </keep-alive>
-                    </div>
-                    <div id="chatroom">
-                        <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden"></chat-board>
-                    </div>
+                <div class="right-up-container" id="video-display">
+                        <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight" :container-width="this.videoDisplayWidth"></video-display>
+                </div>
+                <div id="chatroom">
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden"></chat-board>
                 </div>
             </div>
             <div>
@@ -92,14 +91,13 @@ export default {
             teacherName: '',
             studentNum: '',
             username: '',
-            leftComponent: 'TeachingTools',
-            rightComponent: 'VideoDisplay',
             hidden: false,
             socket: '',
-            leftContainerHeight: 0,
-            leftContainerWidth: 0,
-            rightUpContainerHeight: 0,
-            rightUpContainerWidth: 0
+            toolsOnLeft: true,
+            teachingToolsHeight: 0,
+            teachingToolsWidth: 0,
+            videoDisplayHeight: 0,
+            videoDisplayWidth: 0
         }
     },
     created: function () {
@@ -112,21 +110,25 @@ export default {
     },
     mounted: function () {
         let self = this
+        document.getElementById('bg').style.height = window.innerHeight + 'px'
+        document.getElementById('bg').style.width = window.innerWidth + 'px'
         let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
         document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
         document.getElementById('live-room').style.height = unit + 'px'
-        self.leftContainerWidth = (1.33 * unit * 0.9 * 0.68)
-        self.leftContainerHeight = (0.78 * unit)
-        self.rightUpContainerWidth = (1.33 * unit * 0.9 * 0.3)
-        self.rightUpContainerHeight = (0.78 * unit * 0.3)
+        self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+        self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+        self.videoDisplayWidth = document.getElementById('video-display').clientWidth
+        self.videoDisplayHeight = document.getElementById('video-display').clientHeight
         window.onresize = function () {
+            document.getElementById('bg').style.height = window.innerHeight + 'px'
+            document.getElementById('bg').style.width = window.innerWidth + 'px'
             let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
             document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
             document.getElementById('live-room').style.height = unit + 'px'
-            self.leftContainerWidth = (1.33 * unit * 0.9 * 0.68)
-            self.leftContainerHeight = (0.78 * unit)
-            self.rightUpContainerWidth = (1.33 * unit * 0.9 * 0.3)
-            self.rightUpContainerHeight = (0.78 * unit * 0.3)
+            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            self.videoDisplayWidth = document.getElementById('video-display').clientWidth
+            self.videoDisplayHeight = document.getElementById('video-display').clientHeight
         }
     },
     methods: {
@@ -135,24 +137,34 @@ export default {
             document.getElementById('start-live-button').style.display = 'none'
             document.getElementById('stop-live-button').style.display = 'inline-block'
         },
-        hide: function () {
-            let rightContent = document.getElementById('right-up-container')
-            rightContent.style.display = 'none'
+        hideLeft: function () {
+            this.swap()
+            this.hideRight()
+        },
+        hideRight: function () {
+            document.getElementsByClassName('right-up-container')[0].style.display = 'none'
             this.hidden = true
-            document.getElementById('chatroom').style.marginTop = '0'
-            document.getElementById('chatroom').style.height = '100%'
+            document.getElementById('chatroom').style.paddingTop = '0'
+            document.getElementById('chatroom').style.height = '78%'
+            document.getElementById('chatroom').style.top = 'inherit'
         },
         popUp: function () {
-            let rightContent = document.getElementById('right-up-container')
-            rightContent.style.display = 'block'
+            document.getElementsByClassName('right-up-container')[0].style.display = 'block'
             this.hidden = false
-            document.getElementById('chatroom').style.marginTop = '2%'
-            document.getElementById('chatroom').style.height = '56%'
+            document.getElementById('chatroom').style.paddingTop = '12px'
+            document.getElementById('chatroom').style.height = '52.5%'
+            document.getElementById('chatroom').style.top = '42%'
         },
         swap: function () {
-            let tmp = this.leftComponent
-            this.leftComponent = this.rightComponent
-            this.rightComponent = tmp
+            let teachingTools = document.getElementById('teaching-tools')
+            teachingTools.className = teachingTools.className === 'left-container' ? 'right-up-container' : 'left-container'
+            let videoDisplay = document.getElementById('video-display')
+            videoDisplay.className = videoDisplay.className === 'left-container' ? 'right-up-container' : 'left-container'
+            this.toolsOnLeft = !this.toolsOnLeft
+            this.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            this.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            this.videoDisplayWidth = document.getElementById('video-display').clientWidth
+            this.videoDisplayHeight = document.getElementById('video-display').clientHeight
         },
         changeNum: function () {
             if (this.username === this.teacherName) {
@@ -220,6 +232,8 @@ export default {
 <style scoped>
 #bg {
     background: #f5f7f9;
+    min-height: 600px;
+    min-width: 800px;
 }
 
 #live-room {
@@ -285,26 +299,35 @@ export default {
     margin-top: 110px;
 }
 
-#left-container {
-    height: 100%;
-    width: 68%;
+.left-container {
+    position: absolute;
+    left: 0;
+    height: 78%;
+    width: 67%;
     text-align: left;
     overflow: hidden;
 }
 
-#right-container {
-    width: 30%;
-    height: 100%;
-}
-
-#right-up-container {
-    width: 100%;
+.right-up-container {
+    display: block;
+    height: 27%;
+    position: absolute;
+    left: 70%;
+    width: 30%
 }
 
 #chatroom {
-    margin-top: 2%;
-    height: 56%;
-    width: 100%;
+    position: absolute;
+    left: 70%;
+    top: 42%;
+    padding-top: 12px;
+    height: 52.5%;
+    width: 30%;
+}
+
+.buttons-panel {
+    position: absolute;
+    left: 66.4%;
 }
 
 #swap-button,

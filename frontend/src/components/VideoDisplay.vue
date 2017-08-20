@@ -1,5 +1,5 @@
 <template>
-    <Card class="video-display">
+    <Card id="video-display">
         <div id="divDevice">
             <div class="select">
                 <label for="audioSource">Audio source: </label>
@@ -32,7 +32,7 @@
 <script>
 export default {
     name: 'video-display',
-    props: ['roomId', 'teacherName', 'username'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth'],
     data: function () {
         return {
             client: '',
@@ -51,6 +51,7 @@ export default {
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
+        document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
     },
     methods: {
         showVideo: function () {
@@ -151,6 +152,11 @@ export default {
                 }
             })
         }
+    },
+    watch: {
+        containerHeight: function (newVal, oldVal) {
+            document.getElementById('video').style.height = (newVal - 62) + 'px'
+        }
     }
 }
 </script>
@@ -164,7 +170,6 @@ export default {
 
 #video {
     width: 100%;
-    height: 23vmin;
 }
 
 #divDevice {

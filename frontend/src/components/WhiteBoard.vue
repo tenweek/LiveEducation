@@ -1,6 +1,6 @@
 <template>
     <div class="white-board">
-        <div class="tools">
+        <div id="tools">
             <Button type="text" @click="clear">清空</Button>
             <Button type="text" @click="undo">撤销</Button>
             <Button type="text" :class="{ active: type === 'eraser' }" @click="clickEraser">橡皮擦</Button>
@@ -29,7 +29,7 @@
         </div>
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
-            <canvas ref="board" id="canvas" :width="containerWidth - 74" :height="containerHeight - 66"></canvas>
+            <canvas ref="board" id="canvas" :width="whiteBoardWidth" :height="whiteBoardHeight"></canvas>
         </div>
     </div>
 </template>
@@ -41,7 +41,7 @@ import myMsg from './../warning.js'
 const MIN = 0.005
 export default {
     name: 'white-board',
-    props: ['roomId', 'teacherName', 'username', 'containerWidth', 'containerHeight'],
+    props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight', 'isOnLeft'],
     data: function () {
         return {
             type: 'pen',
@@ -81,13 +81,24 @@ export default {
                 this.changeEraserCursor()
             }
         },
-        containerWidth: function (newVal, oldVal) {
-            document.getElementById('canvas').width = (newVal - 74) + 'px'
+        whiteBoardWidth: function (newVal, oldVal) {
+            document.getElementById('canvas').width = (newVal - 119) + 'px'
+            console.log('whiteBoardWidth changed' + this.whiteBoardWidth)
         },
-        containerHeight: function (newVal, oldVal) {
-            document.getElementById('canvas').height = (newVal -66) + 'px'
+        whiteBoardHeight: function (newVal, oldVal) {
+            document.getElementById('canvas').height = (newVal - 66) + 'px'
+            console.log('whiteBoardHeight changed' + this.whiteBoardHeight)
+        },
+        isOnLeft: function (newVal, oldVal) {
+            console.log('xx')
+            if (newVal) {
+                document.getElementById('tools').style.display = 'inline-block'
+                console.log('ss')
+            } else {
+                document.getElementById('tools').style.display = 'none'
+                console.log('bb')
+            }
         }
-
     },
     mounted: function () {
         ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
@@ -139,7 +150,7 @@ export default {
         },
         drawLongText: function (text, beginX, beginY) {
             let textLength = text.length
-            let rowLength = this.containerWidth - beginX
+            let rowLength = this.whiteBoardWidth - beginX
             let newText = text.split('')
             let rowText = ''
             let count = 0
@@ -257,8 +268,8 @@ export default {
             this.socket.emit('message', {
                 type: 'pen',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
@@ -273,8 +284,8 @@ export default {
                 textField.style.autofocus = 'true'
                 this.socket.emit('message', {
                     type: 'textField',
-                    x: x / this.containerWidth,
-                    y: y / this.containerHeight,
+                    x: x / this.whiteBoardWidth,
+                    y: y / this.whiteBoardHeight,
                     color: this.colorBorder,
                     action: action,
                     buttons: buttons
@@ -291,8 +302,8 @@ export default {
             this.socket.emit('message', {
                 type: 'eraser',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons
             }, this.roomId + '.0')
         },
@@ -306,8 +317,8 @@ export default {
             this.socket.emit('message', {
                 type: 'line',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 color: this.colorBorder
             }, this.roomId + '.0')
@@ -322,8 +333,8 @@ export default {
             this.socket.emit('message', {
                 type: 'rectangle',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -340,8 +351,8 @@ export default {
             this.socket.emit('message', {
                 type: 'circle',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -358,8 +369,8 @@ export default {
             this.socket.emit('message', {
                 type: 'ellipse',
                 action: action,
-                x: x / this.containerWidth,
-                y: y / this.containerHeight,
+                x: x / this.whiteBoardWidth,
+                y: y / this.whiteBoardHeight,
                 buttons: buttons,
                 colorBorder: this.colorBorder,
                 colorFill: this.colorFill,
@@ -369,8 +380,8 @@ export default {
         pen: function (data) {
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
-                this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
             } else if (data.action === 'mousemove') {
                 if (this.originPoint === null) {
                     return
@@ -388,10 +399,10 @@ export default {
                 context.lineWidth = this.size
                 context.beginPath()
                 context.moveTo(ox, oy)
-                context.lineTo(data.x * this.containerWidth, data.y * this.containerHeight)
+                context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
                 context.stroke()
                 context.closePath()
-                this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
+                this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
             } else if (data.action === 'mouseup') {
                 this.originPoint = null
                 this.lastImageData = null
@@ -402,8 +413,8 @@ export default {
         eraser: function (data) {
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -419,7 +430,7 @@ export default {
                     const context = this.context
                     const [ox, oy] = this.originPoint
                     context.clearRect(ox, oy, this.size * 10, this.size * 10)
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
                     break
                 case 'mouseup':
                     this.originPoint = null
@@ -433,8 +444,8 @@ export default {
             this.colorBorder = data.color
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint == null) {
@@ -454,7 +465,7 @@ export default {
                     context.lineWidth = this.size
                     context.beginPath()
                     context.moveTo(ox, oy)
-                    context.lineTo(data.x * this.containerWidth, data.y * this.containerHeight)
+                    context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
                     context.stroke()
                     context.closePath()
                     break
@@ -472,8 +483,8 @@ export default {
             this.fill = data.fill
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -489,7 +500,7 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.containerWidth - ox, data.y * this.containerHeight - oy]
+                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
                     context.lineWidth = this.size
                     context.beginPath()
                     context.rect(ox, oy, dx, dy)
@@ -517,8 +528,8 @@ export default {
             this.fill = data.fill
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -534,11 +545,11 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [data.x * this.containerWidth - ox, data.y * this.containerHeight - oy]
+                    const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
                     const radius = Math.sqrt(dx * dx, dy * dy)
                     context.lineWidth = this.size
                     context.beginPath()
-                    context.arc((ox + data.x * this.containerWidth) / 2, (data.y * this.containerHeight + oy) / 2, radius, 0, 2 * Math.PI)
+                    context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -563,8 +574,8 @@ export default {
             this.fill = data.fill
             switch (data.action) {
                 case 'mousedown':
-                    this.originPoint = [data.x * this.containerWidth, data.y * this.containerHeight]
-                    this.lastImageData = this.context.getImageData(0, 0, this.containerWidth, this.containerHeight)
+                    this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+                    this.lastImageData = this.context.getImageData(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                     break
                 case 'mousemove':
                     if (this.originPoint === null) {
@@ -580,14 +591,14 @@ export default {
                     const context = this.context
                     context.putImageData(this.lastImageData, 0, 0)
                     const [ox, oy] = this.originPoint
-                    const [dx, dy] = [Math.abs(data.x * this.containerWidth - ox), Math.abs(data.y * this.containerHeight - oy)]
+                    const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
                     context.strokeStyle = this.colorBorder
                     context.lineWidth = this.size
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                     }
                     context.beginPath()
-                    context.ellipse((data.x * this.containerWidth + ox) / 2, (data.y * this.containerHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+                    context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
                     if (this.fill === true) {
                         context.fillStyle = this.colorFill
                         context.fill()
@@ -607,15 +618,15 @@ export default {
             }
         },
         boardClear: function (data) {
-            this.context.clearRect(0, 0, this.containerWidth, this.containerHeight)
+            this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
             this.allDataUrl = []
             this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer = 0
         },
         textBox: function (data) {
             if (data.action === 'mouseup') {
-                this.textLeft = data.x * this.containerWidth
-                this.textTop = data.y * this.containerHeight
+                this.textLeft = data.x * this.whiteBoardWidth
+                this.textTop = data.y * this.whiteBoardHeight
                 this.colorBorder = data.color
             }
         },
@@ -637,7 +648,7 @@ export default {
                 return
             } else {
                 this.pointer -= 1
-                this.context.clearRect(0, 0, this.containerWidth, this.containerHeight)
+                this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
                 this.drawDataUrl(this.allDataUrl[this.pointer])
                 this.allDataUrl.length = this.pointer + 1
             }
@@ -743,7 +754,7 @@ export default {
             let img = new Image()
             let that = this
             img.onload = function () {
-                that.context.drawImage(img, 0, 0, that.containerWidth, that.containerHeight)
+                that.context.drawImage(img, 0, 0, that.whiteBoardWidth, that.whiteBoardHeight)
             }
             img.src = dataUrl
         }
@@ -763,7 +774,7 @@ export default {
     cursor: hand;
 }
 
-.tools {
+#tools {
     height: auto;
     width: 85px;
     background: #efefef;

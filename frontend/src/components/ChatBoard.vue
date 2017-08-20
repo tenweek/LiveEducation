@@ -24,8 +24,8 @@
                     </Dropdown>
                 </div>
             </div>
-            <Input v-model="msgInput">
-            <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
+            <Input v-model="msgInput" id="input">
+                <Button id="send-btn" @click="sendMsg" slot="append">发送</Button>
             </Input>
             <Modal v-model="showGagList" title="解除禁言" @on-ok="allowSpeak">
                 <label>请选择您要解除禁言的对象</label>
@@ -275,7 +275,6 @@ export default {
 
 #chat-board {
     width: 100%;
-    height: 40vmin;
     position: relative;
 }
 
