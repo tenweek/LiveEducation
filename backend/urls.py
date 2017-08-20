@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^getTeacherFileInfo/$', views.getTeacherFileInfo),
     url(r'^closeLiveRoom/$', views.closeLiveRoom),
     url(r'^getVideoRooms/$', views.getVideoRooms),
-    url(r'^getVideoRoomInfo/$', views.getVideoRoomInfo)
+    url(r'^getVideoRoomInfo/$', views.getVideoRoomInfo),
+    url(r'^startRecord/$', views.startRecord)
 ]

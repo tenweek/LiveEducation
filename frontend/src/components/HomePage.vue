@@ -139,6 +139,7 @@ export default {
     width: 20%;
     margin-left: 2%;
     margin-right: 2%;
+    margin-top: 10px;
 }
 
 .live-picture {

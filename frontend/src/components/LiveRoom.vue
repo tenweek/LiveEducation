@@ -103,7 +103,8 @@ export default {
             rightComponent: 'VideoDisplay',
             hidden: false,
             socket: '',
-            started: false
+            started: false,
+            startTime: ''
         }
     },
     created: function () {
@@ -130,6 +131,9 @@ export default {
             self.$Message.warning(myMsg.room['endLive'])
             setTimeout(window.close, 3000)
         })
+        self.socket.on('time', function (time) {
+            self.startTime = time
+        })
     },
     methods: {
         closeLive: function () {
@@ -142,6 +146,8 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    'channel': this.roomId,
+                    'time': this.startTime,
                     'roomId': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => { })
@@ -149,6 +155,17 @@ export default {
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
             this.started = true
+            fetch('/startRecord/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'channel': this.roomId
+                })
+            }).then((response) => response.json()).then((obj) => { })
         },
         hide: function () {
             let rightContent = document.getElementById('right-up-container')

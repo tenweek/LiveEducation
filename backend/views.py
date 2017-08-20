@@ -6,7 +6,6 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 import simplejson
 from .models import Room, User, RoomStudent, VideoRoom
-
 import os
 import random
 import cloudconvert
@@ -45,6 +44,22 @@ def getVideoRooms(request):
     response = JsonResponse({'rooms': myroom})
     return response
 
+@csrf_exempt
+def startRecord(request):
+    req = simplejson.load(request)
+    channel = req['channel']
+    str = './backend/record/Recorder_local \
+        --appId "9b343e8aaaa144928e093b29513634e9" \
+        --uid 0 \
+        --channel "' + channel + '" \
+        --appliteDir "./backend/record/bin/" \
+        --channelProfile 1 \
+        --idle 30 \
+        --recordFileRootDir "./frontend/static/record/"'
+    os.system(str)
+    response = JsonResponse({})
+    return response
+
 
 @csrf_exempt
 def closeLiveRoom(request):
@@ -62,6 +77,10 @@ def closeLiveRoom(request):
     teacherRoom.teacher.user_file = ''
     teacherRoom.teacher.file_num = 0
     teacherRoom.teacher.save()
+    path = './frontend/static/record/' + \
+        req['time'] + '/' + str(req['channel']) + '*'
+    command = 'python ./backend/video_convert.py ' + path
+    os.system(command)
     Room.objects.filter(id=req['roomId']).delete()
     response = JsonResponse({})
     return response
@@ -126,8 +145,6 @@ def getTeacherFileInfo(request):
     return response
 
 
-# need teacherName and roomId
-# change the ppt name to teachername+roomid
 @csrf_exempt
 def closeRoomForFile(request):
     req = simplejson.load(request)
@@ -137,8 +154,6 @@ def closeRoomForFile(request):
     return response
 
 
-# need teachername and roomid
-# will delete the ppt when kill the videoRoom
 @csrf_exempt
 def removeFile(request):
     req = simplejson.load(request)
