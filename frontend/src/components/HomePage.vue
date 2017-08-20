@@ -82,7 +82,21 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 存储所有房间信息
+             *
+             * @attribute rooms
+             * @type Array
+             * @default []
+             */
             rooms: [],
+            /**
+             * 表示导航栏的选择（首页、直播、录播）
+             *
+             * @attribute option
+             * @type Number
+             * @default 1 1表示当前处于首页
+             */
             option: 1
         }
     },
@@ -118,7 +132,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .home-page {
     border: 1px solid #d7dde4;

@@ -52,19 +52,108 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+     /**
+      * 当有新的发言时，显示新的发言，并隐藏最远的一条记录。
+      *
+     * @property aboveHidden
+     * @type Boolean
+      */
     props: ['roomId', 'teacherName', 'username', 'aboveHidden'],
     data: function () {
         return {
+            /**
+             * 表示是否显示要禁言学生列表
+             *
+             * @attribute showGagList
+             * @type Boolean
+             * @default false
+             */
             showGagList: false,
+            /**
+             * 表示客户端，负责监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 表示老师提出或禁言操作时选中的用户
+             *
+             * @attribute choosenUser
+             * @type 
+             * @default ''
+             */
             choosenUser: '',
+            /**
+             * 表示要禁言的学生列表
+             *
+             * @attribute gagList
+             * @type Array
+             * @default []
+             */
             gagList: [],
+            /**
+             * 表示聊天区域所有发过言的学生列表
+             *
+             * @attribute speakList
+             * @type Array
+             * @default []
+             */
             speakList: [],
+            /**
+             * 存储所有的发言记录
+             *
+             * @attribute messages
+             * @type Array
+             * @default []
+             */
             messages: [],
+            /**
+             * 表示文本框中输入的文字
+             *
+             * @attribute msgInput
+             * @type String
+             * @default ''
+             */
             msgInput: '',
+            /**
+             * 表示老师是否选择开始直播，
+             * 在直播前，即started值为false时不能记性发言。
+             *
+             * @attribute started
+             * @type Boolean
+             * @default false
+             */
             started: false
         }
     },
+    /**
+     * mounted函数，初始化相关数据，客户端负责监听服务器传来的消息。
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         document.oncontextmenu = self.contextMenu
@@ -99,7 +188,7 @@ export default {
             }
         },
         /**
-         * 
+         * 屏蔽浏览器右键
          *
          * @method contextMenu
          * @return false
@@ -108,7 +197,8 @@ export default {
             return false
         },
         /**
-         * 
+         * 接收到'changeNum'消息时，发送'stuNum'，
+         * 完成改变学生数量的目的
          *
          * @method changeStuNum
          */
@@ -119,7 +209,7 @@ export default {
             })
         },
         /**
-         * 
+         * 用户接收到'kickOut'消息时（被提出房间时），弹出警告框进行提示
          *
          * @method kickOut
          */
@@ -133,7 +223,7 @@ export default {
             })
         },
         /**
-         * 
+         * 点击发送按钮时响应，将输入框中的文字发送
          *
          * @method sendMsg
          */

@@ -24,21 +24,97 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 实现教学区ppt等文件播放的复现，
+ * 作为子组件插入录播间页面，
+ * 用户不能进行任何操作。
+ *
+ * @module FileDisplayForRecord
+ * @class FileDisplayForRecord
+ */
 import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
     props: ['roomId', 'teacherName', 'username'],
     data: function () {
         return {
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 表示存放文件的根目录
+             *
+             * @attribute baseRoute
+             * @readOnly
+             * @type String
+             * @default 'static/ppt/'
+             */
             baseRoute: 'static/ppt/',
+            /**
+             * 表示老师上传文件的完整路径
+             *
+             * @attribute route
+             * @type String
+             * @default ''
+             */
             route: '',
+            /**
+             * 表示老师上传文件的最大页数
+             *
+             * @attribute maxPage
+             * @type String
+             * @default ''
+             */
             maxPage: '',
+            /**
+             * 表示当前页码数
+             *
+             * @attribute currentPage
+             * @type String
+             * @default ''
+             */
             currentPage: '',
+            /**
+             * 表示上传文件的数量
+             *
+             * @attribute fileNum
+             * @type Number
+             * @default 0
+             */
             fileNum: 0
         }
     },
+    /**
+     * mounted函数，初始化相关数据，客户端监听服务器消息
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')

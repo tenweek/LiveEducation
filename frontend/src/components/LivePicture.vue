@@ -17,18 +17,72 @@
 </template>
 
 <script>
+/**
+ * 表示正在直播房间的缩略图，
+ * 包含老师上传的封面图片及房间信息（房间名称、老师名称、在线人数），
+ * 作为子组件插入首页或直播详情页。
+ *
+ * @module LivePicture
+ * @class LivePicture
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'live-picture',
+    /**
+     * 表示房间名称
+     *
+     * @property roomName
+     */
+
+    /**
+     * 表示该直播房间老师名字
+     *
+     * @property teacherName
+     */
+
+    /**
+     * 表示在线人数
+     *
+     * @property studentNum
+     */
+
+    /**
+     * 表示房间id号
+     *
+     * @property id
+     */
+
+    /**
+     * 表示该直播房间的缩略图
+     *
+     * @property userImg
+     */
     props: ['roomName', 'teacherName', 'studentNum', 'id', 'userImg'],
     components: {
     },
     data: function () {
         return {
+            /**
+             * 表示用户账号
+             *
+             * @property stuAccount
+             * @type String
+             * @default ''
+             */
             stuAccount: '',
+            /**
+             * 表示用户选择是否进入该直播房间
+             *
+             * @property joinOrNot
+             * @type Boolean
+             * @default false
+             */
             joinOrNot: false
         }
     },
+    /**
+     * created函数，
+     */
     created: function () {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {

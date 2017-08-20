@@ -21,28 +21,177 @@ import myMsg from './../warning.js'
 const MIN = 0.005
 export default {
     name: 'white-board',
+    /**
+     *表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     *表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     *表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+    /**
+     *表示白板区域的宽，根据父组件大小动态变化
+     *
+     * @property teachingToolsWidth
+     * @type Number
+     */
+
+    /**
+     *表示白板区域的长，根据父组件大小动态变化
+     *
+     * @property teachingToolsHeight
+     * @type Number
+     */
     props: ['roomId', 'teacherName', 'username', 'teachingToolsWidth', 'teachingToolsHeight'],
     data: function () {
         return {
+            /**
+             * 表示当前老师选中的绘图功能
+             *
+             * @attribute type
+             * @type String
+             * @default 'pen'
+             */
             type: 'pen',
-            context: null,
+            /**
+             * 获取canvas的上下文，指代页面上的绘图区域，
+             * 用于对白板操作。
+             *
+             * @attribute context
+             * @type null
+             */
+            /**
+             * 表示绘图过程中（mousemove时）上一次鼠标的位置，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute originPoint
+             * @type null
+             */
             originPoint: null,
+            /**
+             * 表示绘图过程中（mousemove时）上一次操作的绘图结果，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute lastImageData
+             * @type null
+             */
             lastImageData: null,
+            /**
+             * 表示画板上边框的颜色（第一个颜色选择器）
+             *
+             * @attribute colorBorder
+             * @type String
+             * @default 'rgba(0, 0, 0, 1)'
+             */
             colorBorder: 'rgba(0, 0, 0, 1)',
+            /**
+             * 表示画板上填充的颜色（第二个颜色选择器）
+             *
+             * @attribute colorFill
+             * @type String
+             * @default 'rgba(255, 255, 255, 1)'
+             */
             colorFill: 'rgba(255, 255, 255, 1)',
+            /**
+             * 表示是否选择"填充"按钮
+             *
+             * @attribute fill
+             * @type Boolean
+             * @default false
+             */
             fill: false,
+            /**
+             * 表示是否选择"边框"按钮
+             *
+             * @attribute border
+             * @type Boolean
+             * @default true
+             */
             border: true,
+            /**
+             * 表示是否选择粗细的大小
+             *
+             * @attribute size
+             * @type Number
+             * @default 1
+             */
             size: 1,
+            /**
+             * 表示文本输入框是否显示
+             *
+             * @attribute textField
+             * @type Boolean
+             * @default false
+             */
             textField: false,
+            /**
+             * 表示文本输入框中输入的文字
+             *
+             * @attribute textInput
+             * @type String
+             * @default ''
+             */
             textInput: '',
+            /**
+             * 表示绘制文字时文字起始位置的横坐标
+             *
+             * @attribute textLeft
+             * @type Number
+             * @default 0
+             */
             textLeft: 0,
+            /**
+             * 表示绘制文字时文字起始位置的纵坐标
+             *
+             * @attribute textTop
+             * @type Number
+             * @default 0
+             */
             textTop: 0,
+            /**
+             * 指向canvas画板对象
+             *
+             * @attribute canvas
+             * @type null
+             */
             canvas: null,
+            /**
+             * 存储画板上每次操作对应的图片
+             *
+             * @attribute allDataUrl
+             * @type Array
+             */
             allDataUrl: [],
-            currentImageData: null,
+            /**
+             * 表示一个指针，指向allDataUrl中当前画板的状态，
+             * 在undo操作时前移一个，从而实现undo操作。
+             *
+             * @attribute pointer
+             * @type Number
+             * @default 0
+             */
             pointer: 0,
-            socket: '',
-            roomId: ''
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
+            socket: ''
         }
     },
     watch: {
@@ -61,6 +210,11 @@ export default {
             }
         }
     },
+    /**
+     * mounted函数，初始化数据，客户端监听服务器消息
+     *
+     * @method mounted
+     */
     mounted: function () {
         this.initData()
         let self = this
