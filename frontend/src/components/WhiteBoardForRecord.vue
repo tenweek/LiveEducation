@@ -1,34 +1,6 @@
 <template>
     <div class="white-board">
-        <div class="tools">
-            <Button type="text">清空</Button>
-            <Button type="text">撤销</Button>
-            <Button type="text" :class="{ active: type === 'eraser' }">橡皮擦</Button>
-            <Button type="text" :class="{ active: type === 'pen' }">画笔</Button>
-            <Button type="text" :class="{ active: type === 'text' }">文字</Button>
-            <Button type="text" :class="{ active: type === 'line' }">直线</Button>
-            <Button type="text" :class="{ active: type === 'rectangle' }">矩形</Button>
-            <Button type="text" :class="{ active: type === 'circle' }">圆形</Button>
-            <Button type="text" :class="{ active: type === 'ellipse' }">椭圆</Button>
-            <Dropdown class="change-size" placement="right-start">
-                <Button type="text">
-                    粗细
-                    <Icon type="ios-arrow-forward"></Icon>
-                </Button>
-                <Dropdown-menu slot="list" v-if="this.teacherName === this.username">
-                    <Dropdown-item name='small'>小</Dropdown-item>
-                    </Dropdown-item>
-                    <Dropdown-item name='middle'>中</Dropdown-item>
-                    <Dropdown-item name='large'>大</Dropdown-item>
-                </Dropdown-menu>
-            </Dropdown>
-            <Button type="text" :class="{ active: border === true }">边框</Button>
-            <Button type="text" :class="{ active: fill === true }">填充</Button>
-            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorBorder" show-alpha></el-color-picker>
-            <el-color-picker v-if="this.teacherName === this.username" class="color-selected" v-model="colorFill" show-alpha></el-color-picker>
-        </div>
         <div class="drawing-board">
-            <input id="text-field" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
             <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
         </div>
     </div>
@@ -408,77 +380,53 @@ export default {
             }
         },
         whiteBoardDoing: function (data) {
-            switch (data.type) {
-                case 'pen':
-                    this.pen(data)
-                    break
-                case 'eraser':
-                    this.eraser(data)
-                    break
-                case 'line':
-                    this.line(data)
-                    break
-                case 'rectangle':
-                    this.rectangle(data)
-                    break
-                case 'circle':
-                    this.circle(data)
-                    break
-                case 'ellipse':
-                    this.ellipse(data)
-                    break
-                case 'clear':
-                    this.boardClear(data)
-                    break
-                case 'textField':
-                    this.textBox(data)
-                    break
-                case 'drawText':
-                    this.font(data)
-                    break
-                case 'undo':
-                    this.boardUndo(data)
-                    break
+            if (data.type === 'pen') {
+                this.pen(data)
+            } else if (data.type === 'eraser') {
+                this.eraser(data)
+            } else if (data.type === 'line') {
+                this.line(data)
+            } else if (data.type === 'rectangle') {
+                this.rectangle(data)
+            } else if (data.type === 'circle') {
+                this.circle(data)
+            } else if (data.type === 'ellipse') {
+                this.ellipse(data)
+            } else if (data.type === 'clear') {
+                this.clear(data)
+            } else if (data.type === 'textField') {
+                this.textBox(data)
+            } else if (data.type === 'drawText') {
+                this.font(data)
+            } else if (data.type === 'undo') {
+                this.boardUndo(data)
             }
         },
         buttonDoing: function (data) {
-            switch (data.type) {
-                case 'eraser':
-                    this.type = 'eraser'
-                    break
-                case 'pen':
-                    this.type = 'pen'
-                    break
-                case 'text':
-                    this.type = 'text'
-                    break
-                case 'line':
-                    this.type = 'line'
-                    break
-                case 'rectangle':
-                    this.type = 'rectangle'
-                    break
-                case 'circle':
-                    this.type = 'circle'
-                    break
-                case 'ellipse':
-                    this.type = 'ellipse'
-                    break
-                case 'border':
-                    this.border = !this.border
-                    break
-                case 'fill':
-                    this.fill = !this.fill
-                    break
-                case 'sizeLarge':
-                    this.size = 5
-                    break
-                case 'sizeMiddle':
-                    this.size = 3
-                    break
-                case 'sizeSmall':
-                    this.size = 1
-                    break
+            if (data.type === 'eraser') {
+                this.type = 'eraser'
+            } else if (data.type === 'pen') {
+                this.type = 'pen'
+            } else if (data.type === 'text') {
+                this.type = 'text'
+            } else if (data.type === 'line') {
+                this.type = 'line'
+            } else if (data.type === 'rectangle') {
+                this.type = 'rectangle'
+            } else if (data.type === 'circle') {
+                this.type = 'circle'
+            } else if (data.type === 'ellipse') {
+                this.type = 'ellipse'
+            } else if (data.type === 'border') {
+                this.border = !this.border
+            } else if (data.type === 'fill') {
+                this.fill = !this.fill
+            } else if (data.type === 'sizeLarge') {
+                this.size = 5
+            } else if (data.type === 'sizeMiddle') {
+                this.size = 3
+            } else if (data.type === 'sizeSmall') {
+                this.size = 1
             }
         },
         updateMessageDoing: function (data) {
@@ -505,37 +453,10 @@ export default {
 </script>
 
 <style scoped>
-#text-field {
-    position: absolute;
-    width: 300px;
-}
-
 .white-board {
     height: 100%;
     display: flex;
     cursor: hand;
-}
-
-.tools {
-    height: auto;
-    width: 85px;
-    background: #efefef;
-}
-
-button {
-    background-color: #efefef;
-    height: 30px;
-    width: 74px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-button.active {
-    background-color: #aaa;
-}
-
-.color-selected {
-    margin-left: 8px;
 }
 
 .drawing-board {

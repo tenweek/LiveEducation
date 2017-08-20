@@ -101,7 +101,7 @@ io.on('connection', function (socket) {
         console.log('start live')
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
-        fs.open(path[roomId], 'a', (err, fd) => {
+        fs.open(String(path[roomId]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
@@ -132,7 +132,7 @@ io.on('connection', function (socket) {
                 'maxPage': data['maxPage']
             }
         }
-        fs.open(path[index], 'a', (err, fd) => {
+        fs.open(String(path[index]), 'a', (err, fd) => {
             if (err) {
                 throw err
             }
