@@ -202,27 +202,22 @@ export default {
      * @method created
      */
     created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                this.account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-            }
-        }
-        if (this.account !== '') {
-            fetch('/getName/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ 'account': this.account })
-            }).then((response) => response.json()).then((obj) => {
+        fetch('/getName/', {
+            method: 'post',
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({})
+        }).then((response) => response.json()).then((obj) => {
+            if (obj.result) {
+                this.account = obj.account
                 this.username = obj.name
                 this.isTeacher = obj.isTeacher
-            })
-        }
+            }
+        })
     },
     methods: {
         handleMaxSize: function (file) {
@@ -286,6 +281,7 @@ export default {
                 fetch('/getImg/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -317,6 +313,7 @@ export default {
                 fetch('/createRoom/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -339,6 +336,7 @@ export default {
             fetch('/changeName/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -375,16 +373,6 @@ export default {
             this.$router.push({ path: '/signup' })
         },
         /**
-         * 清除cookie，点击'注销账户'时触发
-         *
-         * @method clearCookie
-         */
-        clearCookie: function () {
-            let date = new Date()
-            date.setTime(date.getTime() - 10000)
-            document.cookie = 'userAccount=a; expires=' + date.toGMTString()
-        },
-        /**
          * 个人信息下拉栏的on-click响应事件
          *
          * @method dropDownClick
@@ -394,13 +382,24 @@ export default {
             if (name === 'changeName') {
                 this.showChangeName = true
             } else if (name === 'modifyPassword') {
-                this.clearCookie()
                 this.$router.push({ path: '/reset' })
             } else {
-                this.clearCookie()
-                location.reload()
+                this.logout()
                 this.$router.push({ path: '/' })
             }
+        },
+        logout: function () {
+            fetch('/logout/', {
+                method: 'post',
+                credentials: 'same-origin',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            location.reload()
         }
     }
 }

@@ -196,6 +196,7 @@ export default {
             fetch('/closeLiveRoom/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -212,6 +213,7 @@ export default {
                 fetch('/startRecord/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -283,6 +285,7 @@ export default {
                 fetch('/changeNum/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'applica tion/json'
@@ -311,6 +314,7 @@ export default {
             fetch('/getRoomInfo/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -330,27 +334,20 @@ export default {
          * @method getUsername
          */
         getUsername: function () {
-            let arrCookies = document.cookie.split(';')
-            let account = ''
-            for (let i = 0; i < arrCookies.length; i++) {
-                let arrStr = arrCookies[i].split('=')
-                if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                    account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-                }
-            }
-            if (account !== '') {
-                fetch('/getName/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ 'account': account })
-                }).then((response) => response.json()).then((obj) => {
+            fetch('/getName/', {
+                method: 'post',
+                mode: 'cors',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({})
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.result) {
                     this.username = obj.name
-                })
-            }
+                }
+            })
         }
     }
 }

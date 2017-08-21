@@ -291,9 +291,15 @@ def getRoomInfo(request):
 
 @csrf_exempt
 def joinRoom(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': 'login'
+        })
+        return response
+    stuAccount = request.session.get('account')
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=req['stuAccount'])
+    student = User.objects.get(username=stuAccount)
     roomStudent = RoomStudent.objects.filter(room=room, student=student)
     if len(roomStudent) == 0:
         RoomStudent.objects.create(room=room, student=student)
@@ -309,9 +315,16 @@ def joinRoom(request):
 
 @csrf_exempt
 def getName(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     req = simplejson.load(request)
-    user = User.objects.get(username=req['account'])
+    user = User.objects.get(username=request.session.get('account'))
     response = JsonResponse({
+        'result': True,
+        'account': user.username,
         'name': user.name,
         'isTeacher': user.is_teacher
     })
@@ -390,7 +403,15 @@ def login(request):
     if user is None:
         response = JsonResponse({'result': False})
     else:
-        response = JsonResponse({'result': True, 'name': user.name})
+        request.session['account'] = req['account']
+        response = JsonResponse({'result': True})
+    return response
+
+
+@csrf_exempt
+def logout(request):
+    del request.session['account']
+    response = JsonResponse({})
     return response
 
 

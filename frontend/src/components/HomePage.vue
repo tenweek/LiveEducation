@@ -89,6 +89,7 @@ export default {
             fetch('/getVideoRooms/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -106,6 +107,7 @@ export default {
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',
+                credentials: 'same-origin',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
