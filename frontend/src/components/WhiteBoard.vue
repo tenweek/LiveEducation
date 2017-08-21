@@ -85,14 +85,14 @@ export default {
     /**
      * 表示白板区域的宽，根据父组件大小动态变化
      *
-     * @property teachingToolsWidth
+     * @property whiteBoardWidth
      * @type Number
      */
 
     /**
      * 表示白板区域的长，根据父组件大小动态变化
      *
-     * @property teachingToolsHeight
+     * @property whiteBoardHeight
      * @type Number
      */
     props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight', 'isOnLeft'],
@@ -260,10 +260,19 @@ export default {
             }
         },
         whiteBoardWidth: function (newVal, oldVal) {
-            document.getElementById('canvas').width = newVal
+            this.drawDataUrl(this.allDataUrl[this.pointer])
         },
-        whiteBoardHeight: function (newVal, oldVal) {
-            document.getElementById('canvas').height = newVal
+        colorBorder: function (newVal, oldVal) {
+            this.socket.emit('click', {
+                type: 'colorBorder',
+                colorBorder: this.colorBorder
+            }, this.roomId + '.0')
+        },
+        colorFill: function (newVal, oldVal) {
+            this.socket.emit('click', {
+                type: 'colorFill',
+                colorFill: this.colorFill
+            }, this.roomId + '.0')
         },
         isOnLeft: function (newVal, oldVal) {
             if (newVal) {
@@ -766,10 +775,10 @@ export default {
             context.lineWidth = this.size
             context.beginPath()
             context.moveTo(ox, oy)
-            context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
+            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
             context.stroke()
             context.closePath()
-            this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
         },
         /**
          * 根据接收到的信息对画板进行橡皮擦操作
@@ -810,7 +819,7 @@ export default {
             const context = this.context
             const [ox, oy] = this.originPoint
             context.clearRect(ox, oy, this.size * 10, this.size * 10)
-            this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
+            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
         },
         /**
          * 根据接收到的信息对画板进行直线操作
@@ -856,7 +865,7 @@ export default {
             context.lineWidth = this.size
             context.beginPath()
             context.moveTo(ox, oy)
-            context.lineTo(data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight)
+            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
             context.stroke()
             context.closePath()
         },
@@ -911,7 +920,7 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
+            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
             context.lineWidth = this.size
             context.beginPath()
             context.rect(ox, oy, dx, dy)
@@ -976,11 +985,11 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [data.x * this.teachingToolsWidth - ox, data.y * this.teachingToolsHeight - oy]
+            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
             const radius = Math.sqrt(dx * dx, dy * dy)
             context.lineWidth = this.size
             context.beginPath()
-            context.arc((ox + data.x * this.teachingToolsWidth) / 2, (data.y * this.teachingToolsHeight + oy) / 2, radius, 0, 2 * Math.PI)
+            context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
                 context.fill()
@@ -1042,14 +1051,14 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [Math.abs(data.x * this.teachingToolsWidth - ox), Math.abs(data.y * this.teachingToolsHeight - oy)]
+            const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
             context.strokeStyle = this.colorBorder
             context.lineWidth = this.size
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
             }
             context.beginPath()
-            context.ellipse((data.x * this.teachingToolsWidth + ox) / 2, (data.y * this.teachingToolsHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+            context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
                 context.fill()
@@ -1185,6 +1194,10 @@ export default {
                 this.size = 3
             } else if (data.type === 'sizeSmall') {
                 this.size = 1
+            } else if (data.type === 'colorBorder') {
+                this.colorBorder = data.colorBorder
+            } else if (data.type === 'colorFill') {
+                this.colorFill = data.colorFill
             }
         },
         /**
@@ -1204,7 +1217,9 @@ export default {
                 border: this.border,
                 fill: this.fill,
                 size: this.size,
-                dataUrl: this.allDataUrl
+                dataUrl: this.allDataUrl,
+                colorBorder: this.colorBorder,
+                colorFill: this.colorFill
             }, this.roomId + '.0')
         },
         /**
@@ -1221,6 +1236,8 @@ export default {
                 this.type = data.type
                 this.border = this.border
                 this.fill = data.fill
+                this.colorBorder = data.colorBorder
+                this.colorFill = data.colorFill
                 this.size = data.size
                 this.pointer = this.allDataUrl.length - 1
                 this.drawDataUrl(this.allDataUrl[this.pointer])
