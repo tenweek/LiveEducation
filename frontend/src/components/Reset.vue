@@ -156,6 +156,7 @@ export default {
         getVerification: function () {
             fetch('/getRand/', {
                 method: 'post',
+                credentials: 'same-origin',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
@@ -196,6 +197,7 @@ export default {
                 fetch('/changePasswd/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'

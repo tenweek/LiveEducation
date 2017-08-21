@@ -209,6 +209,7 @@ export default {
             fetch('/checkGag/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -240,6 +241,7 @@ export default {
             fetch('/gag/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -262,6 +264,7 @@ export default {
             fetch('/gagAll/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -282,6 +285,7 @@ export default {
             fetch('/allowAllSpeak/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -302,6 +306,7 @@ export default {
                 fetch('/kickOut/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -372,6 +377,7 @@ export default {
             fetch('/allowSpeak/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'

@@ -61,24 +61,7 @@ export default {
     components: {
     },
     data: function () {
-        return {
-            /**
-             * 表示用户账号
-             *
-             * @property stuAccount
-             * @type String
-             * @default ''
-             */
-            stuAccount: '',
-            /**
-             * 表示用户选择是否进入该直播房间
-             *
-             * @property joinOrNot
-             * @type Boolean
-             * @default false
-             */
-            joinOrNot: false
-        }
+        return {}
     },
     /**
      * created函数，获取用户账号，
@@ -86,18 +69,6 @@ export default {
      *
      * @method created
      */
-    created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                this.stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-                break
-            } else {
-                this.stuAccount = ''
-            }
-        }
-    },
     methods: {
         /**
          * 获取房间信息
@@ -105,29 +76,26 @@ export default {
          * @method liveRoom
          */
         liveRoom: function () {
-            // 如果用户已经登录
-            if (this.stuAccount) {
-                fetch('/joinRoom/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'roomID': this.id,
-                        'stuAccount': this.stuAccount
-                    })
-                }).then((response) => response.json()).then((obj) => {
-                    if (obj.result === 'cannot') {
-                        this.$Message.error(myMsg.room['cannotJoin'])
-                    } else {
-                        window.open('./#/live_room/' + this.id)
-                    }
+            fetch('/joinRoom/', {
+                method: 'post',
+                mode: 'cors',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomID': this.id,
                 })
-            } else {
-                this.$Message.error(myMsg.account['loginNeeded'])
-            }
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.result === 'cannot') {
+                    this.$Message.error(myMsg.room['cannotJoin'])
+                } else if(obj.result==='login'){
+                    this.$Message.error(myMsg.account['loginNeeded'])
+                } else {
+                    window.open('./#/live_room/' + this.id)
+                }
+            })
         }
     }
 }

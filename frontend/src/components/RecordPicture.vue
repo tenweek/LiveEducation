@@ -46,13 +46,20 @@ export default {
      * @method created
      */
     created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+        fetch('/getName/', {
+            method: 'post',
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({})
+        }).then((response) => response.json()).then((obj) => {
+            if (obj.result) {
                 this.canWork = true
             }
-        }
+        })
         this.route = '/static/cover/' + this.userImg
     },
     methods: {

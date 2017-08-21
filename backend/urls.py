@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^getVerification/$', views.getVerification),
     url(r'^signUp/$', views.signUp),
     url(r'^login/$', views.login),
+    url(r'^logout/$', views.logout),
     url(r'^getRand/$', views.getRand),
     url(r'^changePasswd/$', views.changePasswd),
     url(r'^changeName/$', views.changeName),

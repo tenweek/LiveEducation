@@ -78,15 +78,21 @@ export default {
         }
     },
     created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                this.canWork = true
-                this.userAccount = arrStr[1]
-            }
-        }
         this.roomId = this.$route.params.id
+        fetch('/getName/', {
+            method: 'post',
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({})
+        }).then((response) => response.json()).then((obj) => {
+            if (obj.result) {
+                this.userAccount = obj.account
+            }
+        })
     },
     /**
      * mounted函数，当接收到'changeCurrent'消息时改变相应属性值

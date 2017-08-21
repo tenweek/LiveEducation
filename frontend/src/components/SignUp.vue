@@ -167,6 +167,7 @@ export default {
             fetch('/signUp/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -214,6 +215,7 @@ export default {
             fetch('/getVerification/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
