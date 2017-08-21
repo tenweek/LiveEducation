@@ -27,7 +27,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
-    props: ['roomId'],
+    props: ['userAccount', 'roomId'],
     data: function () {
         return {
             socket: '',
@@ -37,7 +37,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', this.roomId)
+        self.socket.emit('joinTest', this.roomId, this.userAccount + 'c')
         self.socket.on('chatroom', function (data) {
             self.messages.push({
                 'msg': data['message'],

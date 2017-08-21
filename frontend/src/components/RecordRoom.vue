@@ -18,7 +18,7 @@
                     </Button>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
+                    <component :is="currentTools" :userAccount="this.userAccount" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -26,7 +26,7 @@
                     <video :src=videoPath id="video" autoplay="autoplay"></video>
                 </div>
                 <div class="chatroom">
-                    <chat-board-for-record :roomId="this.roomId"></chat-board-for-record>
+                    <chat-board-for-record :roomId="this.roomId" :userAccount="this.userAccount"></chat-board-for-record>
                 </div>
             </div>
         </div>
@@ -43,6 +43,7 @@ import PageFooter from './PageFooter'
 import ChatBoardForRecord from './ChatBoardForRecord'
 import FileDisplayForRecord from './FileDisplayForRecord'
 import WhiteBoardForRecord from './WhiteBoardForRecord'
+import CodeEditorForRecord from './CodeEditorForRecord'
 import * as io from 'socket.io-client'
 
 export default {
@@ -52,21 +53,31 @@ export default {
         PageFooter,
         ChatBoardForRecord,
         FileDisplayForRecord,
-        WhiteBoardForRecord
+        WhiteBoardForRecord,
+        CodeEditorForRecord
     },
     data: function () {
         return {
             currentTools: 'WhiteBoardForRecord',
             roomId: '',
-            videoPath: ''
+            videoPath: '',
+            userAccount: ''
         }
     },
     created: function () {
+        let arrCookies = document.cookie.split(';')
+        for (let i = 0; i < arrCookies.length; i++) {
+            let arrStr = arrCookies[i].split('=')
+            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+                this.canWork = true
+                this.userAccount = arrStr[1]
+            }
+        }
         let self = this
         self.roomId = self.$route.params.id
         self.videoPath = './../../static/record/' + self.roomId + '.mp4'
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', self.roomId)
+        self.socket.emit('joinTest', this.roomId, this.userAccount + 't')
         self.socket.on('changeCurrent', function (data) {
             self.currentTools = data['name'] + 'ForRecord'
         })
