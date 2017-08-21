@@ -94,10 +94,10 @@ export default {
             }
         },
         whiteBoardWidth: function (newVal, oldVal) {
-            document.getElementById('canvas').width = (newVal - 119) + 'px'
+            document.getElementById('canvas').width = newVal
         },
         whiteBoardHeight: function (newVal, oldVal) {
-            document.getElementById('canvas').height = (newVal - 66) + 'px'
+            document.getElementById('canvas').height = newVal
         },
         isOnLeft: function (newVal, oldVal) {
             if (newVal) {

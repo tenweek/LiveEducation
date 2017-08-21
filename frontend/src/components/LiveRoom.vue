@@ -56,7 +56,7 @@
                     <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight"></video-display>
                 </div>
                 <div id="chatroom">
-                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :above-is-hidden="this.hidden" :container-height="this.chatBoardHeight"></chat-board>
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.chatBoardHeight" ></chat-board>
                 </div>
             </div>
             <div>
