@@ -64,7 +64,7 @@
  * 实现教学区ppt等文件播放功能，
  * 作为子组件插入直播间页面。
  * 老师端可以对ppt做上下翻页等操作，
- * 学生端不能对白板操作，
+ * 学生端不能对ppt操作，
  * 只能同步看到老师的操作。
  *
  * @module FileDisplay
@@ -354,8 +354,8 @@ export default {
 
 <style scoped>
 .drag-file {
-    width: 400px;
-    height: 400px;
+    width: 100%;
+    height: 100%;
     border: 2px dashed black;
     margin: auto;
 }

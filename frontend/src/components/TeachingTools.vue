@@ -15,7 +15,7 @@
                 </Dropdown>
             </div>
             <keep-alive>
-                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :white-board-width="this.whiteBoardWidth" :white-board-height="this.whiteBoardHeight" :is-on-left="this.toolsOnLeft"></component>
+                <component :is="currentTools" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :white-board-width="this.whiteBoardWidth" :container-height="this.whiteBoardHeight" :is-on-left="this.toolsOnLeft"></component>
             </keep-alive>
         </div>
     </Card>
@@ -134,10 +134,21 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            this.whiteBoardHeight = newVal - 32 - 32
+            if (this.isOnLeft) {
+                this.whiteBoardHeight = newVal - 64
+            } else {
+                this.whiteBoardHeight = newVal - 32
+            }
         },
         containerWidth: function (newVal, oldVal) {
-            this.whiteBoardWidth = newVal - 74 - 32
+            this.whiteBoardWidth = newVal - 106
+        },
+        toolsOnLeft: function (newVal, oldVal) {
+            if (newVal) {
+                document.getElementsByClassName('choose-current')[0].style.display = 'inline-block'
+            } else {
+                document.getElementsByClassName('choose-current')[0].style.display = 'none'
+            }
         }
     }
 }

@@ -19,9 +19,6 @@
                     <Icon type="stop"></Icon>
                 </button>
             </template>
-            <button @click="showVideo" id="arrow">
-                <Icon type="chevron-up"></Icon>
-            </button>
         </div>
         <div id="video">
             <template v-if="this.username === this.teacherName">
@@ -162,22 +159,6 @@ export default {
         })
     },
     methods: {
-        /**
-         * 显示直播视频
-         *
-         * @method showVideo
-         */
-        showVideo: function () {
-            let arrow = document.getElementById('arrow')
-            let video = document.getElementById('video')
-            if (video.style.display === 'none') {
-                video.style.display = 'inline-block'
-                arrow.innerHTML = '<i class="ivu-icon ivu-icon-chevron-up"></i>'
-            } else {
-                video.style.display = 'none'
-                arrow.innerHTML = '<i class="ivu-icon ivu-icon-chevron-down"></i>'
-            }
-        },
         /**
          * 播放视频
          *

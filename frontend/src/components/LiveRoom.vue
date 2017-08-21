@@ -166,25 +166,10 @@ export default {
      */
     mounted: function () {
         let self = this
-        document.getElementById('bg').style.height = window.innerHeight + 'px'
-        document.getElementById('bg').style.width = window.innerWidth + 'px'
-        let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
-        document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
-        document.getElementById('live-room').style.height = unit + 'px'
-        self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
-        self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
-        self.videoDisplayHeight = document.getElementById('video-display').clientHeight
-        self.chatBoardHeight = document.getElementById('chatroom').clientHeight
-        window.onresize = function () {
-            document.getElementById('bg').style.height = window.innerHeight + 'px'
-            document.getElementById('bg').style.width = window.innerWidth + 'px'
-            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
-            document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
-            document.getElementById('live-room').style.height = unit + 'px'
-            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
-            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
-            self.videoDisplayHeight = document.getElementById('video-display').clientHeight
-            self.chatBoardHeight = document.getElementById('chatroom').clientHeight
+        this.resize(self)
+        window.onresize = () => {
+            let self = this
+            this.resize(self)
         }
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
@@ -194,6 +179,17 @@ export default {
         self.startRecord()
     },
     methods: {
+        resize: function (self) {
+            document.getElementById('bg').style.height = window.innerHeight + 'px'
+            document.getElementById('bg').style.width = window.innerWidth + 'px'
+            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+            document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+            document.getElementById('live-room').style.height = unit + 'px'
+            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            self.videoDisplayHeight = document.getElementById('video-display').clientHeight
+            self.chatBoardHeight = document.getElementById('chatroom').clientHeight
+        },
         closeLive: function () {
             document.getElementById('cover').style.display = 'inline'
             this.socket.emit('closeLive', this.roomId)
@@ -247,7 +243,7 @@ export default {
             document.getElementById('chatroom').style.paddingTop = '0'
             document.getElementById('chatroom').style.height = '78%'
             document.getElementById('chatroom').style.top = 'inherit'
-            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight + 12
         },
         /**
          * 弹出右边窗口
@@ -275,7 +271,6 @@ export default {
             this.toolsOnLeft = !this.toolsOnLeft
             this.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
             this.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
-            this.videoDisplayWidth = document.getElementById('video-display').clientWidth
             this.videoDisplayHeight = document.getElementById('video-display').clientHeight
         },
         /**
@@ -429,20 +424,21 @@ export default {
     margin-left: auto;
     margin-right: auto;
     margin-top: 110px;
+    position: relative;
 }
 
 .left-container {
     position: absolute;
     left: 0;
-    height: 78%;
-    width: 67%;
+    height: 100%;
+    width: 65%;
     text-align: left;
     overflow: hidden;
 }
 
 .right-up-container {
     display: block;
-    height: 27%;
+    height: 40%;
     position: absolute;
     left: 70%;
     width: 30%
@@ -451,15 +447,15 @@ export default {
 #chatroom {
     position: absolute;
     left: 70%;
-    top: 42%;
+    top: 40%;
     padding-top: 12px;
-    height: 52.5%;
+    height: 60%;
     width: 30%;
 }
 
 .buttons-panel {
     position: absolute;
-    left: 66.4%;
+    left: 65%;
 }
 
 #swap-button,
