@@ -14,6 +14,14 @@
 </template>
 
 <script>
+/**
+ * 表示录播房间的缩略图，
+ * 包含老师上传的封面图片及房间信息（房间名称、老师名称），
+ * 作为子组件插入首页或录播详情页。
+ *
+ * @module RecordPicture
+ * @class RecordPicture
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'RecordPicture',
@@ -21,10 +29,22 @@ export default {
     components: {},
     data: function () {
         return {
+            /**
+             *表示用户是否登录
+             *
+             * @attribute canWork
+             * @type Boolean
+             * @default false
+             */
             canWork: false,
             route: ''
         }
     },
+    /**
+     * created函数，判断用户是否登录
+     *
+     * @method created
+     */
     created: function () {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
@@ -36,6 +56,12 @@ export default {
         this.route = '/static/cover/' + this.userImg
     },
     methods: {
+        /**
+         * 进入录播房间，
+         * 如果用户没有登录，则弹出消息框提示。
+         *
+         * @method recordRoom
+         */
         recordRoom: function () {
             if (this.canWork) {
                 window.open('./#/record_room/' + this.liveId)

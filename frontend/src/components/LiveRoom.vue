@@ -68,6 +68,12 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+/**
+ * 直播间页面
+ *
+ * @module LiveRoom
+ * @class LiveRoom
+ */
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 import HomePageHeader from './HomePageHeader'
@@ -87,10 +93,45 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 房间ID
+             *
+             * @attribute roomId
+             * @type Number
+             * @default -1
+             */
             roomId: -1,
+            /**
+             * 房间名称
+             *
+             * @attribute roomName
+             * @type String
+             * @default ''
+             */
             roomName: '',
+            /**
+             * 老师名字
+             *
+             * @attribute teacherName
+             * @type String
+             * @default ''
+             */
             teacherName: '',
+            /**
+             * 在线人数
+             *
+             * @attribute studentNum
+             * @type String
+             * @default ''
+             */
             studentNum: '',
+            /**
+             * 用户名字
+             *
+             * @attribute username
+             * @type String
+             * @default ''
+             */
             username: '',
             hidden: false,
             socket: '',
@@ -102,6 +143,11 @@ export default {
             chatBoardHeight: 0
         }
     },
+    /**
+     * created函数，初始化相关数据，客户端发送'joinRoom'消息
+     *
+     * @method created
+     */
     created: function () {
         this.roomId = this.$route.params.id
         this.socket = io.connect('http://localhost:9000')
@@ -110,6 +156,12 @@ export default {
         this.getUsername()
         window.setInterval(this.changeNum, 5000)
     },
+    /**
+     * mounted函数，初始化教学区域和白板区域的长和高，
+     * 并监测窗口大小的改变，实时变化相应参数
+     *
+     * @method mounted
+     */
     mounted: function () {
         let self = this
         document.getElementById('bg').style.height = window.innerHeight + 'px'
@@ -167,6 +219,11 @@ export default {
                 })
             }).then((response) => response.json()).then((obj) => { })
         },
+        /**
+         * 开始直播，发送'startLive'消息
+         *
+         * @method startLive
+         */
         startLive: function () {
             this.socket.emit('startLive', this.roomId)
             document.getElementById('start-live-button').style.display = 'none'
@@ -184,6 +241,11 @@ export default {
             document.getElementById('chatroom').style.top = 'inherit'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
+        /**
+         * 弹出右边窗口
+         *
+         * @method popUp
+         */
         popUp: function () {
             document.getElementsByClassName('right-up-container')[0].style.display = 'block'
             this.hidden = false
@@ -192,6 +254,11 @@ export default {
             document.getElementById('chatroom').style.top = '42%'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
+        /**
+         * 左右子组件交换位置
+         *
+         * @method swap
+         */
         swap: function () {
             let teachingTools = document.getElementById('teaching-tools')
             teachingTools.className = teachingTools.className === 'left-container' ? 'right-up-container' : 'left-container'
@@ -203,6 +270,11 @@ export default {
             this.videoDisplayWidth = document.getElementById('video-display').clientWidth
             this.videoDisplayHeight = document.getElementById('video-display').clientHeight
         },
+        /**
+         * 更新学生数量
+         *
+         * @method changeNum
+         */
         changeNum: function () {
             if (this.username === this.teacherName) {
                 fetch('/changeNum/', {
@@ -219,9 +291,19 @@ export default {
                 }).then((response) => response.json()).then((obj) => { })
             }
         },
+        /**
+         * 获取学生数量
+         *
+         * @method getNum
+         */
         getNum: function (count) {
             this.studentNum = count
         },
+        /**
+         * 获取房间信息
+         *
+         * @method getRoomInfo
+         */
         getRoomInfo: function () {
             fetch('/getRoomInfo/', {
                 method: 'post',
@@ -239,6 +321,11 @@ export default {
                 this.teacherName = obj.teacherName
             })
         },
+        /**
+         * 获取用户名称
+         *
+         * @method getUsername
+         */
         getUsername: function () {
             let arrCookies = document.cookie.split(';')
             let account = ''

@@ -22,12 +22,24 @@
 </template>
 
 <script>
+/**
+ * 直播详情页，
+ * 包含正在直播的所有房间缩略图及信息。
+ *
+ * @module LivePage
+ * @class LivePage
+ */
 import LivePicture from './LivePicture'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
 
 export default {
     name: 'live-page',
+    /**
+     * created函数，调用getRooms函数
+     *
+     * @method created
+     */
     created: function () {
         this.getRooms()
     },
@@ -38,11 +50,30 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 表示导航栏的选择（首页、直播、录播）
+             *
+             * @attribute option
+             * @type Number
+             * @default 2 2表示当前处于直播详情页
+             */
             option: 2,
+            /**
+             * 存储所有正在直播的房间信息
+             *
+             * @attribute rooms
+             * @type Array
+             * @default []
+             */
             rooms: []
         }
     },
     methods: {
+        /**
+         * 获取房间信息
+         *
+         * @method getRooms
+         */
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',
@@ -60,7 +91,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .list {
     height: auto;

@@ -52,9 +52,22 @@
 </template>
 
 <script>
+/**
+ * 重置密码页
+ *
+ * @module Reset
+ * @class Reset
+ */
 import myMsg from './../warning.js'
 export default {
     data: function () {
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePass
+         * @readOnly
+         * @type Object
+         */
         const validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error(myMsg.account['passwordNeeded']))
@@ -65,6 +78,13 @@ export default {
                 callback()
             }
         }
+        /**
+         * 检验输入合法性
+         *
+         * @attribute validatePassCheck
+         * @readOnly
+         * @type Object
+         */
         const validatePassCheck = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error(myMsg.account['passwordAgain']))
@@ -75,7 +95,20 @@ export default {
             }
         }
         return {
+            /**
+             * 表示当前正在执行的操作（进度条状态）
+             *
+             * @attribute current
+             * @type Number
+             * @default 0
+             */
             current: 0,
+            /**
+             * 检验输入合法性
+             *
+             * @attribute formCustom
+             * @type Object
+             */
             formCustom: {
                 mail: '',
                 passwd: '',
@@ -83,6 +116,12 @@ export default {
                 verification: '',
                 loginKey: ''
             },
+            /**
+             * 检验输入合法性
+             *
+             * @attribute ruleCustom
+             * @type Object
+             */
             ruleCustom: {
                 mail: [
                     { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
@@ -100,10 +139,20 @@ export default {
         }
     },
     methods: {
+        /**
+         * 进度条进入下一个状态
+         *
+         * @method next
+         */
         next: function () {
             this.current = 0
             this.$router.push({ path: '/login' })
         },
+        /**
+         * 进度条进入下一个状态
+         *
+         * @method next
+         */
         getVerification: function () {
             fetch('/getRand/', {
                 method: 'post',
@@ -123,6 +172,11 @@ export default {
                 }
             })
         },
+        /**
+         * 检验验证码有效性
+         *
+         * @method checkKey
+         */
         checkKey: function () {
             if (this.formCustom.verification !== this.formCustom.loginKey) {
                 this.$Message.error(myMsg.account['verificationWrong'])
@@ -130,6 +184,11 @@ export default {
                 this.current = 2
             }
         },
+        /**
+         * 修改密码
+         *
+         * @method changePasswd
+         */
         changePasswd: function () {
             if (this.formCustom.passwd !== this.formCustom.passwdCheck) {
                 this.$Message.error(myMsg.account['passwordAgainWrong'])

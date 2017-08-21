@@ -23,6 +23,12 @@
 </template>
 
 <script>
+/**
+ * 录播详情页，显示所有录播房间的缩略图及房间信息。
+ *
+ * @module RecordPage
+ * @class RecordPage
+ */
 import RecordPicture from './RecordPicture'
 import HomePageHeader from './HomePageHeader'
 import PageFooter from './PageFooter'
@@ -37,6 +43,13 @@ export default {
         HomePageHeader,
         PageFooter
     },
+    /**
+     * 表示导航栏的选择（首页、直播、录播）
+     *
+     * @attribute option
+     * @type Number
+     * @default 3 3表示当前处于录播详情页
+     */
     data: function () {
         return {
             option: 3,

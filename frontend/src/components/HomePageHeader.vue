@@ -73,7 +73,7 @@
                             <label id="new-username">请输入新的昵称：</label>
                             <br>
                             <br>
-                            <Input v-model="newUserName" size="large" placeholder="请输入新的昵称"></Input>
+                            <Input v-model="newUsername" size="large" placeholder="请输入新的昵称"></Input>
                             <br>
                             <br>
                         </Modal>
@@ -88,27 +88,119 @@
 </template>
 
 <script>
+/**
+ * 页面的导航栏部分，
+ * 在首页、直播间、录播间、直播详情页、录播详情页作为子组件插入。
+ * 包含了直播网站的logo、名字等信息，有首页、直播、录播、登录注册等选项，
+ * 点击可进入相关页面。
+ * 用户在登录后可以看到自己的个人信息并且有修改昵称、密码等功能，
+ * 若用户拥有老师权限则可以进行创建房间。
+ *
+ * @module HomePageHeader
+ * @class HomePageHeader
+ */
 import myMsg from './../warning.js'
 export default {
     name: 'home-page-header',
+    /**
+     * 表示导航栏的选择（首页、直播、录播）
+     *
+     * @property myOption
+     * @type Number
+     */
     props: ['myOption'],
     components: {
     },
     data: function () {
         return {
+            /**
+             * 表示是否显示创建房间的消息框
+             *
+             * @attribute showCreateRoom
+             * @type Boolean
+             * @default false
+             */
             showCreateRoom: false,
+            /**
+             * 表示是否显示修改昵称的消息框
+             *
+             * @attribute showChangeName
+             * @type Boolean
+             * @default false
+             */
             showChangeName: false,
+            /**
+             * 表示当前用户是否为创建房间的老师
+             *
+             * @attribute isTeacher
+             * @type Boolean
+             * @default false
+             */
             isTeacher: false,
+            /**
+             * 表示用户昵称
+             *
+             * @attribute username
+             * @type String
+             * @default ''
+             */
             username: '',
+            /**
+             * 表示用户账号
+             *
+             * @attribute account
+             * @type String
+             * @default ''
+             */
             account: '',
+            /**
+             * 表示房间名称
+             *
+             * @attribute roomName
+             * @type String
+             * @default ''
+             */
             roomName: '',
-            newUserName: '',
+            /**
+             * 表示修改昵称时新输入的用户昵称
+             *
+             * @attribute newUsername
+             * @type String
+             * @default ''
+             */
+            newUsername: '',
+            /**
+             * 表示创建房间时缩略图的保存路径
+             *
+             * @attribute route
+             * @type String
+             * @default ''
+             */
             route: '',
+            /**
+             * 表示创建房间时上传的文件
+             *
+             * @attribute file
+             * @type null
+             */
             file: null,
-            loadingStatus: false,
-            hadImg: false
+            hadImg: false,
+            /**
+             * 表示创建房间时上传文件的状态
+             *
+             * @attribute loadingStatus
+             * @type Boolean
+             * @default false
+             */
+            loadingStatus: false
         }
     },
+    /**
+     * created函数，判断用户是否登录，
+     * 并且判断用户是否有老师权限。
+     *
+     * @method created
+     */
     created: function () {
         let arrCookies = document.cookie.split(';')
         for (let i = 0; i < arrCookies.length; i++) {
@@ -136,24 +228,58 @@ export default {
         handleMaxSize: function (file) {
             this.$Message.error('文件 ' + file.name + ' 图片太大，请上传10M以下的图片')
         },
+        /**
+         * 老师在创建房间上传文件时，
+         * 若文件格式不正确（支持ppt、pptx、key格式），
+         * 显示error消息框进行提示
+         *
+         * @method fileFormatError
+         * @param file 表示用户想要上传的文件
+         */
         fileFormatError: function (file) {
             this.file = null
             this.loadingStatus = false
             this.$Message.error('文件 ' + file.name + ' 格式不正确，请上传ppt、pptx或key格式的图片')
         },
+        /**
+         * 用户在创建房间上传封面图的时候，
+         * 若图片格式不正确（支持jpg、png格式），
+         * 显示error消息框进行提示
+         *
+         * @method imgFormatError
+         * @param file 用户想要上传的文件
+         */
         imgFormatError: function (file) {
             this.$Message.error('文件 ' + file.name + ' 格式不正确，请上传jpg或png格式的图片')
         },
+        /**
+         * 用户在上传文件前要进行的操作
+         *
+         * @method handleUpload
+         * @param file 用户想要上传的文件
+         */
         handleUpload: function (file) {
             this.file = file
             this.loadingStatus = true
             return true
         },
+        /**
+         * 用户上传文件成功时调用，弹出'上传成功'的消息框
+         *
+         * @method upload
+         */
         upload: function () {
             this.file = null
             this.loadingStatus = false
             this.$Message.success('上传成功')
         },
+        /**
+         * 用户上传封面图成功时调用，获取图片地址
+         *
+         * @method handleSuccess
+         * @param res
+         * @param file 上传的图片
+         */
         handleSuccess: function (res, file) {
             setTimeout(() => {
                 this.$refs.upload.fileList.splice(0, 1)
@@ -175,6 +301,11 @@ export default {
                 })
             }, 1500)
         },
+        /**
+         * 创建房间
+         *
+         * @method createRoom
+         */
         createRoom: function () {
             if (this.roomName === '') {
                 this.$Message.error(myMsg.room['nameNeeded'])
@@ -202,6 +333,11 @@ export default {
                 })
             }
         },
+        /**
+         * 修改昵称，在修改昵称的消息框中点击'OK'按钮时调用
+         *
+         * @method changeName
+         */
         changeName: function () {
             fetch('/changeName/', {
                 method: 'post',
@@ -212,29 +348,51 @@ export default {
                 },
                 body: JSON.stringify({
                     'account': this.account,
-                    'newname': this.newUserName
+                    'newname': this.newUsername
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.newUserName = ''
                 if (obj.result) {
-                    this.username = this.newUserName
+                    this.username = this.newUsername
                     this.$Message.success(myMsg.account['nameChanged'])
+                    this.newUsername = ''
                 } else {
                     this.$Message.error(myMsg.account['nameExist'])
+                    this.newUsername = ''
                 }
             })
         },
+        /**
+         * 跳转到登录页面，点击'登录'时触发
+         *
+         * @method login
+         */
         login: function () {
             this.$router.push({ path: '/login' })
         },
+        /**
+         * 跳转到注册页面，点击'注册'时触发
+         *
+         * @method signUp
+         */
         signUp: function () {
             this.$router.push({ path: '/signup' })
         },
+        /**
+         * 清除cookie，点击'注销账户'时触发
+         *
+         * @method clearCookie
+         */
         clearCookie: function () {
             let date = new Date()
             date.setTime(date.getTime() - 10000)
             document.cookie = 'userAccount=a; expires=' + date.toGMTString()
         },
+        /**
+         * 个人信息下拉栏的on-click响应事件
+         *
+         * @method dropDownClick
+         * @param name 表示当前登录用户的昵称
+         */
         dropDownClick: function (name) {
             if (name === 'changeName') {
                 this.showChangeName = true

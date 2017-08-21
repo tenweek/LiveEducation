@@ -39,6 +39,13 @@
 </template>
 
 <script>
+/**
+ * 直播网站的首页，
+ * 包含导航栏、直播列表、录播列表等信息
+ *
+ * @module HomePage
+ * @class HomePage
+ */
 import LivePicture from './LivePicture'
 import RecordPicture from './RecordPicture'
 import HomePageHeader from './HomePageHeader'
@@ -58,9 +65,23 @@ export default {
     },
     data: function () {
         return {
+            /**
+             * 存储所有房间信息
+             *
+             * @attribute rooms
+             * @type Array
+             * @default []
+             */
             rooms: [],
-            option: 1,
-            videoRooms: []
+            videoRooms: [],
+            /**
+             * 表示导航栏的选择（首页、直播、录播）
+             *
+             * @attribute option
+             * @type Number
+             * @default 1 1表示当前处于首页
+             */
+            option: 1
         }
     },
     methods: {
@@ -77,6 +98,11 @@ export default {
                 this.videoRooms = obj.rooms
             })
         },
+        /**
+         * 获取正在直播及录播房间信息
+         *
+         * @method getRooms
+         */
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',
@@ -94,7 +120,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .home-page {
     border: 1px solid #d7dde4;

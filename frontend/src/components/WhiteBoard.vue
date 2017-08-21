@@ -50,31 +50,197 @@
  */
 import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
+/**
+ * 用于判断鼠标在画图过程中是否移出canvas
+ *
+ * @attribute MIN
+ * @readOnly
+ * @default 0.005
+ * @type Number
+ */
 const MIN = 0.005
 export default {
     name: 'white-board',
+    /**
+     * 表示房间ID号
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     * 表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     * 表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+    /**
+     * 表示白板区域的宽，根据父组件大小动态变化
+     *
+     * @property teachingToolsWidth
+     * @type Number
+     */
+
+    /**
+     * 表示白板区域的长，根据父组件大小动态变化
+     *
+     * @property teachingToolsHeight
+     * @type Number
+     */
     props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'whiteBoardHeight', 'isOnLeft'],
     data: function () {
         return {
+            /**
+             * 表示当前老师选中的绘图功能
+             *
+             * @attribute type
+             * @type String
+             * @default 'pen'
+             */
             type: 'pen',
+            /**
+             * 获取canvas的上下文，指代页面上的绘图区域，
+             * 用于对白板操作。
+             *
+             * @attribute context
+             * @type null
+             */
             context: null,
+            /**
+             * 表示绘图过程中（mousemove时）上一次鼠标的位置，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute originPoint
+             * @type null
+             */
             originPoint: null,
+            /**
+             * 表示绘图过程中（mousemove时）上一次操作的绘图结果，
+             * 在没有画图操作的时候为空。
+             *
+             * @attribute lastImageData
+             * @type null
+             */
             lastImageData: null,
+            /**
+             * 表示画板上边框的颜色（第一个颜色选择器）
+             *
+             * @attribute colorBorder
+             * @type String
+             * @default 'rgba(0, 0, 0, 1)'
+             */
             colorBorder: 'rgba(0, 0, 0, 1)',
+            /**
+             * 表示画板上填充的颜色（第二个颜色选择器）
+             *
+             * @attribute colorFill
+             * @type String
+             * @default 'rgba(255, 255, 255, 1)'
+             */
             colorFill: 'rgba(255, 255, 255, 1)',
+            /**
+             * 表示是否选择"填充"按钮
+             *
+             * @attribute fill
+             * @type Boolean
+             * @default false
+             */
             fill: false,
+            /**
+             * 表示是否选择"边框"按钮
+             *
+             * @attribute border
+             * @type Boolean
+             * @default true
+             */
             border: true,
+            /**
+             * 表示是否选择粗细的大小
+             *
+             * @attribute size
+             * @type Number
+             * @default 1
+             */
             size: 1,
+            /**
+             * 表示文本输入框是否显示
+             *
+             * @attribute textField
+             * @type Boolean
+             * @default false
+             */
             textField: false,
+            /**
+             * 表示文本输入框中输入的文字
+             *
+             * @attribute textInput
+             * @type String
+             * @default ''
+             */
             textInput: '',
+            /**
+             * 表示绘制文字时文字起始位置的横坐标
+             *
+             * @attribute textLeft
+             * @type Number
+             * @default 0
+             */
             textLeft: 0,
+            /**
+             * 表示绘制文字时文字起始位置的纵坐标
+             *
+             * @attribute textTop
+             * @type Number
+             * @default 0
+             */
             textTop: 0,
+            /**
+             * 指向canvas画板对象
+             *
+             * @attribute canvas
+             * @type null
+             */
             canvas: null,
+            /**
+             * 存储画板上每次操作对应的图片
+             *
+             * @attribute allDataUrl
+             * @type Array
+             */
             allDataUrl: [],
-            currentImageData: null,
+            /**
+             * 表示一个指针，指向allDataUrl中当前画板的状态，
+             * 在undo操作时前移一个，从而实现undo操作。
+             *
+             * @attribute pointer
+             * @type Number
+             * @default 0
+             */
             pointer: 0,
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
-            roomId: '',
+            /**
+             * 表示老师是否选择开始直播，
+             * 在直播前，即started值为false时不能对白板区域进行任何操作。
+             *
+             * @attribute started
+             * @type Boolean
+             * @default false
+             */
             started: false
         }
     },
@@ -107,6 +273,11 @@ export default {
             }
         }
     },
+    /**
+     * mounted函数，初始化数据，客户端监听服务器消息
+     *
+     * @method mounted
+     */
     mounted: function () {
         ['mousemove', 'mousedown', 'mouseup'].map((eventName) => {
             this.$refs.board.addEventListener(eventName, ({ offsetX: x, offsetY: y, buttons }) => {
@@ -198,7 +369,10 @@ export default {
             }
         },
         /**
-         * 用户（创建房间的老师）点击粗细
+         * 用户（创建房间的老师）点击粗细选择大小时触发，
+         * 箱服务器发送click消息，data中包含"size"的信息
+         *
+         * @method changeSize
          */
         changeSize: function (name) {
             if (this.teacherName !== this.username) {
@@ -212,60 +386,120 @@ export default {
                 this.socket.emit('click', { type: 'sizeSmall' }, this.roomId + '.0')
             }
         },
+        /**
+         * 用户（创建房间的老师）点击橡皮擦按钮时触发，
+         * 向服务器发送click消息，data中包含"橡皮擦"信息
+         *
+         * @method clickEraser
+         */
         clickEraser: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'eraser' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击画笔按钮时触发，
+         * 向服务器发送click消息，data中包含"画笔"信息
+         *
+         * @method clickPen
+         */
         clickPen: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'pen' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击文字按钮时触发，
+         * 向服务器发送click消息，data中包含"文字"信息
+         *
+         * @method clickPen
+         */
         clickText: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'text' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击直线按钮时触发，
+         * 向服务器发送click消息，data中包含"直线"信息
+         *
+         * @method clickLine
+         */
         clickLine: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'line' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击矩形按钮时触发，
+         * 向服务器发送click消息，data中包含"矩形"信息
+         *
+         * @method clickRectangle
+         */
         clickRectangle: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'rectangle' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击圆形按钮时触发，
+         * 向服务器发送click消息，data中包含"圆形"信息
+         *
+         * @method clickCircle
+         */
         clickCircle: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'circle' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击椭圆按钮时触发，
+         * 向服务器发送click消息，data中包含"椭圆"信息
+         *
+         * @method clickEllipse
+         */
         clickEllipse: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'ellipse' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击边框按钮时触发，
+         * 向服务器发送click消息，data中包含"边框"信息
+         *
+         * @method clickBorder
+         */
         clickBorder: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'border' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）点击填充按钮时触发，
+         * 向服务器发送click消息，data中包含"填充"信息
+         *
+         * @method clickFill
+         */
         clickFill: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('click', { type: 'fill' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）在文本框输入文字后按下回车键是响应，
+         * 向服务器发送'message'消息，包含输入的文字信息
+         *
+         * @method drawText
+         */
         drawText: function () {
             if (this.teacherName !== this.username) {
                 return
@@ -276,18 +510,38 @@ export default {
                 input: input
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）按下清空按钮时响应，
+         * 向服务器发送'message'消息，包含"清空"信息
+         *
+         * @method clear
+         */
         clear: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('message', { type: 'clear' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）按下撤销按钮时响应，
+         * 向服务器发送'message'消息，包含"撤销"信息
+         *
+         * @method undo
+         */
         undo: function () {
             if (this.teacherName !== this.username) {
                 return
             }
             this.socket.emit('message', { type: 'undo' }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用画笔功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method penCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示当前鼠标在白板上的坐标
+         */
         penCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -304,6 +558,14 @@ export default {
                 color: this.colorBorder
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用文字功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据（在mouseup的时候响应）
+         *
+         * @method textCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示当前鼠标在白板上的坐标
+         */
         textCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -322,6 +584,14 @@ export default {
                 }, this.roomId + '.0')
             }
         },
+        /**
+         * 用户（创建房间的老师）使用橡皮擦功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method eraserCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示当前鼠标在白板上的坐标
+         */
         eraserCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -337,6 +607,14 @@ export default {
                 buttons: buttons
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用直线功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method lineCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示鼠标在白板上的坐标
+         */
         lineCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -353,6 +631,14 @@ export default {
                 color: this.colorBorder
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用画矩形功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method rectangleCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示鼠标在白板上的坐标
+         */
         rectangleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -371,6 +657,14 @@ export default {
                 fill: this.fill
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用画圆功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method circleCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示鼠标在白板上的坐标
+         */
         circleCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -389,6 +683,14 @@ export default {
                 fill: this.fill
             }, this.roomId + '.0')
         },
+        /**
+         * 用户（创建房间的老师）使用画椭圆功能对白板进行操作的时候响应，
+         * 向服务器发送操作的数据
+         *
+         * @method penCommand
+         * @param action 表示鼠标事件，包括mousedown、mousemove、mouseup
+         * @param { x, y, buttons} 其中x、y表示鼠标在白板上的坐标
+         */
         ellipseCommand: function (action, { x, y, buttons }) {
             if (this.teacherName !== this.username) {
                 return
@@ -407,6 +709,30 @@ export default {
                 fill: this.fill
             }, this.roomId + '.0')
         },
+        /**
+         * 判断绘图过程中鼠标是否移出canvas
+         *
+         * @method isOutCanvas
+         * @param data
+         * @return true表示鼠标移出canvas；false表示鼠标在canvas上
+         */
+        isOutCanvas: function (data) {
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return true
+            } else {
+                return false
+            }
+        },
+        /**
+         * 根据接收到的信息对画板进行画笔操作
+         *
+         * @method pen
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         pen: function (data) {
             this.colorBorder = data.color
             if (data.action === 'mousedown') {
@@ -421,15 +747,17 @@ export default {
                 this.allDataUrl.push(this.canvas.toDataURL())
             }
         },
+        /**
+         * 当从服务器接收到的信息是画笔操作，且鼠标事件为mousemove时调用。
+         *
+         * @method penMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         penMousemove: function (data) {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.pointer += 1
-                this.allDataUrl.push(this.canvas.toDataURL())
+            if (this.isOutCanvas(data) === true) {
                 return
             }
             const context = this.context
@@ -443,6 +771,12 @@ export default {
             context.closePath()
             this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
         },
+        /**
+         * 根据接收到的信息对画板进行橡皮擦操作
+         *
+         * @method eraser
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         eraser: function (data) {
             switch (data.action) {
                 case 'mousedown':
@@ -460,15 +794,17 @@ export default {
                     break
             }
         },
+        /**
+         * 当从服务器接收到的信息是橡皮擦操作，且鼠标事件为mousemove时调用。
+         *
+         * @method eraserMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         eraserMousemove: function (data) {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
             const context = this.context
@@ -476,6 +812,12 @@ export default {
             context.clearRect(ox, oy, this.size * 10, this.size * 10)
             this.originPoint = [data.x * this.teachingToolsWidth, data.y * this.teachingToolsHeight]
         },
+        /**
+         * 根据接收到的信息对画板进行直线操作
+         *
+         * @method line
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         line: function (data) {
             this.colorBorder = data.color
             switch (data.action) {
@@ -494,15 +836,17 @@ export default {
                     break
             }
         },
+        /**
+         * 当从服务器接收到的信息是直线操作，且鼠标事件为mousemove时调用。
+         *
+         * @method lineMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         lineMousemove: function (data) {
             if (this.originPoint == null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
             const context = this.context
@@ -516,6 +860,12 @@ export default {
             context.stroke()
             context.closePath()
         },
+        /**
+         * 根据接收到的信息对画板进行画矩形操作
+         *
+         * @method rectangle
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         rectangle: function (data) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
@@ -536,18 +886,28 @@ export default {
                     break
             }
         },
+        /**
+         * 当从服务器接收到的信息是画矩形操作，且鼠标事件为mousemove时调用。
+         *
+         * @method rectangleMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         rectangleMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.rectangleMousemoveDrawing(data)
+        },
+        /**
+         * 绘制矩形，在rectangleMousemove函数中调用
+         *
+         * @method rectangleMousemoveDrawing
+         * @param data 从服务器接收到的消息，包含绘图的操作数据
+         */
+        rectangleMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
@@ -565,6 +925,12 @@ export default {
             }
             context.closePath()
         },
+        /**
+         * 根据接收到的信息对画板进行画圆形操作
+         *
+         * @method circle
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         circle: function (data) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
@@ -585,18 +951,28 @@ export default {
                     break
             }
         },
+        /**
+         * 当从服务器接收到的信息是画圆形操作，且鼠标事件为mousemove时调用。
+         *
+         * @method circleMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         circleMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.circleMousemoveDrawing(data)
+        },
+        /**
+         * 绘制圆形，在circleMousemove函数中调用
+         *
+         * @method circleMousemoveDrawing
+         * @param data 从服务器接收到的信息，包含画图操作的数据
+         */
+        circleMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
@@ -615,6 +991,12 @@ export default {
             }
             context.closePath()
         },
+        /**
+         * 根据接收到的信息对画板进行画椭圆操作
+         *
+         * @method ellipse
+         * @param data 从服务器接收到的信息，包含对画板操作的数据
+         */
         ellipse: function (data) {
             this.colorBorder = data.colorBorder
             this.colorFill = data.colorFill
@@ -635,18 +1017,28 @@ export default {
                     break
             }
         },
+        /**
+         * 当从服务器接收到的信息是画椭圆操作，且鼠标事件为mousemove时调用。
+         *
+         * @method ellipseMousemove
+         * @param data 从服务器接收的信息，包括对画板进行操作的数据
+         */
         ellipseMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.ellipseMousemoveDrawing(data)
+        },
+        /**
+         * 绘制椭圆，在ellipseMousemove函数中调用
+         *
+         * @method ellipseMousemoveDrawing
+         * @param data 从服务器接收到的消息，包含画图操作的各种数据
+         */
+        ellipseMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
@@ -668,12 +1060,27 @@ export default {
             }
             context.closePath()
         },
+        /**
+         * 在'whiteBoardDoing'函数中调用，
+         * 接收到服务器消息后清空画板
+         *
+         * @method boardClear
+         * @param data 从服务器接收到的数据，包含"清空"信息
+         */
         boardClear: function (data) {
             this.context.clearRect(0, 0, this.whiteBoardWidth, this.whiteBoardHeight)
             this.allDataUrl = []
             this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer = 0
         },
+        /**
+         * 在'whiteBoardDoing'函数中调用，
+         * 根据服务器传来的信息更新自己的数据，
+         * 同步到老师端。
+         *
+         * @method textBox
+         * @param data 从服务器接收到的数据，包含文字坐标、颜色等信息
+         */
         textBox: function (data) {
             if (data.action === 'mouseup') {
                 this.textLeft = data.x * this.whiteBoardWidth
@@ -681,6 +1088,13 @@ export default {
                 this.colorBorder = data.color
             }
         },
+        /**
+         * 在'whiteBoardDoing'函数中调用，
+         * 将指定文本内容画到画板上
+         *
+         * @method font
+         * @param data 从服务器接收到的数据，包含文本内容等信息
+         */
         font: function (data) {
             this.textField = false
             this.context.font = (this.size * 5 + 25) + 'px serif'
@@ -690,7 +1104,13 @@ export default {
             this.allDataUrl.push(this.canvas.toDataURL())
             this.pointer += 1
         },
-        boardUndo: function (data) {
+        /**
+         * 在'whiteBoardDoing'函数中调用，
+         * 接收到服务器端的信息后，执行undo操作
+         *
+         * @method boardUndo
+         */
+        boardUndo: function () {
             if (this.started === false) {
                 return
             }
@@ -704,6 +1124,12 @@ export default {
                 this.allDataUrl.length = this.pointer + 1
             }
         },
+        /**
+         * 当用户接收到'message'消息时，对画板进行绘图操作
+         *
+         * @method whiteBoardDoing
+         * @param data 从服务器接收到的信息，包括在画板上操作的坐标、颜色、形状等信息
+         */
         whiteBoardDoing: function (data) {
             if (data.type === 'pen') {
                 this.pen(data)
@@ -718,15 +1144,22 @@ export default {
             } else if (data.type === 'ellipse') {
                 this.ellipse(data)
             } else if (data.type === 'clear') {
-                this.clear(data)
+                this.boardClear(data)
             } else if (data.type === 'textField') {
                 this.textBox(data)
             } else if (data.type === 'drawText') {
                 this.font(data)
             } else if (data.type === 'undo') {
-                this.boardUndo(data)
+                this.boardUndo()
             }
         },
+        /**
+         * 用户在开始直播后接收到'click'消息后，
+         * 根据传输数据的类型，改变相应属性，完成点击按钮事件的响应。
+         *
+         * @method buttonDoing
+         * @param data 从服务器端接收到的信息，包括点击的按钮类型
+         */
         buttonDoing: function (data) {
             if (data.type === 'eraser') {
                 this.type = 'eraser'
@@ -754,6 +1187,14 @@ export default {
                 this.size = 1
             }
         },
+        /**
+         * 当用户（创建房间的老师）接收到'newJoin'消息时调用，
+         * 老师直播过程中有新的用户进入房间，
+         * 老师就把自己对白板操作的信息都发送到服务器，
+         * 以达到学生同步的目的。
+         *
+         * @method joinDoing
+         */
         joinDoing: function () {
             if (this.teacherName !== this.username) {
                 return
@@ -766,6 +1207,14 @@ export default {
                 dataUrl: this.allDataUrl
             }, this.roomId + '.0')
         },
+        /**
+         * 当用户接收到'updateWhiteBoardMessage'消息时调用
+         * （老师直播过程中有新的用户进入房间），
+         * 将自己的信息同步到老师端
+         *
+         * @method updateMessageDoing
+         * @param data 从服务器接收的信息，包括老师端对画板操作的所有信息
+         */
         updateMessageDoing: function (data) {
             if (this.teacherName !== this.username) {
                 this.allDataUrl = data.dataUrl
@@ -777,6 +1226,12 @@ export default {
                 this.drawDataUrl(this.allDataUrl[this.pointer])
             }
         },
+        /**
+         * 将指定dataURL画到canvas上
+         *
+         * @method drawDataUrl
+         * @param dataUrl 将要画到canvas上的base64编码的图形对象
+         */
         drawDataUrl: function (dataUrl) {
             let img = new Image()
             let that = this
