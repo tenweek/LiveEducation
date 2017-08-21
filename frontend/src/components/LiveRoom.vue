@@ -1,5 +1,6 @@
 <template>
     <div id="bg">
+        <div id="cover"></div>
         <div id="live-room">
             <div class="header">
                 <home-page-header></home-page-header>
@@ -194,6 +195,7 @@ export default {
     },
     methods: {
         closeLive: function () {
+            document.getElementById('cover').style.display = 'inline'
             this.socket.emit('closeLive', this.roomId)
             fetch('/closeLiveRoom/', {
                 method: 'post',
@@ -465,5 +467,16 @@ export default {
 #hide-button {
     height: 41px;
     border: none;
+}
+
+#cover {
+    display: none;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    position: absolute;
 }
 </style>
