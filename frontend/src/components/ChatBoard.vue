@@ -52,7 +52,7 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
-    props: ['roomId', 'teacherName', 'username', 'aboveIsHidden', 'containerHeight'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight'],
     data: function () {
         return {
             /**
@@ -386,15 +386,6 @@ export default {
         }
     },
     watch: {
-        aboveIsHidden: function (newVal, oldVal) {
-            if (newVal) {
-                document.getElementById('messages').style.height = '90%'
-                document.getElementById('chat-board').style.height = '76vmin'
-            } else {
-                document.getElementById('messages').style.height = '87%'
-                document.getElementById('chat-board').style.height = '40vmin'
-            }
-        },
         containerHeight: function (newVal, oldVal) {
             document.getElementById('chat-board').style.height = (newVal - 44) + 'px'
         }

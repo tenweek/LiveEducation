@@ -134,10 +134,10 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            this.whiteBoardWidth = newVal - 74 - 32
+            this.whiteBoardHeight = newVal - 32 - 32
         },
         containerWidth: function (newVal, oldVal) {
-            this.whiteBoardWidth = newVal - 32 - 32
+            this.whiteBoardWidth = newVal - 74 - 32
         }
     }
 }
