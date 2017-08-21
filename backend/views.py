@@ -321,10 +321,9 @@ def getName(request):
 @csrf_exempt
 def createRoom(request):
     req = simplejson.load(request)
-    roomName = req['roomName']
-    authId = req['account']
-    teacher = User.objects.get(username=authId)
-    room = Room.objects.create(teacher=teacher, room_name=roomName)
+    teacher = User.objects.get(username=req['account'])
+    room = Room.objects.create(teacher=teacher, room_name=req['roomName'])
+    RoomStudent.objects.create(room=room, student=teacher)
     path = "./frontend/static/" + str(room.id)
     os.makedirs(path)
     os.mknod(path + "/" + str(room.id) + ".txt")
