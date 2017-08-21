@@ -85,12 +85,12 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'roomID': this.id,
+                    'roomID': this.id
                 })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result === 'cannot') {
                     this.$Message.error(myMsg.room['cannotJoin'])
-                } else if(obj.result==='login'){
+                } else if (obj.result === 'login') {
                     this.$Message.error(myMsg.account['loginNeeded'])
                 } else {
                     window.open('./#/live_room/' + this.id)
