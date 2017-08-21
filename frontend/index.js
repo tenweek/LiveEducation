@@ -26,12 +26,9 @@ const basicPath = './static/'
 io.on('connection', function (socket) {
     let id = 0
     let idForLeave = 0
-    // 这个起始时间应该要进行修改
-    const TIME = process.uptime() * 1000
+    // 向录播间广播
     socket.on('joinTest', function (roomId, account) {
-        console.log('录播室加入')
         socket.join(account)
-        // 像聊天室打印信息
         const rl = readline.createInterface({
             input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
         });
@@ -63,7 +60,7 @@ io.on('connection', function (socket) {
             }
         })
     })
-    // 加入房间 用于广播是否开始直播
+    // 加入房间
     socket.on('joinRoom', function (roomId) {
         console.log('room connected')
         socket.join(roomId)
@@ -123,6 +120,7 @@ io.on('connection', function (socket) {
             })
         })
         io.to(roomId).emit('time', time)
+        io.to(roomId).emit('startVideo')
         io.to(chatroom).emit('getStarted')
         io.to(whiteboard).emit('getStarted')
     })
