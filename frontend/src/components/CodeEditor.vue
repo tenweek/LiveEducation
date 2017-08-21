@@ -25,7 +25,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
-    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth', 'isOnLeft'],
+    props: ['roomId', 'teacherName', 'username', 'containerHeight', 'isOnLeft'],
     data: function () {
         return {
             /**
@@ -109,6 +109,7 @@ export default {
                 self.code = data['code']
             })
         }
+        document.getElementsByClassName('CodeMirror')[0].style.maxHeight = (this.containerHeight - 32) + 'px'
     },
     watch: {
         code: function (newcode, oldcode) {
@@ -120,7 +121,7 @@ export default {
             }
         },
         containerHeight: function (newVal, oldVal) {
-            document.getElementById('code-editor').style.height = (newVal - 32) + 'px'
+            document.getElementsByClassName('CodeMirror')[0].style.maxHeight = (this.containerHeight - 32) + 'px'
         }
     }
 }
