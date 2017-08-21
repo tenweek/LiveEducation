@@ -208,8 +208,9 @@ export default {
             }).then((response) => response.json()).then((obj) => { })
         },
         startRecord: function () {
-            this.socket.on('time', function (time) {
-                this.startTime = time
+            let self = this
+            self.socket.on('time', function (time) {
+                self.startTime = time
                 fetch('/startRecord/', {
                     method: 'post',
                     mode: 'cors',
@@ -218,8 +219,8 @@ export default {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        'channel': this.roomId,
-                        'time': this.startTime
+                        'channel': self.roomId,
+                        'time': self.startTime
                     })
                 }).then((response) => response.json()).then((obj) => { })
             })

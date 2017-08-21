@@ -55,7 +55,7 @@ def startRecord(request):
         --channel "' + channel + '" \
         --appliteDir "./backend/record/bin/" \
         --channelProfile 1 \
-        --idle 3 \
+        --idle 10 \
         --recordFileRootDir "./frontend/static/record/"'
     os.system(connect)
     path = './frontend/static/record/' + \

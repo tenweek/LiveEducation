@@ -11,9 +11,6 @@
             </div>
         </div>
         <div class="control-panel">
-            <button @click="join">
-                <Icon id="join" type="android-arrow-dropright-circle"></Icon>
-            </button>
             <template v-if="this.username === this.teacherName">
                 <button @click="play" id="play">
                     <Icon type="play"></Icon>
@@ -37,7 +34,10 @@
     </Card>
 </template>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
+import * as io from 'socket.io-client'
+
 /**
  * 视频直播区域
  *
@@ -133,7 +133,8 @@ export default {
              * @type Boolean
              * @default false
              */
-            isTeacher: false
+            isTeacher: false,
+            socket: ''
         }
     },
     /**
@@ -143,6 +144,8 @@ export default {
      */
     created: function () {
         this.isTeacher = this.username === this.teacherName
+        this.socket = io.connect('http://localhost:9000')
+        this.socket.emit('joinRoom', this.roomId)
     },
     /**
      * mounted函数，初始化相关数据
@@ -153,6 +156,10 @@ export default {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
         document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
+        let self = this
+        self.socket.on('startVideo', function () {
+            self.join()
+        })
     },
     methods: {
         /**
@@ -197,7 +204,6 @@ export default {
          * @method join
          */
         join: function () {
-            document.getElementById('join').disable = true
             this.clientInit()
             this.client.on('error', function (err) {
                 console.log('Got error msg:', err.reason)
