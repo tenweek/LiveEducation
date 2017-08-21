@@ -289,6 +289,24 @@ export default {
             }
         },
         /**
+         * 判断绘图过程中鼠标是否移出canvas
+         *
+         * @method isOutCanvas
+         * @param data
+         * @return true表示鼠标移出canvas；false表示鼠标在canvas上
+         */
+        isOutCanvas: function (data) {
+            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
+                this.originPoint = null
+                this.lastImageData = null
+                this.allDataUrl.push(this.canvas.toDataURL())
+                this.pointer += 1
+                return true
+            } else {
+                return false
+            }
+        },
+        /**
          * 根据接收到的信息对画板进行画笔操作
          *
          * @method pen
@@ -318,11 +336,7 @@ export default {
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.pointer += 1
-                this.allDataUrl.push(this.canvas.toDataURL())
+            if (this.isOutCanvas(data) === true) {
                 return
             }
             const context = this.context
@@ -415,11 +429,7 @@ export default {
             if (this.originPoint == null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
             const context = this.context
@@ -466,17 +476,21 @@ export default {
          * @param data 从服务器接收的信息，包括对画板进行操作的数据
          */
         rectangleMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.rectangleMousemoveDrawing (data)
+        },
+        /**
+         * 绘制矩形，在rectangleMousemove函数中调用
+         *
+         * @method rectangleMousemoveDrawing
+         * @param data 从服务器接收到的消息，包含绘图的操作数据
+         */
+        rectangleMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
@@ -527,17 +541,21 @@ export default {
          * @param data 从服务器接收的信息，包括对画板进行操作的数据
          */
         circleMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.circleMousemoveDrawing(data)
+        },
+        /**
+         * 绘制圆形，在circleMousemove函数中调用
+         *
+         * @method circleMousemoveDrawing
+         * @param data 从服务器接收到的信息，包含画图操作的数据
+         */
+        circleMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
@@ -589,17 +607,21 @@ export default {
          * @param data 从服务器接收的信息，包括对画板进行操作的数据
          */
         ellipseMousemove: function (data) {
-            // TODO:拆分函数
             if (this.originPoint === null) {
                 return
             }
-            if (data.x < MIN || data.x > (1 - MIN) || data.y < MIN || data.y > (1 - MIN)) {
-                this.originPoint = null
-                this.lastImageData = null
-                this.allDataUrl.push(this.canvas.toDataURL())
-                this.pointer += 1
+            if (this.isOutCanvas(data) === true) {
                 return
             }
+            this.ellipseMousemoveDrawing(data)
+        },
+        /**
+         * 绘制椭圆，在ellipseMousemove函数中调用
+         *
+         * @method ellipseMousemoveDrawing
+         * @param data 从服务器接收到的消息，包含画图操作的各种数据
+         */
+        ellipseMousemoveDrawing: function (data) {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
