@@ -56,7 +56,7 @@
                     <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight"></video-display>
                 </div>
                 <div id="chatroom">
-                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.chatBoardHeight" ></chat-board>
+                    <chat-board v-on:stuNum="getNum" :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.chatBoardHeight"></chat-board>
                 </div>
             </div>
             <div>
@@ -140,7 +140,8 @@ export default {
             teachingToolsHeight: 0,
             teachingToolsWidth: 0,
             videoDisplayHeight: 0,
-            chatBoardHeight: 0
+            chatBoardHeight: 0,
+            intervalNum: -1
         }
     },
     /**
@@ -154,7 +155,7 @@ export default {
         this.socket.emit('joinRoom', this.roomId)
         this.getRoomInfo()
         this.getUsername()
-        window.setInterval(this.changeNum, 5000)
+        this.intervalNum = window.setInterval(this.changeNum, 5000)
     },
     /**
      * mounted函数，初始化教学区域和白板区域的长和高，
@@ -186,23 +187,10 @@ export default {
         }
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
+            window.clearInterval(self.intervalNum)
             setTimeout(window.close, 3000)
         })
-        self.socket.on('time', function (time) {
-            self.startTime = time
-            fetch('/startRecord/', {
-                method: 'post',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    'channel': self.roomId,
-                    'time': self.startTime
-                })
-            }).then((response) => response.json()).then((obj) => { })
-        })
+        self.startRecord()
     },
     methods: {
         closeLive: function () {
@@ -218,6 +206,23 @@ export default {
                     'roomId': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => { })
+        },
+        startRecord: function () {
+            this.socket.on('time', function (time) {
+                this.startTime = time
+                fetch('/startRecord/', {
+                    method: 'post',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json, text/plain, */*',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'channel': this.roomId,
+                        'time': this.startTime
+                    })
+                }).then((response) => response.json()).then((obj) => { })
+            })
         },
         /**
          * 开始直播，发送'startLive'消息
