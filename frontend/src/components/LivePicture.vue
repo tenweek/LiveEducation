@@ -63,12 +63,6 @@ export default {
     data: function () {
         return {}
     },
-    /**
-     * created函数，获取用户账号，
-     * 判断该用户是否登录。
-     *
-     * @method created
-     */
     methods: {
         /**
          * 获取房间信息
