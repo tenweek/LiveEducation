@@ -28,9 +28,9 @@ io.on('connection', function (socket) {
     let idForLeave = 0
     // 这个起始时间应该要进行修改
     const TIME = process.uptime() * 1000
-    socket.on('joinTest', function (roomId) {
+    socket.on('joinTest', function (roomId, account) {
         console.log('录播室加入')
-        socket.join(roomId)
+        socket.join(account)
         // 像聊天室打印信息
         const rl = readline.createInterface({
             input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
@@ -42,21 +42,23 @@ io.on('connection', function (socket) {
                 startTime = json['startTime']
             } else if (json['type'] === 'chatroom') {
                 setTimeout(function () {
-                    io.to(roomId).emit('chatroom', json)
+                    io.to(account).emit('chatroom', json)
                 }, json['time'] - startTime)
             } else if (json['type'] === 'file') {
                 setTimeout(function () {
-                    io.to(roomId).emit('filedisplay', json)
+                    io.to(account).emit('filedisplay', json)
                 }, json['time'] - startTime)
             } else if (json['type'] === 'code') {
-                console.log('code')
+                setTimeout(function () {
+                    io.to(account).emit('code', json)
+                }, json['time'] - startTime)
             } else if (json['type'] === 'changeComponents') {
                 setTimeout(function () {
-                    io.to(roomId).emit('changeCurrent', json)
+                    io.to(account).emit('changeCurrent', json)
                 }, json['time'] - startTime)
             } else {
                 setTimeout(function () {
-                    io.to(roomId).emit('whiteboard', json)
+                    io.to(account).emit('whiteboard', json)
                 }, json['time'] - startTime)
             }
         })

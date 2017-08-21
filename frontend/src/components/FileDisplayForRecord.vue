@@ -28,7 +28,7 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
-    props: ['roomId'],
+    props: ['roomId', 'userAccount'],
     data: function () {
         return {
             socket: '',
@@ -42,7 +42,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', this.roomId)
+        self.socket.emit('joinTest', this.roomId, this.userAccount + 'f')
         self.socket.on('filedisplay', function (data) {
             self.teacherId = data['teacherId']
             self.fileNum = data['fileNum']

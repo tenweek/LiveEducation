@@ -13,7 +13,7 @@ import myMsg from './../warning.js'
 const MIN = 0.005
 export default {
     name: 'white-board',
-    props: ['roomId', 'teachingToolsWidth', 'teachingToolsHeight'],
+    props: ['roomId', 'userAccount', 'teachingToolsWidth', 'teachingToolsHeight'],
     data: function () {
         return {
             type: 'pen',
@@ -73,7 +73,7 @@ export default {
             this.canvas.style.cursor = 'default'
             this.allDataUrl.push(this.canvas.toDataURL())
             this.socket = io.connect('http://localhost:9000')
-            this.socket.emit('joinTest', this.roomId)
+            this.socket.emit('joinTest', this.roomId, this.userAccount + 'w')
         },
         changeEraserCursor: function () {
             if (this.size === 1) {
