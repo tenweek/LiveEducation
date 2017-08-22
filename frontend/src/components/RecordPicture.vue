@@ -1,13 +1,13 @@
 <template>
-    <Card id="record-picture" padding="8">
+    <Card padding="0">
         <div class="picture">
             <a @click="recordRoom">
                 <div class="for-img">
                     <img :src="this.route" width="100%">
                 </div>
-                <label id="information-room-name">房间名:{{ this.roomName }}</label>
+                <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
                 <br>
-                <label id="information-teacher-name">主讲教师: {{ this.teacherName }}</label>
+                <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
             </a>
         </div>
     </Card>
@@ -84,15 +84,16 @@ export default {
 <style scoped>
 .picture {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
     font-size: 14px;
     text-align: left;
+    overflow: hidden;
 }
 
 .for-img {
     width: 100%;
-    height: auto;
+    overflow: hidden;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 #information-room-name {

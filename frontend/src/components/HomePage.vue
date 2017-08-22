@@ -140,15 +140,25 @@ export default {
 .list {
     height: auto;
     min-height: 295px;
-    width: 65%;
+    width: 85%;
     min-width: 800px;
-    max-width: 1000px;
+    max-width: 1200px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     margin: auto;
     overflow: hidden;
     background: white;
     padding-top: 8px;
+}
+
+.list-hint {
+    height: 45px;
+    line-height: 45px;
+    width: 96%;
+    font-size: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: solid #e9eaec 1px;
 }
 
 .list-picture {
@@ -163,26 +173,14 @@ export default {
 }
 
 .every-picture {
-    width: 20%;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-top: 10px;
+    width: 22%;
+    margin: 10px 1%;
 }
 
 .live-picture {
     width: 100%;
     height: auto;
     margin: auto;
-}
-
-.list-hint {
-    height: 45px;
-    line-height: 45px;
-    width: 100%;
-    font-size: 25px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-bottom: solid;
 }
 
 .icon-middle {

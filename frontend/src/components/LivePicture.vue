@@ -1,16 +1,18 @@
 <template>
-    <Card id="live-picture" padding="8">
+    <Card padding="0">
         <div class="picture">
             <a @click="liveRoom">
                 <div class="for-img">
                     <img :src="this.userImg" width="100%">
                 </div>
-                <label id="information-room-name">房间名:{{ this.roomName }}</label>
-                <br>
-                <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
-                <label class="person">
-                    <Icon type="person"></Icon>{{ this.studentNum }}
-                </label>
+                <div class="infomation">
+                    <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
+                    <br>
+                    <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                    <label class="person">
+                        <Icon type="android-people"></Icon>&nbsp{{ this.studentNum }}
+                    </label>
+                </div>
             </a>
         </div>
     </Card>
@@ -61,7 +63,9 @@ export default {
     components: {
     },
     data: function () {
-        return {}
+        return {
+            imageWidth: 0
+        }
     },
     methods: {
         /**
@@ -91,6 +95,27 @@ export default {
                 }
             })
         }
+    },
+    mounted: function () {
+        let self = this
+        if (document.getElementsByClassName('for-img').length > 0) {
+            this.imageWidth = document.getElementsByClassName('for-img')[0].clientWidth
+            for (let i = 0; i < document.getElementsByClassName('for-img').length; i++) {
+                let img = document.getElementsByClassName('for-img')[i]
+                img.style.maxHeight = this.imageWidth / 1.6 + 'px'
+                img.getElementsByTagName('img')[0].style.minHeight = this.imageWidth / 1.6 + 'px'
+            }
+        }
+        window.onresize = function () {
+            if (document.getElementsByClassName('for-img').length > 0) {
+                self.imageWidth = document.getElementsByClassName('for-img')[0].clientWidth
+                for (let i = 0; i < document.getElementsByClassName('for-img').length; i++) {
+                    let img = document.getElementsByClassName('for-img')[i]
+                    img.style.maxHeight = self.imageWidth / 1.6 + 'px'
+                    img.getElementsByTagName('img')[0].style.minHeight = self.imageWidth / 1.6 + 'px'
+                }
+            }
+        }
     }
 }
 </script>
@@ -98,15 +123,16 @@ export default {
 <style scoped>
 .picture {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
     font-size: 14px;
     text-align: left;
+    overflow: hidden;
 }
 
 .for-img {
     width: 100%;
-    height: 105px;
+    overflow: hidden;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 #information-room-name {
