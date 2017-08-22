@@ -193,7 +193,7 @@ def changeNum(request):
 @csrf_exempt
 def upload(request):
     uploadFile = request.FILES.get('myfile')
-    account = request.COOKIES.get('userAccount')
+    account = request.session.get('account')
     uploadUser = User.objects.get(username=account)
     oldImg = uploadUser.user_img
     uploadUser.user_img = uploadFile
