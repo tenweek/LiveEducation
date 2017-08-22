@@ -9,7 +9,7 @@
                 <div>
                     <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
                         <Form-item label="邮箱" prop="mail">
-                            <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
+                            <Input placeholder="请输入注册邮箱或手机" v-model="formCustom.mail"></Input>
                         </Form-item>
                         <Form-item label="用户名" prop="username">
                             <Input placeholder="请输入用户名" v-model="formCustom.username"></Input>
@@ -26,10 +26,43 @@
                                 <Input v-model="formCustom.verification" placeholder="请输入验证码"></Input>
                                 </Col>
                                 <Col span="7">
-                                <Button type="ghost" @click="getVerification">获取验证码</Button>
+                                <Button type="ghost" @click="toLoading">
+                                    <span v-if="phoneTestLoading===1">获取验证码!</span>
+                                    <span v-else-if="phoneTestLoading===2">（{{this.lastTime}}s）后重新发送</span>
+                                    <span v-else-if="phoneTestLoading===3">重新发送</span>
+                                </Button>
                                 </Col>
                             </Row>
                         </Form-item>
+                        <!-- <Form-item label="验证码" prop="vertification">
+                                <Row>
+                                    <Col span="17">
+                                    <Input v-model="formCustom.verification" placeholder="请输入验证码"></Input>
+                                    </Col>
+                                    <Col span="7">
+                                    <Button type="ghost" @click="getVerification">获取验证码</Button>
+                                    </Col>
+                                </Row>
+                            </Form-item>
+                            <Form-item label="手机" prop="phone">
+                                <Input placeholder="请输入注册手机" v-model="formCustom.phone"></Input>
+                            </Form-item>
+                            <Form-item label="手机验证码" prop="phoneTest">
+                                <Row>
+                                    <Col span="17">
+                                    <Input v-model="formCustom.phoneTest" placeholder="请输入验证码"></Input>
+                                    </Col>
+                                    <Col span="7">
+
+                                    <Button type="ghost" @click="toLoading">
+                                        <span v-if="phoneTestLoading===1">获取验证码!</span>
+                                        <span v-else-if="phoneTestLoading===2">（{{this.lastTime}}s）后重新发送</span>
+                                        <span v-else-if="phoneTestLoading===3">重新发送</span>
+                                    </Button>
+
+                                    </Col>
+                                </Row>
+                            </Form-item> -->
                         <Form-item>
                             <Button type="primary" @click="signUp" id="signup-btn">确认注册</Button>
                         </Form-item>
@@ -83,6 +116,8 @@ export default {
             }
         }
         return {
+            lastTime: 60,
+            phoneTestLoading: 1,
             /**
              * 检验输入合法性
              *
@@ -105,9 +140,11 @@ export default {
              * @type Object
              */
             ruleCustom: {
+                username: [
+                    { required: true, massage: 'name needed', trigger: 'blur' }
+                ],
                 mail: [
-                    { required: true, message: myMsg.account['passwordAgain'], trigger: 'blur' },
-                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
+                    { required: true, message: '请输入邮箱或手机号', trigger: 'blur' }
                 ],
                 passwd: [
                     { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
@@ -121,6 +158,54 @@ export default {
         }
     },
     methods: {
+        timeLess: function () {
+            setTimeout(() => {
+                if (this.lastTime > 0) {
+                    this.lastTime = this.lastTime - 1
+                    this.timeLess()
+                }
+                else {
+                    this.phoneTestLoading = 3
+                    this.lastTime = 60
+                }
+            }, 1000)
+        },
+        toLoading: function () {
+            if (this.checkEmailAndPhone() === 0) {
+                return
+            }
+            else if (this.checkEmailAndPhone() === 1) {
+                this.getVerification()
+                this.phoneTestLoading = 2
+                this.timeLess()
+            }
+            else if (this.checkEmailAndPhone() === 2) {
+                this.phoneForTest()
+                this.phoneTestLoading = 2
+                this.timeLess()
+            }
+        },
+        phoneForTest: function () {
+            fetch('/phoneTest/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'phoneNum': this.formCustom.mail
+                })
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.verification === 'exist') {
+                    this.$Message.error(myMsg.account['accountExist'])
+                    return
+                }
+                this.formCustom.loginKey = obj.verification
+                this.formCustom.mailChecked = this.formCustom.mail
+                console.log(this.formCustom.loginKey)
+            })
+        },
         /**
          * 注册前进行输入有效性检查，
          * 当输入不合法时，弹出消息框提示。
@@ -191,17 +276,23 @@ export default {
          * @method checkEmail
          * @return true表示输入合法，false表示输入不合法，并弹出消息框
          */
-        checkEmail: function () {
+        checkEmailAndPhone: function () {
             if (this.formCustom.mail === '') {
-                this.$Message.error(myMsg.account['mailNeeded'])
-                return false
+                this.$Message.error("请输入邮箱或手机号")
+                return 0
             }
-            let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
-            if (!this.formCustom.mail.match(reg)) {
-                this.$Message.error(myMsg.account['mailFormatWrong'])
-                return false
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (this.formCustom.mail.match(regMail)) {
+                return 1
             }
-            return true
+            else if (this.formCustom.mail.match(regPhone)) {
+                return 2
+            }
+            else {
+                this.$Message.error("请输入正确邮箱或手机号")
+                return 0
+            }
         },
         /**
          * 获取验证码
@@ -209,9 +300,6 @@ export default {
          * @method getVerification
          */
         getVerification: function () {
-            if (!this.checkEmail()) {
-                return
-            }
             fetch('/getVerification/', {
                 method: 'post',
                 mode: 'cors',

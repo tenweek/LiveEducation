@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views
+from . import views, phoneViews
 from django.views.generic import TemplateView
 
 
@@ -31,5 +31,7 @@ urlpatterns = [
     url(r'^closeLiveRoom/$', views.closeLiveRoom),
     url(r'^getVideoRooms/$', views.getVideoRooms),
     url(r'^getVideoRoomInfo/$', views.getVideoRoomInfo),
-    url(r'^startRecord/$', views.startRecord)
+    url(r'^startRecord/$', views.startRecord),
+    url(r'^phoneTest/$', phoneViews.phoneTest),
+    url(r'^phoneRand/$', phoneViews.phoneRand)
 ]
