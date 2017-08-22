@@ -274,9 +274,6 @@ export default {
                 colorFill: this.colorFill
             }, this.roomId + '.0')
         },
-        containerHeight: function (newVal, oldVal) {
-            document.getElementById('canvas').height = newVal
-        },
         isOnLeft: function (newVal, oldVal) {
             if (newVal) {
                 document.getElementById('tools').style.display = 'inline-block'
@@ -778,10 +775,10 @@ export default {
             context.lineWidth = this.size
             context.beginPath()
             context.moveTo(ox, oy)
-            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.containerHeight)
             context.stroke()
             context.closePath()
-            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.containerHeight]
         },
         /**
          * 根据接收到的信息对画板进行橡皮擦操作
@@ -822,7 +819,7 @@ export default {
             const context = this.context
             const [ox, oy] = this.originPoint
             context.clearRect(ox, oy, this.size * 10, this.size * 10)
-            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight]
+            this.originPoint = [data.x * this.whiteBoardWidth, data.y * this.containerHeight]
         },
         /**
          * 根据接收到的信息对画板进行直线操作
@@ -868,7 +865,7 @@ export default {
             context.lineWidth = this.size
             context.beginPath()
             context.moveTo(ox, oy)
-            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.whiteBoardHeight)
+            context.lineTo(data.x * this.whiteBoardWidth, data.y * this.containerHeight)
             context.stroke()
             context.closePath()
         },
@@ -923,7 +920,7 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
+            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.containerHeight - oy]
             context.lineWidth = this.size
             context.beginPath()
             context.rect(ox, oy, dx, dy)
@@ -988,11 +985,11 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.whiteBoardHeight - oy]
+            const [dx, dy] = [data.x * this.whiteBoardWidth - ox, data.y * this.containerHeight - oy]
             const radius = Math.sqrt(dx * dx, dy * dy)
             context.lineWidth = this.size
             context.beginPath()
-            context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.whiteBoardHeight + oy) / 2, radius, 0, 2 * Math.PI)
+            context.arc((ox + data.x * this.whiteBoardWidth) / 2, (data.y * this.containerHeight + oy) / 2, radius, 0, 2 * Math.PI)
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
                 context.fill()
@@ -1054,14 +1051,14 @@ export default {
             const context = this.context
             context.putImageData(this.lastImageData, 0, 0)
             const [ox, oy] = this.originPoint
-            const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.whiteBoardHeight - oy)]
+            const [dx, dy] = [Math.abs(data.x * this.whiteBoardWidth - ox), Math.abs(data.y * this.containerHeight - oy)]
             context.strokeStyle = this.colorBorder
             context.lineWidth = this.size
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
             }
             context.beginPath()
-            context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.whiteBoardHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
+            context.ellipse((data.x * this.whiteBoardWidth + ox) / 2, (data.y * this.containerHeight + oy) / 2, dx / 2, dy / 2, 0, 0, 2 * Math.PI)
             if (this.fill === true) {
                 context.fillStyle = this.colorFill
                 context.fill()

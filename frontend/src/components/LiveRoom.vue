@@ -243,7 +243,7 @@ export default {
             document.getElementsByClassName('right-up-container')[0].style.display = 'none'
             this.hidden = true
             document.getElementById('chatroom').style.paddingTop = '0'
-            document.getElementById('chatroom').style.height = '78%'
+            document.getElementById('chatroom').style.height = '100%'
             document.getElementById('chatroom').style.top = 'inherit'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight + 12
         },
@@ -256,8 +256,8 @@ export default {
             document.getElementsByClassName('right-up-container')[0].style.display = 'block'
             this.hidden = false
             document.getElementById('chatroom').style.paddingTop = '12px'
-            document.getElementById('chatroom').style.height = '52.5%'
-            document.getElementById('chatroom').style.top = '42%'
+            document.getElementById('chatroom').style.height = '60%'
+            document.getElementById('chatroom').style.top = '40%'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         /**

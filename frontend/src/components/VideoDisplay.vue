@@ -123,24 +123,15 @@ export default {
              * @default ''
              */
             camera: '',
-            /**
-             * 判断当前用户是否为老师（创建房间的用户）
-             *
-             * @attribute isTeacher
-             * @type Boolean
-             * @default false
-             */
-            isTeacher: false,
             socket: ''
         }
     },
     /**
-     * created函数，初始化isTeacher值
+     * created函数
      *
      * @method created
      */
     created: function () {
-        this.isTeacher = this.username === this.teacherName
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinRoom', this.roomId)
     },
@@ -152,7 +143,11 @@ export default {
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
-        document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
+        if (this.username === this.teacherName) {
+            document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
+        } else {
+            document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
+        }
         let self = this
         self.socket.on('startVideo', function () {
             self.join()
@@ -283,7 +278,11 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            document.getElementById('video').style.height = (newVal - 62) + 'px'
+            if (this.username === this.teacherName) {
+                document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
+            } else {
+                document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
+            }
         }
     }
 }
