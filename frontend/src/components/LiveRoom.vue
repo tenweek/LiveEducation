@@ -150,12 +150,18 @@ export default {
      *
      * @method created
      */
-    created: function () {
+    async created () {
         this.roomId = this.$route.params.id
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinRoom', this.roomId)
-        this.getRoomInfo()
-        this.getUsername()
+        let roomInfo = await this.getRoomInfo()
+        this.roomName = roomInfo.roomName
+        this.studentNum = roomInfo.studentNum
+        this.teacherName = roomInfo.teacherName
+        let userName = await this.getUsername()
+        if (userName.result) {
+            this.username = userName.name
+        }
         this.intervalNum = window.setInterval(this.changeNum, 5000)
     },
     /**
@@ -204,7 +210,7 @@ export default {
                 body: JSON.stringify({
                     'roomId': this.roomId
                 })
-            }).then((response) => response.json()).then((obj) => { })
+            })
         },
         startRecord: function () {
             let self = this
@@ -222,7 +228,7 @@ export default {
                         'channel': self.roomId,
                         'time': self.startTime
                     })
-                }).then((response) => response.json()).then((obj) => { })
+                })
             })
         },
         /**
@@ -294,7 +300,7 @@ export default {
                         'studentNum': this.studentNum,
                         'roomId': this.roomId
                     })
-                }).then((response) => response.json()).then((obj) => { })
+                })
             }
         },
         /**
@@ -311,7 +317,7 @@ export default {
          * @method getRoomInfo
          */
         getRoomInfo: function () {
-            fetch('/getRoomInfo/', {
+            return fetch('/getRoomInfo/', {
                 method: 'post',
                 mode: 'cors',
                 credentials: 'same-origin',
@@ -322,11 +328,7 @@ export default {
                 body: JSON.stringify({
                     'roomID': this.roomId
                 })
-            }).then((response) => response.json()).then((obj) => {
-                this.roomName = obj.roomName
-                this.studentNum = obj.stuNum
-                this.teacherName = obj.teacherName
-            })
+            }).then((response) => response.json())
         },
         /**
          * 获取用户名称
@@ -334,7 +336,7 @@ export default {
          * @method getUsername
          */
         getUsername: function () {
-            fetch('/getName/', {
+            return fetch('/getName/', {
                 method: 'post',
                 mode: 'cors',
                 credentials: 'same-origin',
@@ -343,11 +345,7 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({})
-            }).then((response) => response.json()).then((obj) => {
-                if (obj.result) {
-                    this.username = obj.name
-                }
-            })
+            }).then((response) => response.json())
         }
     }
 }
