@@ -1,6 +1,6 @@
 <template>
     <div id="code-editor">
-        <Select v-model='editorOptions.mode' placeholder="language" filterable>
+        <Select id="language-selector" v-model='editorOptions.mode' placeholder="language" filterable>
             <Option v-for='mode in modeList' :value='mode.modeValue' :key='mode.modeName'>
                 {{ mode.modeName }}
             </Option>
@@ -131,5 +131,6 @@ export default {
 #code-editor {
     width: 100%;
     height: auto;
+    text-align: left;
 }
 </style>

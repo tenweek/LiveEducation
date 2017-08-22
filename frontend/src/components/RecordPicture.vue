@@ -90,10 +90,19 @@ export default {
 }
 
 .for-img {
-    width: 100%;
+    width: 240px;
+    height: 150px;
     overflow: hidden;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.for-img img {
+    min-height: 150px;
+}
+
+.information {
+    margin-bottom: 5px;
 }
 
 #information-room-name {

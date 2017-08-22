@@ -3,6 +3,7 @@
         <div class="header">
             <home-page-header :myOption="this.option"></home-page-header>
         </div>
+        <Card>
         <div class="list">
             <div class="list-hint">
                 <Icon type="university" class="icon-middle"></Icon>
@@ -18,6 +19,8 @@
                 </div>
             </div>
         </div>
+        </Card>
+        <Card>
         <div class="list">
             <div class="list-hint">
                 <Icon type="university" class="icon-middle"></Icon>
@@ -32,6 +35,7 @@
                 </div>
             </div>
         </div>
+        </Card>
         <div>
             <page-footer></page-footer>
         </div>
@@ -124,10 +128,7 @@ export default {
 
 <style scoped>
 .home-page {
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
     position: relative;
-    border-radius: 5px;
     overflow: hidden;
 }
 
@@ -143,8 +144,6 @@ export default {
     width: 85%;
     min-width: 800px;
     max-width: 1200px;
-    background: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     margin: auto;
     overflow: hidden;
     background: white;
@@ -154,11 +153,13 @@ export default {
 .list-hint {
     height: 45px;
     line-height: 45px;
+    margin: auto;
     width: 96%;
     font-size: 25px;
     padding-left: 20px;
     padding-right: 20px;
     border-bottom: solid #e9eaec 1px;
+    margin: auto;
 }
 
 .list-picture {
@@ -173,8 +174,7 @@ export default {
 }
 
 .every-picture {
-    width: 22%;
-    margin: 10px 1%;
+    margin: 10px 10px;
 }
 
 .live-picture {

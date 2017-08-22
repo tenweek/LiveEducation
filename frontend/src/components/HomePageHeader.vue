@@ -1,27 +1,30 @@
 <template>
-    <div class="title">
+    <div class="page-header">
         <div class="logo">
             <a href="#">
                 <div class="logo-picture">
-                    <img src="../assets/rabbit.png" height="58">
-                </div>
-                <div class="logo-text">
-                    <label>MDZZ</label>
+                    <img src="../assets/CodeNow.png">
                 </div>
             </a>
         </div>
         <Row class="row">
             <Col class="navigation-center" span="19">
             <a :class="this.myOption === 1 ? 'selected' : 'navigation-bar'" href="#">
-                <Icon type="home"></Icon> 首页</a> |
+                <Icon type="home"></Icon>
+                <label>首页&nbsp</label>
+            </a>
             <a :class="this.myOption === 2 ? 'selected' : 'navigation-bar'" href="#/live_page">
-                <Icon type="university"></Icon> 直播</a> |
+                <Icon type="university"></Icon>
+                <label>直播&nbsp</label>
+            </a>
             <a :class="this.myOption === 3 ? 'selected' : 'navigation-bar'" href="#/record_page">
-                <Icon type="videocamera"></Icon> 录播</a>
+                <Icon type="videocamera"></Icon>
+                <label>录播&nbsp</label>
+            </a>
             <template v-if="this.isTeacher === true">
-                |
                 <a class="navigation-bar" @click="showCreateRoom = true">
-                    <Icon type="ios-plus"></Icon> 创建房间
+                    <Icon type="ios-plus"></Icon>
+                    <label>创建房间</label>
                 </a>
             </template>
             <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
@@ -78,7 +81,7 @@
                             <br>
                         </Modal>
                         <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
-                        <Dropdown-item name='logOut' divided>注销账户</Dropdown-item>
+                        <Dropdown-item name='logOut' divided>登出</Dropdown-item>
                     </Dropdown-menu>
                 </Dropdown>
             </template>
@@ -450,14 +453,14 @@ export default {
     line-height: 100px;
 }
 
-.title {
-    height: 60px;
-    line-height: 60px;
+.page-header {
+    height: 50px;
+    line-height: 50px;
     width: 100%;
     padding-left: 50px;
-    background: white;
     position: fixed;
-    background: #22313F;
+    background: url('../assets/header.png');
+    background-repeat: repeat;
     display: flex;
     z-index: 50;
 }
@@ -466,12 +469,8 @@ export default {
     float: left;
 }
 
-.logo-text {
-    width: 140px;
-    font-size: 28px;
-    vertical-align: top;
-    color: #ECFFFB;
-    font-family: "宋体";
+.logo-picture img {
+    height: 33px;
 }
 
 .row {
@@ -480,8 +479,7 @@ export default {
 }
 
 .navigation-center {
-    font-size: 20px;
-    padding-top: 14px;
+    font-size: 16px;
     color: #9ba7b5;
     display: flex;
     padding-left: 20px;
@@ -489,20 +487,20 @@ export default {
 
 .navigation-right {
     float: right;
-    font-size: 20px;
+    font-size: 16px;
     display: flex;
 }
 
 .navigation-center a {
-    color: #E4F1FE;
+    color: #999;
 }
 
 .navigation-center .selected {
-    color: gold;
+    color: #fff;
 }
 
 .navigation-right a {
-    color: #E4F1FE;
+    color: #999;
 }
 
 .ivu-dropdown-rel {
@@ -510,11 +508,11 @@ export default {
 }
 
 .navigation-bar:hover {
-    color: gold;
+    color: #fff;
 }
 
 .navigation-right-bar:hover {
-    color: gold;
+    color: #fff;
 }
 
 .navigation-bar {
@@ -527,7 +525,6 @@ export default {
 
 .navigation-right-bar {
     position: relative;
-    top: 14px;
     padding: 0 10px;
 }
 

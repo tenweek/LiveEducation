@@ -95,27 +95,6 @@ export default {
                 }
             })
         }
-    },
-    mounted: function () {
-        let self = this
-        if (document.getElementsByClassName('for-img').length > 0) {
-            this.imageWidth = document.getElementsByClassName('for-img')[0].clientWidth
-            for (let i = 0; i < document.getElementsByClassName('for-img').length; i++) {
-                let img = document.getElementsByClassName('for-img')[i]
-                img.style.maxHeight = this.imageWidth / 1.6 + 'px'
-                img.getElementsByTagName('img')[0].style.minHeight = this.imageWidth / 1.6 + 'px'
-            }
-        }
-        window.onresize = function () {
-            if (document.getElementsByClassName('for-img').length > 0) {
-                self.imageWidth = document.getElementsByClassName('for-img')[0].clientWidth
-                for (let i = 0; i < document.getElementsByClassName('for-img').length; i++) {
-                    let img = document.getElementsByClassName('for-img')[i]
-                    img.style.maxHeight = self.imageWidth / 1.6 + 'px'
-                    img.getElementsByTagName('img')[0].style.minHeight = self.imageWidth / 1.6 + 'px'
-                }
-            }
-        }
     }
 }
 </script>
@@ -129,10 +108,19 @@ export default {
 }
 
 .for-img {
-    width: 100%;
+    width: 240px;
+    height: 150px;
     overflow: hidden;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.for-img img {
+    min-height: 150px;
+}
+
+.information {
+    margin-bottom: 5px;
 }
 
 #information-room-name {

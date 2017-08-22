@@ -10,19 +10,14 @@
                 <select id="videoSource"></select>
             </div>
         </div>
-        <div class="control-panel">
-            <template v-if="this.username === this.teacherName">
-                <button @click="play" id="play">
-                    <Icon type="play"></Icon>
-                </button>
-                <button @click="stop" id="stop">
-                    <Icon type="stop"></Icon>
-                </button>
-            </template>
-        </div>
         <div id="video">
             <template v-if="this.username === this.teacherName">
-                <div id="agora-local"></div>
+                <div id="agora-local">
+                    <div class="control-panel">
+                        <Button @click="play" id="play" type="ghost" shape="circle" icon="play"></Button>
+                        <Button @click="stop" id="stop" type="ghost" shape="circle" icon="stop"></Button>
+                    </div>
+                </div>
             </template>
             <template v-else>
                 <div id="agora-remote"></div>
@@ -143,11 +138,7 @@ export default {
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
-        if (this.username === this.teacherName) {
-            document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
-        } else {
-            document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
-        }
+        document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
         let self = this
         self.socket.on('startVideo', function () {
             self.join()
@@ -160,8 +151,8 @@ export default {
          * @method play
          */
         play: function () {
-            document.getElementById('stop').disable = false
-            document.getElementById('play').disable = true
+            document.getElementById('stop').style.display = 'inline-block'
+            document.getElementById('play').style.display = 'none'
             this.localStream.enableVideo()
         },
         /**
@@ -170,8 +161,8 @@ export default {
          * @method
          */
         stop: function () {
-            document.getElementById('play').disable = false
-            document.getElementById('stop').disable = true
+            document.getElementById('play').style.display = 'inline-block'
+            document.getElementById('stop').style.display = 'none'
             this.localStream.disableVideo()
         },
         /**
@@ -278,11 +269,7 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            if (this.username === this.teacherName) {
-                document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
-            } else {
-                document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
-            }
+            document.getElementById('video').style.height = (newVal - 32) + 'px'
         }
     }
 }
@@ -296,24 +283,28 @@ export default {
     display: inline-block;
 }
 
+#video-display,
 #video {
     width: 100%;
+    height: 100%;
+}
+
+#video {
+    position: relative;
 }
 
 #divDevice {
     display: none;
 }
 
-button {
-    background-color: rgba(0, 0, 0, 0);
-    color: rgb(92, 107, 119);
-    border: none;
-    font-size: 20px;
-    margin-right: 12px;
-    outline: none;
+#play {
+    display: none;
 }
 
 .control-panel {
     text-align: right;
+    position: absolute;
+    z-index: 50;
+    right: 0;
 }
 </style>
