@@ -42,7 +42,8 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 /**
- * 实现聊天室功能，
+ * 实现聊天室功能，老师可以与观看直播额的学生进行交流；
+ * 老师有权限进行禁言、踢出房间等操作，
  * 作为子组件插入直播间页面。
  *
  * @module ChatBoard
@@ -52,6 +53,29 @@ import * as io from 'socket.io-client'
 import myMsg from './../warning.js'
 export default {
     name: 'chat-board',
+    /**
+     * 表示房间ID信息
+     *
+     * @property roomId
+     */
+
+    /**
+     * 表示老师名字
+     *
+     * @property teacherName
+     */
+
+    /**
+     * 表示用户名字
+     *
+     * @property username
+     */
+
+    /**
+     * 表示教学区域组件的高
+     *
+     * @property containerHeight
+     */
     props: ['roomId', 'teacherName', 'username', 'containerHeight'],
     data: function () {
         return {
@@ -113,7 +137,7 @@ export default {
             msgInput: '',
             /**
              * 表示老师是否选择开始直播，
-             * 在直播前，即started值为false时不能记性发言。
+             * 在直播前，即started值为false时不能进行发言。
              *
              * @attribute started
              * @type Boolean
@@ -184,7 +208,7 @@ export default {
             })
         },
         /**
-         * 用户接收到'kickOut'消息时（被提出房间时），弹出警告框进行提示
+         * 用户接收到'kickOut'消息时（被踢出出房间时），弹出警告框进行提示
          *
          * @method kickOut
          */
@@ -198,8 +222,8 @@ export default {
             })
         },
         /**
-         * 发送小时时，首先判断该用户是否被禁言，
-         * 若没有被禁言，向服务器发送'message'消息。
+         * 发送消息时，首先判断该用户是否被禁言，
+         * 若没有被禁言，则向服务器发送'message'消息。
          *
          * @method sendMsg
          */
@@ -366,7 +390,7 @@ export default {
             }
         },
         /**
-         * 给特定用户解禁
+         * 给指定用户解禁
          *
          * @method allowSpeak
          */

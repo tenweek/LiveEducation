@@ -70,7 +70,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 /**
- * 直播间页面
+ * 直播间页面，顶部包含导航栏和房间信息，
+ * 页面主体部分包括教学区域、视频区域和聊天区域，
+ * 这三部分可以较为灵活的切换位置。
+ * 其中，教学区域包括白板、代码编辑器、课件展示的功能，
+ * 视频区域和聊天区域分别实现了视频直播和聊天功能。
  *
  * @module LiveRoom
  * @class LiveRoom
@@ -192,6 +196,12 @@ export default {
         self.startRecord()
     },
     methods: {
+        /**
+         * 当窗口大小变化时调整各个组件的大小（包括初始化）
+         *
+         * @method resize
+         * @param self 指向this
+         */
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
@@ -203,6 +213,11 @@ export default {
             self.videoDisplayHeight = document.getElementById('video-display').clientHeight
             self.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
+        /**
+         * 关闭直播
+         *
+         * @method closeLive
+         */
         closeLive: function () {
             document.getElementById('cover').style.display = 'inline'
             this.socket.emit('closeLive', this.roomId)
@@ -219,6 +234,11 @@ export default {
                 })
             })
         },
+        /**
+         * 开始录播
+         *
+         * @method startRecord
+         */
         startRecord: function () {
             let self = this
             self.socket.on('time', function (time) {
@@ -248,10 +268,21 @@ export default {
             document.getElementById('start-live-button').style.display = 'none'
             document.getElementById('stop-live-button').style.display = 'inline-block'
         },
+        /**
+         * 隐藏左边窗口，将右上窗口移到左边，拉长聊天区域，
+         * 调用swap、hideRight函数。
+         *
+         * @method hideLeft
+         */
         hideLeft: function () {
             this.swap()
             this.hideRight()
         },
+        /**
+         * 隐藏右边窗口，同时拉长聊天区域。
+         *
+         * @method hideRight
+         */
         hideRight: function () {
             document.getElementsByClassName('right-up-container')[0].style.display = 'none'
             this.hidden = true

@@ -25,6 +25,11 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
+    /**
+     * 表示房间ID信息
+     *
+     * @property roomId
+     */
     props: ['roomId', 'teacherName', 'username', 'containerHeight', 'isOnLeft'],
     data: function () {
         return {
