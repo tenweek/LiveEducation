@@ -17,7 +17,7 @@
                     <template v-if="this.current === 0">
                         <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
                             <Form-item label="账号" prop="mail">
-                                <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
+                                <Input placeholder="请输入注册邮箱或手机号" v-model="formCustom.mail"></Input>
                             </Form-item>
                         </Form>
                         <Button type="primary" id="nextBtn" @click="getVerification">获取验证码</Button>
@@ -124,8 +124,7 @@ export default {
              */
             ruleCustom: {
                 mail: [
-                    { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
-                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
+                    { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' }
                 ],
                 passwd: [
                     { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
@@ -139,6 +138,52 @@ export default {
         }
     },
     methods: {
+        getVerification: function () {
+            if (this.checkEmailAndPhone() === 0) {
+                return
+            } else if (this.checkEmailAndPhone() === 1) {
+                this.getPhoneVerification()
+            } else {
+                this.getPhoneVerification()
+            }
+        },
+        getPhoneVerification: function () {
+            fetch('/getPhoneRand/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'phoneNum': this.formCustom.mail
+                })
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.verification === 'none') {
+                    this.$Message.error(myMsg.account['mailNotExist'])
+                } else {
+                    this.current = 1
+                    this.formCustom.loginKey = obj.verification
+                    console.log(this.formCustom.loginKey)
+                }
+            })
+        },
+        checkEmailAndPhone: function () {
+            if (this.formCustom.mail === '') {
+                this.$Message.error('请输入邮箱或手机号')
+                return 0
+            }
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (this.formCustom.mail.match(regMail)) {
+                return 1
+            } else if (this.formCustom.mail.match(regPhone)) {
+                return 2
+            } else {
+                this.$Message.error('请输入正确邮箱或手机号')
+                return 0
+            }
+        },
         /**
          * 进度条进入下一个状态
          *
@@ -153,8 +198,8 @@ export default {
          *
          * @method next
          */
-        getVerification: function () {
-            fetch('/getRand/', {
+        getMailVerification: function () {
+            fetch('/getMailRand/', {
                 method: 'post',
                 credentials: 'same-origin',
                 mode: 'cors',
