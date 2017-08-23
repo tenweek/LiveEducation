@@ -358,7 +358,7 @@ export default {
 }
 
 #live-room {
-    background: #f5f7f9;
+    background: transparent;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
@@ -380,13 +380,13 @@ export default {
 }
 
 .navigation {
-    background: #efefef;
+    background-color: rgba(239, 239, 239, 0.6);
     padding: 8px 10px;
     overflow: hidden;
     display: flex;
     position: fixed;
     left: 0;
-    top: 60px;
+    top: 50px;
     width: 100%;
     font-size: 15px;
 }

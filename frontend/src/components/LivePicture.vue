@@ -1,11 +1,11 @@
 <template>
-    <Card padding="0">
+    <Card id="card" padding="0">
         <div class="picture">
             <a @click="liveRoom">
                 <div class="for-img">
                     <img :src="this.userImg" width="100%">
                 </div>
-                <div class="infomation">
+                <div id="information">
                     <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
                     <br>
                     <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
@@ -119,8 +119,8 @@ export default {
     min-height: 150px;
 }
 
-.information {
-    margin-bottom: 5px;
+#information {
+    height: 47px;
 }
 
 #information-room-name {

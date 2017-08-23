@@ -14,8 +14,12 @@
             <template v-if="this.username === this.teacherName">
                 <div id="agora-local">
                     <div class="control-panel">
-                        <Button @click="play" id="play" type="ghost" shape="circle" icon="play"></Button>
-                        <Button @click="stop" id="stop" type="ghost" shape="circle" icon="stop"></Button>
+                    <Tooltip content="启用视频直播" placement="top-end"  id="play">
+                        <Button @click="play" id="play-button" type="ghost" shape="circle" icon="play"></Button>
+                    </Tooltip>
+                    <Tooltip content="关闭视频直播" placement="top-end" id="stop">
+                        <Button @click="stop" id="stop-button" type="ghost" shape="circle" icon="stop"></Button>
+                    </Tooltip>
                     </div>
                 </div>
             </template>
@@ -299,6 +303,12 @@ export default {
 
 #play {
     display: none;
+}
+
+#play-button,
+#stop-button {
+    border: none;
+    color: #fff;
 }
 
 .control-panel {
