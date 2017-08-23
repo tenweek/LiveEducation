@@ -217,7 +217,7 @@ export default {
 
 <style scoped>
 .reset {
-    margin-top: 80px;
+    margin-top: 26px;
     margin-left: auto;
     margin-right: auto;
     padding: auto;
@@ -241,7 +241,7 @@ export default {
     width: 550px;
     position: absolute;
     top: 50%;
-    margin-top: -214px;
+    margin-top: -187px;
     left: 50%;
     margin-left: -275px;
 }

@@ -1,16 +1,18 @@
 <template>
-    <Card id="live-picture" padding="8">
+    <Card padding="0">
         <div class="picture">
             <a @click="liveRoom">
                 <div class="for-img">
                     <img :src="this.userImg" width="100%">
                 </div>
-                <label id="information-room-name">房间名:{{ this.roomName }}</label>
-                <br>
-                <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
-                <label class="person">
-                    <Icon type="person"></Icon>{{ this.studentNum }}
-                </label>
+                <div class="infomation">
+                    <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
+                    <br>
+                    <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                    <label class="person">
+                        <Icon type="android-people"></Icon>&nbsp{{ this.studentNum }}
+                    </label>
+                </div>
             </a>
         </div>
     </Card>
@@ -61,7 +63,9 @@ export default {
     components: {
     },
     data: function () {
-        return {}
+        return {
+            imageWidth: 0
+        }
     },
     methods: {
         /**
@@ -98,15 +102,25 @@ export default {
 <style scoped>
 .picture {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
     font-size: 14px;
     text-align: left;
+    overflow: hidden;
 }
 
 .for-img {
-    width: 100%;
-    height: 105px;
+    width: 240px;
+    height: 150px;
+    overflow: hidden;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.for-img img {
+    min-height: 150px;
+}
+
+.information {
+    margin-bottom: 5px;
 }
 
 #information-room-name {

@@ -2,7 +2,7 @@
     <div class="bg">
         <div class="sign-up">
             <div>
-                <h2>注册</h2>
+                <h2 id="title">注册</h2>
                 <router-link to="/login" id="login-link">已有账号？</router-link>
             </div>
             <div class="form-panel">
@@ -236,10 +236,8 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-    font: 30px "microsoft yahei";
-    color: #000000;
-    height: 30px;
+#title {
+    font-size: x-large;
     position: absolute;
     margin-left: 222.5px;
     margin-top: -20px;
