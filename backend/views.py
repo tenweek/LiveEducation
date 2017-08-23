@@ -29,7 +29,7 @@ def getVideoRoomInfo(request):
 def getVideoRooms(request):
     req = simplejson.load(request)
     if req['type'] == 1:
-        rooms = VideoRoom.objects.order_by('-create_time')[:8]
+        rooms = VideoRoom.objects.order_by('-create_time')[:12]
     else:
         rooms = VideoRoom.objects.order_by('-create_time')
     myroom = []
@@ -208,7 +208,7 @@ def upload(request):
 def kickOut(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name=req['name'])
+    student = User.objects.get(username=request.session.get('account'))
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     roomStudent.can_watch = False
     roomStudent.save()
@@ -259,7 +259,7 @@ def gagAll(request):
 def checkGag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name=req['name'])
+    student = User.objects.get(username=request.session.get('account'))
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     response = JsonResponse({'result': roomStudent.can_speak})
     return response
@@ -269,7 +269,7 @@ def checkGag(request):
 def gag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name=req['name'])
+    student = User.objects.get(username=request.session.get('account'))
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     roomStudent.can_speak = False
     roomStudent.save()
@@ -279,12 +279,33 @@ def gag(request):
 
 @csrf_exempt
 def getRoomInfo(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     req = simplejson.load(request)
-    room = Room.objects.get(id=req['roomID'])
+    room = Room.objects.filter(id=req['roomID'])
+    if len(room) == 0:
+        response = JsonResponse({
+            'result': False
+        })
+        return response
+    student = User.objects.get(username=request.session.get('account'))
+    roomStudent = RoomStudent.objects.filter(room=room, student=student)
+    if len(roomStudent) == 0:
+        RoomStudent.objects.create(room=room[0], student=student)
+    elif not roomStudent[0].can_watch:
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     response = JsonResponse({
-        'teacherName': room.teacher.name,
-        'stuNum': room.student_num,
-        'roomName': room.room_name
+        'result': True,
+        'teacherName': room[0].teacher.name,
+        'stuNum': room[0].student_num,
+        'roomName': room[0].room_name,
+        'name': student.name
     })
     return response
 
@@ -348,7 +369,7 @@ def createRoom(request):
 def getRooms(request):
     req = simplejson.load(request)
     if req['type'] == 1:
-        rooms = Room.objects.order_by('-student_num')[:8]
+        rooms = Room.objects.order_by('-student_num')[:12]
     else:
         rooms = Room.objects.order_by('-student_num')
     myroom = []
