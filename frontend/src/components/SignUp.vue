@@ -106,8 +106,11 @@ export default {
              */
             ruleCustom: {
                 mail: [
-                    { required: true, message: myMsg.account['passwordAgain'], trigger: 'blur' },
+                    { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
                     { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
+                ],
+                username: [
+                    { required: true, message: '请输入用户名！', trigger: 'blur' }
                 ],
                 passwd: [
                     { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },
