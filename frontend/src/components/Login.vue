@@ -51,6 +51,15 @@ export default {
                 callback()
             }
         }
+        const validateAccount = (rule, value, callback) => {
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (!value.match(regMail) && !value.match(regPhone)) {
+                callback(new Error('请输入正确的账号'))
+            } else {
+                callback()
+            }
+        }
         return {
             /**
              * 检验输入合法性
@@ -71,7 +80,7 @@ export default {
             ruleCustom: {
                 account: [
                     { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
-                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
+                    { validator: validateAccount, trigger: 'blur' }
                 ],
                 password: [
                     { required: true, message: myMsg.account['passwordNeeded'], trigger: 'blur' },

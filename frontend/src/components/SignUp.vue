@@ -8,8 +8,8 @@
             <div class="form-panel">
                 <div>
                     <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="70">
-                        <Form-item label="邮箱" prop="mail">
-                            <Input placeholder="请输入注册邮箱" v-model="formCustom.mail"></Input>
+                        <Form-item label="邮箱" prop="account">
+                            <Input placeholder="请输入注册邮箱或手机" v-model="formCustom.account"></Input>
                         </Form-item>
                         <Form-item label="用户名" prop="username">
                             <Input placeholder="请输入用户名" v-model="formCustom.username"></Input>
@@ -26,7 +26,7 @@
                                 <Input v-model="formCustom.verification" placeholder="请输入验证码"></Input>
                                 </Col>
                                 <Col span="7">
-                                <Button type="ghost" @click="getVerification">获取验证码</Button>
+                                <Button type="ghost" @click="getVerification">获取验证码!</Button>
                                 </Col>
                             </Row>
                         </Form-item>
@@ -82,6 +82,15 @@ export default {
                 callback()
             }
         }
+        const validateAccount = (rule, value, callback) => {
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (!value.match(regMail) && !value.match(regPhone)) {
+                callback(new Error('请输入正确的账号'))
+            } else {
+                callback()
+            }
+        }
         return {
             /**
              * 检验输入合法性
@@ -90,7 +99,7 @@ export default {
              * @type Object
              */
             formCustom: {
-                mail: '',
+                account: '',
                 mailChecked: '',
                 username: '',
                 passwd: '',
@@ -105,9 +114,9 @@ export default {
              * @type Object
              */
             ruleCustom: {
-                mail: [
-                    { required: true, message: myMsg.account['mailNeeded'], trigger: 'blur' },
-                    { type: 'email', message: myMsg.account['mailFormatWrong'], trigger: 'blur' }
+                account: [
+                    { required: true, message: '请输入邮箱或手机号', trigger: 'blur' },
+                    { validator: validateAccount, trigger: 'blur' }
                 ],
                 username: [
                     { required: true, message: '请输入用户名！', trigger: 'blur' }
@@ -124,6 +133,36 @@ export default {
         }
     },
     methods: {
+        getVerification: function () {
+            if (this.checkEmailAndPhone() === 0) {
+                return
+            } else if (this.checkEmailAndPhone() === 1) {
+                this.getMailVerification()
+            } else if (this.checkEmailAndPhone() === 2) {
+                this.getPhoneVerification()
+            }
+        },
+        getPhoneVerification: function () {
+            fetch('/getPhoneVerification/', {
+                method: 'post',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'phoneNum': this.formCustom.account
+                })
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.verification === 'exist') {
+                    this.$Message.error(myMsg.account['accountExist'])
+                    return
+                }
+                this.formCustom.loginKey = obj.verification
+                this.formCustom.mailChecked = this.formCustom.account
+                console.log(this.formCustom.loginKey)
+            })
+        },
         /**
          * 注册前进行输入有效性检查，
          * 当输入不合法时，弹出消息框提示。
@@ -131,7 +170,7 @@ export default {
          * @method checkBeforeSignUp
          */
         checkBeforeSignUp: function () {
-            if (this.formCustom.mailChecked !== this.formCustom.mail) {
+            if (this.formCustom.mailChecked !== this.formCustom.account) {
                 this.$Message.error(myMsg.account['mailNotChange'])
                 return false
             }
@@ -176,7 +215,7 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'mail': this.formCustom.mail,
+                    'mail': this.formCustom.account,
                     'password': this.formCustom.passwd,
                     'username': this.formCustom.username
                 })
@@ -194,28 +233,29 @@ export default {
          * @method checkEmail
          * @return true表示输入合法，false表示输入不合法，并弹出消息框
          */
-        checkEmail: function () {
-            if (this.formCustom.mail === '') {
-                this.$Message.error(myMsg.account['mailNeeded'])
-                return false
+        checkEmailAndPhone: function () {
+            if (this.formCustom.account === '') {
+                this.$Message.error('请输入邮箱或手机号')
+                return 0
             }
-            let reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
-            if (!this.formCustom.mail.match(reg)) {
-                this.$Message.error(myMsg.account['mailFormatWrong'])
-                return false
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (this.formCustom.account.match(regMail)) {
+                return 1
+            } else if (this.formCustom.account.match(regPhone)) {
+                return 2
+            } else {
+                this.$Message.error('请输入正确邮箱或手机号')
+                return 0
             }
-            return true
         },
         /**
          * 获取验证码
          *
          * @method getVerification
          */
-        getVerification: function () {
-            if (!this.checkEmail()) {
-                return
-            }
-            fetch('/getVerification/', {
+        getMailVerification: function () {
+            fetch('/getMailVerification/', {
                 method: 'post',
                 mode: 'cors',
                 credentials: 'same-origin',
@@ -223,14 +263,14 @@ export default {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ 'mail': this.formCustom.mail })
+                body: JSON.stringify({ 'mail': this.formCustom.account })
             }).then((response) => response.json()).then((obj) => {
                 if (obj.verification === 'exist') {
                     this.$Message.error(myMsg.account['accountExist'])
                     return
                 }
                 this.formCustom.loginKey = obj.verification
-                this.formCustom.mailChecked = this.formCustom.mail
+                this.formCustom.mailChecked = this.formCustom.account
                 console.log(this.formCustom.loginKey)
             })
         }
