@@ -155,12 +155,13 @@ export default {
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinRoom', this.roomId)
         let roomInfo = await this.getRoomInfo()
-        this.roomName = roomInfo.roomName
-        this.studentNum = roomInfo.studentNum
-        this.teacherName = roomInfo.teacherName
-        let userName = await this.getUsername()
-        if (userName.result) {
-            this.username = userName.name
+        if (roomInfo.result) {
+            this.roomName = roomInfo.roomName
+            this.studentNum = roomInfo.studentNum
+            this.teacherName = roomInfo.teacherName
+            this.username = roomInfo.name
+        } else {
+            this.pageJump()
         }
         this.intervalNum = window.setInterval(this.changeNum, 5000)
     },
@@ -180,11 +181,14 @@ export default {
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
             window.clearInterval(self.intervalNum)
-            setTimeout(window.close, 3000)
+            setTimeout(this.pageJump, 3000)
         })
         self.startRecord()
     },
     methods: {
+        pageJump: function () {
+            this.$router.push({ name: 'home' })
+        },
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
@@ -328,23 +332,6 @@ export default {
                 body: JSON.stringify({
                     'roomID': this.roomId
                 })
-            }).then((response) => response.json())
-        },
-        /**
-         * 获取用户名称
-         *
-         * @method getUsername
-         */
-        getUsername: function () {
-            return fetch('/getName/', {
-                method: 'post',
-                mode: 'cors',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json, text/plain, */*',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({})
             }).then((response) => response.json())
         }
     }

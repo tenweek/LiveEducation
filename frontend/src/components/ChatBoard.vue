@@ -74,11 +74,11 @@ export default {
             /**
              * 表示老师踢出或禁言操作时选中的用户
              *
-             * @attribute choosenUser
+             * @attribute chosenUser
              * @type
              * @default ''
              */
-            choosenUser: '',
+            chosenUser: '',
             /**
              * 表示要禁言的学生列表
              *
@@ -137,7 +137,8 @@ export default {
         self.socket.on('message', function (data) {
             self.messages.push({
                 'msg': data['message'],
-                'isTeacher': data['isTeacher']
+                'isTeacher': data['isTeacher'],
+                'user': data['user']
             })
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
@@ -155,7 +156,7 @@ export default {
          * @param message
          */
         getName: function (message) {
-            this.choosenUser = message['user']
+            this.chosenUser = message['user']
             if (this.teacherName !== this.username) {
                 let show = document.getElementById('show')
                 show.style.display = 'none'
@@ -222,6 +223,7 @@ export default {
                 if (obj.result && this.started) {
                     this.socket.emit('message', {
                         type: 'chatroom',
+                        user: this.username,
                         message: this.username + ' : ' + this.msgInput,
                         isTeacher: this.username === this.teacherName
                     }, this.roomId + '.1')
@@ -237,7 +239,7 @@ export default {
          * @method gag
          */
         gag: function () {
-            this.$Message.warning('您将禁言用户： ' + this.choosenUser)
+            this.$Message.warning('您将禁言用户： ' + this.chosenUser)
             fetch('/gag/', {
                 method: 'post',
                 mode: 'cors',
@@ -247,11 +249,11 @@ export default {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    'name': this.choosenUser,
+                    'name': this.chosenUser,
                     'roomID': this.roomId
                 })
             }).then((response) => response.json()).then((obj) => {
-                this.gagList.push(this.choosenUser)
+                this.gagList.push(this.chosenUser)
             })
         },
         /**
@@ -301,8 +303,8 @@ export default {
          * @method kickSomeoneOut
          */
         kickSomeoneOut: function () {
-            if (this.choosenUser !== this.teacherName) {
-                this.$Message.warning('您将踢出用户： ' + this.choosenUser)
+            if (this.chosenUser !== this.teacherName) {
+                this.$Message.warning('您将踢出用户： ' + this.chosenUser)
                 fetch('/kickOut/', {
                     method: 'post',
                     mode: 'cors',
@@ -312,11 +314,11 @@ export default {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        'name': this.choosenUser,
+                        'name': this.chosenUser,
                         'roomID': this.roomId
                     })
                 }).then((response) => response.json()).then((obj) => {
-                    this.socket.emit('kickOut', this.choosenUser, this.roomId + '.1')
+                    this.socket.emit('kickOut', this.chosenUser, this.roomId + '.1')
                 })
             } else {
                 this.$Message.warning(myMsg.chatroom['cannotKickOut'])

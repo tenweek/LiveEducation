@@ -91,6 +91,8 @@ export default {
         }).then((response) => response.json()).then((obj) => {
             if (obj.result) {
                 this.userAccount = obj.account
+            } else {
+                this.$router.push({ name: 'home' })
             }
         })
     },
