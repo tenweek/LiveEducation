@@ -1,16 +1,18 @@
 <template>
-    <Card id="live-picture" padding="8">
+    <Card id="card" padding="0">
         <div class="picture">
             <a @click="liveRoom">
                 <div class="for-img">
                     <img :src="this.userImg" width="100%">
                 </div>
-                <label id="information-room-name">房间名:{{ this.roomName }}</label>
-                <br>
-                <label id="information-teacher-name">主讲教师:{{ this.teacherName }}</label>
-                <label class="person">
-                    <Icon type="person"></Icon>{{ this.studentNum }}
-                </label>
+                <div id="information">
+                    <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
+                    <br>
+                    <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                    <label class="person">
+                        <Icon type="android-people"></Icon>&nbsp{{ this.studentNum }}
+                    </label>
+                </div>
             </a>
         </div>
     </Card>
@@ -62,40 +64,7 @@ export default {
     },
     data: function () {
         return {
-            /**
-             * 表示用户账号
-             *
-             * @property stuAccount
-             * @type String
-             * @default ''
-             */
-            stuAccount: '',
-            /**
-             * 表示用户选择是否进入该直播房间
-             *
-             * @property joinOrNot
-             * @type Boolean
-             * @default false
-             */
-            joinOrNot: false
-        }
-    },
-    /**
-     * created函数，获取用户账号，
-     * 判断该用户是否登录。
-     *
-     * @method created
-     */
-    created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                this.stuAccount = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-                break
-            } else {
-                this.stuAccount = ''
-            }
+            imageWidth: 0
         }
     },
     methods: {
@@ -105,29 +74,26 @@ export default {
          * @method liveRoom
          */
         liveRoom: function () {
-            // 如果用户已经登录
-            if (this.stuAccount) {
-                fetch('/joinRoom/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'roomID': this.id,
-                        'stuAccount': this.stuAccount
-                    })
-                }).then((response) => response.json()).then((obj) => {
-                    if (obj.result === 'cannot') {
-                        this.$Message.error(myMsg.room['cannotJoin'])
-                    } else {
-                        window.open('./#/live_room/' + this.id)
-                    }
+            fetch('/joinRoom/', {
+                method: 'post',
+                mode: 'cors',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json, text/plain, */*',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    'roomID': this.id
                 })
-            } else {
-                this.$Message.error(myMsg.account['loginNeeded'])
-            }
+            }).then((response) => response.json()).then((obj) => {
+                if (obj.result === 'cannot') {
+                    this.$Message.error(myMsg.room['cannotJoin'])
+                } else if (obj.result === 'login') {
+                    this.$Message.error(myMsg.account['loginNeeded'])
+                } else {
+                    window.open('./#/live_room/' + this.id)
+                }
+            })
         }
     }
 }
@@ -136,15 +102,25 @@ export default {
 <style scoped>
 .picture {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
     font-size: 14px;
     text-align: left;
+    overflow: hidden;
 }
 
 .for-img {
-    width: 100%;
-    height: 105px;
+    width: 240px;
+    height: 150px;
+    overflow: hidden;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.for-img img {
+    min-height: 150px;
+}
+
+#information {
+    height: 47px;
 }
 
 #information-room-name {

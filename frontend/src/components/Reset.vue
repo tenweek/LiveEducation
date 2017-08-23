@@ -156,6 +156,7 @@ export default {
         getVerification: function () {
             fetch('/getRand/', {
                 method: 'post',
+                credentials: 'same-origin',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
@@ -196,6 +197,7 @@ export default {
                 fetch('/changePasswd/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -215,7 +217,7 @@ export default {
 
 <style scoped>
 .reset {
-    margin-top: 80px;
+    margin-top: 26px;
     margin-left: auto;
     margin-right: auto;
     padding: auto;
@@ -239,7 +241,7 @@ export default {
     width: 550px;
     position: absolute;
     top: 50%;
-    margin-top: -214px;
+    margin-top: -187px;
     left: 50%;
     margin-left: -275px;
 }

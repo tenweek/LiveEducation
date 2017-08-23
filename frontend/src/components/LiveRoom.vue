@@ -150,12 +150,19 @@ export default {
      *
      * @method created
      */
-    created: function () {
+    async created () {
         this.roomId = this.$route.params.id
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinRoom', this.roomId)
-        this.getRoomInfo()
-        this.getUsername()
+        let roomInfo = await this.getRoomInfo()
+        if (roomInfo.result) {
+            this.roomName = roomInfo.roomName
+            this.studentNum = roomInfo.studentNum
+            this.teacherName = roomInfo.teacherName
+            this.username = roomInfo.name
+        } else {
+            this.$router.push({ name: 'home' })
+        }
         this.intervalNum = window.setInterval(this.changeNum, 5000)
     },
     /**
@@ -174,7 +181,13 @@ export default {
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
             window.clearInterval(self.intervalNum)
-            setTimeout(window.close, 3000)
+            if (self.teacherName === self.username) {
+                setTimeout(window.close, 3000)
+            } else {
+                setTimeout(function () {
+                    self.$router.push({ name: 'home' })
+                }, 3000)
+            }
         })
         self.startRecord()
     },
@@ -196,6 +209,7 @@ export default {
             fetch('/closeLiveRoom/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -203,7 +217,7 @@ export default {
                 body: JSON.stringify({
                     'roomId': this.roomId
                 })
-            }).then((response) => response.json()).then((obj) => { })
+            })
         },
         startRecord: function () {
             let self = this
@@ -212,6 +226,7 @@ export default {
                 fetch('/startRecord/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'application/json'
@@ -220,7 +235,7 @@ export default {
                         'channel': self.roomId,
                         'time': self.startTime
                     })
-                }).then((response) => response.json()).then((obj) => { })
+                })
             })
         },
         /**
@@ -241,7 +256,7 @@ export default {
             document.getElementsByClassName('right-up-container')[0].style.display = 'none'
             this.hidden = true
             document.getElementById('chatroom').style.paddingTop = '0'
-            document.getElementById('chatroom').style.height = '78%'
+            document.getElementById('chatroom').style.height = '100%'
             document.getElementById('chatroom').style.top = 'inherit'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight + 12
         },
@@ -254,8 +269,8 @@ export default {
             document.getElementsByClassName('right-up-container')[0].style.display = 'block'
             this.hidden = false
             document.getElementById('chatroom').style.paddingTop = '12px'
-            document.getElementById('chatroom').style.height = '52.5%'
-            document.getElementById('chatroom').style.top = '42%'
+            document.getElementById('chatroom').style.height = '60%'
+            document.getElementById('chatroom').style.top = '40%'
             this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         /**
@@ -283,6 +298,7 @@ export default {
                 fetch('/changeNum/', {
                     method: 'post',
                     mode: 'cors',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json, text/plain, */*',
                         'Accept': 'applica tion/json'
@@ -291,7 +307,7 @@ export default {
                         'studentNum': this.studentNum,
                         'roomId': this.roomId
                     })
-                }).then((response) => response.json()).then((obj) => { })
+                })
             }
         },
         /**
@@ -308,9 +324,10 @@ export default {
          * @method getRoomInfo
          */
         getRoomInfo: function () {
-            fetch('/getRoomInfo/', {
+            return fetch('/getRoomInfo/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -318,39 +335,7 @@ export default {
                 body: JSON.stringify({
                     'roomID': this.roomId
                 })
-            }).then((response) => response.json()).then((obj) => {
-                this.roomName = obj.roomName
-                this.studentNum = obj.stuNum
-                this.teacherName = obj.teacherName
-            })
-        },
-        /**
-         * 获取用户名称
-         *
-         * @method getUsername
-         */
-        getUsername: function () {
-            let arrCookies = document.cookie.split(';')
-            let account = ''
-            for (let i = 0; i < arrCookies.length; i++) {
-                let arrStr = arrCookies[i].split('=')
-                if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
-                    account = arrStr[1].replace(/(^\s*)|(\s*$)/g, '')
-                }
-            }
-            if (account !== '') {
-                fetch('/getName/', {
-                    method: 'post',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json, text/plain, */*',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ 'account': account })
-                }).then((response) => response.json()).then((obj) => {
-                    this.username = obj.name
-                })
-            }
+            }).then((response) => response.json())
         }
     }
 }
@@ -358,13 +343,12 @@ export default {
 
 <style scoped>
 #bg {
-    background: #f5f7f9;
     min-height: 600px;
     min-width: 800px;
 }
 
 #live-room {
-    background: #f5f7f9;
+    background: transparent;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
@@ -377,7 +361,7 @@ export default {
 }
 
 .header {
-    height: 60px;
+    height: 50px;
     width: 100%;
     font-size: 40px;
     position: fixed;
@@ -386,13 +370,13 @@ export default {
 }
 
 .navigation {
-    background: #efefef;
+    background-color: rgba(239, 239, 239, 0.6);
     padding: 8px 10px;
     overflow: hidden;
     display: flex;
     position: fixed;
     left: 0;
-    top: 60px;
+    top: 50px;
     width: 100%;
     font-size: 15px;
 }

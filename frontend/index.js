@@ -18,6 +18,8 @@ let onlineCount = {}
 let pictureNow = {}
 // 记录不同房间的路径
 let path = {}
+// 记录不同房间的开始状态
+let started = {}
 // 记录基础路径
 const basicPath = './static/'
 
@@ -64,6 +66,9 @@ io.on('connection', function (socket) {
     socket.on('joinRoom', function (roomId) {
         console.log('room connected')
         socket.join(roomId)
+        if (started[roomId]) {
+            io.to(roomId).emit('startVideo')
+        }
     })
     // 四个管道的加入
     socket.on('join', function (roomId, realRoom) {
@@ -76,11 +81,18 @@ io.on('connection', function (socket) {
         path[id] = basicPath + id + '/' + id + '.txt'
         onlineCount[id] += 1
         socket.join(roomId)
+        if (started[realRoom]) {
+            io.to(roomId).emit('getStarted')
+        }
         io.to(roomId).emit('changeNum', onlineCount[id])
     })
     socket.on('joinForWhiteBoard', function (roomId) {
         console.log('whiteboard connected')
+        let index = parseInt(roomId.split('.')[0])
         socket.join(roomId)
+        if (started[index]) {
+            io.to(roomId).emit('getStarted')
+        }
         io.to(roomId).emit('newJoin')
     })
     socket.on('joinForCodeEditor', function (roomId) {
@@ -103,6 +115,7 @@ io.on('connection', function (socket) {
         const time = String(date.getFullYear()) + month + String(date.getDate())
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
+        started[roomId] = true
         fs.open(String(path[roomId]), 'a', (err, fd) => {
             if (err) {
                 throw err

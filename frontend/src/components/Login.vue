@@ -90,6 +90,7 @@ export default {
             fetch('/login/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -101,7 +102,6 @@ export default {
             }).then((response) => response.json()).then((obj) => {
                 if (obj.result) {
                     this.$Message.success(myMsg.account['loginSuccess'])
-                    document.cookie = 'userAccount=' + this.formCustom.account
                     this.$router.push({ path: '/' })
                 } else {
                     this.$Message.error(myMsg.account['loginFailed'])

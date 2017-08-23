@@ -29,7 +29,7 @@ def getVideoRoomInfo(request):
 def getVideoRooms(request):
     req = simplejson.load(request)
     if req['type'] == 1:
-        rooms = VideoRoom.objects.order_by('-create_time')[:8]
+        rooms = VideoRoom.objects.order_by('-create_time')[:12]
     else:
         rooms = VideoRoom.objects.order_by('-create_time')
     myroom = []
@@ -193,7 +193,7 @@ def changeNum(request):
 @csrf_exempt
 def upload(request):
     uploadFile = request.FILES.get('myfile')
-    account = request.COOKIES.get('userAccount')
+    account = request.session.get('account')
     uploadUser = User.objects.get(username=account)
     oldImg = uploadUser.user_img
     uploadUser.user_img = uploadFile
@@ -208,7 +208,7 @@ def upload(request):
 def kickOut(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(name=req['name'])
+    student = User.objects.get(username=request.session.get('account'))
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     roomStudent.can_watch = False
     roomStudent.save()
@@ -279,21 +279,48 @@ def gag(request):
 
 @csrf_exempt
 def getRoomInfo(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     req = simplejson.load(request)
-    room = Room.objects.get(id=req['roomID'])
+    room = Room.objects.filter(id=req['roomID'])
+    if len(room) == 0:
+        response = JsonResponse({
+            'result': False
+        })
+        return response
+    student = User.objects.get(username=request.session.get('account'))
+    roomStudent = RoomStudent.objects.filter(room=room, student=student)
+    if len(roomStudent) == 0:
+        RoomStudent.objects.create(room=room[0], student=student)
+    elif not roomStudent[0].can_watch:
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     response = JsonResponse({
-        'teacherName': room.teacher.name,
-        'stuNum': room.student_num,
-        'roomName': room.room_name
+        'result': True,
+        'teacherName': room[0].teacher.name,
+        'stuNum': room[0].student_num,
+        'roomName': room[0].room_name,
+        'name': student.name
     })
     return response
 
 
 @csrf_exempt
 def joinRoom(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': 'login'
+        })
+        return response
+    stuAccount = request.session.get('account')
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=req['stuAccount'])
+    student = User.objects.get(username=stuAccount)
     roomStudent = RoomStudent.objects.filter(room=room, student=student)
     if len(roomStudent) == 0:
         RoomStudent.objects.create(room=room, student=student)
@@ -309,9 +336,16 @@ def joinRoom(request):
 
 @csrf_exempt
 def getName(request):
+    if not request.session.get('account'):
+        response = JsonResponse({
+            'result': False
+        })
+        return response
     req = simplejson.load(request)
-    user = User.objects.get(username=req['account'])
+    user = User.objects.get(username=request.session.get('account'))
     response = JsonResponse({
+        'result': True,
+        'account': user.username,
         'name': user.name,
         'isTeacher': user.is_teacher
     })
@@ -335,7 +369,7 @@ def createRoom(request):
 def getRooms(request):
     req = simplejson.load(request)
     if req['type'] == 1:
-        rooms = Room.objects.order_by('-student_num')[:8]
+        rooms = Room.objects.order_by('-student_num')[:12]
     else:
         rooms = Room.objects.order_by('-student_num')
     myroom = []
@@ -390,7 +424,15 @@ def login(request):
     if user is None:
         response = JsonResponse({'result': False})
     else:
-        response = JsonResponse({'result': True, 'name': user.name})
+        request.session['account'] = req['account']
+        response = JsonResponse({'result': True})
+    return response
+
+
+@csrf_exempt
+def logout(request):
+    del request.session['account']
+    response = JsonResponse({})
     return response
 
 

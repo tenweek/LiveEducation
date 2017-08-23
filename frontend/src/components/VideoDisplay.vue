@@ -10,19 +10,18 @@
                 <select id="videoSource"></select>
             </div>
         </div>
-        <div class="control-panel">
-            <template v-if="this.username === this.teacherName">
-                <button @click="play" id="play">
-                    <Icon type="play"></Icon>
-                </button>
-                <button @click="stop" id="stop">
-                    <Icon type="stop"></Icon>
-                </button>
-            </template>
-        </div>
         <div id="video">
             <template v-if="this.username === this.teacherName">
-                <div id="agora-local"></div>
+                <div id="agora-local">
+                    <div class="control-panel">
+                    <Tooltip content="启用视频直播" placement="top-end"  id="play">
+                        <Button @click="play" id="play-button" type="ghost" shape="circle" icon="play"></Button>
+                    </Tooltip>
+                    <Tooltip content="关闭视频直播" placement="top-end" id="stop">
+                        <Button @click="stop" id="stop-button" type="ghost" shape="circle" icon="stop"></Button>
+                    </Tooltip>
+                    </div>
+                </div>
             </template>
             <template v-else>
                 <div id="agora-remote"></div>
@@ -123,24 +122,16 @@ export default {
              * @default ''
              */
             camera: '',
-            /**
-             * 判断当前用户是否为老师（创建房间的用户）
-             *
-             * @attribute isTeacher
-             * @type Boolean
-             * @default false
-             */
-            isTeacher: false,
-            socket: ''
+            socket: '',
+            started: false
         }
     },
     /**
-     * created函数，初始化isTeacher值
+     * created函数
      *
      * @method created
      */
     created: function () {
-        this.isTeacher = this.username === this.teacherName
         this.socket = io.connect('http://localhost:9000')
         this.socket.emit('joinRoom', this.roomId)
     },
@@ -152,10 +143,13 @@ export default {
     mounted: function () {
         this.audioSelect = document.querySelector('select#audioSource')
         this.videoSelect = document.querySelector('select#videoSource')
-        document.getElementById('video').style.height = (this.containerHeight - 62) + 'px'
+        document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
         let self = this
         self.socket.on('startVideo', function () {
-            self.join()
+            if (!self.started) {
+                self.join()
+            }
+            self.started = true
         })
     },
     methods: {
@@ -165,8 +159,8 @@ export default {
          * @method play
          */
         play: function () {
-            document.getElementById('stop').disable = false
-            document.getElementById('play').disable = true
+            document.getElementById('stop').style.display = 'inline-block'
+            document.getElementById('play').style.display = 'none'
             this.localStream.enableVideo()
         },
         /**
@@ -175,8 +169,8 @@ export default {
          * @method
          */
         stop: function () {
-            document.getElementById('play').disable = false
-            document.getElementById('stop').disable = true
+            document.getElementById('play').style.display = 'inline-block'
+            document.getElementById('stop').style.display = 'none'
             this.localStream.disableVideo()
         },
         /**
@@ -283,7 +277,7 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            document.getElementById('video').style.height = (newVal - 62) + 'px'
+            document.getElementById('video').style.height = (newVal - 32) + 'px'
         }
     }
 }
@@ -297,24 +291,34 @@ export default {
     display: inline-block;
 }
 
+#video-display,
 #video {
     width: 100%;
+    height: 100%;
+}
+
+#video {
+    position: relative;
 }
 
 #divDevice {
     display: none;
 }
 
-button {
-    background-color: rgba(0, 0, 0, 0);
-    color: rgb(92, 107, 119);
+#play {
+    display: none;
+}
+
+#play-button,
+#stop-button {
     border: none;
-    font-size: 20px;
-    margin-right: 12px;
-    outline: none;
+    color: #fff;
 }
 
 .control-panel {
     text-align: right;
+    position: absolute;
+    z-index: 50;
+    right: 0;
 }
 </style>

@@ -1,13 +1,15 @@
 <template>
-    <Card id="record-picture" padding="8">
+    <Card padding="0">
         <div class="picture">
             <a @click="recordRoom">
                 <div class="for-img">
                     <img :src="this.route" width="100%">
                 </div>
-                <label id="information-room-name">房间名:{{ this.roomName }}</label>
-                <br>
-                <label id="information-teacher-name">主讲教师: {{ this.teacherName }}</label>
+                <div id="information">
+                    <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
+                    <br>
+                    <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                </div>
             </a>
         </div>
     </Card>
@@ -46,13 +48,20 @@ export default {
      * @method created
      */
     created: function () {
-        let arrCookies = document.cookie.split(';')
-        for (let i = 0; i < arrCookies.length; i++) {
-            let arrStr = arrCookies[i].split('=')
-            if (arrStr[0].replace(/(^\s*)|(\s*$)/g, '') === 'userAccount') {
+        fetch('/getName/', {
+            method: 'post',
+            mode: 'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json, text/plain, */*',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({})
+        }).then((response) => response.json()).then((obj) => {
+            if (obj.result) {
                 this.canWork = true
             }
-        }
+        })
         this.route = '/static/cover/' + this.userImg
     },
     methods: {
@@ -77,15 +86,25 @@ export default {
 <style scoped>
 .picture {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
     font-size: 14px;
     text-align: left;
+    overflow: hidden;
 }
 
 .for-img {
-    width: 100%;
-    height: auto;
+    width: 240px;
+    height: 150px;
+    overflow: hidden;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.for-img img {
+    min-height: 150px;
+}
+
+#information {
+    height: 47px;
 }
 
 #information-room-name {

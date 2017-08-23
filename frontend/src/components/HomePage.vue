@@ -3,38 +3,41 @@
         <div class="header">
             <home-page-header :myOption="this.option"></home-page-header>
         </div>
-        <div class="list">
-            <div class="list-hint">
-                <Icon type="university" class="icon-middle"></Icon>
-                <input type="text" class="live-broadcast" value="直播课堂" readonly="true"></input>
-                <a href="#/live_page" class="more">查看更多
-                    <Icon type="chevron-right"></Icon>
-                </a>
-            </div>
-            <div class="list-picture">
-                <div v-for="room in rooms" class="every-picture">
-                    <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" :userImg="room.userImg" class="live-picture">
-                    </live-picture>
+        <Card id="live-list" padding="0">
+            <div class="list">
+                <div class="list-hint">
+                    <input type="text" class="live-broadcast" value="直播课堂" readonly="true"></input>
+                    <a href="#/live_page" class="more">查看更多
+                        <Icon type="chevron-right"></Icon>
+                    </a>
+                </div>
+                <div class="list-picture">
+                    <div v-for="room in rooms" class="every-picture">
+                        <live-picture :roomName="room.roomName" :id="room.id" :teacherName="room.teacherName" :studentNum="room.studentNum" :userImg="room.userImg" class="live-picture">
+                        </live-picture>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="list">
-            <div class="list-hint">
-                <Icon type="university" class="icon-middle"></Icon>
-                <input type="text" class="live-broadcast" value="录播课堂" readonly="true"></input>
-                <a href="#/record_page" class="more">查看更多
-                    <Icon type="chevron-right"></Icon>
-                </a>
-            </div>
-            <div class="list-picture">
-                <div v-for="videoRoom in videoRooms" class="every-picture">
-                    <record-picture :roomName="videoRoom.roomName" :teacherName="videoRoom.teacherName" :liveId="videoRoom.liveId" :userImg="videoRoom.userImg"></record-picture>
+        </Card>
+        <Card id="record-list" padding="0">
+            <div class="list">
+                <div class="list-hint">
+                    <input type="text" class="live-broadcast" value="录播课堂" readonly="true"></input>
+                    <a href="#/record_page" class="more">查看更多
+                        <Icon type="chevron-right"></Icon>
+                    </a>
+                </div>
+                <div class="list-picture">
+                    <div v-for="videoRoom in videoRooms" class="every-picture">
+                        <record-picture :roomName="videoRoom.roomName" :teacherName="videoRoom.teacherName" :liveId="videoRoom.liveId" :userImg="videoRoom.userImg"></record-picture>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Card>
         <div>
             <page-footer></page-footer>
         </div>
+        <Back-top></Back-top>
     </div>
 </template>
 
@@ -89,6 +92,7 @@ export default {
             fetch('/getVideoRooms/', {
                 method: 'post',
                 mode: 'cors',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
                     'Accept': 'application/json'
@@ -106,6 +110,7 @@ export default {
         getRooms: function () {
             fetch('/getRooms/', {
                 method: 'post',
+                credentials: 'same-origin',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json, text/plain, */*',
@@ -122,31 +127,42 @@ export default {
 
 <style scoped>
 .home-page {
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
     position: relative;
-    border-radius: 5px;
     overflow: hidden;
+    background-color: #f4f4f4;
 }
 
 .header {
-    height: 60px;
+    height: 50px;
     width: 100%;
     font-size: 40px;
 }
 
-.list {
+#live-list,
+#record-list {
     height: auto;
     min-height: 295px;
-    width: 65%;
+    width: 85%;
     min-width: 800px;
-    max-width: 1000px;
-    background: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    max-width: 1200px;
     margin: auto;
+    margin-bottom: 40px;
+    margin-top: 20px;
     overflow: hidden;
     background: white;
-    padding-top: 8px;
+}
+
+.list-hint {
+    height: 61px;
+    line-height: 45px;
+    margin: auto;
+    width: 96%;
+    font-size: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 16px;
+    border-bottom: solid #e9eaec 1px;
+    margin: auto;
 }
 
 .list-picture {
@@ -155,16 +171,14 @@ export default {
     min-width: 800px;
     padding-top: 5px;
     padding-left: 4%;
+    padding-bottom: 16px;
     margin: auto;
     display: flex;
     flex-wrap: wrap;
 }
 
 .every-picture {
-    width: 20%;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-top: 10px;
+    margin: 10px 10px;
 }
 
 .live-picture {
@@ -173,33 +187,20 @@ export default {
     margin: auto;
 }
 
-.list-hint {
-    height: 45px;
-    line-height: 45px;
-    width: 100%;
-    font-size: 25px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-bottom: solid;
-}
-
-.icon-middle {
-    float: left;
-    margin-top: 10px;
-}
-
 .live-broadcast {
     width: 150px;
-    height: 40px;
+    height: 30px;
+    margin-top: 12px;
+    font-size: 25px;
     border: none;
     float: left;
-    margin-left: 10px;
+    margin-left: 6px;
 }
 
 .more {
     font-size: 15px;
     float: right;
-    color: #464c5b;
+    color: #999;
     height: 30px;
     padding-top: 10px;
 }
