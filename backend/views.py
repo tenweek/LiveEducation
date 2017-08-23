@@ -259,7 +259,7 @@ def gagAll(request):
 def checkGag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=request.session.get('account'))
+    student = User.objects.get(name=req['name'])
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     response = JsonResponse({'result': roomStudent.can_speak})
     return response
@@ -269,7 +269,7 @@ def checkGag(request):
 def gag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=request.session.get('account'))
+    student = User.objects.get(name=req['name'])
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     roomStudent.can_speak = False
     roomStudent.save()
