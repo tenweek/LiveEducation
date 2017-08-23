@@ -50,7 +50,7 @@
 import myMsg from './../warning.js'
 export default {
     name: 'sign-up',
-    data: function() {
+    data: function () {
         /**
          * 检验输入合法性
          *
@@ -82,6 +82,15 @@ export default {
                 callback()
             }
         }
+        const validateAccount = (rule, value, callback) => {
+            let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+            let regPhone = /^1(3|4|5|7|8)\d{9}$/
+            if (!value.match(regMail) && !value.match(regPhone)) {
+                callback(new Error('请输入正确的账号'))
+            } else {
+                callback()
+            }
+        }
         return {
             /**
              * 检验输入合法性
@@ -105,11 +114,9 @@ export default {
              * @type Object
              */
             ruleCustom: {
-                username: [
-                    { required: true, massage: 'name needed', trigger: 'blur' }
-                ],
                 account: [
-                    { required: true, message: '请输入邮箱或手机号', trigger: 'blur' }
+                    { required: true, message: '请输入邮箱或手机号', trigger: 'blur' },
+                    { validator: validateAccount, trigger: 'blur' }
                 ],
                 username: [
                     { required: true, message: '请输入用户名！', trigger: 'blur' }
@@ -126,18 +133,16 @@ export default {
         }
     },
     methods: {
-        getVerification: function() {
+        getVerification: function () {
             if (this.checkEmailAndPhone() === 0) {
                 return
-            }
-            else if (this.checkEmailAndPhone() === 1) {
+            } else if (this.checkEmailAndPhone() === 1) {
                 this.getMailVerification()
-            }
-            else if (this.checkEmailAndPhone() === 2) {
+            } else if (this.checkEmailAndPhone() === 2) {
                 this.getPhoneVerification()
             }
         },
-        getPhoneVerification: function() {
+        getPhoneVerification: function () {
             fetch('/getPhoneVerification/', {
                 method: 'post',
                 mode: 'cors',
@@ -164,7 +169,7 @@ export default {
          *
          * @method checkBeforeSignUp
          */
-        checkBeforeSignUp: function() {
+        checkBeforeSignUp: function () {
             if (this.formCustom.mailChecked !== this.formCustom.account) {
                 this.$Message.error(myMsg.account['mailNotChange'])
                 return false
@@ -196,7 +201,7 @@ export default {
          *
          * @method signUp
          */
-        signUp: function() {
+        signUp: function () {
             if (!this.checkBeforeSignUp()) {
                 return
             }
@@ -228,21 +233,19 @@ export default {
          * @method checkEmail
          * @return true表示输入合法，false表示输入不合法，并弹出消息框
          */
-        checkEmailAndPhone: function() {
+        checkEmailAndPhone: function () {
             if (this.formCustom.account === '') {
-                this.$Message.error("请输入邮箱或手机号")
+                this.$Message.error('请输入邮箱或手机号')
                 return 0
             }
             let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             let regPhone = /^1(3|4|5|7|8)\d{9}$/
             if (this.formCustom.account.match(regMail)) {
                 return 1
-            }
-            else if (this.formCustom.account.match(regPhone)) {
+            } else if (this.formCustom.account.match(regPhone)) {
                 return 2
-            }
-            else {
-                this.$Message.error("请输入正确邮箱或手机号")
+            } else {
+                this.$Message.error('请输入正确邮箱或手机号')
                 return 0
             }
         },
@@ -251,7 +254,7 @@ export default {
          *
          * @method getVerification
          */
-        getMailVerification: function() {
+        getMailVerification: function () {
             fetch('/getMailVerification/', {
                 method: 'post',
                 mode: 'cors',

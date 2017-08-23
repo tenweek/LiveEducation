@@ -141,11 +141,9 @@ export default {
         getVerification: function () {
             if (this.checkEmailAndPhone() === 0) {
                 return
-            }
-            else if (this.checkEmailAndPhone() === 1) {
+            } else if (this.checkEmailAndPhone() === 1) {
                 this.getPhoneVerification()
-            }
-            else {
+            } else {
                 this.getPhoneVerification()
             }
         },
@@ -172,19 +170,17 @@ export default {
         },
         checkEmailAndPhone: function () {
             if (this.formCustom.mail === '') {
-                this.$Message.error("请输入邮箱或手机号")
+                this.$Message.error('请输入邮箱或手机号')
                 return 0
             }
             let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             let regPhone = /^1(3|4|5|7|8)\d{9}$/
             if (this.formCustom.mail.match(regMail)) {
                 return 1
-            }
-            else if (this.formCustom.mail.match(regPhone)) {
+            } else if (this.formCustom.mail.match(regPhone)) {
                 return 2
-            }
-            else {
-                this.$Message.error("请输入正确邮箱或手机号")
+            } else {
+                this.$Message.error('请输入正确邮箱或手机号')
                 return 0
             }
         },

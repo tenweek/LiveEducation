@@ -159,7 +159,7 @@ def getImg(request):
 @csrf_exempt
 def uploadFile(request):
     file = request.FILES.get('file')
-    account = request.COOKIES.get('userAccount')
+    account = request.session.get('account')
     user = User.objects.get(username=account)
     user.user_file = file
     user.file_num += 1
