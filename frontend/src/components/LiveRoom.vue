@@ -353,7 +353,6 @@ export default {
 
 <style scoped>
 #bg {
-    background: url('../assets/blueCube.jpg');
     min-height: 600px;
     min-width: 800px;
 }
