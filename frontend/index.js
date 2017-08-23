@@ -1,7 +1,7 @@
-let app = require('express')()
-let server = require('http').Server(app)
-let io = require('socket.io')(server)
-let fs = require('fs')
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
+var fs = require('fs')
 const readline = require('readline')
 
 app.get('/', function (req, res) {
@@ -13,28 +13,28 @@ server.listen(9000, () => {
 })
 
 // 记录房间当前人数
-let onlineCount = {}
+var onlineCount = {}
 // 记录房间当前PPT页码
-let pictureNow = {}
+var pictureNow = {}
 // 记录不同房间的路径
-let path = {}
+var path = {}
 // 记录基础路径
 const basicPath = './static/'
 
 // .0是白板 .1是聊天室 .2是课件展示 .3是代码编辑器
 
 io.on('connection', function (socket) {
-    let id = 0
-    let idForLeave = 0
+    var id = 0
+    var idForLeave = 0
     // 向录播间广播
     socket.on('joinTest', function (roomId, account) {
         socket.join(account)
         const rl = readline.createInterface({
             input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
         });
-        let startTime = 0
+        var startTime = 0
         rl.on('line', (line) => {
-            let json = eval('(' + line + ')')
+            var json = eval('(' + line + ')')
             if (json['type'] === 'time') {
                 startTime = json['startTime']
             } else if (json['type'] === 'chatroom') {
@@ -88,7 +88,7 @@ io.on('connection', function (socket) {
         socket.join(roomId)
     })
     socket.on('joinForFileDisplay', function (roomId, isTeacher) {
-        let index = parseInt(roomId.split('.')[0])
+        var index = parseInt(roomId.split('.')[0])
         console.log('filedisplay connected')
         socket.join(roomId)
         if (!isTeacher) {
@@ -98,7 +98,7 @@ io.on('connection', function (socket) {
     // 开始直播信息
     socket.on('startLive', function (roomId) {
         console.log('start live')
-        let date = new Date()
+        var date = new Date()
         const month = date.getMonth() + 1 > 10 ? String(date.getMonth() + 1) : '0' + String(date.getMonth() + 1)
         const time = String(date.getFullYear()) + month + String(date.getDate())
         const chatroom = roomId + '.1'
@@ -107,11 +107,11 @@ io.on('connection', function (socket) {
             if (err) {
                 throw err
             }
-            let data = {
+            var data = {
                 'startTime': process.uptime() * 1000,
                 'type': 'time'
             }
-            let msg = JSON.stringify(data) + '\n'
+            var msg = JSON.stringify(data) + '\n'
             fs.write(fd, msg, function (err) {
                 if (err) {
                     throw err
@@ -141,7 +141,7 @@ io.on('connection', function (socket) {
                 throw err
             }
             data['time'] = process.uptime() * 1000
-            let msg = JSON.stringify(data) + '\n'
+            var msg = JSON.stringify(data) + '\n'
             fs.write(fd, msg, function (err) {
                 if (err) {
                     throw err

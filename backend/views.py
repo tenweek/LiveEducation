@@ -386,7 +386,7 @@ def getRooms(request):
 
 
 @csrf_exempt
-def getVerification(request):
+def getMailVerification(request):
     req = simplejson.load(request)
     user = User.objects.filter(username=req['mail'])
     if len(user) != 0:
@@ -437,7 +437,7 @@ def logout(request):
 
 
 @csrf_exempt
-def getRand(request):
+def getMailRand(request):
     req = simplejson.load(request)
     user = User.objects.filter(username=req['mail'])
     if len(user) == 0:

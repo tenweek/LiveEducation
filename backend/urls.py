@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views
+from . import views, phoneViews
 from django.views.generic import TemplateView
 
 
@@ -7,11 +7,11 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
     url(r'^createRoom/$', views.createRoom),
     url(r'^getRooms/$', views.getRooms),
-    url(r'^getVerification/$', views.getVerification),
+    url(r'^getMailVerification/$', views.getMailVerification),
     url(r'^signUp/$', views.signUp),
     url(r'^login/$', views.login),
     url(r'^logout/$', views.logout),
-    url(r'^getRand/$', views.getRand),
+    url(r'^getMailRand/$', views.getMailRand),
     url(r'^changePasswd/$', views.changePasswd),
     url(r'^changeName/$', views.changeName),
     url(r'^getName/$', views.getName),
@@ -31,5 +31,7 @@ urlpatterns = [
     url(r'^closeLiveRoom/$', views.closeLiveRoom),
     url(r'^getVideoRooms/$', views.getVideoRooms),
     url(r'^getVideoRoomInfo/$', views.getVideoRoomInfo),
-    url(r'^startRecord/$', views.startRecord)
+    url(r'^startRecord/$', views.startRecord),
+    url(r'^getPhoneVerification/$', phoneViews.getPhoneVerification),
+    url(r'^getPhoneRand/$', phoneViews.getPhoneRand)
 ]
