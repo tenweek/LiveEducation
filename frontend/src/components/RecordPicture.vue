@@ -5,9 +5,11 @@
                 <div class="for-img">
                     <img :src="this.route" width="100%">
                 </div>
-                <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
-                <br>
-                <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                <div id="information">
+                    <label id="information-room-name">房间名:&nbsp{{ this.roomName }}</label>
+                    <br>
+                    <label id="information-teacher-name">主讲教师:&nbsp{{ this.teacherName }}</label>
+                </div>
             </a>
         </div>
     </Card>
@@ -101,8 +103,8 @@ export default {
     min-height: 150px;
 }
 
-.information {
-    margin-bottom: 5px;
+#information {
+    height: 47px;
 }
 
 #information-room-name {
