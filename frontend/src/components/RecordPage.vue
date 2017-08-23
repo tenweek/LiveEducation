@@ -19,6 +19,7 @@
         <div>
             <page-footer></page-footer>
         </div>
+        <Back-top></Back-top>
     </div>
 </template>
 
@@ -129,7 +130,7 @@ export default {
 }
 
 .header {
-    height: 60px;
+    height: 50px;
     width: 100%;
     font-size: 40px;
     z-index: 50;
