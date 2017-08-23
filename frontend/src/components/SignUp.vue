@@ -82,6 +82,12 @@ export default {
                 callback()
             }
         }
+        /**
+         * 检验账号输入合法性
+         *
+         * @attribute validateAccount
+         * @readOnly
+         */
         const validateAccount = (rule, value, callback) => {
             let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             let regPhone = /^1(3|4|5|7|8)\d{9}$/
@@ -133,6 +139,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取验证码，调用getMailVerification或getPhoneVerification函数
+         *
+         * @method getVerification
+         */
         getVerification: function () {
             if (this.checkEmailAndPhone() === 0) {
                 return
@@ -142,6 +153,11 @@ export default {
                 this.getPhoneVerification()
             }
         },
+        /**
+         * 获取手机验证码
+         *
+         * @method getPhoneVerification
+         */
         getPhoneVerification: function () {
             fetch('/getPhoneVerification/', {
                 method: 'post',
@@ -250,7 +266,7 @@ export default {
             }
         },
         /**
-         * 获取验证码
+         * 获取邮箱验证码
          *
          * @method getVerification
          */

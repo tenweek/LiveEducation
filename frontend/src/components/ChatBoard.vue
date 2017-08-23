@@ -57,24 +57,28 @@ export default {
      * 表示房间ID信息
      *
      * @property roomId
+     * @type String
      */
 
     /**
      * 表示老师名字
      *
      * @property teacherName
+     * @type String
      */
 
     /**
      * 表示用户名字
      *
      * @property username
+     * @type String
      */
 
     /**
      * 表示教学区域组件的高
      *
      * @property containerHeight
+     * @type Number
      */
     props: ['roomId', 'teacherName', 'username', 'containerHeight'],
     data: function () {

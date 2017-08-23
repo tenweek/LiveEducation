@@ -138,6 +138,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取验证码，调用getMailVerification或getPhoneVerification函数
+         *
+         * @method getVerification
+         */
         getVerification: function () {
             if (this.checkEmailAndPhone() === 0) {
                 return
@@ -147,6 +152,11 @@ export default {
                 this.getPhoneVerification()
             }
         },
+        /**
+         * 获取手机验证码
+         *
+         * @method getPhoneVerification
+         */
         getPhoneVerification: function () {
             fetch('/getPhoneRand/', {
                 method: 'post',
@@ -168,6 +178,11 @@ export default {
                 }
             })
         },
+        /**
+         * 检查邮箱或手机号输入正确性
+         *
+         * @method checkEmailAndPhone
+         */
         checkEmailAndPhone: function () {
             if (this.formCustom.mail === '') {
                 this.$Message.error('请输入邮箱或手机号')
@@ -194,9 +209,9 @@ export default {
             this.$router.push({ path: '/login' })
         },
         /**
-         * 进度条进入下一个状态
+         * 获取邮箱验证码
          *
-         * @method next
+         * @method getVerification
          */
         getMailVerification: function () {
             fetch('/getMailRand/', {

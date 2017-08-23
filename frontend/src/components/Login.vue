@@ -51,6 +51,12 @@ export default {
                 callback()
             }
         }
+        /**
+         * 检验账号输入正确性
+         *
+         * @attribute validateAccount
+         * @readOnly
+         */
         const validateAccount = (rule, value, callback) => {
             let regMail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
             let regPhone = /^1(3|4|5|7|8)\d{9}$/
