@@ -1,5 +1,5 @@
 <template>
-    <Card id="chatboard-card">
+    <Card id="chatboard-card" dis-hover>
         <div id="chat-board">
             <div id="messages">
                 <div v-for="message in messages">
@@ -175,6 +175,7 @@ export default {
             self.started = true
         })
         document.getElementById('chat-board').style.height = (this.containerHeight - 32) + 'px'
+        document.getElementById('messages').style.height = (this.containerHeight - 64) + 'px'
     },
     methods: {
         /**
@@ -423,7 +424,8 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            document.getElementById('chat-board').style.height = (newVal - 44) + 'px'
+            document.getElementById('chat-board').style.height = (newVal - 32) + 'px'
+            document.getElementById('messages').style.height = (newVal - 64) + 'px'
         }
     }
 }
@@ -482,6 +484,5 @@ export default {
 
 #messages {
     overflow: auto;
-    height: 87%;
 }
 </style>

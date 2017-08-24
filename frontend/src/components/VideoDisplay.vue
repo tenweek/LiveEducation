@@ -1,5 +1,5 @@
 <template>
-    <Card id="video-display">
+    <Card id="video-display" dis-hover>
         <div id="divDevice">
             <div class="select">
                 <label for="audioSource">Audio source: </label>
@@ -237,6 +237,7 @@ export default {
                         this.localStream.setVideoProfile('720p_3')
                         this.localStream.init(() => {
                             this.localStream.play('agora-local')
+                            document.getElementById('stop').style.display = 'inline-block'
                             this.client.publish(this.localStream)
                         })
                     }
@@ -327,7 +328,8 @@ export default {
     display: none;
 }
 
-#play {
+#play,
+#stop {
     display: none;
 }
 

@@ -3,19 +3,18 @@
         <div class="header">
             <home-page-header :myOption="this.option"></home-page-header>
         </div>
-        <div class="navigation">
-            <div class="welcome">
-                <Icon type="videocamera"></Icon>
-                <label>录播课堂：</label>
-            </div>
-        </div>
-        <div class="list">
-            <div class="list-picture">
-                <div v-for="room in rooms" class="every-picture">
-                    <record-picture :roomName="room.roomName" :teacherName="room.teacherName" :liveId="room.liveId" :userImg="room.userImg"></record-picture class="record-picture">
+        <Card id="record-list" padding="0" dis-hover>
+            <div class="list">
+                <div class="list-hint">
+                    <input type="text" class="live-broadcast" value="录播课堂" readonly="true"></input>
+                </div>
+                <div class="list-picture">
+                    <div v-for="room in rooms" class="every-picture">
+                        <record-picture :roomName="room.roomName" :teacherName="room.teacherName" :liveId="room.liveId" :userImg="room.userImg"></record-picture class="record-picture">
+                    </div>
                 </div>
             </div>
-        </div>
+        </Card>
         <div>
             <page-footer></page-footer>
         </div>
@@ -96,19 +95,30 @@ export default {
 </script>
 
 <style scoped>
-.list {
+#record-list {
     height: auto;
     min-height: 295px;
-    width: 65%;
+    width: 85%;
     min-width: 800px;
-    max-width: 1000px;
-    background: #fff;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+    max-width: 1200px;
     margin: auto;
+    margin-bottom: 40px;
+    margin-top: 40px;
     overflow: hidden;
     background: white;
-    padding-top: 8px;
-    padding-bottom: 30px;
+}
+
+.list-hint {
+    height: 61px;
+    line-height: 45px;
+    margin: auto;
+    width: 96%;
+    font-size: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 16px;
+    border-bottom: solid #e9eaec 1px;
+    margin: auto;
 }
 
 .list-picture {
@@ -117,35 +127,36 @@ export default {
     min-width: 800px;
     padding-top: 5px;
     padding-left: 4%;
+    padding-bottom: 16px;
     margin: auto;
     display: flex;
     flex-wrap: wrap;
 }
 
 .every-picture {
-    width: 20%;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-top: 10px;
+    margin: 10px 10px;
 }
 
 .record-picture {
-    width: 160px;
+    width: 100%;
     height: auto;
     margin: auto;
 }
 
-.navigation {
-    background: #efefef;
-    padding: 8px 40px;
-    overflow: hidden;
-    display: flex;
-    font-size: 15px;
+.live-broadcast {
+    width: 150px;
+    height: 30px;
+    margin-top: 12px;
+    font-size: 25px;
+    border: none;
+    float: left;
+    margin-left: 6px;
 }
 
 .record-page {
-    background-color: #efefef;
-    height: 50px;
+    background-color: #f4f4f4;
+    position: relative;
+    overflow: hidden;
 }
 
 .header {

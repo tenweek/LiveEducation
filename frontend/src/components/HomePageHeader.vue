@@ -1,92 +1,96 @@
 <template>
     <div class="page-header">
-        <div class="logo">
-            <a href="#">
-                <div class="logo-picture">
-                    <img src="../assets/CodeNow.png">
-                </div>
-            </a>
-        </div>
-        <Row class="row">
-            <Col class="navigation-center" span="19">
-            <a :class="this.myOption === 1 ? 'selected' : 'navigation-bar'" href="#">
-                <Icon type="home"></Icon>
-                <label>首页&nbsp</label>
-            </a>
-            <a :class="this.myOption === 2 ? 'selected' : 'navigation-bar'" href="#/live_page">
-                <Icon type="university"></Icon>
-                <label>直播&nbsp</label>
-            </a>
-            <a :class="this.myOption === 3 ? 'selected' : 'navigation-bar'" href="#/record_page">
-                <Icon type="videocamera"></Icon>
-                <label>录播&nbsp</label>
-            </a>
-            <template v-if="this.isTeacher === true">
-                <a class="navigation-bar" @click="showCreateRoom = true">
-                    <Icon type="ios-plus"></Icon>
-                    <label>创建房间</label>
+        <div class="header-content">
+            <Row class="row">
+                <Col span="5">
+                    <a href="#">
+                    <div class="logo-picture">
+                        <img src="../assets/CodeNow.png">
+                    </div>
                 </a>
-            </template>
-            <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
-                <label>房间名称：</label>
-                <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
-                <br>
-                <br>
-                <p>上传封面图</p>
-                <Upload ref="upload" :on-success="handleSuccess" :format="['jpg', 'jpeg', 'png']" :max-size="10240" :on-format-error="imgFormatError" :on-exceeded-size="handleMaxSize" name="myfile" action="/upload/">
-                    <div class="upload-img">
-                        <img :src="this.route">
-                        <div class="upload-cover">
-                            <Icon type="plus"></Icon>
-                        </div>
-                    </div>
-                </Upload>
-                <br>
-                <p>上传课件</p>
-                <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
-                    <div class="upload-file">
-                        <Button type="ghost">点击选择文件&nbsp;&nbsp;
-                            <Icon type="folder"></Icon>
-                        </Button>
-                    </div>
-                </Upload>
-                <div v-if="file !== null">
-                    待上传文件：{{ file.name }}
-                    <Button type="text" :loading="loadingStatus">
-                        {{ '上传中' }}
-                    </Button>
-                </div>
-            </Modal>
-            </Col>
-            <Col class="navigation-right" span="5">
-            <template v-if="this.username === ''">
-                <a class="navigation-right-bar" @click="login">登录</a>
-                <a class="navigation-right-bar" @click="signUp">注册</a>
-            </template>
-            <template v-else>
-                <Dropdown @on-click="dropDownClick">
-                    <a class="navigation-right-bar" href="javascript:void(0)">
-                        {{ username }}
-                        <Icon type="arrow-down-b"></Icon>
+                </Col>
+                <Col class="navigation-center" span="14">
+                    <a :class="this.myOption === 1 ? 'selected' : 'navigation-bar'" href="#">
+                        <Icon type="home"></Icon>
+                        <label>首页&nbsp</label>
                     </a>
-                    <Dropdown-menu slot="list">
-                        <Dropdown-item name='changeName'>修改昵称</Dropdown-item>
-                        <Modal v-model="showChangeName" title="修改昵称" @on-ok="changeName">
-                            <br>
-                            <label id="new-username">请输入新的昵称：</label>
-                            <br>
-                            <br>
-                            <Input v-model="newUsername" size="large" placeholder="请输入新的昵称"></Input>
-                            <br>
-                            <br>
-                        </Modal>
-                        <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
-                        <Dropdown-item name='logOut' divided>登出</Dropdown-item>
-                    </Dropdown-menu>
-                </Dropdown>
-            </template>
-            </Col>
-        </Row>
+                    <a :class="this.myOption === 2 ? 'selected' : 'navigation-bar'" href="#/live_page">
+                        <Icon type="university"></Icon>
+                        <label>直播&nbsp</label>
+                    </a>
+                    <a :class="this.myOption === 3 ? 'selected' : 'navigation-bar'" href="#/record_page">
+                        <Icon type="videocamera"></Icon>
+                        <label>录播&nbsp</label>
+                    </a>
+                    <template v-if="this.isTeacher === true">
+                        <a class="navigation-bar" @click="showCreateRoom = true">
+                            <Icon type="ios-plus"></Icon>
+                            <label>创建房间</label>
+                        </a>
+                    </template>
+                    <Modal v-model="showCreateRoom" title="创建房间" @on-ok="createRoom">
+                        <label>房间名称：</label>
+                        <Input v-model="roomName" size="large" placeholder="请输入房间名称"></Input>
+                        <br>
+                        <br>
+                        <p>上传封面图</p>
+                        <Upload ref="upload" :on-success="handleSuccess" :format="['jpg', 'jpeg', 'png']" :max-size="10240" :on-format-error="imgFormatError" :on-exceeded-size="handleMaxSize" name="myfile" action="/upload/">
+                            <div class="upload-img">
+                                <img :src="this.route">
+                                <div class="upload-cover">
+                                    <Icon type="plus"></Icon>
+                                </div>
+                            </div>
+                        </Upload>
+                        <br>
+                        <p>上传课件</p>
+                        <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
+                            <div class="upload-file">
+                                <Button type="ghost">点击选择文件&nbsp;&nbsp;
+                                    <Icon type="folder"></Icon>
+                                </Button>
+                            </div>
+                        </Upload>
+                        <div v-if="file !== null">
+                            待上传文件：{{ file.name }}
+                            <Button type="text" :loading="loadingStatus">
+                                {{ '上传中' }}
+                            </Button>
+                        </div>
+                    </Modal>
+                </Col>
+                <Col class="navigation-right" span="5">
+                    <template v-if="this.username === ''">
+                        <div class="navigation-right-bar">
+                            <a @click="login">登录</a>
+                            <a @click="signUp">注册</a>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Dropdown @on-click="dropDownClick" class="navigation-right-bar">
+                            <a href="javascript:void(0)">
+                                {{ username }}
+                                <Icon type="arrow-down-b"></Icon>
+                            </a>
+                            <Dropdown-menu slot="list">
+                                <Dropdown-item name='changeName'>修改昵称</Dropdown-item>
+                                <Modal v-model="showChangeName" title="修改昵称" @on-ok="changeName">
+                                    <br>
+                                    <label id="new-username">请输入新的昵称：</label>
+                                    <br>
+                                    <br>
+                                    <Input v-model="newUsername" size="large" placeholder="请输入新的昵称"></Input>
+                                    <br>
+                                    <br>
+                                </Modal>
+                                <Dropdown-item name='modifyPassword'>修改密码</Dropdown-item>
+                                <Dropdown-item name='logOut' divided>登出</Dropdown-item>
+                            </Dropdown-menu>
+                        </Dropdown>
+                    </template>
+                </Col>
+            </Row>
+        </div>
     </div>
 </template>
 
@@ -474,7 +478,6 @@ export default {
     height: 50px;
     line-height: 50px;
     width: 100%;
-    padding-left: 50px;
     position: fixed;
     background: url('../assets/header.png');
     background-repeat: repeat;
@@ -482,8 +485,15 @@ export default {
     z-index: 50;
 }
 
+.header-content {
+    width: 85%;
+    min-width: 800px;
+    margin: auto;
+    max-width: 1200px;
+}
+
 .logo-picture {
-    float: left;
+    text-align: left;
 }
 
 .logo-picture img {
@@ -499,13 +509,13 @@ export default {
     font-size: 16px;
     color: #9ba7b5;
     display: flex;
-    padding-left: 20px;
 }
 
 .navigation-right {
     float: right;
     font-size: 16px;
     display: flex;
+    position: relative;
 }
 
 .navigation-center a {
@@ -541,7 +551,8 @@ export default {
 }
 
 .navigation-right-bar {
-    position: relative;
+    position: absolute;
+    right: 0;
     padding: 0 10px;
 }
 

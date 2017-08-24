@@ -1,5 +1,6 @@
 <template>
-    <div class="record-room">
+<div id="bg">
+    <div id="record-room">
         <div class="header">
             <home-page-header></home-page-header>
         </div>
@@ -18,7 +19,7 @@
                     </Button>
                 </div>
                 <keep-alive>
-                    <component :is="currentTools" :userAccount="this.userAccount" :roomId="this.roomId" :teachingToolsWidth="400" :teachingToolsHeight="400"></component>
+                    <component :is="currentTools" :userAccount="this.userAccount" :roomId="this.roomId" :teachingToolsWidth="this.teachingToolsWidth" :teachingToolsHeight="this.teachingToolsHeight"></component>
                 </keep-alive>
             </div>
             <div class="composite-container">
@@ -33,6 +34,7 @@
         <div>
             <page-footer></page-footer>
         </div>
+    </div>
     </div>
 </template>
 
@@ -97,6 +99,8 @@ export default {
              * @default ''
              */
             userAccount: ''
+            teachingToolsHeight: 0,
+            teachingToolsWidth: 0
         }
     },
     /**
@@ -136,14 +140,33 @@ export default {
         self.socket.on('changeCurrent', function (data) {
             self.currentTools = data['name'] + 'ForRecord'
         })
+        window.onresize = () => {
+            let self = this
+            this.resize(self)
+        }
+    },
+    methods: {
+        resize: function (self) {
+            document.getElementById('bg').style.height = window.innerHeight + 'px'
+            document.getElementById('bg').style.width = window.innerWidth + 'px'
+            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+            document.getElementById('record-room').style.width = (1.33 * unit) + 'px'
+            document.getElementById('record-room').style.height = unit + 'px'
+            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
+            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+        }
     }
 }
 </script>
 
 <style scoped>
+#bg {
+    min-width: 800px;
+    min-height: 600px;
+}
+
 .record-room {
-    border: 1px solid #d7dde4;
-    background: #f5f7f9;
+    background: transparent;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
@@ -151,10 +174,12 @@ export default {
     height: 100vmin;
     margin-left: auto;
     margin-right: auto;
+    min-height: 600px;
+    min-width: 800px;
 }
 
 .header {
-    height: 60px;
+    height: 50px;
     width: 100%;
     font-size: 40px;
     position: fixed;
@@ -163,21 +188,22 @@ export default {
 }
 
 .navigation {
-    background: #efefef;
+    background-color: rgba(239, 239, 239, 0.6);
     padding: 8px 10px;
     overflow: hidden;
     display: flex;
     position: fixed;
     left: 0;
-    top: 60px;
+    top: 50px;
     width: 100%;
     font-size: 15px;
 }
 
 
 .layout-header {
-    width: 78%;
+    width: 98%;
     height: 78%;
+    min-width: 800px;
     display: flex;
     margin-left: auto;
     margin-right: auto;
@@ -186,8 +212,7 @@ export default {
 
 .teaching-tools {
     height: 100%;
-    width: 68%;
-    border: solid;
+    width: 65%;
     text-align: left;
     overflow: hidden;
 }
@@ -199,16 +224,14 @@ export default {
 }
 
 .video-live {
-    height: 30%;
+    height: 40%;
     width: 100%;
-    border: solid;
 }
 
 .chatroom {
-    margin-top: 4%;
-    height: 68%;
+    height: 60%;
     width: 100%;
-    border: solid;
+    padding-top: 12px;
 }
 
 #video {

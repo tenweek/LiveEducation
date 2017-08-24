@@ -1,0 +1,607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: agora::base::opt_parser类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">My Project
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'搜索');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceagora.html">agora</a></li><li class="navelem"><a class="el" href="namespaceagora_1_1base.html">base</a></li><li class="navelem"><a class="el" href="classagora_1_1base_1_1opt__parser.html">opt_parser</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#pub-types">Public 类型</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="classagora_1_1base_1_1opt__parser-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">agora::base::opt_parser类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="opt__parser_8h_source.html">opt_parser.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public 类型</h2></td></tr>
+<tr class="memitem:a0fc17310b5630aaa3afe90e4778b804b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_type</a> { <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba97aea0a1b21d534e7d49099ea2b1a3c8">no_argu</a> =0, 
+<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba7c3733485347882408b61571fd8e4211">require_argu</a> =1, 
+<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_argu</a> =2
+ }</td></tr>
+<tr class="separator:a0fc17310b5630aaa3afe90e4778b804b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a426c6f21ae385d1464204f4674ad6d7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a426c6f21ae385d1464204f4674ad6d7d">opt_parser</a> ()</td></tr>
+<tr class="separator:a426c6f21ae385d1464204f4674ad6d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4f5a1606c19bd164e328530bff6f9b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#ac4f5a1606c19bd164e328530bff6f9b7">add_long_opt</a> (const char *long_opt, bool *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:ac4f5a1606c19bd164e328530bff6f9b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55e3f9f02281a2e57922df70b2ec2dd9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a55e3f9f02281a2e57922df70b2ec2dd9">add_long_opt</a> (const char *long_opt, int32_t *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:a55e3f9f02281a2e57922df70b2ec2dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf34e17e53e4f3e7fc53049b7241cca3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#adf34e17e53e4f3e7fc53049b7241cca3">add_long_opt</a> (const char *long_opt, uint32_t *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:adf34e17e53e4f3e7fc53049b7241cca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00692f576fe8bf16648f4c5f135b62ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a00692f576fe8bf16648f4c5f135b62ca">add_long_opt</a> (const char *long_opt, int64_t *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:a00692f576fe8bf16648f4c5f135b62ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f2ecb3d07458c175abcced10f14b9f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0f2ecb3d07458c175abcced10f14b9f6">add_long_opt</a> (const char *long_opt, uint64_t *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:a0f2ecb3d07458c175abcced10f14b9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeffac6ed09e80d91aef71b0dca6854bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#aeffac6ed09e80d91aef71b0dca6854bc">add_long_opt</a> (const char *long_opt, double *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:aeffac6ed09e80d91aef71b0dca6854bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816dedd4910cacaecddfcc8234ff7e90"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a816dedd4910cacaecddfcc8234ff7e90">add_long_opt</a> (const char *long_opt, std::string *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:a816dedd4910cacaecddfcc8234ff7e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae75d3be7780b550e76f765c6507c0415"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#ae75d3be7780b550e76f765c6507c0415">add_long_opt</a> (const char *long_opt, <a class="el" href="structagora_1_1base_1_1ipv4.html">ipv4</a> *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:ae75d3be7780b550e76f765c6507c0415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaccf1b6fa12a1f6b8dd4116f270addd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#aaccf1b6fa12a1f6b8dd4116f270addd4">add_long_opt</a> (const char *long_opt, <a class="el" href="structagora_1_1base_1_1mac__addr.html">mac_addr</a> *store, const char *help, <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a> optParamType=<a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a>)</td></tr>
+<tr class="separator:aaccf1b6fa12a1f6b8dd4116f270addd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc2868b0cee3db50f795a34e3614c24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a1cc2868b0cee3db50f795a34e3614c24">parse_opts</a> (int argc, char *const argv[])</td></tr>
+<tr class="separator:a1cc2868b0cee3db50f795a34e3614c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aace056fb515c80c54aebcb757946c4ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#aace056fb515c80c54aebcb757946c4ff">clear</a> ()</td></tr>
+<tr class="separator:aace056fb515c80c54aebcb757946c4ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c79880ee7ba4ab8395af4795d552dcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a4c79880ee7ba4ab8395af4795d552dcc">print_usage</a> (const char *exec_file, std::ostream &amp;sout) const</td></tr>
+<tr class="separator:a4c79880ee7ba4ab8395af4795d552dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">成员枚举类型说明</h2>
+<a id="a0fc17310b5630aaa3afe90e4778b804b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fc17310b5630aaa3afe90e4778b804b">&#9670;&nbsp;</a></span>opt_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">agora::base::opt_parser::opt_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">枚举值</th></tr><tr><td class="fieldname"><a id="a0fc17310b5630aaa3afe90e4778b804ba97aea0a1b21d534e7d49099ea2b1a3c8"></a>no_argu&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a0fc17310b5630aaa3afe90e4778b804ba7c3733485347882408b61571fd8e4211"></a>require_argu&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594"></a>opt_argu&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a426c6f21ae385d1464204f4674ad6d7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a426c6f21ae385d1464204f4674ad6d7d">&#9670;&nbsp;</a></span>opt_parser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">agora::base::opt_parser::opt_parser </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="ac4f5a1606c19bd164e328530bff6f9b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4f5a1606c19bd164e328530bff6f9b7">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[1/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a55e3f9f02281a2e57922df70b2ec2dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55e3f9f02281a2e57922df70b2ec2dd9">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[2/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf34e17e53e4f3e7fc53049b7241cca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf34e17e53e4f3e7fc53049b7241cca3">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[3/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a00692f576fe8bf16648f4c5f135b62ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00692f576fe8bf16648f4c5f135b62ca">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[4/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int64_t *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f2ecb3d07458c175abcced10f14b9f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f2ecb3d07458c175abcced10f14b9f6">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[5/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeffac6ed09e80d91aef71b0dca6854bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeffac6ed09e80d91aef71b0dca6854bc">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[6/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a816dedd4910cacaecddfcc8234ff7e90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a816dedd4910cacaecddfcc8234ff7e90">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[7/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae75d3be7780b550e76f765c6507c0415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae75d3be7780b550e76f765c6507c0415">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[8/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structagora_1_1base_1_1ipv4.html">ipv4</a> *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaccf1b6fa12a1f6b8dd4116f270addd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaccf1b6fa12a1f6b8dd4116f270addd4">&#9670;&nbsp;</a></span>add_long_opt() <span class="overload">[9/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::add_long_opt </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>long_opt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structagora_1_1base_1_1mac__addr.html">mac_addr</a> *&#160;</td>
+          <td class="paramname"><em>store</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>help</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804b">opt_parser::opt_type</a>&#160;</td>
+          <td class="paramname"><em>optParamType</em> = <code><a class="el" href="classagora_1_1base_1_1opt__parser.html#a0fc17310b5630aaa3afe90e4778b804ba27048b825dd338a030cfd58aff58e594">opt_parser::opt_argu</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aace056fb515c80c54aebcb757946c4ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aace056fb515c80c54aebcb757946c4ff">&#9670;&nbsp;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void agora::base::opt_parser::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1cc2868b0cee3db50f795a34e3614c24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cc2868b0cee3db50f795a34e3614c24">&#9670;&nbsp;</a></span>parse_opts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool agora::base::opt_parser::parse_opts </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *const&#160;</td>
+          <td class="paramname"><em>argv</em>[]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c79880ee7ba4ab8395af4795d552dcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c79880ee7ba4ab8395af4795d552dcc">&#9670;&nbsp;</a></span>print_usage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void agora::base::opt_parser::print_usage </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>exec_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>sout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>backend/record/base/<a class="el" href="opt__parser_8h_source.html">opt_parser.h</a></li>
+<li>backend/record/<a class="el" href="opt__parser_8cpp.html">opt_parser.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

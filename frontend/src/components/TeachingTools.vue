@@ -1,5 +1,5 @@
 <template>
-    <Card class="teaching-tools">
+    <Card class="teaching-tools" dis-hover>
         <div>
             <div class="choose-current">
                 <Dropdown trigger="hover" placement="right-start" @on-click="changeCurrent">
@@ -155,8 +155,8 @@ export default {
     },
     watch: {
         containerHeight: function (newVal, oldVal) {
-            if (this.isOnLeft) {
-                this.whiteBoardHeight = newVal - 64
+            if (this.toolsOnLeft) {
+                this.whiteBoardHeight = newVal - 96
             } else {
                 this.whiteBoardHeight = newVal - 32
             }
