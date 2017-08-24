@@ -157,7 +157,6 @@ export default {
          */
         getName: function (message) {
             this.chosenUser = message['user']
-            alert(this.chosenUser)
             if (this.teacherName !== this.username) {
                 let show = document.getElementById('show')
                 show.style.display = 'none'
