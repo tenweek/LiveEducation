@@ -59,17 +59,24 @@ export default {
      */
 
     /**
-     *表示白板区域的宽，根据父组件大小动态变化
+     *表示教学区域的高
      *
-     * @property teachingToolsWidth
+     * @property containerHeight
      * @type Number
      */
 
     /**
-     *表示白板区域的长，根据父组件大小动态变化
+     *表示教学区域的宽
      *
-     * @property teachingToolsHeight
+     * @property containerWidth
      * @type Number
+     */
+
+    /**
+     * 表示教学工具是否位于左边窗口
+     *
+     * @property toolsOnLeft
+     * @type Boolean
      */
     props: ['roomId', 'teacherName', 'username', 'containerHeight', 'containerWidth', 'toolsOnLeft'],
     components: {
@@ -95,7 +102,21 @@ export default {
              * @default ''
              */
             socket: '',
+            /**
+             * 表示白板的高
+             *
+             * @attribute whiteBoardHeight
+             * @type Number
+             * @default 0
+             */
             whiteBoardHeight: 0,
+            /**
+             * 表示白板的宽
+             *
+             * @attribute whiteBoardWidth
+             * @type Number
+             * @default 0
+             */
             whiteBoardWidth: 0
         }
     },

@@ -138,14 +138,77 @@ export default {
              * @default ''
              */
             username: '',
+            /**
+             * 表示是否隐藏右边窗口
+             *
+             * @attribute hidden
+             * @type Boolean
+             * @default false
+             */
             hidden: false,
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 表示直播开始的时间
+             *
+             * @attribute startTime
+             * @type String
+             * @default ''
+             */
             startTime: '',
+            /**
+             * 表示教学工具是否位于左边窗口
+             *
+             * @attribute toolsOnLeft
+             * @type Boolean
+             * @default true
+             */
             toolsOnLeft: true,
+            /**
+             * 表示教学区域组件的高
+             *
+             * @attribute teachingToolsHeight
+             * @type Number
+             * @default 0
+             */
             teachingToolsHeight: 0,
+            /**
+             * 表示教学区域组件的宽
+             *
+             * @attribute teachingToolsWidth
+             * @type Number
+             * @default 0
+             */
             teachingToolsWidth: 0,
+            /**
+             * 表示视频域组件的高
+             *
+             * @attribute videoDisplayHeight
+             * @type Number
+             * @default 0
+             */
             videoDisplayHeight: 0,
+            /**
+             * 表示聊天区域组件的高
+             *
+             * @attribute chatBoardHeight
+             * @type Number
+             * @default 0
+             */
             chatBoardHeight: 0,
+            /**
+             * 表示
+             *
+             * @attribute intervalNum
+             * @type Number
+             * @default -1
+             */
             intervalNum: -1
         }
     },
