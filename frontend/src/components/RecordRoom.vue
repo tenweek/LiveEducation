@@ -98,7 +98,7 @@ export default {
              * @type String
              * @default ''
              */
-            userAccount: ''
+            userAccount: '',
             teachingToolsHeight: 0,
             teachingToolsWidth: 0
         }

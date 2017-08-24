@@ -22,8 +22,47 @@ let path = {}
 let started = {}
 // 记录基础路径
 const basicPath = './static/'
-
+let messages = []
+let play = false
 // .0是白板 .1是聊天室 .2是课件展示 .3是代码编辑器
+
+function readFile(rl) {
+    rl.on('line', (line) => {
+        let json = eval('(' + line + ')')
+        messages.push(json)
+    })
+}
+
+function sendNextMessage(old_msg, io) {
+    let list = messages
+    if (list.length <= 0) {
+        console.log('record finish')
+        return
+    }
+    if (play) {
+        let msg = list.shift()
+        const time_slot = msg['time'] - old_msg['time'] > 0 ? msg['time'] - old_msg['time'] : 1
+        sendMessage(io, msg)
+        setTimeout(() => {
+            sendNextMessage(msg, io)
+        }, time_slot)
+    }
+}
+
+function sendMessage(io, json) {
+    console.log(json)
+    if (json['type'] === 'chatroom') {
+        io.to('chatboard').emit('chatroom', json)
+    } else if (json['type'] === 'file') {
+        io.to('file').emit('filedisplay', json)
+    } else if (json['type'] === 'code') {
+        io.to('code').emit('code', json)
+    } else if (json['type'] === 'changeComponents') {
+        io.to('tools').emit('changeCurrent', json)
+    } else {
+        io.to('whiteboard').emit('whiteboard', json)
+    }
+}
 
 io.on('connection', function (socket) {
     let id = 0
@@ -31,43 +70,28 @@ io.on('connection', function (socket) {
     // 向录播间广播
     socket.on('joinTest', function (roomId, account) {
         socket.join(account)
-        const rl = readline.createInterface({
-            input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
-        });
-        let startTime = 0
-        rl.on('line', (line) => {
-            let json = eval('(' + line + ')')
-            if (json['type'] === 'time') {
-                startTime = json['startTime']
-            } else if (json['type'] === 'chatroom') {
-                setTimeout(function () {
-                    io.to(account).emit('chatroom', json)
-                }, json['time'] - startTime)
-            } else if (json['type'] === 'file') {
-                setTimeout(function () {
-                    io.to(account).emit('filedisplay', json)
-                }, json['time'] - startTime)
-            } else if (json['type'] === 'code') {
-                setTimeout(function () {
-                    io.to(account).emit('code', json)
-                }, json['time'] - startTime)
-            } else if (json['type'] === 'changeComponents') {
-                setTimeout(function () {
-                    io.to(account).emit('changeCurrent', json)
-                }, json['time'] - startTime)
-            } else {
-                setTimeout(function () {
-                    io.to(account).emit('whiteboard', json)
-                }, json['time'] - startTime)
-            }
-        })
+        if (messages.length === 0) {
+            console.log('empty')
+            const rl = readline.createInterface({
+                input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
+            });
+            readFile(rl)
+        }
     })
+
     // 加入房间
     socket.on('joinRoom', function (roomId) {
         console.log('room connected')
         socket.join(roomId)
         if (started[roomId]) {
             io.to(roomId).emit('startVideo')
+        }
+    })
+    socket.on('pause', (account) => {
+        play = !play
+        if (play && messages.length > 0) {
+            console.log('send')
+            sendNextMessage(messages.shift(), io)
         }
     })
     // 四个管道的加入
@@ -116,22 +140,6 @@ io.on('connection', function (socket) {
         const chatroom = roomId + '.1'
         const whiteboard = roomId + '.0'
         started[roomId] = true
-        fs.open(String(path[roomId]), 'a', (err, fd) => {
-            if (err) {
-                throw err
-            }
-            let data = {
-                'startTime': process.uptime() * 1000,
-                'type': 'time'
-            }
-            let msg = JSON.stringify(data) + '\n'
-            fs.write(fd, msg, function (err) {
-                if (err) {
-                    throw err
-                }
-                fs.closeSync(fd)
-            })
-        })
         io.to(roomId).emit('time', time)
         io.to(roomId).emit('startVideo')
         io.to(chatroom).emit('getStarted')
