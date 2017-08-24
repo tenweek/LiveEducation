@@ -29,7 +29,7 @@
         </div>
         <div class="drawing-board">
             <input id="text-field" @keyup.enter="drawText" v-show="this.textField === true" v-model="textInput" placeholder="请输入..." autofocus="true"></input>
-            <canvas ref="board" id="canvas" :width="this.whiteBoardWidth" :height="this.containerHeight"></canvas>
+            <canvas ref="board" id="canvas" :width="Math.min(this.whiteBoardWidth, this.containerHeight)" :height="Math.min(this.whiteBoardWidth, this.containerHeight)"></canvas>
         </div>
     </div>
 </template>
@@ -268,6 +268,9 @@ export default {
         },
         whiteBoardWidth: function (newVal, oldVal) {
             console.log('kkk')
+            this.drawDataUrl(this.allDataUrl[this.pointer])
+        },
+        containerHeight: function (newVal, oldVal) {
             this.drawDataUrl(this.allDataUrl[this.pointer])
         },
         colorBorder: function (newVal, oldVal) {
@@ -1261,7 +1264,7 @@ export default {
             let img = new Image()
             let that = this
             img.onload = function () {
-                that.context.drawImage(img, 0, 0, that.whiteBoardWidth, that.containerHeight)
+                that.context.drawImage(img, 0, 0, Math.min(that.whiteBoardWidth, that.containerHeight), Math.min(that.containerHeight, that.whiteBoardWidth))
             }
             img.src = dataUrl
         }
@@ -1306,5 +1309,9 @@ button.active {
 .drawing-board {
     height: 100%;
     width: 100%;
+}
+
+#canvas {
+    border: #e9eaec dashed 1px;
 }
 </style>

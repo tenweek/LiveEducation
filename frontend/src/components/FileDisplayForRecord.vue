@@ -111,7 +111,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', this.roomId, this.userAccount + 'f')
+        self.socket.emit('joinTest', this.roomId, 'file')
         self.socket.on('filedisplay', function (data) {
             self.teacherId = data['teacherId']
             self.fileNum = data['fileNum']

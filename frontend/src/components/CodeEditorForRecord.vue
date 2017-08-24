@@ -30,20 +30,7 @@ export default {
     props: ['roomId', 'userAccount'],
     data: function () {
         return {
-            /**
-             * 表示编辑器中输入的代码
-             *
-             * @attribute code
-             * @type String
-             * @default 'const a = 10   123456789'
-             */
-            code: 'const a = 10   123456789',
-            /**
-             * 编辑器中的一些设置参数
-             *
-             * @attribute editorOptions
-             * @type Object
-             */
+            code: '',
             editorOptions: {
                 readOnly: true,
                 tabSize: 4,
@@ -104,7 +91,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', self.roomId, self.userAccount)
+        self.socket.emit('joinTest', self.roomId, 'code')
         self.socket.on('code', function (data) {
             self.code = data['code']
         })

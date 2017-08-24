@@ -556,6 +556,10 @@ export default {
     padding: 0 10px;
 }
 
+.navigation-right-bar a {
+    margin-left: 10px;
+}
+
 #new-username {
     font-size: 15px;
 }

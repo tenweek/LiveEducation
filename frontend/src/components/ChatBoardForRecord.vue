@@ -17,7 +17,7 @@
             </div>
         </div>
         <Input>
-        <Button id="send-btn" slot="append">发送</Button>
+        <Button id="send-btn" slot="append" disabled>发送</Button>
         </Input>
     </div>
 </template>
@@ -34,20 +34,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
-    /**
-     * 表示用户账号
-     *
-     * @property userAccount
-     * @type String
-     */
-
-    /**
-     * 表示房间ID信息
-     *
-     * @property roomId
-     * @type String
-     */
-    props: ['userAccount', 'roomId'],
+    props: ['userAccount', 'roomId', 'chatBoardHeight'],
     data: function () {
         return {
             /**
@@ -76,7 +63,7 @@ export default {
     mounted: function () {
         let self = this
         self.socket = io.connect('http://localhost:9000')
-        self.socket.emit('joinTest', self.roomId, self.userAccount + 'c')
+        self.socket.emit('joinTest', self.roomId, 'chatboard')
         self.socket.on('chatroom', function (data) {
             self.messages.push({
                 'msg': data['message'],
@@ -85,6 +72,12 @@ export default {
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
         })
+        document.getElementById('messages').style.height = (this.chatBoardHeight - 32) + 'px'
+    },
+    watch: {
+        chatBoardHeight: function (newVal, oldVal) {
+            document.getElementById('messages').style.height = (newVal - 32) + 'px'
+        }
     }
 }
 </script>
@@ -122,17 +115,7 @@ export default {
     padding-left: 5px;
 }
 
-#send-btn {
-    color: #6088BB;
-    background-color: #9EF4E6;
-}
-
-#send-btn:hover {
-    border-color: #12CC94;
-}
-
 #messages {
     overflow: auto;
-    height: 91%;
 }
 </style>

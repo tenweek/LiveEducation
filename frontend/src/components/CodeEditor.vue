@@ -67,9 +67,8 @@ export default {
              *
              * @attribute code
              * @type String
-             * @default 'const a = 10   123456789'
              */
-            code: 'const a = 10   123456789',
+            code: '',
             /**
              * 编辑器中的一些设置参数
              *

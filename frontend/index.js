@@ -50,7 +50,6 @@ function sendNextMessage(old_msg, io) {
 }
 
 function sendMessage(io, json) {
-    console.log(json)
     if (json['type'] === 'chatroom') {
         io.to('chatboard').emit('chatroom', json)
     } else if (json['type'] === 'file') {
@@ -71,7 +70,6 @@ io.on('connection', function (socket) {
     socket.on('joinTest', function (roomId, account) {
         socket.join(account)
         if (messages.length === 0) {
-            console.log('empty')
             const rl = readline.createInterface({
                 input: fs.createReadStream(String(basicPath + roomId + '/' + roomId + '.txt'))
             });
@@ -87,7 +85,7 @@ io.on('connection', function (socket) {
             io.to(roomId).emit('startVideo')
         }
     })
-    socket.on('pause', (account) => {
+    socket.on('pause', () => {
         play = !play
         if (play && messages.length > 0) {
             console.log('send')

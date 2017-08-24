@@ -1,7 +1,7 @@
 <template>
     <div class="white-board">
         <div class="drawing-board">
-            <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
+            <canvas ref="board" id="canvas" :width="this.teachingToolsWidth" :height="this.teachingToolsHeight"></canvas>
         </div>
     </div>
 </template>
@@ -240,7 +240,7 @@ export default {
             this.canvas.style.cursor = 'default'
             this.allDataUrl.push(this.canvas.toDataURL())
             this.socket = io.connect('http://localhost:9000')
-            this.socket.emit('joinTest', this.roomId, this.userAccount + 'w')
+            this.socket.emit('joinTest', this.roomId, 'whiteboard')
         },
         /**
          * 当选择功能为橡皮擦且size值变化时调用，
