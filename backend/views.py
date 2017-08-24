@@ -159,7 +159,7 @@ def getImg(request):
 @csrf_exempt
 def uploadFile(request):
     file = request.FILES.get('file')
-    account = request.COOKIES.get('userAccount')
+    account = request.session.get('account')
     user = User.objects.get(username=account)
     user.user_file = file
     user.file_num += 1
@@ -259,7 +259,7 @@ def gagAll(request):
 def checkGag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=request.session.get('account'))
+    student = User.objects.get(name=req['name'])
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     response = JsonResponse({'result': roomStudent.can_speak})
     return response
@@ -269,7 +269,7 @@ def checkGag(request):
 def gag(request):
     req = simplejson.load(request)
     room = Room.objects.get(id=req['roomID'])
-    student = User.objects.get(username=request.session.get('account'))
+    student = User.objects.get(name=req['name'])
     roomStudent = RoomStudent.objects.get(room=room, student=student)
     roomStudent.can_speak = False
     roomStudent.save()
@@ -386,7 +386,7 @@ def getRooms(request):
 
 
 @csrf_exempt
-def getVerification(request):
+def getMailVerification(request):
     req = simplejson.load(request)
     user = User.objects.filter(username=req['mail'])
     if len(user) != 0:
@@ -437,7 +437,7 @@ def logout(request):
 
 
 @csrf_exempt
-def getRand(request):
+def getMailRand(request):
     req = simplejson.load(request)
     user = User.objects.filter(username=req['mail'])
     if len(user) == 0:

@@ -161,7 +161,7 @@ export default {
             this.teacherName = roomInfo.teacherName
             this.username = roomInfo.name
         } else {
-            this.pageJump()
+            this.$router.push({ name: 'home' })
         }
         this.intervalNum = window.setInterval(this.changeNum, 5000)
     },
@@ -181,14 +181,17 @@ export default {
         self.socket.on('closeLive', function () {
             self.$Message.warning(myMsg.room['endLive'])
             window.clearInterval(self.intervalNum)
-            setTimeout(this.pageJump, 3000)
+            if (self.teacherName === self.username) {
+                setTimeout(window.close, 3000)
+            } else {
+                setTimeout(function () {
+                    self.$router.push({ name: 'home' })
+                }, 3000)
+            }
         })
         self.startRecord()
     },
     methods: {
-        pageJump: function () {
-            this.$router.push({ name: 'home' })
-        },
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'

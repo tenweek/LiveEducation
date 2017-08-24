@@ -122,7 +122,8 @@ export default {
              * @default ''
              */
             camera: '',
-            socket: ''
+            socket: '',
+            started: false
         }
     },
     /**
@@ -145,7 +146,10 @@ export default {
         document.getElementById('video').style.height = (this.containerHeight - 32) + 'px'
         let self = this
         self.socket.on('startVideo', function () {
-            self.join()
+            if (!self.started) {
+                self.join()
+            }
+            self.started = true
         })
     },
     methods: {
