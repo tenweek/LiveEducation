@@ -6,52 +6,56 @@
                 <home-page-header></home-page-header>
             </div>
             <div class="navigation">
-                <div class="welcome">
-                    <Icon type="university"></Icon>
-                    <label>欢迎进入直播间 !</label>
-                </div>
-                <div class="navigation-center">
-                    <label class="information">老师姓名：{{ this.teacherName }}</label>
-                    <label class="information">房间ID:{{ this.roomId }}</label>
-                    <label class="information">房间名：{{ this.roomName }}</label>
-                    <label class="information">在线人数：{{ this.studentNum }}</label>
-                </div>
-                <div class="navigation-right">
-                    <template v-if="this.teacherName === this.username">
-                        <Button @click="startLive" type="primary" shape="circle" size="small" id="start-live-button">开始直播</Button>
-                        <Button @click="closeLive" type="error" shape="circle" size="small" id="stop-live-button">结束直播</Button>
-                    </template>
+                <div class="navigation-content">
+                    <div class="welcome">
+                        <Icon type="university"></Icon>
+                        <label>欢迎进入直播间 !</label>
+                    </div>
+                    <div class="navigation-center">
+                        <label class="information">老师姓名：{{ this.teacherName }}</label>
+                        <label class="information">房间ID:{{ this.roomId }}</label>
+                        <label class="information">房间名：{{ this.roomName }}</label>
+                        <label class="information">在线人数：{{ this.studentNum }}</label>
+                    </div>
+                    <div class="navigation-right">
+                        <template v-if="this.teacherName === this.username">
+                            <Button @click="startLive" type="primary" shape="circle" size="small" id="start-live-button">开始直播</Button>
+                            <Button @click="closeLive" type="error" shape="circle" size="small" id="stop-live-button">结束直播</Button>
+                        </template>
+                    </div>
                 </div>
             </div>
             <div class="layout-header">
                 <div class="left-container" id="teaching-tools">
                     <teaching-tools :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.teachingToolsHeight" :container-width="this.teachingToolsWidth" :tools-on-left="this.toolsOnLeft"></teaching-tools>
                 </div>
-                <div class="buttons-panel">
-                    <template v-if="this.hidden === true">
-                        <Tooltip content="弹出右边窗口" placement="right-start">
-                            <Button id="pop-up-button" type="ghost" @click="popUp">
-                                <Icon type="ios-redo"></Icon>
-                            </Button>
-                        </Tooltip>
-                    </template>
-                    <template v-else>
-                        <Tooltip content="切换位置" placement="right-start">
-                            <Button id="swap-button" type="ghost" @click="swap">
-                                <Icon type="arrow-swap"></Icon>
-                            </Button>
-                        </Tooltip><br>
-                        <Tooltip content="隐藏右边窗口" placement="right-start">
-                            <Button id="hide-button" type="ghost" @click="hideRight">
-                                <Icon type="ios-undo"></Icon>
-                            </Button>
-                        </Tooltip><br>
-                        <Tooltip content="隐藏左边窗口" placement="right-start">
-                            <Button id="hide-button" type="ghost" @click="hideLeft">
-                                <Icon type="ios-redo"></Icon>
-                            </Button>
-                        </Tooltip>
-                    </template>
+                <div class="center-container">
+                    <div class="buttons-panel">
+                        <template v-if="this.hidden === true">
+                            <Tooltip content="弹出右边窗口" placement="right-start">
+                                <Button id="pop-up-button" type="ghost" @click="popUp">
+                                    <Icon type="ios-redo"></Icon>
+                                </Button>
+                            </Tooltip>
+                        </template>
+                        <template v-else>
+                            <Tooltip content="切换位置" placement="right-start">
+                                <Button id="swap-button" type="ghost" @click="swap">
+                                    <Icon type="arrow-swap"></Icon>
+                                </Button>
+                            </Tooltip><br>
+                            <Tooltip content="隐藏右边窗口" placement="right-start">
+                                <Button id="hide-button" type="ghost" @click="hideRight">
+                                    <Icon type="ios-undo"></Icon>
+                                </Button>
+                            </Tooltip><br>
+                            <Tooltip content="隐藏左边窗口" placement="right-start">
+                                <Button id="hide-button" type="ghost" @click="hideLeft">
+                                    <Icon type="ios-redo"></Icon>
+                                </Button>
+                            </Tooltip>
+                        </template>
+                    </div>
                 </div>
                 <div class="right-up-container" id="video-display">
                     <video-display :roomId="this.roomId" :teacherName="this.teacherName" :username="this.username" :container-height="this.videoDisplayHeight"></video-display>
@@ -195,13 +199,17 @@ export default {
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
-            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
-            document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
-            document.getElementById('live-room').style.height = unit + 'px'
+            // let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
+            // document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
+            // document.getElementById('live-room').style.height = unit + 'px'
             self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
             self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
             self.videoDisplayHeight = document.getElementById('video-display').clientHeight
-            self.chatBoardHeight = document.getElementById('chatroom').clientHeight
+            if (this.hidden) {
+                self.chatBoardHeight = document.getElementById('chatroom').clientHeight
+            } else {
+                self.chatBoardHeight = document.getElementById('chatroom').clientHeight - 12
+            }
         },
         closeLive: function () {
             document.getElementById('cover').style.display = 'inline'
@@ -258,7 +266,7 @@ export default {
             document.getElementById('chatroom').style.paddingTop = '0'
             document.getElementById('chatroom').style.height = '100%'
             document.getElementById('chatroom').style.top = 'inherit'
-            this.chatBoardHeight = document.getElementById('chatroom').clientHeight + 12
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
         },
         /**
          * 弹出右边窗口
@@ -271,7 +279,7 @@ export default {
             document.getElementById('chatroom').style.paddingTop = '12px'
             document.getElementById('chatroom').style.height = '60%'
             document.getElementById('chatroom').style.top = '40%'
-            this.chatBoardHeight = document.getElementById('chatroom').clientHeight
+            this.chatBoardHeight = document.getElementById('chatroom').clientHeight - 12
         },
         /**
          * 左右子组件交换位置
@@ -352,12 +360,13 @@ export default {
     position: relative;
     border-radius: 5px;
     overflow: hidden;
-    width: 177vmin;
-    height: 100vmin;
+    width: 85%;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
     min-height: 600px;
     min-width: 800px;
+    max-width: 1200px;
 }
 
 .header {
@@ -381,14 +390,21 @@ export default {
     font-size: 15px;
 }
 
+.navigation-content {
+    width: 85%;
+    min-width: 800px;
+    max-width: 1200px;
+    display: flex;
+    margin: auto;
+}
+
 .navigation-center {
     margin: 0 auto;
     font-size: 15px;
 }
 
 .navigation-right {
-    margin-right: 15px;
-    width: 64px;
+    width: 79px;
     font-size: 15px;
 }
 
@@ -401,7 +417,7 @@ export default {
 }
 
 .layout-header {
-    width: 90%;
+    width: 100%;
     height: 78%;
     min-width: 800px;
     display: flex;
@@ -420,6 +436,13 @@ export default {
     overflow: hidden;
 }
 
+.center-container {
+    width: 5%;
+    position: absolute;
+    text-align: center;
+    left: 65%;
+}
+
 .right-up-container {
     display: block;
     height: 40%;
@@ -435,11 +458,6 @@ export default {
     padding-top: 12px;
     height: 60%;
     width: 30%;
-}
-
-.buttons-panel {
-    position: absolute;
-    left: 65%;
 }
 
 #swap-button,

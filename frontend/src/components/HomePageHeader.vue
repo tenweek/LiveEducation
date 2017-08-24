@@ -472,6 +472,7 @@ export default {
     width: 85%;
     min-width: 800px;
     margin: auto;
+    max-width: 1200px;
 }
 
 .logo-picture {

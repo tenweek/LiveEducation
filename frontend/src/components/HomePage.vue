@@ -144,9 +144,10 @@ export default {
     min-height: 295px;
     width: 85%;
     min-width: 800px;
+    max-width: 1200px;
     margin: auto;
     margin-bottom: 40px;
-    margin-top: 20px;
+    margin-top: 40px;
     overflow: hidden;
     background: white;
 }
