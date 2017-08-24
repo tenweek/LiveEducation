@@ -1,7 +1,7 @@
 <template>
     <div class="white-board">
         <div class="drawing-board">
-            <canvas ref="board" id="canvas" :width="teachingToolsWidth" :height="teachingToolsHeight"></canvas>
+            <canvas ref="board" id="canvas" :width="this.teachingToolsWidth" :height="this.teachingToolsHeight"></canvas>
         </div>
     </div>
 </template>

@@ -17,7 +17,7 @@
             </div>
         </div>
         <Input>
-        <Button id="send-btn" slot="append">发送</Button>
+        <Button id="send-btn" slot="append" disabled>发送</Button>
         </Input>
     </div>
 </template>
@@ -34,7 +34,7 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
-    props: ['userAccount', 'roomId'],
+    props: ['userAccount', 'roomId', 'chatBoardHeight'],
     data: function () {
         return {
             /**
@@ -72,6 +72,12 @@ export default {
             let scroll = document.getElementById('messages')
             scroll.scrollTop = scroll.scrollHeight
         })
+        document.getElementById('messages').style.height = (this.chatBoardHeight - 32) + 'px'
+    },
+    watch: {
+        chatBoardHeight: function (newVal, oldVal) {
+            document.getElementById('messages').style.height = (newVal - 32) + 'px'
+        }
     }
 }
 </script>
@@ -109,17 +115,7 @@ export default {
     padding-left: 5px;
 }
 
-#send-btn {
-    color: #6088BB;
-    background-color: #9EF4E6;
-}
-
-#send-btn:hover {
-    border-color: #12CC94;
-}
-
 #messages {
     overflow: auto;
-    height: 91%;
 }
 </style>

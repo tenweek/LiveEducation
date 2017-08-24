@@ -17,7 +17,7 @@ export default {
     props: ['roomId', 'userAccount'],
     data: function () {
         return {
-            code: 'const a = 10   123456789',
+            code: '',
             editorOptions: {
                 readOnly: true,
                 tabSize: 4,

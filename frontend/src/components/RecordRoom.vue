@@ -1,40 +1,56 @@
 <template>
-<div id="bg">
-    <div id="record-room">
-        <div class="header">
-            <home-page-header></home-page-header>
-        </div>
-        <div class="navigation">
-            <div class="welcome">
-                <Icon type="university"></Icon>
-                <label>欢迎进入录播间 !</label>
+    <div id="bg">
+        <div id="record-room">
+            <div class="header">
+                <home-page-header></home-page-header>
             </div>
-        </div>
-        <div class="layout-header">
-            <div class="teaching-tools">
-                <div class="choose-current">
-                    <Button type="ghost">
-                        教学区
-                        <Icon type="arrow-right-b"></Icon>
-                    </Button>
-                </div>
-                <keep-alive>
-                    <component :is="currentTools" :userAccount="this.userAccount" :roomId="this.roomId" :teachingToolsWidth="this.teachingToolsWidth" :teachingToolsHeight="this.teachingToolsHeight"></component>
-                </keep-alive>
-            </div>
-            <div class="composite-container">
-                <div class="video-live">
-                    <video :src=videoPath id="video" autoplay="autoplay"></video>
-                </div>
-                <div class="chatroom">
-                    <chat-board-for-record :roomId="this.roomId" :userAccount="this.userAccount"></chat-board-for-record>
+            <div class="navigation">
+                <div class="navigation-content">
+                    <div class="welcome">
+                        <Icon type="university"></Icon>
+                        <label>欢迎进入录播间 !</label>
+                    </div>
+                     <div class="navigation-center">
+                        <label class="information">老师姓名：{{ this.userAccount }}</label>
+                        <label class="information">房间ID:{{ this.roomId }}</label>
+                        <label class="information">房间名：{{ this.roomName }}</label>
+                    </div>
+                     <div class="navigation-right">
+                        <template v-if="this.teacherName === this.username">
+                            <Button @click="start" type="primary" shape="circle" size="small" id="start-button">开始播放</Button>
+                            <Button @click="pause" type="error" shape="circle" size="small" id="pause-button">暂停播放</Button>
+                        </template>
+                    </div>
                 </div>
             </div>
+            <div class="layout-header">
+                <div class="teaching-tools" id="teaching-tools">
+                    <Card dis-hover>
+                        <div class="choose-current">
+                            <Button type="ghost">
+                                教学区
+                            </Button>
+                        </div>
+                        <keep-alive>
+                            <component :is="currentTools" :userAccount="this.userAccount" :roomId="this.roomId" :teaching-tools-width="this.teachingToolsWidth" :teaching-tools-height="this.teachingToolsHeight"></component>
+                        </keep-alive>
+                    </Card>
+                </div>
+                <div class="video-live" id="video-live">
+                    <Card dis-hover>
+                        <video :src=videoPath id="video" :width="this.videoWidth" :height="this.videoHeight"></video>
+                    </Card>
+                </div>
+                <div class="chatroom" id="chatroom">
+                    <Card dis-hover>
+                        <chat-board-for-record :roomId="this.roomId" :userAccount="this.userAccount" :chat-board-height="this.chatBoardHeight"></chat-board-for-record>
+                    </Card>
+                </div>
+            </div>
+            <div>
+                <page-footer></page-footer>
+            </div>
         </div>
-        <div>
-            <page-footer></page-footer>
-        </div>
-    </div>
     </div>
 </template>
 
@@ -78,7 +94,10 @@ export default {
             videoPath: '',
             userAccount: '',
             teachingToolsHeight: 0,
-            teachingToolsWidth: 0
+            teachingToolsWidth: 0,
+            videoWidth: 0,
+            videoHeight: 0,
+            chatBoardHeight: 0
         }
     },
     created: function () {
@@ -113,6 +132,7 @@ export default {
         self.socket.on('changeCurrent', function (data) {
             self.currentTools = data['name'] + 'ForRecord'
         })
+        self.resize(self)
         window.onresize = () => {
             let self = this
             this.resize(self)
@@ -122,11 +142,24 @@ export default {
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
-            let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
-            document.getElementById('record-room').style.width = (1.33 * unit) + 'px'
-            document.getElementById('record-room').style.height = unit + 'px'
-            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
-            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
+            self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth - 32
+            self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight - 64
+            self.videoWidth = document.getElementById('video-live').clientWidth - 32
+            self.videoHeight = document.getElementById('video-live').clientHeight - 32
+            self.chatBoardHeight = document.getElementById('chatroom').clientHeight - 44
+            console.log(this.teachingToolsHeight + 'teachingToolsHeight')
+            console.log(this.teachingToolsWidth + 'teachingToolsWidth')
+            console.log(this.videoWidth + 'videoWidth')
+            console.log(this.videoHeight + 'videoHeight')
+            console.log(this.chatBoardHeight + 'chatBoardHeight')
+        },
+        start: function () {
+            document.getElementById('start-button').style.display = 'none'
+            document.getElementById('pause-button').style.display = 'inline-block'
+        },
+        pause: function () {
+            document.getElementById('pause-button').style.display = 'none'
+            document.getElementById('start-button').style.display = 'inline-block'
         }
     }
 }
@@ -138,17 +171,18 @@ export default {
     min-height: 600px;
 }
 
-.record-room {
+#record-room {
     background: transparent;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
-    width: 177vmin;
-    height: 100vmin;
+    width: 85%;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
     min-height: 600px;
     min-width: 800px;
+    max-width: 1200px;
 }
 
 .header {
@@ -172,38 +206,66 @@ export default {
     font-size: 15px;
 }
 
+.navigation-content {
+    width: 85%;
+    min-width: 800px;
+    max-width: 1200px;
+    display: flex;
+    margin: auto;
+}
+
+.navigation-center {
+    margin: 0 auto;
+    font-size: 15px;
+}
+
+.navigation-right {
+    width: 79px;
+    font-size: 15px;
+}
+
+#pause-button {
+    display: none;
+}
+
+.information {
+    margin: 0 auto;
+}
 
 .layout-header {
-    width: 98%;
+    width: 100%;
     height: 78%;
     min-width: 800px;
     display: flex;
     margin-left: auto;
     margin-right: auto;
     margin-top: 110px;
+    position: relative;
 }
 
 .teaching-tools {
+    position: absolute;
+    left: 0;
     height: 100%;
-    width: 65%;
+    width: 68%;
     text-align: left;
     overflow: hidden;
 }
 
-.composite-container {
-    width: 30%;
-    height: 100%;
-    margin-left: 2%;
-}
-
 .video-live {
+    display: block;
+    position: absolute;
+    left: 70%;
     height: 40%;
-    width: 100%;
+    width: 30%;
 }
 
 .chatroom {
+    position: absolute;
+    left: 70%;
+    top: 40%;
     height: 60%;
-    width: 100%;
+    width: 30%;
     padding-top: 12px;
 }
 

@@ -444,13 +444,13 @@ export default {
     display: block;
     height: 40%;
     position: absolute;
-    left: 70%;
+    right: 0;
     width: 30%
 }
 
 #chatroom {
     position: absolute;
-    left: 70%;
+    right: 0;
     top: 40%;
     padding-top: 12px;
     height: 60%;

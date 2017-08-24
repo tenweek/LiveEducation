@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div id="file-content">
         <template v-if="this.fileNum > 0">
             <div class="file-display" id="file">
-                <div class="ppt-header">PPT放映</div>
+                <div id="ppt-header">PPT放映</div>
                 <div @click="makeFoucs" @keydown="modPicture()" tabindex="0">
                     <img :src="this.route" />
                 </div>
-                <div class="ppt-footer">
+                <div id="ppt-footer">
                     <div class="for-footer">
                         <a class="arrow" :style="this.isTeacher ? 'display:block' : 'display:none'" @click="prePicture">
                             <Icon type="arrow-left-b"></Icon>
@@ -22,7 +22,7 @@
                         </a>
                     </div>
                 </div>
-                <div :style="this.isTeacher ? 'display:block':'display:none'">
+                <div :style="this.isTeacher ? 'display:block':'display:none'" id="upload-btn">
                     <Upload name="file" :before-upload="handleUpload" :show-upload-list="false" :on-success="upload" :format="['ppt','pptx','key','pdf']" :on-format-error="fileFormatError" action="/uploadFile/">
                         <div class="upload-file">
                             <Button type="ghost" style="background:white">点击上传课件&nbsp;&nbsp;
@@ -349,6 +349,19 @@ export default {
                 'maxPage': this.maxPage
             }, this.roomId + '.2')
         }
+    },
+    watch: {
+        isOnLeft: function (newVal, oldVal) {
+            if (newVal) {
+                document.getElementById('ppt-header').style.display = 'inline-block'
+                document.getElementById('ppt-footer').style.display = 'inline-block'
+                document.getElementById('upload-btn').style.display = 'inline-block'
+            } else {
+                document.getElementById('ppt-header').style.display = 'none'
+                document.getElementById('ppt-footer').style.display = 'none'
+                document.getElementById('upload-btn').style.display = 'none'
+            }
+        }
     }
 }
 </script>
@@ -357,7 +370,7 @@ export default {
 .drag-file {
     width: 100%;
     height: 100%;
-    border: 2px dashed black;
+    border: 2px dashed #eee;
     margin: auto;
 }
 
@@ -379,7 +392,7 @@ export default {
     background: #52524E;
 }
 
-.ppt-header {
+#ppt-header {
     background-color: #52524E;
     width: 100%;
     height: 50px;
@@ -397,7 +410,7 @@ img {
     width: 100%;
 }
 
-.ppt-footer {
+#ppt-footer {
     width: 100%;
     height: 80px;
     background-color: #52524E;
