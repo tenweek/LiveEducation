@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: backend.models.Room类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">My Project
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'搜索');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacebackend.html">backend</a></li><li class="navelem"><a class="el" href="namespacebackend_1_1models.html">models</a></li><li class="navelem"><a class="el" href="classbackend_1_1models_1_1_room.html">Room</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-static-attribs">静态 Public 属性</a> &#124;
+<a href="classbackend_1_1models_1_1_room-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">backend.models.Room类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>存储直播房间信息的表  
+ <a href="classbackend_1_1models_1_1_room.html#details">更多...</a></p>
+<div class="dynheader">
+类 backend.models.Room 继承关系图:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classbackend_1_1models_1_1_room.png" usemap="#backend.models.Room_map" alt=""/>
+  <map id="backend.models.Room_map" name="backend.models.Room_map">
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+静态 Public 属性</h2></td></tr>
+<tr class="memitem:aa686cd4be0c8a8e497ed1e8346931164"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_room.html#aa686cd4be0c8a8e497ed1e8346931164">teacher</a> = models.ForeignKey('backend.User')</td></tr>
+<tr class="memdesc:aa686cd4be0c8a8e497ed1e8346931164"><td class="mdescLeft">&#160;</td><td class="mdescRight">teacher存储房间的教师  <a href="#aa686cd4be0c8a8e497ed1e8346931164">更多...</a><br /></td></tr>
+<tr class="separator:aa686cd4be0c8a8e497ed1e8346931164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb61d370730412c4820f8a074cce0df2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_room.html#afb61d370730412c4820f8a074cce0df2">room_name</a> = models.CharField(max_length=100)</td></tr>
+<tr class="memdesc:afb61d370730412c4820f8a074cce0df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">room_name存储房间名字  <a href="#afb61d370730412c4820f8a074cce0df2">更多...</a><br /></td></tr>
+<tr class="separator:afb61d370730412c4820f8a074cce0df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad63f9554f2504138615bd530e3f5c5a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_room.html#ad63f9554f2504138615bd530e3f5c5a6">student_num</a> = models.IntegerField(default=0)</td></tr>
+<tr class="memdesc:ad63f9554f2504138615bd530e3f5c5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">student_num存储房间学生的数目  <a href="#ad63f9554f2504138615bd530e3f5c5a6">更多...</a><br /></td></tr>
+<tr class="separator:ad63f9554f2504138615bd530e3f5c5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d6b225a3f6f65e26f5e23ee3e15bdbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_room.html#a8d6b225a3f6f65e26f5e23ee3e15bdbc">create_time</a> = models.DateTimeField(default=timezone.now)</td></tr>
+<tr class="memdesc:a8d6b225a3f6f65e26f5e23ee3e15bdbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">create_time存储房间创建时间  <a href="#a8d6b225a3f6f65e26f5e23ee3e15bdbc">更多...</a><br /></td></tr>
+<tr class="separator:a8d6b225a3f6f65e26f5e23ee3e15bdbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>存储直播房间信息的表 </p>
+</div><h2 class="groupheader">类成员变量说明</h2>
+<a id="a8d6b225a3f6f65e26f5e23ee3e15bdbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d6b225a3f6f65e26f5e23ee3e15bdbc">&#9670;&nbsp;</a></span>create_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.Room.create_time = models.DateTimeField(default=timezone.now)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>create_time存储房间创建时间 </p>
+
+</div>
+</div>
+<a id="afb61d370730412c4820f8a074cce0df2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb61d370730412c4820f8a074cce0df2">&#9670;&nbsp;</a></span>room_name</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.Room.room_name = models.CharField(max_length=100)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>room_name存储房间名字 </p>
+
+</div>
+</div>
+<a id="ad63f9554f2504138615bd530e3f5c5a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad63f9554f2504138615bd530e3f5c5a6">&#9670;&nbsp;</a></span>student_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.Room.student_num = models.IntegerField(default=0)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>student_num存储房间学生的数目 </p>
+
+</div>
+</div>
+<a id="aa686cd4be0c8a8e497ed1e8346931164"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa686cd4be0c8a8e497ed1e8346931164">&#9670;&nbsp;</a></span>teacher</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.Room.teacher = models.ForeignKey('backend.User')</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>teacher存储房间的教师 </p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>backend/<a class="el" href="models_8py.html">models.py</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

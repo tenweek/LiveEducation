@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: backend.models.VideoRoom类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">My Project
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'搜索');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacebackend.html">backend</a></li><li class="navelem"><a class="el" href="namespacebackend_1_1models.html">models</a></li><li class="navelem"><a class="el" href="classbackend_1_1models_1_1_video_room.html">VideoRoom</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-static-attribs">静态 Public 属性</a> &#124;
+<a href="classbackend_1_1models_1_1_video_room-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">backend.models.VideoRoom类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>存储录播房间信息  
+ <a href="classbackend_1_1models_1_1_video_room.html#details">更多...</a></p>
+<div class="dynheader">
+类 backend.models.VideoRoom 继承关系图:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classbackend_1_1models_1_1_video_room.png" usemap="#backend.models.VideoRoom_map" alt=""/>
+  <map id="backend.models.VideoRoom_map" name="backend.models.VideoRoom_map">
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+静态 Public 属性</h2></td></tr>
+<tr class="memitem:a0a3ecbe8fbb2179b1784fa0870196e50"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#a0a3ecbe8fbb2179b1784fa0870196e50">teacher</a> = models.ForeignKey('backend.User')</td></tr>
+<tr class="memdesc:a0a3ecbe8fbb2179b1784fa0870196e50"><td class="mdescLeft">&#160;</td><td class="mdescRight">teacher表示该房间的创始老师  <a href="#a0a3ecbe8fbb2179b1784fa0870196e50">更多...</a><br /></td></tr>
+<tr class="separator:a0a3ecbe8fbb2179b1784fa0870196e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a326a210dc89f3fd7954fa4ccbb399c68"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#a326a210dc89f3fd7954fa4ccbb399c68">room_name</a> = models.CharField(max_length=100)</td></tr>
+<tr class="memdesc:a326a210dc89f3fd7954fa4ccbb399c68"><td class="mdescLeft">&#160;</td><td class="mdescRight">room_name存储录播间名字，也就是该录播间对应的直播间的名字  <a href="#a326a210dc89f3fd7954fa4ccbb399c68">更多...</a><br /></td></tr>
+<tr class="separator:a326a210dc89f3fd7954fa4ccbb399c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7a1d5ca134ed277c68704cc66f3e97a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#aa7a1d5ca134ed277c68704cc66f3e97a">video_img</a> = models.CharField(max_length=100)</td></tr>
+<tr class="memdesc:aa7a1d5ca134ed277c68704cc66f3e97a"><td class="mdescLeft">&#160;</td><td class="mdescRight">video_img保存该录播间的图片的名字  <a href="#aa7a1d5ca134ed277c68704cc66f3e97a">更多...</a><br /></td></tr>
+<tr class="separator:aa7a1d5ca134ed277c68704cc66f3e97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac875828eaf3c166d11d9a1449e691abb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#ac875828eaf3c166d11d9a1449e691abb">live_room_id</a> = models.IntegerField(default=0)</td></tr>
+<tr class="memdesc:ac875828eaf3c166d11d9a1449e691abb"><td class="mdescLeft">&#160;</td><td class="mdescRight">live_room_id表示该录播间对应的直播间的id  <a href="#ac875828eaf3c166d11d9a1449e691abb">更多...</a><br /></td></tr>
+<tr class="separator:ac875828eaf3c166d11d9a1449e691abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad35e28db9b29d18b7748fac0968431bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#ad35e28db9b29d18b7748fac0968431bd">file_num</a> = models.IntegerField(default=0)</td></tr>
+<tr class="memdesc:ad35e28db9b29d18b7748fac0968431bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">file_num表示该录播间的课件数  <a href="#ad35e28db9b29d18b7748fac0968431bd">更多...</a><br /></td></tr>
+<tr class="separator:ad35e28db9b29d18b7748fac0968431bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a239f4bcb852bc950db5d35014a9fd7b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbackend_1_1models_1_1_video_room.html#a239f4bcb852bc950db5d35014a9fd7b5">create_time</a> = models.DateTimeField(default=timezone.now)</td></tr>
+<tr class="memdesc:a239f4bcb852bc950db5d35014a9fd7b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">create_time表示该录播间的创建时间  <a href="#a239f4bcb852bc950db5d35014a9fd7b5">更多...</a><br /></td></tr>
+<tr class="separator:a239f4bcb852bc950db5d35014a9fd7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>存储录播房间信息 </p>
+</div><h2 class="groupheader">类成员变量说明</h2>
+<a id="a239f4bcb852bc950db5d35014a9fd7b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a239f4bcb852bc950db5d35014a9fd7b5">&#9670;&nbsp;</a></span>create_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.create_time = models.DateTimeField(default=timezone.now)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>create_time表示该录播间的创建时间 </p>
+
+</div>
+</div>
+<a id="ad35e28db9b29d18b7748fac0968431bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad35e28db9b29d18b7748fac0968431bd">&#9670;&nbsp;</a></span>file_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.file_num = models.IntegerField(default=0)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>file_num表示该录播间的课件数 </p>
+
+</div>
+</div>
+<a id="ac875828eaf3c166d11d9a1449e691abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac875828eaf3c166d11d9a1449e691abb">&#9670;&nbsp;</a></span>live_room_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.live_room_id = models.IntegerField(default=0)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>live_room_id表示该录播间对应的直播间的id </p>
+
+</div>
+</div>
+<a id="a326a210dc89f3fd7954fa4ccbb399c68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a326a210dc89f3fd7954fa4ccbb399c68">&#9670;&nbsp;</a></span>room_name</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.room_name = models.CharField(max_length=100)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>room_name存储录播间名字，也就是该录播间对应的直播间的名字 </p>
+
+</div>
+</div>
+<a id="a0a3ecbe8fbb2179b1784fa0870196e50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a3ecbe8fbb2179b1784fa0870196e50">&#9670;&nbsp;</a></span>teacher</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.teacher = models.ForeignKey('backend.User')</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>teacher表示该房间的创始老师 </p>
+
+</div>
+</div>
+<a id="aa7a1d5ca134ed277c68704cc66f3e97a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7a1d5ca134ed277c68704cc66f3e97a">&#9670;&nbsp;</a></span>video_img</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">backend.models.VideoRoom.video_img = models.CharField(max_length=100)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>video_img保存该录播间的图片的名字 </p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>backend/<a class="el" href="models_8py.html">models.py</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>
