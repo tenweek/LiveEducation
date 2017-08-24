@@ -25,6 +25,40 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'code-editor',
+    /**
+     * 表示房间ID信息
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     * 表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     * 表示进入该房间的用户名字
+     *
+     * @property username
+     * @type String
+     */
+
+    /**
+     * 表示教学区域的高，根据父组件大小动态变化
+     *
+     * @property containerHeight
+     * @type Number
+     */
+
+    /**
+     * 表示代码编辑器是否位于左边窗口
+     *
+     * @property isOnLeft
+     * @type Boolean
+     */
     props: ['roomId', 'teacherName', 'username', 'containerHeight', 'isOnLeft'],
     data: function () {
         return {

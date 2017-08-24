@@ -34,6 +34,19 @@
 import * as io from 'socket.io-client'
 export default {
     name: 'chat-board',
+    /**
+     * 表示用户账号
+     *
+     * @property userAccount
+     * @type String
+     */
+
+    /**
+     * 表示房间ID信息
+     *
+     * @property roomId
+     * @type String
+     */
     props: ['userAccount', 'roomId'],
     data: function () {
         return {

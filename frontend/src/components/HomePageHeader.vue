@@ -191,6 +191,13 @@ export default {
              * @type null
              */
             file: null,
+            /**
+             * 用于判断用户创建房间时是否上传封面图
+             *
+             * @attribute
+             * @type Boolean
+             * @default false
+             */
             hadImg: false,
             /**
              * 表示创建房间时上传文件的状态
@@ -227,6 +234,11 @@ export default {
         })
     },
     methods: {
+        /**
+         * 用户创建房间上传封面图太大时进行提示
+         *
+         * @method handleMaxSize
+         */
         handleMaxSize: function (file) {
             this.$Message.error('文件 ' + file.name + ' 图片太大，请上传10M以下的图片')
         },
@@ -395,6 +407,11 @@ export default {
                 this.$router.push({ path: '/' })
             }
         },
+        /**
+         * 登出账号
+         *
+         * @method logout
+         */
         logout: function () {
             fetch('/logout/', {
                 method: 'post',

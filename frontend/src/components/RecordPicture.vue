@@ -27,6 +27,33 @@
 import myMsg from './../warning.js'
 export default {
     name: 'RecordPicture',
+    /**
+     * 表示房间名称
+     *
+     * @property roomName
+     * @type String
+     */
+
+    /**
+     * 表示创建该房间的老师名字
+     *
+     * @property teacherName
+     * @type String
+     */
+
+    /**
+     * 表示房间缩略图
+     *
+     * @property userImg
+     * @type String
+     */
+
+    /**
+     * 表示对应直播房间的ID
+     *
+     * @property liveId
+     * @type String
+     */
     props: ['roomName', 'teacherName', 'userImg', 'liveId'],
     components: {},
     data: function () {
@@ -39,6 +66,13 @@ export default {
              * @default false
              */
             canWork: false,
+            /**
+             * 用来表示房间缩略图的路径
+             *
+             * @attribute route
+             * @type String
+             * @default ''
+             */
             route: ''
         }
     },

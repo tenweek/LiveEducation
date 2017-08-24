@@ -41,7 +41,8 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 /**
- * 录播间页面
+ * 录播间页面，实现教学区、视频区及聊天室的复现，
+ * 有暂停功能。
  *
  * @module RecordRoom
  * @class RecordRoom
@@ -74,13 +75,39 @@ export default {
              * @default 'WhiteBoardForRecord'
              */
             currentTools: 'WhiteBoardForRecord',
+            /**
+             * 表示房间ID信息
+             *
+             * @attribute roomId
+             * @type String
+             * @default ''
+             */
             roomId: '',
+            /**
+             * 房间的视频文件路径
+             *
+             * @attribute videoPath
+             * @type String
+             * @default ''
+             */
             videoPath: '',
-            userAccount: '',
+            /**
+             * 表示用户账号信息
+             *
+             * @attribute userAccount
+             * @type String
+             * @default ''
+             */
+            userAccount: ''
             teachingToolsHeight: 0,
             teachingToolsWidth: 0
         }
     },
+    /**
+     * created函数
+     *
+     * @method mounted
+     */
     created: function () {
         this.roomId = this.$route.params.id
         fetch('/getName/', {

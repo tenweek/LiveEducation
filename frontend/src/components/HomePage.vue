@@ -70,13 +70,20 @@ export default {
     data: function () {
         return {
             /**
-             * 存储所有房间信息
+             * 存储所有直播房间信息
              *
              * @attribute rooms
              * @type Array
              * @default []
              */
             rooms: [],
+            /**
+             * 存储所有录播房间信息
+             *
+             * @attribute videoRooms
+             * @type Array
+             * @default []
+             */
             videoRooms: [],
             /**
              * 表示导航栏的选择（首页、直播、录播）
@@ -89,6 +96,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取正在直播的房间信息
+         *
+         * @method getRooms
+         */
         getVideoRooms: function () {
             fetch('/getVideoRooms/', {
                 method: 'post',
@@ -104,7 +116,7 @@ export default {
             })
         },
         /**
-         * 获取正在直播及录播房间信息
+         * 获取正在直播的房间信息
          *
          * @method getRooms
          */

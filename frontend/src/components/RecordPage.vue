@@ -24,7 +24,8 @@
 
 <script>
 /**
- * 录播详情页，显示所有录播房间的缩略图及房间信息。
+ * 录播详情页，显示所有录播房间的缩略图及房间信息,
+ * 并且按直播开始时间排序。
  *
  * @module RecordPage
  * @class RecordPage
@@ -35,6 +36,11 @@ import PageFooter from './PageFooter'
 
 export default {
     name: 'record-page',
+    /**
+     * created函数，调用getVideoRooms获取房间信息。
+     *
+     * @method created
+     */
     created: function () {
         this.getVideoRooms()
     },
@@ -50,6 +56,14 @@ export default {
      * @type Number
      * @default 3 3表示当前处于录播详情页
      */
+
+    /**
+     * 存储所有录播房间信息
+     *
+     * @attribute rooms
+     * @type Array
+     * @default []
+     */
     data: function () {
         return {
             option: 3,
@@ -57,6 +71,11 @@ export default {
         }
     },
     methods: {
+        /**
+         * 获取录播房间信息
+         *
+         * @method getVideoRooms
+         */
         getVideoRooms: function () {
             fetch('/getVideoRooms/', {
                 method: 'post',

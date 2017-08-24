@@ -62,6 +62,13 @@ export default {
      * @property username
      * @type String
      */
+
+    /**
+     * 表示视频区域的高
+     *
+     * @property containerHeight
+     * @type Number
+     */
     props: ['roomId', 'teacherName', 'username', 'containerHeight'],
     data: function () {
         return {
@@ -122,7 +129,22 @@ export default {
              * @default ''
              */
             camera: '',
+            /**
+             * 表示客户端，监听服务器传来的消息
+             *
+             * @attribute socket
+             * @type Object
+             * @default ''
+             */
             socket: '',
+            /**
+             * 表示老师是否选择开始直播，
+             * 在直播前，即started值为false时不能进行任何操作。
+             *
+             * @attribute started
+             * @type Boolean
+             * @default false
+             */
             started: false
         }
     },

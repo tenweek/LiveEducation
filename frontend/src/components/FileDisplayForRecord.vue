@@ -36,6 +36,19 @@ import * as io from 'socket.io-client'
 
 export default {
     name: 'file-display',
+    /**
+     * 表示房间ID信息
+     *
+     * @property roomId
+     * @type String
+     */
+
+    /**
+     * 表示用户账号信息
+     *
+     * @property userAccount
+     * @type String
+     */
     props: ['roomId', 'userAccount'],
     data: function () {
         return {

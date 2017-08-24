@@ -90,10 +90,17 @@ export default {
      */
 
     /**
-     * 表示白板区域的长，根据父组件大小动态变化
+     * 表示白板区域的高，根据父组件大小动态变化
      *
-     * @property whiteBoardHeight
+     * @property containerHeight
      * @type Number
+     */
+
+    /**
+     * 表示代码编辑器是否位于左边窗口
+     *
+     * @property isOnLeft
+     * @type Boolean
      */
     props: ['roomId', 'teacherName', 'username', 'whiteBoardWidth', 'containerHeight', 'isOnLeft'],
     data: function () {
@@ -260,6 +267,7 @@ export default {
             }
         },
         whiteBoardWidth: function (newVal, oldVal) {
+            console.log('kkk')
             this.drawDataUrl(this.allDataUrl[this.pointer])
         },
         colorBorder: function (newVal, oldVal) {
