@@ -199,9 +199,6 @@ export default {
         resize: function (self) {
             document.getElementById('bg').style.height = window.innerHeight + 'px'
             document.getElementById('bg').style.width = window.innerWidth + 'px'
-            // let unit = Math.min(window.innerWidth / 1.33, window.innerHeight)
-            // document.getElementById('live-room').style.width = (1.33 * unit) + 'px'
-            // document.getElementById('live-room').style.height = unit + 'px'
             self.teachingToolsWidth = document.getElementById('teaching-tools').clientWidth
             self.teachingToolsHeight = document.getElementById('teaching-tools').clientHeight
             self.videoDisplayHeight = document.getElementById('video-display').clientHeight

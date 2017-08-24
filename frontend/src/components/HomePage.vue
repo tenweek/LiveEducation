@@ -3,6 +3,7 @@
         <div class="header">
             <home-page-header :myOption="this.option"></home-page-header>
         </div>
+        <router-view></router-view>
         <Card id="live-list" padding="0" dis-hover>
             <div class="list">
                 <div class="list-hint">
