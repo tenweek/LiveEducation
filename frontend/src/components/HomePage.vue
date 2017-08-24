@@ -3,7 +3,8 @@
         <div class="header">
             <home-page-header :myOption="this.option"></home-page-header>
         </div>
-        <Card id="live-list" padding="0">
+        <router-view></router-view>
+        <Card id="live-list" padding="0" dis-hover>
             <div class="list">
                 <div class="list-hint">
                     <input type="text" class="live-broadcast" value="直播课堂" readonly="true"></input>
@@ -19,7 +20,7 @@
                 </div>
             </div>
         </Card>
-        <Card id="record-list" padding="0">
+        <Card id="record-list" padding="0" dis-hover>
             <div class="list">
                 <div class="list-hint">
                     <input type="text" class="live-broadcast" value="录播课堂" readonly="true"></input>
@@ -147,7 +148,7 @@ export default {
     max-width: 1200px;
     margin: auto;
     margin-bottom: 40px;
-    margin-top: 20px;
+    margin-top: 40px;
     overflow: hidden;
     background: white;
 }
