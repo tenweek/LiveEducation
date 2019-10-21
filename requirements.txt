@@ -5,7 +5,7 @@ chardet==3.0.4
 cloudconvert==1.0.0
 cryptography==1.7.1
 decorator==4.0.11
-Django==1.11.3
+Django==1.11.23
 django-cors-headers==2.1.0
 enum34==1.1.6
 gyp==0.1
