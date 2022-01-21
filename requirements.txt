@@ -11,7 +11,7 @@ enum34==1.1.6
 gyp==0.1
 idna==2.5
 ipaddress==1.0.17
-ipython==5.1.0
+ipython==7.16.3
 ipython-genutils==0.1.0
 keyring==10.3.1
 keyrings.alt==2.2
