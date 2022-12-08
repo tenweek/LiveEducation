@@ -1,6 +1,6 @@
 adium-theme-ubuntu==0.3.4
 backports.shutil-get-terminal-size==1.0.0
-certifi==2017.7.27.1
+certifi==2022.12.7
 chardet==3.0.4
 cloudconvert==1.0.0
 cryptography==1.7.1
